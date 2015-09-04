@@ -1,0 +1,48 @@
+from peewee import Model, CharField, TextField
+
+class Environment(Model):
+    class Meta:
+        db_table = "environment"
+
+    name = CharField(unique=True)
+    description = TextField()
+    #
+    env_type = CharField(
+        default="eval",
+        choices=[
+            ("prod", "Productive"),
+            ("test", "Test"),
+            ("dev", "Develop"),
+            ("eval", "Evaluation"),
+            ("other", "Other")
+        ]
+    )
+    # NOC system user
+    sys_user = CharField(default="noc")
+    # NOC system group
+    sys_group = CharField(default="noc")
+    # Default installation prefix
+    sys_prefix = CharField(default="/opt/noc")
+    # Repo settings
+    repo = CharField(default="https://bitbucket.org/nocproject/noc")
+    branch = CharField(default="default")
+    # PostgreSQL settings
+    pg_db = CharField(default="noc")
+    pg_user = CharField(default="noc")
+    pg_password = CharField(default="noc")
+    # MongoDB settins
+    mongo_db = CharField(default="noc")
+    mongo_user = CharField(default="noc")
+    mongo_password = CharField(default="noc")
+    mongo_rs = CharField(default="noc")
+    mongo_engine = CharField(
+        default="wiredTiger",
+        choices=[
+            ("wiredTiger", "WiredTiger"),
+            ("mmapv1", "MMAPv1")
+        ]
+    )
+
+
+def migrate(migrator):
+    migrator.create_table(Environment)
