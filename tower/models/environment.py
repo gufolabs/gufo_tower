@@ -6,6 +6,8 @@
 ## See LICENSE for details
 ##----------------------------------------------------------------------
 
+# Python modules
+import json
 # Third-party modules
 from peewee import Model, CharField, TextField
 # Tower modules
@@ -82,3 +84,57 @@ class Environment(Model):
             "id": str(self.id),
             "name": self.name
         }
+
+    def ansible_inventory(self):
+        """
+        Generate ansible-compatible dynamic inventory
+        :return:
+        """
+        from node import Node
+
+        r = {
+            "nodes": {
+                "hosts": [],
+                "vars": {
+                    "noc_env": self.name,
+                    # System settings
+                    "noc_root": self.sys_prefix,
+                    "noc_user": self.sys_user,
+                    "noc_group": self.sys_group,
+                    # Repo settings
+                    "noc_repo": self.repo,
+                    "noc_branch": self.branch,
+                    # Postgres settings
+                    "noc_pg_db": self.pg_db,
+                    "noc_pg_user": self.pg_user,
+                    "noc_pg_password": self.pg_password,
+                    # Mongo settings
+                    "noc_mongo_db": self.mongo_db,
+                    "noc_mongo_replicaset": self.mongo_rs,
+                    "noc_mongo_storageengine": self.mongo_engine,
+                    "noc_mongo_user": self.mongo_user,
+                    "noc_mongo_password": self.mongo_password
+                }
+            },
+            "_meta": {
+                "hostvars": {}
+            }
+        }
+        #
+        with db.atomic():
+            nodes = list(Node.select().where(Node.environment == self))
+        #
+        for node in nodes:
+            r["nodes"]["hosts"] += [node.name]
+            r["_meta"]["hostvars"][node.name] = {
+                "ansible_ssh_host": node.address,
+                "ansible_user": node.login_as,
+                "noc_dc": node.datacenter.name
+            }
+            dcn = "dc-%s" % node.datacenter.name
+            if dcn not in r:
+                r[dcn] = {
+                    "hosts": []
+                }
+            r[dcn]["hosts"] += [node.name]
+        return json.dumps(r)

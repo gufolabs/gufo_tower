@@ -33,7 +33,7 @@ def main():
         ],
         entry_points={
             "console_scripts": [
-                "inv = tower.inv.commands:inv",
+                "tower-inv = tower.cli.inv:main",
                 "tower-web = tower.daemons.web:run"
             ]
         },
