@@ -18,9 +18,13 @@ class ModelAPI(API):
 
     @api
     def read_items(self, cfg):
-        # @todo: Paging
+        limit = int(cfg.get("limit", 0))
+        page = int(cfg.get("page", 0))
         with db.atomic():
-            data = [o.list_item() for o in self.model.select()]
+            q = self.model.select()
+            if limit:
+                q = q.paginate(page, limit)
+            data = [o.list_item() for o in q]
         return {
             "data": data,
             "total": len(data),
