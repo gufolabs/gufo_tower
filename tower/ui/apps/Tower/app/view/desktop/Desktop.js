@@ -10,7 +10,9 @@ Ext.define("Tower.view.desktop.Desktop", {
         "Tower.view.desktop.DesktopModel",
         "Tower.view.environment.Environment",
         "Tower.view.datacenter.Datacenter",
-        "Tower.view.about.About"
+        "Tower.view.pool.Pool",
+        "Tower.view.about.About",
+        "Tower.store.Environment"
     ],
 
     controller: "desktop-desktop",
@@ -26,9 +28,25 @@ Ext.define("Tower.view.desktop.Desktop", {
             items: [
                 {
                     xtype: "tbtext",
-                    html: "NOC Tower"
+                    bind: {
+                        html: "NOC Tower: {environmentHeader}"
+                    }
                 },
                 "->",
+                {
+                    xtype: "combobox",
+                    //store: {
+                    //    type: "environment"
+                    //},
+                    valueField: "id",
+                    displayField: "name",
+                    emptyText: "Select Environment",
+                    width: 200,
+                    bind: {
+                        store: "{environments}",
+                        selection: "{selectedEnvironment}"
+                    }
+                },
                 {
                     iconCls: "x-fa fa-bars",
                     menu: [
@@ -59,10 +77,12 @@ Ext.define("Tower.view.desktop.Desktop", {
             xtype: "app-datacenter"
         },
         {
-            title: "Pools"
+            xtype: "app-pool"
         },
         {
-            title: "Nodes"
+            title: "Nodes",
+            disabled: true,
+            iconCls: "x-fa fa-server"
         },
         {
             xtype: "app-about"

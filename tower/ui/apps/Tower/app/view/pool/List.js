@@ -1,18 +1,13 @@
-Ext.define("Tower.view.datacenter.List", {
+Ext.define("Tower.view.pool.List", {
     extend: "Ext.grid.Panel",
-    xtype: "app-datacenter-list",
-    requires: [
-        "Tower.store.Datacenter"
-    ],
+    xtype: "app-pool-list",
     reference: "grid",
 
-    store: {
-        type: "datacenter"
-    },
+    bind: "{pools}",
     autoLoad: true,
     columns: [
         {
-            text: "Datacenter",
+            text: "Pool",
             dataIndex: "name",
             width: 100
         },
@@ -23,7 +18,7 @@ Ext.define("Tower.view.datacenter.List", {
         }
     ],
     viewConfig: {
-        emptyText: "No datacenters"
+        emptyText: "No pools"
     },
     dockedItems: [
         {
@@ -42,7 +37,7 @@ Ext.define("Tower.view.datacenter.List", {
                 "-",
                 {
                     iconCls: "x-fa fa-plus",
-                    text: "New Datacenter",
+                    text: "New Pool",
                     handler: "onCreate"
                 }
             ]

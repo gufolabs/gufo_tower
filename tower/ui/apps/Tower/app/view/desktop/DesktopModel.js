@@ -1,16 +1,30 @@
 Ext.define('Tower.view.desktop.DesktopModel', {
     extend: 'Ext.app.ViewModel',
+    requires: [
+        "Tower.model.Environment"
+    ],
     alias: 'viewmodel.desktop-desktop',
-    data: {
-        env: ""
+    stores: {
+        environments: {
+            type: "environment",
+            autoLoad: true
+        }
     },
+    data: {
+        selectedEnvironment: null
+    },
+    formulas: {
+        isEnvironmentSelected: function(get) {
+            return !!get("selectedEnvironment");
+        },
 
-    onSelectEnv: function() {
-        var me = this;
-        console.log("???");
-        //console.log(me.getViewModel().data);
+        environmentHeader: function(get) {
+            var se = get("selectedEnvironment");
+            if(!se) {
+                return "(Select Environment)";
+            } else {
+                return se.get("name");
+            }
+        }
     }
-
-    // getEnvironments
-    // setEnvironment
 });

@@ -76,3 +76,9 @@ class Environment(Model):
             "mongo_rs": self.mongo_rs,
             "mongo_engine": self.mongo_engine
         }
+
+    def reference_item(self):
+        return {
+            "id": str(self.id),
+            "name": self.name
+        }

@@ -21,6 +21,7 @@ from tower.api.direct import DirectRequestHandler
 from tower.api.login import LoginAPI
 from tower.api.environment import EnvironmentAPI
 from tower.api.datacenter import DatacenterAPI
+from tower.api.pool import PoolAPI
 from tower.models.settings import Settings
 
 

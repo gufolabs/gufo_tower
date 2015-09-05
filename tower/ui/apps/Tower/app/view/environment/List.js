@@ -5,9 +5,9 @@ Ext.define("Tower.view.environment.List", {
         "Tower.store.Environment"
     ],
     reference: "grid",
-
-    store: {
-        type: "environment"
+    bind: {
+        store: "{environments}",
+        selection: "{selectedEnvironment}"
     },
     autoLoad: true,
     columns: [
@@ -63,6 +63,6 @@ Ext.define("Tower.view.environment.List", {
         }
     ],
     listeners: {
-        select: "onItemSelected"
+        itemdblclick: "onItemSelected"
     }
 });
