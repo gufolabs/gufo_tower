@@ -5,26 +5,7 @@ Ext.define("Tower.store.Environment", {
     ],
 
     alias: "store.environment",
-
-    fields: [
-        {name: "id", type: "string"},
-        {name: "name", type: "string"},
-        {name: "description", type: "string"},
-        {name: "env_type", type: "string"},
-        {name: "sys_user", type: "string"},
-        {name: "sys_group", type: "string"},
-        {name: "sys_prefix", type: "string"},
-        {name: "repo", type: "string"},
-        {name: "branch", type: "string"},
-        {name: "pg_db", type: "string"},
-        {name: "pg_user", type: "string"},
-        {name: "pg_password", type: "string"},
-        {name: "mongo_db", type: "string"},
-        {name: "mongo_user", type: "string"},
-        {name: "mongo_password", type: "string"},
-        {name: "mongo_rs", type: "string"},
-        {name: "mongo_engine", type: "string"}
-    ],
+    model: "Tower.model.Environment",
 
     proxy: {
         type: "direct",

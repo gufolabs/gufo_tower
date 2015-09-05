@@ -5,12 +5,7 @@ Ext.define("Tower.store.Datacenter", {
     ],
 
     alias: "store.datacenter",
-
-    fields: [
-        {name: "id", type: "string"},
-        {name: "name", type: "string"},
-        {name: "description", type: "string"}
-    ],
+    model: "Tower.model.Datacenter",
 
     proxy: {
         type: "direct",
