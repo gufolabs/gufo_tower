@@ -18,10 +18,34 @@ class ModelAPI(API):
 
     @api
     def read_items(self, cfg):
+        """
+        Returns list of items
+        cfg may contain:
+            limit
+            page
+            start
+            filter
+        :param cfg:
+        :return:
+        """
         limit = int(cfg.get("limit", 0))
         page = int(cfg.get("page", 0))
+        filters = []
+        for fd in cfg.get("filter", []):
+            prop = fd.get("property")
+            value = fd.get("value")
+            if prop is None or value is None:
+                continue
+            field = getattr(self.model, prop, None)
+            if not field:
+                continue
+            filters += [
+                field == value
+            ]
         with db.atomic():
             q = self.model.select()
+            if filters:
+                q = q.where(*filters)
             if limit:
                 q = q.paginate(page, limit)
             data = [o.list_item() for o in q]
