@@ -11,6 +11,7 @@ Ext.define("Tower.view.desktop.Desktop", {
         "Tower.view.environment.Environment",
         "Tower.view.datacenter.Datacenter",
         "Tower.view.pool.Pool",
+        "Tower.view.node.Node",
         "Tower.view.about.About",
         "Tower.store.Environment"
     ],
@@ -80,9 +81,7 @@ Ext.define("Tower.view.desktop.Desktop", {
             xtype: "app-pool"
         },
         {
-            title: "Nodes",
-            disabled: true,
-            iconCls: "x-fa fa-server"
+            xtype: "app-node"
         },
         {
             xtype: "app-about"

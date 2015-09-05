@@ -26,3 +26,9 @@ class Datacenter(Model):
             "name": self.name,
             "description": self.description
         }
+
+    def reference_item(self):
+        return {
+            "id": str(self.id),
+            "name": self.name
+        }

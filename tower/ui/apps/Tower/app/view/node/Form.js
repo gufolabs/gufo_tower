@@ -1,12 +1,15 @@
-Ext.define("Tower.view.pool.Form", {
+Ext.define("Tower.view.node.Form", {
     extend: "Ext.form.Panel",
-    xtype: "app-pool-form",
+    xtype: "app-node-form",
     reference: "form",
     autoScroll: true,
 
     requires: [
         "Ext.form.field.Text",
-        "Ext.form.field.TextArea"
+        "Ext.form.field.TextArea",
+        "Ext.form.field.ComboBox",
+        "Ext.form.FieldSet",
+        "Tower.store.Datacenter"
     ],
 
     header: {
@@ -50,7 +53,17 @@ Ext.define("Tower.view.pool.Form", {
             xtype: "textfield",
             fieldLabel: "Name",
             allowBlank: false,
-            regex: /^[a-zA-Z][a-zA-Z0-9]*$/
+            regex: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
+        },
+        {
+            name: "datacenter",
+            xtype: "combobox",
+            store: {
+                type: "datacenter"
+            },
+            fieldLabel: "Datacenter",
+            valueField: "id",
+            displayField: "name"
         },
         {
             name: "description",
@@ -58,6 +71,27 @@ Ext.define("Tower.view.pool.Form", {
             fieldLabel: "Description",
             allowBlank: true,
             anchor: "100%"
+        },
+        {
+            xtype: "fieldset",
+            title: "Connect",
+            layout: "hbox",
+            defaults: {
+                labelAlign: "top",
+                padding: "0 2 0 0"
+            },
+            items: [
+                {
+                    name: "address",
+                    xtype: "textfield",
+                    fieldLabel: "Address"
+                },
+                {
+                    name: "login_as",
+                    xtype: "textfield",
+                    fieldLabel: "Login As"
+                }
+            ]
         }
     ]
 });
