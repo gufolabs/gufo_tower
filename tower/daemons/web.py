@@ -22,7 +22,9 @@ from tower.api.login import LoginAPI
 from tower.api.environment import EnvironmentAPI
 from tower.api.datacenter import DatacenterAPI
 from tower.api.pool import PoolAPI
+from tower.api.node import NodeAPI
 from tower.models.settings import Settings
+from tower.models.migration import Migration
 
 
 logger = logging.getLogger(__name__)
@@ -37,6 +39,8 @@ def run():
     tornado.options.define("children", default=4, help="Run several processes", type=int)
     tornado.options.parse_command_line()
 
+    logger.info("Applying database migrations")
+    Migration.migrate()
     logger.info("Loading service")
     settings = {
         "template_path": os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "templates")),
