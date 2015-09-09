@@ -9,6 +9,7 @@
 # Python modules
 import os
 import sys
+import json
 from optparse import OptionParser
 # Tower modules
 from tower.models.environment import Environment
@@ -45,6 +46,6 @@ def ansible_list(options, args):
     """
     try:
         env = Environment.get(Environment.name == options.env)
-        print env.ansible_inventory()
+        print json.dumps(env.ansible_inventory())
     except Environment.DoesNotFound:
         die("Invalid environment: '%s'" % options.env)

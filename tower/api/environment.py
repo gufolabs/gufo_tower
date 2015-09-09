@@ -7,10 +7,15 @@
 ##----------------------------------------------------------------------
 
 # Tower models
-from model import ModelAPI
+from model import ModelAPI, api
 from tower.models.environment import Environment
 
 
 class EnvironmentAPI(ModelAPI):
     name = "Environment"
     model = Environment
+
+    @api
+    def ansible_inventory(self, env_id):
+        e = Environment.get(Environment.id == int(env_id))
+        return e.ansible_inventory()

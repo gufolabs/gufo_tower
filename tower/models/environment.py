@@ -6,8 +6,6 @@
 ## See LICENSE for details
 ##----------------------------------------------------------------------
 
-# Python modules
-import json
 # Third-party modules
 from peewee import Model, CharField, TextField
 # Tower modules
@@ -137,4 +135,4 @@ class Environment(Model):
                     "hosts": []
                 }
             r[dcn]["hosts"] += [node.name]
-        return json.dumps(r)
+        return r

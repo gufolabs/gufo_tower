@@ -58,6 +58,15 @@ Ext.define("Tower.view.environment.List", {
                     iconCls: "x-fa fa-plus",
                     text: "New Environment",
                     handler: "onCreate"
+                },
+                "-",
+                {
+                    iconCls: "x-fa fa-search",
+                    text: "Inventory",
+                    handler: "onInventory",
+                    bind: {
+                        disabled: "{!isEnvironmentSelected}"
+                    }
                 }
             ]
         }

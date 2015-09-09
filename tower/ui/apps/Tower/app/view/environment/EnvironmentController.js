@@ -77,5 +77,17 @@ Ext.define('Tower.view.environment.EnvironmentController', {
                 Ext.Msg.alert("Failed to delete record");
             }
         });
+    },
+
+    onInventory: function() {
+        var me = this;
+        API.Environment.ansible_inventory(
+            me.getViewModel().get("selectedEnvironment").get("id"),
+            function(result, status) {
+                var html = "<pre>" + JSON.stringify(result, undefined, 2) + "</pre>";
+                me.lookupReference("inventory").setHtml(html);
+                me.getView().getLayout().setActiveItem(2);
+            }
+        )
     }
 });

@@ -6,7 +6,8 @@ Ext.define("Tower.view.environment.Environment", {
         "Tower.view.environment.EnvironmentController",
         "Tower.view.environment.EnvironmentModel",
         "Tower.view.environment.List",
-        "Tower.view.environment.Form"
+        "Tower.view.environment.Form",
+        "Tower.view.environment.Inventory"
     ],
 
     controller: "environment-environment",
@@ -27,6 +28,9 @@ Ext.define("Tower.view.environment.Environment", {
         },
         {
             xtype: "app-environment-form"
+        },
+        {
+            xtype: "app-environment-inventory"
         }
     ]
 });
