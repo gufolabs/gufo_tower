@@ -1,19 +1,10 @@
 Ext.define("Tower.view.node.List", {
     extend: "Ext.grid.Panel",
-    requires: [
-        "Ext.grid.feature.Grouping"
-    ],
     xtype: "app-node-list",
     reference: "grid",
 
     bind: "{nodes}",
     autoLoad: true,
-    features: [{
-        ftype: "grouping",
-        groupHeaderTpl: "{columnName}: {name}",
-        hideGroupedHeader: true,
-        startCollapsed: false
-    }],
     columns: [
         {
             text: "Node",
@@ -24,7 +15,14 @@ Ext.define("Tower.view.node.List", {
             text: "Datacenter",
             dataIndex: "datacenter",
             renderer: function(v) {
-                return v ? v.get("name") : "-";
+                if(!v) {
+                    return "-";
+                }
+                if(v.get) {
+                    return v.get("name");
+                } else {
+                    return "" + v;
+                }
             }
         },
         {

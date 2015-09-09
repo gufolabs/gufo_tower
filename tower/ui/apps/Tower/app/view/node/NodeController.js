@@ -46,6 +46,7 @@ Ext.define('Tower.view.node.NodeController', {
         data = form.getValues();
         store = me.lookupReference("grid").getStore();
         record = me.getViewModel().get("record");
+        console.log("Form values", data);
         if(record) {
             // Edit
             record.set(data);
@@ -54,6 +55,7 @@ Ext.define('Tower.view.node.NodeController', {
             data.environment = me.getViewModel().get("selectedEnvironment").get("id");
             record = store.add(data);
         }
+        console.log("sync", record);
         store.sync({
             success: function() {
                 me.showGrid();

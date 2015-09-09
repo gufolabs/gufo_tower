@@ -28,6 +28,5 @@ Ext.define("Tower.store.Node", {
     },
 
     remoteFilter: true,
-    remoteSort: true,
-    groupField: "datacenter"
+    remoteSort: true
 });
