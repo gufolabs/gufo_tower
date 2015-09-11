@@ -6,10 +6,19 @@
 ## See LICENSE for details
 ##----------------------------------------------------------------------
 
+# Python
+import os
+import subprocess
+import hashlib
+import base64
+import logging
+import shutil
 # Third-party modules
-from peewee import Model, CharField, TextField
+from peewee import Model, CharField, TextField, DateTimeField
 # Tower modules
 from db import db
+
+logging.getLogger(__name__)
 
 
 class Environment(Model):
@@ -126,7 +135,7 @@ class Environment(Model):
             r["nodes"]["hosts"] += [node.name]
             r["_meta"]["hostvars"][node.name] = {
                 "ansible_ssh_host": node.address,
-                "ansible_user": node.login_as,
+                "ansible_ssh_user": node.login_as,
                 "noc_dc": node.datacenter.name
             }
             dcn = "dc-%s" % node.datacenter.name
@@ -136,3 +145,58 @@ class Environment(Model):
                 }
             r[dcn]["hosts"] += [node.name]
         return r
+
+    @property
+    def repo_hash(self):
+        return base64.b32encode(
+            hashlib.sha1(self.repo).digest()
+        )[:6]
+
+    @property
+    def playbook_path(self):
+        return os.path.join("var", "playbooks", self.name)
+
+    def pull_updates(self):
+        """
+        :return:
+        """
+        repo_path = os.path.join("var", "repo", self.repo_hash)
+        # Pull Repo
+        if not os.path.exists(repo_path):
+            logging.info("Cloning %s to %s", self.repo, repo_path)
+            # Clone directory
+            subprocess.check_call(
+                [
+                    "./bin/hg",
+                    "-q",
+                    "clone",
+                    "-U",
+                    self.repo,
+                    repo_path
+                ]
+            )
+        # Pull updates
+        logging.info("Updating %s", repo_path)
+        subprocess.check_call(
+            [
+                "./bin/hg",
+                "-q",
+                "--cwd=%s" % repo_path,
+                "pull"
+            ]
+        )
+        # Fetch playbooks
+        logging.info("Updating playbooks")
+        shutil.rmtree(self.playbook_path, ignore_errors=True)
+        subprocess.check_call(
+            [
+                "./bin/hg",
+                "-q",
+                "--cwd=%s" % repo_path,
+                "archive",
+                "-r", self.branch,
+                "-I", "ansible/**",
+                os.path.join("..", "..", "..", self.playbook_path)
+            ]
+        )
+        logging.info("Pulling complete")
