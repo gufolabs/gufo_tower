@@ -21,11 +21,14 @@ Ext.define("Tower.view.desktop.Desktop", {
         type: "desktop-desktop"
     },
     ui: "navigation",
+    tabPosition: "left",
+    tabRotation: 0,
 
     dockedItems: [
         {
             xtype: "toolbar",
             dock: "top",
+            id: "tower-desktop-header",
             items: [
                 {
                     xtype: "tbtext",
