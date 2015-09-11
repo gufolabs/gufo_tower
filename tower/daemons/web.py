@@ -23,6 +23,7 @@ from tower.api.environment import EnvironmentAPI
 from tower.api.datacenter import DatacenterAPI
 from tower.api.pool import PoolAPI
 from tower.api.node import NodeAPI
+from tower.api.deploy import DeployHandler
 from tower.models.settings import Settings
 from tower.models.migration import Migration
 
@@ -50,6 +51,7 @@ def run():
     app = tornado.web.Application([
         (r"^/direct/", DirectRequestHandler),
         (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {"path": "tower/ui/build/production/Tower"}),
+        (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
         (r"^/$", tornado.web.RedirectHandler, {"url": "/ui/index.html"})
     ], **settings)
     server = tornado.httpserver.HTTPServer(app, xheaders=True)
