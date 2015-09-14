@@ -14,7 +14,8 @@ import base64
 import logging
 import shutil
 # Third-party modules
-from peewee import Model, CharField, TextField, DateTimeField
+from peewee import CharField, TextField, DateTimeField
+from playhouse.signals import Model
 # Tower modules
 from db import db
 
