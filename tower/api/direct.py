@@ -12,11 +12,11 @@ import json
 import tornado.web
 from tornado.log import app_log
 ## Tower modules
+from base import BaseHandler
 from base import SDL, SERVICES
-from tower.models.user import User
 
 
-class DirectRequestHandler(tornado.web.RequestHandler):
+class DirectRequestHandler(BaseHandler):
     """
     Ext.Direct backend
     """
@@ -78,11 +78,3 @@ class DirectRequestHandler(tornado.web.RequestHandler):
         if is_scalar:
             response = response[0]
         self.write(json.dumps(response))
-
-    def get_current_user(self):
-        u = self.get_secure_cookie("user")
-        if u:
-            au = User.get_user(u)
-            if au.is_active:
-                return au
-        return None

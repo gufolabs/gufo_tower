@@ -6,6 +6,34 @@
 ## See LICENSE for details
 ##----------------------------------------------------------------------
 
+# Python modules
+import base64
+# Third-party modules
+import tornado.web
+# Tower modules
+from tower.models.user import User
+
+
+class BaseHandler(tornado.web.RequestHandler):
+    def get_current_user(self):
+        # Cookie authorization
+        u = self.get_secure_cookie("user")
+        if u:
+            au = User.get_user(u)
+            if au.is_active:
+                return au
+        else:
+            # Fallback to basic
+            auth_header = self.request.headers.get("Authorization")
+            if auth_header and auth_header.startswith("Basic "):
+                auth = base64.decodestring(auth_header[6:])
+                u, p = auth.split(":", 2)
+                au = User.authenticate(u, p)
+                if au.is_active:
+                    return au
+        return None
+
+
 SDL = {}
 SERVICES = {}
 
