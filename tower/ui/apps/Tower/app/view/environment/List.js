@@ -67,6 +67,14 @@ Ext.define("Tower.view.environment.List", {
                     bind: {
                         disabled: "{!isEnvironmentSelected}"
                     }
+                },
+                {
+                    iconCls: "x-fa fa-play",
+                    text: "Deploy",
+                    handler: "onDeploy",
+                    bind: {
+                        disabled: "{!isEnvironmentSelected}"
+                    }
                 }
             ]
         }

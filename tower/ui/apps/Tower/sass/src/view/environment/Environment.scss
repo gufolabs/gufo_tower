@@ -1,0 +1,61 @@
+$ok-color: #5cb85c;
+$changed-color: #5bc0de;
+$unreachable-color: #000000;
+$failed-color: #d9534f;
+$skipped-color: grey;
+
+.ansible-status {
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .5em;
+  color: #ffffff;
+}
+
+.ansible-ok-tag {
+  @extend .ansible-status;
+  background-color: $ok-color;
+}
+
+.ansible-changed-tag {
+  @extend .ansible-status;
+  background-color: $changed-color;
+}
+
+.ansible-unreachable-tag {
+  @extend .ansible-status;
+  background-color: $unreachable-color;
+}
+
+.ansible-failed-tag {
+  @extend .ansible-status;
+  background-color: $failed-color;
+}
+
+.ansible-task {
+  font-weight: bold;
+}
+
+.ansible-ok {
+  color: $ok-color;
+}
+
+.ansible-changed {
+  color: $changed-color;
+}
+
+.ansible-unreachable {
+  color: $unreachable-color;
+}
+
+.ansible-failed {
+  color: $failed-color;
+}
+
+.ansible-skipped {
+  color: $skipped-color;
+}

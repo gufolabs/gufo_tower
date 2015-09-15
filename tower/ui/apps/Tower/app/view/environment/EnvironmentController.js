@@ -1,15 +1,23 @@
 Ext.define('Tower.view.environment.EnvironmentController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.environment-environment',
+    requires: [
+        "Ext.window.Toast"
+    ],
+
+    ITEM_GRID: 0,
+    ITEM_FORM: 1,
+    ITEM_INVENTORY: 2,
+    ITEM_DEPLOY: 3,
 
     showGrid: function() {
         var me = this;
-        me.getView().getLayout().setActiveItem(0);
+        me.getView().getLayout().setActiveItem(me.ITEM_GRID);
     },
 
     showForm: function() {
         var me = this;
-        me.getView().getLayout().setActiveItem(1);
+        me.getView().getLayout().setActiveItem(me.ITEM_FORM);
     },
 
     onItemSelected: function(sender, record) {
@@ -56,6 +64,10 @@ Ext.define('Tower.view.environment.EnvironmentController', {
         store.sync({
             success: function() {
                 me.showGrid();
+                Ext.toast({
+                    html: "Data saved",
+                    align: "t"
+                });
             },
             failure: function() {
                 Ext.Msg.alert("Failed to save");
@@ -86,8 +98,90 @@ Ext.define('Tower.view.environment.EnvironmentController', {
             function(result, status) {
                 var html = "<pre>" + JSON.stringify(result, undefined, 2) + "</pre>";
                 me.lookupReference("inventory").setHtml(html);
-                me.getView().getLayout().setActiveItem(2);
+                me.getView().getLayout().setActiveItem(me.ITEM_INVENTORY);
             }
         )
+    },
+
+    rxDeployProgress: /^(ok|changed|unreachable|failed): \[/mg,
+    rxDeployTask: /^.+?\*{5}\s*$/mg,
+    rxDeployLine: /^(ok|changed|unreachable|failed|skipping): \[.+?$/mg,
+
+    onDeploy: function() {
+        var me = this,
+            envName, xhr, dp, vm,
+            offset = 0;
+        vm = me.getViewModel();
+        envName = vm.get("selectedEnvironment").get("name");
+        vm.set({
+            deployStatus: false,
+            nOk: 0,
+            nChanged: 0,
+            nUnreachable: 0,
+            nFailed: 0
+        });
+        dp = me.lookupReference("deploy");
+        dp.setHtml("");
+        xhr = new XMLHttpRequest();
+        xhr.open(
+            "GET",
+            Ext.String.format("/deploy/{0}/", envName),
+            true
+        );
+        xhr.onprogress = function () {
+            var ft = xhr.responseText,
+                match, t, ct,
+                dOk = 0, dChanged = 0, dUnreachable = 0, dFailed = 0;
+            // Process only last chunk
+            t = ft.substr(offset);
+            offset = ft.length;
+            // Get progress
+            while(match = me.rxDeployProgress.exec(t)) {
+                switch(match[1]) {
+                    case "ok":
+                        dOk += 1;
+                        break;
+                    case "changed":
+                        dChanged += 1;
+                        break;
+                    case "unreachable":
+                        dUnreachable += 1;
+                        break;
+                    case "failed":
+                        dFailed += 1;
+                        break;
+                }
+            }
+            // Update progress
+            if(dOk + dChanged + dUnreachable + dFailed) {
+                vm.set({
+                    nOk: vm.get("nOk") + dOk,
+                    nChanged: vm.get("nChanged") + dChanged,
+                    nUnreachable: vm.get("nUnreachable") + dUnreachable,
+                    nFailed: vm.get("nFailed") + dFailed
+                });
+            }
+            // Update deploy log
+            ct = t.replace(me.rxDeployTask, function(x) {
+                x = x.replace("\n", "");
+                return "<div class='ansible-task'>" + x + "</div>";
+            });
+            ct = ct.replace(me.rxDeployLine, function(x) {
+                var c = x.split(":")[0];
+                x = x.replace("\n", "");
+                return "<div class='ansible-" + c + "'>" + x + "</div>";
+            });
+            dp.setHtml(
+                (dp.html || "") + ct
+            );
+        };
+        xhr.onload = function () {
+            vm.set("deployStatus", true);
+        };
+        xhr.onerror = function () {
+            vm.set("deployStatus", true);
+        };
+        me.getView().getLayout().setActiveItem(me.ITEM_DEPLOY);
+        xhr.send();
     }
 });
