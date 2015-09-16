@@ -103,9 +103,9 @@ Ext.define('Tower.view.environment.EnvironmentController', {
         )
     },
 
-    rxDeployProgress: /^(ok|changed|unreachable|failed): \[/mg,
+    rxDeployProgress: /^(ok|changed|unreachable|failed|fatal): \[/mg,
     rxDeployTask: /^.+?\*{5}\s*$/mg,
-    rxDeployLine: /^(ok|changed|unreachable|failed|skipping): \[.+?$/mg,
+    rxDeployLine: /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
 
     onDeploy: function() {
         var me = this,
@@ -148,6 +148,7 @@ Ext.define('Tower.view.environment.EnvironmentController', {
                         dUnreachable += 1;
                         break;
                     case "failed":
+                    case "fatal":
                         dFailed += 1;
                         break;
                 }
@@ -169,6 +170,9 @@ Ext.define('Tower.view.environment.EnvironmentController', {
             ct = ct.replace(me.rxDeployLine, function(x) {
                 var c = x.split(":")[0];
                 x = x.replace("\n", "");
+                if (x === "fatal") {
+                    x = "failed";
+                }
                 return "<div class='ansible-" + c + "'>" + x + "</div>";
             });
             dp.setHtml(
