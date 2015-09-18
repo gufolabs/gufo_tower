@@ -17,7 +17,7 @@ Ext.define("Tower.view.pool.Pool",{
 
     config: {
         title: "Pools",
-        iconCls: "x-fa fa-cubes"
+        iconCls: "x-fa fa-files-o"
     },
 
     layout: "card",
