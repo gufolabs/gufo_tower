@@ -1,5 +1,5 @@
 Ext.define("Tower.view.login.Login", {
-    extend: "Ext.form.Panel",
+    extend: "Ext.panel.Panel",
 
     requires: [
         "Tower.view.login.LoginController",
@@ -12,48 +12,53 @@ Ext.define("Tower.view.login.Login", {
     viewModel: {
         type: "login-login"
     },
-    bodyPadding: 4,
-    frame: true,
-    width: 320,
+    layout: "center",
 
-    defaults: {
-        anchor: "100%",
-        labelWidth: 80
-    },
+    items: [{
+        xtype: "form",
+        width: 400,
+        title: "Login to the NOC Tower",
+        bodyPadding: 4,
 
-    items: [
-        {
-            name: "user",
-            xtype: "textfield",
-            itemId: "user",
-            fieldLabel: "User",
-            emptyText: "User Id",
-            allowBlank: false,
-            bind: "{user}",
-            reference: "userField"
+        defaults: {
+            anchor: "100%",
+            labelWidth: 80
         },
-        {
-            name: "password",
-            xtype: "textfield",
-            inputType: "password",
-            fieldLabel: "Password",
-            emptyText: "Enter password",
-            allowBlank: false,
-            bind: "{password}"
-        }
-    ],
 
-    buttons: [
-        {
-            text: "Login",
-            handler: "onFormLogin",
-            formBind: true
-        },
-        {
-            text: "Reset",
-            handler: "onFormReset"
-        }
-    ],
+        items: [
+            {
+                name: "user",
+                xtype: "textfield",
+                itemId: "user",
+                fieldLabel: "User",
+                emptyText: "User Id",
+                allowBlank: false,
+                bind: "{user}",
+                reference: "userField"
+            },
+            {
+                name: "password",
+                xtype: "textfield",
+                inputType: "password",
+                fieldLabel: "Password",
+                emptyText: "Enter password",
+                allowBlank: false,
+                bind: "{password}"
+            }
+        ],
+
+        buttons: [
+            {
+                text: "Login",
+                handler: "onFormLogin",
+                formBind: true
+            },
+            {
+                text: "Reset",
+                handler: "onFormReset"
+            }
+        ],
+    }],
 
     listeners: {
         show: "onFormShow"
