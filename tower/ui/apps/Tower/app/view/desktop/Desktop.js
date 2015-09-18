@@ -12,6 +12,7 @@ Ext.define("Tower.view.desktop.Desktop", {
         "Tower.view.datacenter.Datacenter",
         "Tower.view.pool.Pool",
         "Tower.view.node.Node",
+        "Tower.view.service.Service",
         "Tower.view.about.About",
         "Tower.store.Environment"
     ],
@@ -23,6 +24,11 @@ Ext.define("Tower.view.desktop.Desktop", {
     ui: "navigation",
     tabPosition: "left",
     tabRotation: 0,
+
+    defaults: {
+        bodyPadding: 4,
+        textAlign: "left"
+    },
 
     dockedItems: [
         {
@@ -69,10 +75,6 @@ Ext.define("Tower.view.desktop.Desktop", {
         }
     ],
 
-    defaults: {
-        bodyPadding: 4
-    },
-
     items: [
         {
             xtype: "app-environment"
@@ -87,7 +89,18 @@ Ext.define("Tower.view.desktop.Desktop", {
             xtype: "app-node"
         },
         {
+            xtype: "app-service"
+        },
+        {
+            title: "Jobs",
+            iconCls: "x-fa fa-tasks"
+        },
+        {
             xtype: "app-about"
         }
-    ]
+    ],
+
+    listeners: {
+        tabchange: "onTabChange"
+    }
 });

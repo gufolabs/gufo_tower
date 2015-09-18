@@ -157,6 +157,11 @@ class Environment(Model):
     def playbook_path(self):
         return os.path.join("var", "playbooks", self.name)
 
+    @property
+    def services_path(self):
+        return os.path.join("var", "playbooks", self.name,
+                            "ansible", "config", "services.yml")
+
     def pull_updates(self):
         """
         :return:
