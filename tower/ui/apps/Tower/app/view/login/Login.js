@@ -57,7 +57,7 @@ Ext.define("Tower.view.login.Login", {
                 text: "Reset",
                 handler: "onFormReset"
             }
-        ],
+        ]
     }],
 
     listeners: {
