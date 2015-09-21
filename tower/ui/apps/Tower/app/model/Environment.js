@@ -10,6 +10,7 @@ Ext.define("Tower.model.Environment", {
         {name: "sys_prefix", type: "string"},
         {name: "repo", type: "string"},
         {name: "branch", type: "string"},
+        {name: "changeset", type: "string"},
         {name: "pg_db", type: "string"},
         {name: "pg_user", type: "string"},
         {name: "pg_password", type: "string"},

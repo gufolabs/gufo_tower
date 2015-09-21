@@ -1,5 +1,6 @@
 from peewee import Model, CharField, TextField
 
+
 class Environment(Model):
     class Meta:
         db_table = "environment"
@@ -26,6 +27,7 @@ class Environment(Model):
     # Repo settings
     repo = CharField(default="https://bitbucket.org/nocproject/noc")
     branch = CharField(default="default")
+    changeset = CharField(default="tip")
     # PostgreSQL settings
     pg_db = CharField(default="noc")
     pg_user = CharField(default="noc")

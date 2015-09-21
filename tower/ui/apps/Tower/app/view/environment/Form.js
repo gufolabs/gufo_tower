@@ -96,6 +96,13 @@ Ext.define("Tower.view.environment.Form", {
                     fieldLabel: "Branch",
                     value: "default",
                     width: 200
+                },
+                {
+                    name: "changeset",
+                    xtype: "textfield",
+                    fieldLabel: "Changeset",
+                    value: "tip",
+                    width: 200
                 }
             ]
         },

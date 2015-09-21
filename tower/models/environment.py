@@ -49,6 +49,7 @@ class Environment(Model):
     # Repo settings
     repo = CharField(default="https://bitbucket.org/nocproject/noc")
     branch = CharField(default="default")
+    changeset = CharField(default="tip")
     # PostgreSQL settings
     pg_db = CharField(default="noc")
     pg_user = CharField(default="noc")
@@ -77,6 +78,7 @@ class Environment(Model):
             "sys_prefix": self.sys_prefix,
             "repo": self.repo,
             "branch": self.branch,
+            "changeset": self.changeset,
             "pg_db": self.pg_db,
             "pg_user": self.pg_user,
             "pg_password": self.pg_password,
