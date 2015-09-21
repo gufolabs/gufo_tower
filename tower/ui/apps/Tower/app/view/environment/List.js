@@ -69,7 +69,17 @@ Ext.define("Tower.view.environment.List", {
                     }
                 },
                 {
+                    iconCls: "x-fa fa-arrow-circle-down",
+                    reference: "pullButton",
+                    text: "Pull",
+                    handler: "onPull",
+                    bind: {
+                        disabled: "{!isEnvironmentSelected}"
+                    }
+                },
+                {
                     iconCls: "x-fa fa-play",
+                    reference: "deployButton",
                     text: "Deploy",
                     handler: "onDeploy",
                     bind: {

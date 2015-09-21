@@ -1,0 +1,141 @@
+# -*- coding: utf-8 -*-
+##----------------------------------------------------------------------
+## Pull repo
+##----------------------------------------------------------------------
+## Copyright (C) 2007-2015 The NOC Project
+## See LICENSE for details
+##----------------------------------------------------------------------
+
+# Python modules
+import logging
+import subprocess
+import datetime
+import os
+import shutil
+# Third-party modules
+from concurrent.futures import ThreadPoolExecutor
+# Tower modules
+from base import API, api
+from tower.models.db import db
+from tower.models.environment import Environment
+from tower.models.pulllog import PullLog
+
+logger = logging.getLogger(__name__)
+
+
+class PullAPI(API):
+    name = "Pull"
+    executor = ThreadPoolExecutor(2)
+
+    @api
+    def start_job(self, env_id):
+        try:
+            env = Environment.get(Environment.id == int(env_id))
+        except Environment.DoesNotExist:
+            return {
+                "success": False
+            }
+        with db.atomic():
+            job = PullLog(
+                start_ts=datetime.datetime.now(),
+                environment=env,
+                user=self.handler.current_user.name,
+                repo=env.repo,
+                branch=env.branch,
+                changeset=env.changeset
+            )
+            job.save()
+            self.executor.submit(self.pull_job, job)
+            return {
+                "success": True,
+                "job": job.id
+            }
+
+    @api
+    def get_job_status(self, env_id, job_id):
+        with db.atomic():
+            try:
+                env = Environment.get(Environment.id == int(env_id))
+            except Environment.DoesNotExist:
+                return {
+                    "success": False
+                }
+            try:
+                job = PullLog.get(PullLog.id == int(job_id),
+                                  PullLog.environment == env)
+            except PullLog.DoesNotExist:
+                return {
+                    "success": False
+                }
+        r = {
+            "success": True,
+            "complete": job.complete_ts is not None,
+        }
+        if r["complete"]:
+            r["status"] = job.status
+        return r
+
+    def pull_job(self, job):
+        """
+        Pull worker job
+        :param env:
+        :return:
+        """
+        env = job.environment
+        repo_path = os.path.join("var", "repo", env.repo_hash)
+        status = True
+        log = []
+        try:
+            # Pull Repo
+            if not os.path.exists(repo_path):
+                logging.info("Cloning %s to %s", env.repo, repo_path)
+                # Clone directory
+                subprocess.check_call(
+                    [
+                        "./bin/hg",
+                        "-q",
+                        "clone",
+                        "-U",
+                        env.repo,
+                        repo_path
+                    ]
+                )
+            # Pull updates
+            logging.info("Updating %s", repo_path)
+            subprocess.check_call(
+                [
+                    "./bin/hg",
+                    "-q",
+                    "--cwd=%s" % repo_path,
+                    "pull"
+                ]
+            )
+            # Fetch playbooks
+            logging.info("Updating playbooks")
+            shutil.rmtree(env.playbook_path, ignore_errors=True)
+            if env.changeset == "tip":
+                rev = env.branch
+            else:
+                rev = env.changeset
+            subprocess.check_call(
+                [
+                    "./bin/hg",
+                    "-q",
+                    "--cwd=%s" % repo_path,
+                    "archive",
+                    "-r", rev,
+                    "-I", "ansible/**",
+                    os.path.join("..", "..", "..", env.playbook_path)
+                ]
+            )
+            logging.info("Pulling complete")
+        except KeyboardInterrupt:
+            raise
+        except:
+            logging.error("Pull error")
+            status = False
+        with db.atomic():
+            job.complete_ts = datetime.datetime.now()
+            job.status = status
+            job.log = "\n".join(log)
+            job.save()

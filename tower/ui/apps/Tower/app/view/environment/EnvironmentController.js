@@ -2,7 +2,9 @@ Ext.define('Tower.view.environment.EnvironmentController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.environment-environment',
     requires: [
-        "Ext.window.Toast"
+        "Ext.window.Toast",
+        "Ext.window.MessageBox",
+        "Ext.util.TaskManager"
     ],
 
     ITEM_GRID: 0,
@@ -10,17 +12,17 @@ Ext.define('Tower.view.environment.EnvironmentController', {
     ITEM_INVENTORY: 2,
     ITEM_DEPLOY: 3,
 
-    showGrid: function() {
+    showGrid: function () {
         var me = this;
         me.getView().getLayout().setActiveItem(me.ITEM_GRID);
     },
 
-    showForm: function() {
+    showForm: function () {
         var me = this;
         me.getView().getLayout().setActiveItem(me.ITEM_FORM);
     },
 
-    onItemSelected: function(sender, record) {
+    onItemSelected: function (sender, record) {
         var me = this,
             form;
         form = me.lookupReference("form").getForm();
@@ -30,31 +32,31 @@ Ext.define('Tower.view.environment.EnvironmentController', {
         me.showForm();
     },
 
-    onRefresh: function() {
+    onRefresh: function () {
         var me = this;
         me.lookupReference("grid").getStore().reload();
     },
 
-    onCreate: function() {
+    onCreate: function () {
         var me = this;
         me.lookupReference("form").getForm().reset();
         me.getViewModel().set("recordId", null);
         me.showForm();
     },
 
-    onCloseForm: function() {
+    onCloseForm: function () {
         var me = this;
         me.showGrid();
     },
 
-    onSave: function() {
+    onSave: function () {
         var me = this,
             form, data, record, store;
         form = me.lookupReference("form").getForm();
         data = form.getValues();
         store = me.lookupReference("grid").getStore();
         record = me.getViewModel().get("record");
-        if(record) {
+        if (record) {
             // Edit
             record.set(data);
         } else {
@@ -62,40 +64,40 @@ Ext.define('Tower.view.environment.EnvironmentController', {
             record = store.add(data);
         }
         store.sync({
-            success: function() {
+            success: function () {
                 me.showGrid();
                 Ext.toast({
                     html: "Data saved",
                     align: "t"
                 });
             },
-            failure: function() {
+            failure: function () {
                 Ext.Msg.alert("Failed to save");
             }
         });
     },
 
-    onDelete: function() {
+    onDelete: function () {
         var me = this,
             record, store;
         record = me.getViewModel().get("record");
         store = me.lookupReference("grid").getStore();
         store.remove(record);
         store.sync({
-            success: function() {
+            success: function () {
                 me.showGrid();
             },
-            failure: function() {
+            failure: function () {
                 Ext.Msg.alert("Failed to delete record");
             }
         });
     },
 
-    onInventory: function() {
+    onInventory: function () {
         var me = this;
         API.Environment.ansible_inventory(
             me.getViewModel().get("selectedEnvironment").get("id"),
-            function(result, status) {
+            function (result, status) {
                 var html = "<pre>" + JSON.stringify(result, undefined, 2) + "</pre>";
                 me.lookupReference("inventory").setHtml(html);
                 me.getView().getLayout().setActiveItem(me.ITEM_INVENTORY);
@@ -107,7 +109,7 @@ Ext.define('Tower.view.environment.EnvironmentController', {
     rxDeployTask: /^.+?\*{5}\s*$/mg,
     rxDeployLine: /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
 
-    onDeploy: function() {
+    onDeploy: function () {
         var me = this,
             envName, xhr, dp, vm,
             offset = 0;
@@ -136,8 +138,8 @@ Ext.define('Tower.view.environment.EnvironmentController', {
             t = ft.substr(offset);
             offset = ft.length;
             // Get progress
-            while(match = me.rxDeployProgress.exec(t)) {
-                switch(match[1]) {
+            while (match = me.rxDeployProgress.exec(t)) {
+                switch (match[1]) {
                     case "ok":
                         dOk += 1;
                         break;
@@ -154,7 +156,7 @@ Ext.define('Tower.view.environment.EnvironmentController', {
                 }
             }
             // Update progress
-            if(dOk + dChanged + dUnreachable + dFailed) {
+            if (dOk + dChanged + dUnreachable + dFailed) {
                 vm.set({
                     nOk: vm.get("nOk") + dOk,
                     nChanged: vm.get("nChanged") + dChanged,
@@ -163,11 +165,11 @@ Ext.define('Tower.view.environment.EnvironmentController', {
                 });
             }
             // Update deploy log
-            ct = t.replace(me.rxDeployTask, function(x) {
+            ct = t.replace(me.rxDeployTask, function (x) {
                 x = x.replace("\n", "");
                 return "<div class='ansible-task'>" + x + "</div>";
             });
-            ct = ct.replace(me.rxDeployLine, function(x) {
+            ct = ct.replace(me.rxDeployLine, function (x) {
                 var c = x.split(":")[0];
                 x = x.replace("\n", "");
                 if (x === "fatal") {
@@ -187,5 +189,58 @@ Ext.define('Tower.view.environment.EnvironmentController', {
         };
         me.getView().getLayout().setActiveItem(me.ITEM_DEPLOY);
         xhr.send();
+    },
+
+    onPull: function () {
+        var me = this,
+            pullButton, iconCls, deployButton, envId;
+        envId = me.getViewModel().get("selectedEnvironment").get("id");
+        pullButton = me.lookupReference("pullButton");
+        deployButton = me.lookupReference("deployButton");
+        pullButton.setDisabled(true);
+        deployButton.setDisabled(true);
+        iconCls = pullButton.iconCls;
+        pullButton.setIconCls("x-fa fa-spinner fa-spin");
+        API.Pull.start_job(envId, function (result) {
+            var task, job,
+                restore = function () {
+                    deployButton.setDisabled(false);
+                    pullButton.setDisabled(false);
+                    pullButton.setIconCls(iconCls);
+                    if (task) {
+                        Ext.TaskManager.stop(task);
+                    }
+                },
+                checkStatus = function () {
+                    API.Pull.get_job_status(envId, job, function (result) {
+                        if (!result.success) {
+                            Ext.Msg.alert("Error", "Failed to pull");
+                            restore();
+                            return;
+                        }
+                        if (result.complete) {
+                            if (!result.status) {
+                                Ext.Msg.alert("Error", "Pull error");
+                            } else {
+                                Ext.toast({
+                                    html: "Pull complete",
+                                    align: "t"
+                                });
+                            }
+                            restore();
+                        }
+                    });
+                };
+            if (!result.success) {
+                Ext.Msg.alert("Error", "Failed to pull");
+                restore();
+                return;
+            }
+            job = result.job;
+            task = Ext.TaskManager.start({
+                interval: 1000,
+                run: checkStatus
+            });
+        });
     }
 });

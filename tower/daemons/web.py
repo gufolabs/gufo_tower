@@ -24,6 +24,7 @@ from tower.api.datacenter import DatacenterAPI
 from tower.api.pool import PoolAPI
 from tower.api.node import NodeAPI
 from tower.api.service import ServiceAPI
+from tower.api.pull import PullAPI
 from tower.api.deploy import DeployHandler
 from tower.models.settings import Settings
 from tower.models.migration import Migration
