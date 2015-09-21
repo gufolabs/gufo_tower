@@ -38,7 +38,7 @@ def run():
         level=logging.DEBUG,
         format="%(asctime)s [%(name)s] %(message)s"
     )
-    tornado.options.define("port", default=8888, help="Run on given port", type=int)
+    tornado.options.define("listen", default="0.0.0.0:8888", help="Listen on specified address", type=str)
     tornado.options.define("children", default=4, help="Run several processes", type=int)
     tornado.options.parse_command_line()
 
@@ -56,8 +56,14 @@ def run():
         (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
         (r"^/$", tornado.web.RedirectHandler, {"url": "/ui/index.html"})
     ], **settings)
+    if ":" in tornado.options.options.listen:
+        addr, port = tornado.options.options.listen.split(":")
+        port = int(port)
+    else:
+        addr = None
+        port = int(tornado.options.options.listen)
     server = tornado.httpserver.HTTPServer(app, xheaders=True)
-    server.bind(tornado.options.options.port)
+    server.bind(port, address=addr)
     server.start(tornado.options.options.children)
     logger.info("Service is ready")
     logging.root.setLevel(logging.DEBUG)
