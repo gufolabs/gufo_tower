@@ -52,7 +52,7 @@ class LoginAPI(API):
     def change_password(self, old_password, new_password):
         user = self.handler.current_user
         with db.atomic():
-            if User.authenticate(self, old_password):
+            if User.authenticate(user.name, old_password):
                 user.set_password(new_password)
                 return True
             else:
