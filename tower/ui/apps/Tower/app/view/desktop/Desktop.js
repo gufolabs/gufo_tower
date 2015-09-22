@@ -13,6 +13,7 @@ Ext.define("Tower.view.desktop.Desktop", {
         "Tower.view.pool.Pool",
         "Tower.view.node.Node",
         "Tower.view.service.Service",
+        "Tower.view.settings.Settings",
         "Tower.view.about.About",
         "Tower.store.Environment"
     ],
@@ -45,9 +46,6 @@ Ext.define("Tower.view.desktop.Desktop", {
                 "->",
                 {
                     xtype: "combobox",
-                    //store: {
-                    //    type: "environment"
-                    //},
                     valueField: "id",
                     displayField: "name",
                     emptyText: "Select Environment",
@@ -62,11 +60,13 @@ Ext.define("Tower.view.desktop.Desktop", {
                     menu: [
                         {
                             text: "Change Password ...",
+                            iconCls: "x-fa fa-pencil-square-o",
                             handler: "onChangePassword"
                         },
                         "-",
                         {
                             text: "Logout",
+                            iconCls: "x-fa fa-sign-out",
                             handler: "onLogout"
                         }
                     ]
@@ -94,6 +94,9 @@ Ext.define("Tower.view.desktop.Desktop", {
         {
             title: "Jobs",
             iconCls: "x-fa fa-tasks"
+        },
+        {
+            xtype: "app-settings"
         },
         {
             xtype: "app-about"

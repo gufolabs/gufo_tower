@@ -18,6 +18,7 @@ from peewee import CharField, TextField, DateTimeField
 from playhouse.signals import Model
 # Tower modules
 from db import db
+from settings import Settings
 
 logging.getLogger(__name__)
 
@@ -102,6 +103,16 @@ class Environment(Model):
         """
         from node import Node
 
+        repo = Settings.get_url()
+        if not repo.endswith("/"):
+            repo += "/"
+        repo += "hg/%s" % self.repo_hash
+
+        if self.changeset == "tip":
+            revision = self.branch
+        else:
+            revision = self.changeset
+
         r = {
             "nodes": {
                 "hosts": [],
@@ -112,8 +123,10 @@ class Environment(Model):
                     "noc_user": self.sys_user,
                     "noc_group": self.sys_group,
                     # Repo settings
-                    "noc_repo": self.repo,
+                    "noc_repo": repo,
                     "noc_branch": self.branch,
+                    "noc_changeset": self.changeset,
+                    "noc_revision": revision,
                     # Postgres settings
                     "noc_pg_db": self.pg_db,
                     "noc_pg_user": self.pg_user,
@@ -147,6 +160,9 @@ class Environment(Model):
                     "hosts": []
                 }
             r[dcn]["hosts"] += [node.name]
+            # @todo: noc_svc_<name>_loglevel
+            # @todo: num instances
+            # @todo: Import node data from system inventory
         return r
 
     @property
@@ -163,3 +179,11 @@ class Environment(Model):
     def services_path(self):
         return os.path.join("var", "tower", "playbooks", self.name,
                             "ansible", "config", "services.yml")
+
+    @property
+    def local_repo(self):
+        return "/hg/%s/" % self.repo_hash
+
+    @property
+    def repo_path(self):
+        return os.path.join("var", "tower", "repo", self.repo_hash)

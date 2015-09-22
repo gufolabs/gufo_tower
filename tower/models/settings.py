@@ -37,11 +37,18 @@ class Settings(Model):
                 raise KeyError
 
     @classmethod
+    def get_items(cls, names):
+        r = {}
+        with db.atomic():
+            for s in Settings.select().where(Settings.key << list(names)):
+                r[s.key] = json.loads(s.value)
+        return r
+
+    @classmethod
     def set_item(cls, name, value):
         value = json.dumps(value)
         with db.atomic():
-            r = list(Settings.select(Settings.key == name))
-            print r, len(r)
+            r = list(Settings.select().where(Settings.key == name))
             if len(r) == 0:
                 r = Settings(
                     key=name,
@@ -61,3 +68,14 @@ class Settings(Model):
             secret = base64.b64encode(os.urandom(64))
             Settings.set_item("cookie_secret", secret)
             return secret
+
+    @classmethod
+    def get_url(cls):
+        """
+        Return tower's URL
+        :return:
+        """
+        try:
+            return Settings.get_item("url")
+        except KeyError:
+            return None

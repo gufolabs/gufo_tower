@@ -24,6 +24,7 @@ from tower.api.pool import PoolAPI
 from tower.api.node import NodeAPI
 from tower.api.service import ServiceAPI
 from tower.api.pull import PullAPI
+from tower.api.settings import SettingsAPI
 from tower.api.deploy import DeployHandler
 from tower.api.repo import RepoHandler
 from tower.models.settings import Settings

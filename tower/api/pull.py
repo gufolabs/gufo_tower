@@ -82,13 +82,12 @@ class PullAPI(API):
         :return:
         """
         env = job.environment
-        repo_path = os.path.join("var", "repo", env.repo_hash)
         status = True
         log = []
         try:
             # Pull Repo
-            if not os.path.exists(repo_path):
-                logging.info("Cloning %s to %s", env.repo, repo_path)
+            if not os.path.exists(env.repo_path):
+                logging.info("Cloning %s to %s", env.repo, env.repo_path)
                 # Clone directory
                 subprocess.check_call(
                     [
@@ -97,16 +96,16 @@ class PullAPI(API):
                         "clone",
                         "-U",
                         env.repo,
-                        repo_path
+                        env.repo_path
                     ]
                 )
             # Pull updates
-            logging.info("Updating %s", repo_path)
+            logging.info("Updating %s", env.repo_path)
             subprocess.check_call(
                 [
                     "./bin/hg",
                     "-q",
-                    "--cwd=%s" % repo_path,
+                    "--cwd=%s" % env.repo_path,
                     "pull"
                 ]
             )
@@ -121,11 +120,11 @@ class PullAPI(API):
                 [
                     "./bin/hg",
                     "-q",
-                    "--cwd=%s" % repo_path,
+                    "--cwd=%s" % env.repo_path,
                     "archive",
                     "-r", rev,
                     "-I", "ansible/**",
-                    os.path.join("..", "..", "..", env.playbook_path)
+                    os.path.join("..", "..", "..", "..", env.playbook_path)
                 ]
             )
             logging.info("Pulling complete")
