@@ -9,8 +9,6 @@
 # Python modules
 import logging
 import os
-import base64
-import uuid
 #
 import tornado.httpserver
 import tornado.ioloop
@@ -40,8 +38,18 @@ def run():
         level=logging.DEBUG,
         format="%(asctime)s [%(name)s] %(message)s"
     )
-    tornado.options.define("listen", default="0.0.0.0:8888", help="Listen on specified address", type=str)
-    tornado.options.define("children", default=4, help="Run several processes", type=int)
+    tornado.options.define(
+        "listen",
+        default=os.environ.get("TOWER_LISTEN", "0.0.0.0:8888"),
+        help="Listen on specified address",
+        type=str
+    )
+    tornado.options.define(
+        "children",
+        default=os.environ.get("TOWER_CHILDREN", 4),
+        help="Run several processes",
+        type=int
+    )
     tornado.options.parse_command_line()
 
     logger.info("Applying database migrations")
