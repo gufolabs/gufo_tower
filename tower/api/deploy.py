@@ -63,7 +63,7 @@ class DeployHandler(BaseHandler):
         self.sp = tornado.process.Subprocess(
             [
                 "./bin/ansible-playbook",
-                "-i", "./bin/inv",
+                "-i", "./bin/tower-inv",
                 os.path.join(self.env.playbook_path, "ansible", "site.yml")
             ],
             env={

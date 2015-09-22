@@ -35,6 +35,8 @@ class Migration(Model):
         Apply pending migrations
         :return:
         """
+        import tower.migrations
+
         # Ensure table is exists
         db.create_table(Migration, safe=True)
         # Get applied migrations
@@ -42,7 +44,7 @@ class Migration(Model):
         for m in Migration.select():
             applied += [m.name]
         # Get all migrations
-        prefix = cls.MIGRATIONS.replace(".", os.sep)
+        prefix = tower.migrations.__path__[0]
         for fn in sorted(
                 f for f in os.listdir(prefix)
                 if f != "__init__.py" and f.endswith(".py")

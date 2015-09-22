@@ -17,6 +17,7 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 # Tower modules
+import tower
 from tower.api.direct import DirectRequestHandler
 from tower.api.login import LoginAPI
 from tower.api.environment import EnvironmentAPI
@@ -50,9 +51,12 @@ def run():
         "cookie_secret": Settings.get_cookie_secret(),
         "static_path": os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "static"))
     }
+    # Get static files path
+    ui_root = os.path.join(tower.__path__[0], "ui/build/production/Tower")
+    logger.info("Serving UI files from %s", ui_root)
     app = tornado.web.Application([
         (r"^/direct/", DirectRequestHandler),
-        (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {"path": "tower/ui/build/production/Tower"}),
+        (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {"path": ui_root}),
         (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
         (r"^/$", tornado.web.RedirectHandler, {"url": "/ui/index.html"})
     ], **settings)

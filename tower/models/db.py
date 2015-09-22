@@ -9,6 +9,6 @@
 ## Third-party packages
 from peewee import SqliteDatabase
 
-db = SqliteDatabase("var/db/config.db",
+db = SqliteDatabase("var/tower/db/config.db",
                     autocommit=False, threadlocals=True)
 db.connect()

@@ -7,36 +7,74 @@
 # -----------------------------------------------------------------------
 
 # Python modules
-from setuptools import setup
+import os
+import subprocess
+from setuptools import setup, find_packages, findall
+from setuptools.command.install import install
+from setuptools.command.sdist import sdist
+
+
+class TowerInstall(install):
+    """
+    Create additional directories
+    """
+    def run(self):
+        install.run(self)
+        # Create directories
+        for d in ["db", "repo"]:
+            path = os.path.join(self.prefix, "var", "tower", d)
+            if not os.path.exists(path):
+                os.makedirs(path)
+
+
+class TowerSdist(sdist):
+    def run(self):
+        subprocess.check_call(
+            ["sencha", "app", "build"],
+            cwd="tower/ui/apps/Tower"
+        )
+        sdist.run(self)
 
 
 def main():
     kwargs = {}
 
-    with open("README.md") as f:
+    with open("README.rst") as f:
         kwargs["long_description"] = f.read()
 
     with open("VERSION") as f:
         VERSION = f.read().strip()
+
+    with open("requirements.txt") as f:
+        requirements = f.read().splitlines()
+        requirements = [x.strip() for x in requirements if x.strip()]
+
+    tower_data = findall(os.path.join("tower", "ui", "build", "production", "Tower"))
+    tower_data = [x[6:] for x in tower_data]
 
     setup(
         name="noc-tower",
         version=VERSION,
         description="NOC Tower",
         author="Dmitry Volodin",
-        # license="BSD",
+        license="BSD",
         author_email="info@nocproject.org",
         url="https://bitbucket.org/nocproject/noc-tower",
-        packages=[
-            "tower",
-            "tower.inv"
-        ],
+        cmdclass={
+            "sdist": TowerSdist,
+            "install": TowerInstall
+        },
+        packages=find_packages(exclude=["tests"]),
         entry_points={
             "console_scripts": [
                 "tower-inv = tower.cli.inv:main",
                 "tower-web = tower.daemons.web:run"
             ]
         },
+        package_data={
+            "tower": tower_data
+        },
+        install_requires=requirements,
         zip_safe=False,
         classifiers=[
             "Operating System :: Unix",
@@ -47,7 +85,6 @@ def main():
         ],
         **kwargs
     )
-
 
 if __name__ == "__main__":
     main()
