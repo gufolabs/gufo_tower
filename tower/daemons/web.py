@@ -27,6 +27,7 @@ from tower.api.node import NodeAPI
 from tower.api.service import ServiceAPI
 from tower.api.pull import PullAPI
 from tower.api.deploy import DeployHandler
+from tower.api.repo import RepoHandler
 from tower.models.settings import Settings
 from tower.models.migration import Migration
 
@@ -48,8 +49,7 @@ def run():
     logger.info("Loading service")
     settings = {
         "template_path": os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "templates")),
-        "cookie_secret": Settings.get_cookie_secret(),
-        "static_path": os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "static"))
+        "cookie_secret": Settings.get_cookie_secret()
     }
     # Get static files path
     ui_root = os.path.join(tower.__path__[0], "ui/build/production/Tower")
@@ -57,6 +57,7 @@ def run():
     app = tornado.web.Application([
         (r"^/direct/", DirectRequestHandler),
         (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {"path": ui_root}),
+        (r"^/hg.*$", RepoHandler),
         (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
         (r"^/$", tornado.web.RedirectHandler, {"url": "/ui/index.html"})
     ], **settings)
