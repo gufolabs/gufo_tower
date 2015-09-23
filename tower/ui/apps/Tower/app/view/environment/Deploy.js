@@ -27,5 +27,5 @@ Ext.define("Tower.view.environment.Deploy", {
         }
     },
     autoScroll: true,
-    autoEl: "pre"
+    bodyCls: "deploy-log"
 });

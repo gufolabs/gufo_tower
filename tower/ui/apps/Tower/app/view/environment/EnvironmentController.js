@@ -105,11 +105,24 @@ Ext.define('Tower.view.environment.EnvironmentController', {
         )
     },
 
+    onDeploy: function() {
+        var me = this,
+            envId;
+        envId = me.getViewModel().get("selectedEnvironment").get("id");
+        API.Pull.is_pulled(envId, function(result) {
+            if(result) {
+                me.deploy();
+            } else {
+                Ext.Msg.alert("Repo is not pulled. Pull repo first");
+            }
+        });
+    },
+
     rxDeployProgress: /^(ok|changed|unreachable|failed|fatal): \[/mg,
     rxDeployTask: /^.+?\*{5}\s*$/mg,
     rxDeployLine: /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
 
-    onDeploy: function () {
+    deploy: function () {
         var me = this,
             envName, xhr, dp, vm,
             offset = 0;
@@ -166,16 +179,14 @@ Ext.define('Tower.view.environment.EnvironmentController', {
             }
             // Update deploy log
             ct = t.replace(me.rxDeployTask, function (x) {
-                x = x.replace("\n", "");
-                return "<div class='ansible-task'>" + x + "</div>";
+                return "<span class='ansible-task'>" + x + "</span>";
             });
             ct = ct.replace(me.rxDeployLine, function (x) {
                 var c = x.split(":")[0];
-                x = x.replace("\n", "");
                 if (x === "fatal") {
                     x = "failed";
                 }
-                return "<div class='ansible-" + c + "'>" + x + "</div>";
+                return "<span class='ansible-" + c + "'>" + x + "</span>";
             });
             dp.setHtml(
                 (dp.html || "") + ct

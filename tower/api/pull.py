@@ -28,6 +28,20 @@ class PullAPI(API):
     executor = ThreadPoolExecutor(2)
 
     @api
+    def is_pulled(self, env_id):
+        """
+        Check repo is pulled and ready to deploy
+        :param env_id:
+        :return:
+        """
+        try:
+            env = Environment.get(Environment.id == int(env_id))
+        except Environment.DoesNotExist:
+            return False
+        playbook = os.path.join(env.playbook_path, "ansible", "site.yml")
+        return os.path.exists(playbook)
+
+    @api
     def start_job(self, env_id):
         try:
             env = Environment.get(Environment.id == int(env_id))

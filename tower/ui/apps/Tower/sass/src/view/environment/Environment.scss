@@ -12,7 +12,7 @@ $skipped-color: grey;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .5em;
+  border-radius: 1em;
   color: #ffffff;
 }
 
@@ -58,4 +58,10 @@ $skipped-color: grey;
 
 .ansible-skipping {
   color: $skipped-color;
+}
+
+.deploy-log .x-autocontainer-innerCt {
+  font-family: monospace;
+  line-height: 14px;
+  white-space: pre;
 }

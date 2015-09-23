@@ -50,6 +50,7 @@ class DeployHandler(BaseHandler):
             self.env = Environment.get(Environment.name == env_name)
         except Environment.DoesNotExist:
             raise tornado.web.HTTPError(404)
+        playbook = os.path.join(self.env.playbook_path, "ansible", "site.yml")
         logger.info("Running deploy on %s", self.env.name)
         with db.atomic():
             self.job_log = JobLog(
@@ -64,7 +65,7 @@ class DeployHandler(BaseHandler):
             [
                 "./bin/ansible-playbook",
                 "-i", "./bin/tower-inv",
-                os.path.join(self.env.playbook_path, "ansible", "site.yml")
+                playbook
             ],
             env={
                 "NOC_ENV": str(self.env.name)
