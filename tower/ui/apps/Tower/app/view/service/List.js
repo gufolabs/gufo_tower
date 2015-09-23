@@ -120,6 +120,13 @@ Ext.define("Tower.view.service.List", {
                     listeners: {
                         select: "onSelect"
                     }
+                },
+                "-",
+                {
+                    xtype: "button",
+                    text: "Summary",
+                    iconCls: "x-fa fa-table",
+                    handler: "onShowPivot"
                 }
             ]
         }

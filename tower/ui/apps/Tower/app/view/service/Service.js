@@ -6,7 +6,8 @@ Ext.define("Tower.view.service.Service",{
     requires: [
         "Tower.view.service.ServiceController",
         "Tower.view.service.ServiceModel",
-        "Tower.view.service.List"
+        "Tower.view.service.List",
+        "Tower.view.service.Pivot"
     ],
 
     controller: "service-service",
@@ -27,6 +28,9 @@ Ext.define("Tower.view.service.Service",{
     items: [
         {
             xtype: "app-service-list"
+        },
+        {
+            xtype: "app-service-pivot"
         }
     ],
 
