@@ -8,11 +8,10 @@
 
 # Python
 import os
-import subprocess
 import hashlib
 import base64
 import logging
-import shutil
+from collections import defaultdict
 # Third-party modules
 from peewee import CharField, TextField, DateTimeField
 from playhouse.signals import Model
@@ -102,6 +101,7 @@ class Environment(Model):
         :return:
         """
         from node import Node
+        from service import Service
 
         repo = Settings.get_url()
         if not repo.endswith("/"):
@@ -144,9 +144,16 @@ class Environment(Model):
             }
         }
         #
+        service_data = defaultdict(list)
+        service_nodes = defaultdict(list)
         with db.atomic():
             nodes = list(Node.select().where(Node.environment == self))
-        #
+            for s in Service.select().where(Service.environment == self):
+                if s.n_instances > 0:
+                    service_data[s.service] += [s]
+        for s in service_data:
+            service_nodes[s] = sorted(set(sd.node.name for sd in service_data[s]))
+        # Hosts variables
         for node in nodes:
             r["nodes"]["hosts"] += [node.name]
             r["_meta"]["hostvars"][node.name] = {
@@ -163,6 +170,12 @@ class Environment(Model):
             # @todo: noc_svc_<name>_loglevel
             # @todo: num instances
             # @todo: Import node data from system inventory
+        # Service groups
+        all_services = [s["id"] for s in self.get_services_description()]
+        for s in all_services:
+            r["svc-%s" % s] = {
+                "hosts": service_nodes[s]
+            }
         return r
 
     @property
@@ -187,3 +200,18 @@ class Environment(Model):
     @property
     def repo_path(self):
         return os.path.join("var", "tower", "repo", self.repo_hash)
+
+    def get_services_description(self):
+        import yaml
+        # Load services description
+        if not os.path.exists(self.services_path):
+            return []
+        with open(self.services_path) as f:
+            d = yaml.load(f)
+        r = [{
+                 "id": n,
+                 "name": n,
+                 "description": d["services"][n]["description"],
+                 "level": d["services"][n]["level"]
+             } for n in sorted(d["services"])]
+        return r

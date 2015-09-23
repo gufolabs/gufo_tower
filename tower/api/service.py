@@ -32,25 +32,11 @@ class ServiceAPI(API):
             }
         return {
             "success": True,
-            "services": self.get_services(env),
+            "services": env.get_services_description(),
             "pools": self.get_pools(env),
             "nodes": self.get_nodes(env),
             "svccfg": self.get_svccfg(env)
         }
-
-    def get_services(self, env):
-        # Load services description
-        if not os.path.exists(env.services_path):
-            return []
-        with open(env.services_path) as f:
-            d = yaml.load(f)
-        r = [{
-                 "id": n,
-                 "name": n,
-                 "description": d["services"][n]["description"],
-                 "level": d["services"][n]["level"]
-             } for n in sorted(d["services"])]
-        return r
 
     def get_pools(self, env):
         data = [{"id": 0, "name": "GLOBAL"}]
