@@ -136,7 +136,9 @@ class Environment(Model):
                     "noc_mongo_replicaset": self.mongo_rs,
                     "noc_mongo_storageengine": self.mongo_engine,
                     "noc_mongo_user": self.mongo_user,
-                    "noc_mongo_password": self.mongo_password
+                    "noc_mongo_password": self.mongo_password,
+                    # Tower local settings
+                    "tower_data": self.data_path
                 }
             },
             "_meta": {
@@ -159,6 +161,7 @@ class Environment(Model):
             r["_meta"]["hostvars"][node.name] = {
                 "ansible_ssh_host": node.address,
                 "ansible_ssh_user": node.login_as,
+                "node_id": node.id,
                 "noc_dc": node.datacenter.name
             }
             dcn = "dc-%s" % node.datacenter.name
@@ -200,6 +203,12 @@ class Environment(Model):
     @property
     def repo_path(self):
         return os.path.join("var", "tower", "repo", self.repo_hash)
+
+    @property
+    def data_path(self):
+        return os.path.abspath(
+            os.path.join("var", "tower", "data", self.name)
+        )
 
     def get_services_description(self):
         import yaml

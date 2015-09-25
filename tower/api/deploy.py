@@ -50,7 +50,6 @@ class DeployHandler(BaseHandler):
             self.env = Environment.get(Environment.name == env_name)
         except Environment.DoesNotExist:
             raise tornado.web.HTTPError(404)
-        playbook = os.path.join(self.env.playbook_path, "ansible", "site.yml")
         logger.info("Running deploy on %s", self.env.name)
         with db.atomic():
             self.job_log = JobLog(
@@ -61,17 +60,24 @@ class DeployHandler(BaseHandler):
             )
             self.job_log.save()
         self.write("Starting job #%d\n\n" % self.job_log.id)
+        bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
+        ansible_ssh_cp = os.path.join(
+            os.environ["HOME"],
+            ".ansible/cp/%%r-%%h-%%r"
+        )
         self.sp = tornado.process.Subprocess(
             [
-                "./bin/ansible-playbook",
-                "-i", "./bin/tower-inv",
-                playbook
+                os.path.join(bin_path, "ansible-playbook"),
+                "-i", os.path.join(bin_path, "tower-inv"),
+                "site.yml"
             ],
             env={
-                "NOC_ENV": str(self.env.name)
+                "NOC_ENV": str(self.env.name),
+                "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp
             },
             stdout=tornado.process.Subprocess.STREAM,
-            stderr=subprocess.STDOUT
+            stderr=subprocess.STDOUT,
+            cwd=os.path.join(self.env.playbook_path, "ansible")
         )
         self.sp.stdout.set_close_callback(self.on_stream_close)
         self.read_future = self.sp.stdout.read_bytes(
