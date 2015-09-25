@@ -183,8 +183,8 @@ Ext.define('Tower.view.environment.EnvironmentController', {
             });
             ct = ct.replace(me.rxDeployLine, function (x) {
                 var c = x.split(":")[0];
-                if (x === "fatal") {
-                    x = "failed";
+                if (c === "fatal") {
+                    c = "failed";
                 }
                 return "<span class='ansible-" + c + "'>" + x + "</span>";
             });
