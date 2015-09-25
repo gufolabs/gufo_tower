@@ -19,11 +19,11 @@ Ext.define("Tower.view.environment.Deploy", {
     ],
     header: {
         bind: {
-            html: "Deploy: {deployText} " +
-                  "<span class='ansible-ok-tag' title='ok'>{nOk}</span> " +
+            html: "<span class='ansible-ok-tag' title='ok'>{nOk}</span> " +
                   "<span class='ansible-changed-tag' title='changed'>{nChanged}</span> " +
                   "<span class='ansible-unreachable-tag' title='unreachable'>{nUnreachable}</span> " +
-                  "<span class='ansible-failed-tag' title='failed'>{nFailed}</span>"
+                  "<span class='ansible-failed-tag' title='failed'>{nFailed}</span> " +
+                  "Deploy: <span class='x-fa {deployGlyphCls}'></span> {deployText}"
         }
     },
     autoScroll: true,

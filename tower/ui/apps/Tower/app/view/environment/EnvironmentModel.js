@@ -22,9 +22,24 @@ Ext.define('Tower.view.environment.EnvironmentModel', {
         },
         deployText: function(get) {
             if(get("deployStatus")) {
-                return "Complete";
+                if(get("nFailed")) {
+                    return "Failed";
+                } else {
+                    return "Complete";
+                }
             } else {
                 return "Running";
+            }
+        },
+        deployGlyphCls: function(get) {
+            if(get("deployStatus")) {
+                if(get("nFailed")) {
+                    return "fa-exclamation-triangle";
+                } else {
+                    return "fa-check";
+                }
+            } else {
+                return "fa-spinner fa-spin";
             }
         }
     }
