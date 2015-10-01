@@ -137,6 +137,8 @@ class Environment(Model):
                     "noc_mongo_storageengine": self.mongo_engine,
                     "noc_mongo_user": self.mongo_user,
                     "noc_mongo_password": self.mongo_password,
+                    "noc_mongo_admin_user": "root",
+                    "noc_mongo_admin_password": self.mongo_password,
                     # Tower local settings
                     "tower_data": self.data_path
                 }
@@ -179,6 +181,22 @@ class Environment(Model):
             r["svc-%s" % s] = {
                 "hosts": service_nodes[s]
             }
+        # Calculate mongo primary and arbiters
+        if "mongod" in service_data:
+            # Elect master
+            # As node with largest n_instances
+            # and lowest address
+            pri = sorted(
+                service_data["mongod"],
+                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.address.split(".")]
+            )[0]
+            r["svc-mongod-master"] = {
+                "hosts": [pri.node.name]
+            }
+            # Add arbiter node when necessary
+            r["svc-mongod-arbiter"] = {"hosts": []}
+            if not len(service_data["mongod"]) % 2:
+                r["svc-mongod-arbiter"]["hosts"] = [pri.node.name]
         return r
 
     @property
