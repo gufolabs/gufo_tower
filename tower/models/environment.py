@@ -197,6 +197,18 @@ class Environment(Model):
             r["svc-mongod-arbiter"] = {"hosts": []}
             if not len(service_data["mongod"]) % 2:
                 r["svc-mongod-arbiter"]["hosts"] = [pri.node.name]
+        # Calculate postgres primary
+        if "postgres" in service_data:
+            # Elect master
+            # As node with largest n_instances
+            # and lowest address
+            pri = sorted(
+                service_data["postgres"],
+                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.address.split(".")]
+            )[0]
+            r["svc-postgres-master"] = {
+                "hosts": [pri.node.name]
+            }
         return r
 
     @property

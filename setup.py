@@ -39,7 +39,7 @@ class TowerSdist(sdist):
 def main():
     kwargs = {}
 
-    with open("README.rst") as f:
+    with open("Readme.md") as f:
         kwargs["long_description"] = f.read()
 
     with open("VERSION") as f:
