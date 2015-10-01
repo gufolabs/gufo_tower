@@ -148,7 +148,7 @@ Ext.define('Tower.view.environment.EnvironmentController', {
                 match, t, ct,
                 dOk = 0, dChanged = 0, dUnreachable = 0, dFailed = 0;
             // Process only last chunk
-            t = ft.substr(offset);
+            t = Ext.util.Format.htmlEncode(ft.substr(offset));
             offset = ft.length;
             // Get progress
             while (match = me.rxDeployProgress.exec(t)) {
