@@ -50,6 +50,9 @@ class Environment(Model):
     repo = CharField(default="https://bitbucket.org/nocproject/noc")
     branch = CharField(default="default")
     changeset = CharField(default="tip")
+    # Web settings
+    web_host = CharField(default="127.0.0.1:8000")
+    # @todo: Certificate
     # PostgreSQL settings
     pg_db = CharField(default="noc")
     pg_user = CharField(default="noc")
@@ -79,6 +82,7 @@ class Environment(Model):
             "repo": self.repo,
             "branch": self.branch,
             "changeset": self.changeset,
+            "web_host": self.web_host,
             "pg_db": self.pg_db,
             "pg_user": self.pg_user,
             "pg_password": self.pg_password,
@@ -127,6 +131,8 @@ class Environment(Model):
                     "noc_branch": self.branch,
                     "noc_changeset": self.changeset,
                     "noc_revision": revision,
+                    # Web settions
+                    "noc_web_host": self.web_host,
                     # Postgres settings
                     "noc_pg_db": self.pg_db,
                     "noc_pg_user": self.pg_user,
@@ -140,7 +146,12 @@ class Environment(Model):
                     "noc_mongo_admin_user": "root",
                     "noc_mongo_admin_password": self.mongo_password,
                     # Tower local settings
-                    "tower_data": self.data_path
+                    "tower_data": self.data_path,
+                    # All services
+                    "noc_all_services": [
+                        s["id"] for s in self.get_services_description()
+                        if not s.get("system")
+                    ]
                 }
             },
             "_meta": {
@@ -248,9 +259,10 @@ class Environment(Model):
         with open(self.services_path) as f:
             d = yaml.load(f)
         r = [{
-                 "id": n,
-                 "name": n,
-                 "description": d["services"][n]["description"],
-                 "level": d["services"][n]["level"]
-             } for n in sorted(d["services"])]
+            "id": n,
+            "name": n,
+            "description": d["services"][n]["description"],
+            "level": d["services"][n]["level"],
+            "system": d["services"][n].get("system", False)
+        } for n in sorted(d["services"])]
         return r

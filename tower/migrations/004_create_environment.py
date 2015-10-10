@@ -28,6 +28,8 @@ class Environment(Model):
     repo = CharField(default="https://bitbucket.org/nocproject/noc")
     branch = CharField(default="default")
     changeset = CharField(default="tip")
+    # Web settings
+    web_host = CharField(default="127.0.0.1:8000")
     # PostgreSQL settings
     pg_db = CharField(default="noc")
     pg_user = CharField(default="noc")
