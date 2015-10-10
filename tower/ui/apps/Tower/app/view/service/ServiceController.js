@@ -129,7 +129,6 @@ Ext.define('Tower.view.service.ServiceController', {
                     Ext.String.format("<td>{0}</td>", d)
                 );
             };
-        console.log(me.svcCfg.svccfg);
         // Calculate amount of services
         Ext.each(me.svcCfg.services, function (s) {
             if (s.level == "pool") {
@@ -200,7 +199,7 @@ Ext.define('Tower.view.service.ServiceController', {
                                 pushTd("<i class='x-fa fa-check'></i>");
                                 break;
                             default:
-                                pushTd("" + v);
+                                pushTd("" + ni);
                         }
 
                     }
