@@ -108,6 +108,24 @@ Ext.define("Tower.view.environment.Form", {
         },
         {
             xtype: "fieldset",
+            title: "Web",
+            layout: "hbox",
+            defaults: {
+                labelAlign: "top",
+                padding: "0 2 0 0"
+            },
+            items: [
+                {
+                    name: "web_host",
+                    xtype: "textfield",
+                    fieldLabel: "Host",
+                    value: "127.0.0.1:8000",
+                    width: 200
+                }
+            ]
+        },
+        {
+            xtype: "fieldset",
             title: "System",
             layout: "hbox",
             defaults: {
