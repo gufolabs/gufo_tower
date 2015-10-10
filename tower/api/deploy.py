@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 class DeployHandler(BaseHandler):
     SUPPORTED_METHODS = ("GET",)
-    BUFFSIZE = 65536
+    BUFFSIZE = 1048576
 
     rx_recap = re.compile(
         r"^(\S+)\s*:\s+"
@@ -97,9 +97,16 @@ class DeployHandler(BaseHandler):
             self.job_log.save()
 
     def on_data(self, data):
-        logger.debug("DATA: '%s'", data)
+        def qlog(x):
+            if x.endswith("\n"):
+                return x[:-1]
+            else:
+                return x
+
+        logger.debug("PROGRESS: %s", qlog(data))
         self.write(data)
         self.flush()
+        self.job_log.append_log(data)
         for match in self.rx_recap.finditer(data):
             g = match.groups()
             self.recap[g[0]] = [int(x) for x in g[1:]]

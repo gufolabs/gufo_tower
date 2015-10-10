@@ -6,6 +6,8 @@
 ## See LICENSE for details
 ##----------------------------------------------------------------------
 
+# Python modules
+import os
 # Third-party modules
 from peewee import (Model, CharField, TextField, ForeignKeyField,
                     DateTimeField, IntegerField, BooleanField)
@@ -30,3 +32,19 @@ class JobLog(Model):
     n_changed = IntegerField(default=0)
     n_unreachable = IntegerField(default=0)
     n_failed = IntegerField(default=0)
+
+    @property
+    def log_path(self):
+        return os.path.join("var", "tower", "log", "jobs", "%s.log" % self.id)
+
+    def append_log(self, data):
+        with open(self.log_path, "a") as f:
+            f.write(data)
+
+    def get_log(self):
+        path = self.log_path
+        if os.path.exists(path):
+            with open(path) as f:
+                return f.read()
+        else:
+            return ""
