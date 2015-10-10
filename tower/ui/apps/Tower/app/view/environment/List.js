@@ -31,6 +31,14 @@ Ext.define("Tower.view.environment.List", {
             }
         },
         {
+            text: "URL",
+            dataIndex: "web_host",
+            width: 150,
+            renderer: function(v) {
+                return "<a target='_' href='https://" + v + "/'>" + v + "</a>";
+            }
+        },
+        {
             text: "Description",
             dataIndex: "description",
             flex: 1
