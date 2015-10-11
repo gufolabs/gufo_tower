@@ -5,6 +5,7 @@ Ext.define("Tower.model.Environment", {
         {name: "name", type: "string"},
         {name: "description", type: "string"},
         {name: "env_type", type: "string"},
+        {name: "installation_name", type: "string"},
         {name: "sys_user", type: "string"},
         {name: "sys_group", type: "string"},
         {name: "sys_prefix", type: "string"},

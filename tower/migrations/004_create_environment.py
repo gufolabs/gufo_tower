@@ -18,6 +18,8 @@ class Environment(Model):
             ("other", "Other")
         ]
     )
+    # Installation name as shown in interface header
+    installation_name = CharField(default="Unconfigured installation")
     # NOC system user
     sys_user = CharField(default="noc")
     # NOC system group

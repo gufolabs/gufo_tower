@@ -40,6 +40,8 @@ class Environment(Model):
             ("other", "Other")
         ]
     )
+    # Installation name as shown in interface header
+    installation_name = CharField(default="Unconfigured installation")
     # NOC system user
     sys_user = CharField(default="noc")
     # NOC system group
@@ -76,6 +78,7 @@ class Environment(Model):
             "name": self.name,
             "description": self.description,
             "env_type": self.env_type,
+            "installation_name": self.installation_name,
             "sys_user": self.sys_user,
             "sys_group": self.sys_group,
             "sys_prefix": self.sys_prefix,
@@ -122,6 +125,7 @@ class Environment(Model):
                 "hosts": [],
                 "vars": {
                     "noc_env": self.name,
+                    "noc_installation_name": self.installation_name,
                     # System settings
                     "noc_root": self.sys_prefix,
                     "noc_user": self.sys_user,
