@@ -109,6 +109,7 @@ class Environment(Model):
         """
         from node import Node
         from service import Service
+        from pool import Pool
 
         repo = Settings.get_url()
         if not repo.endswith("/"):
@@ -155,7 +156,12 @@ class Environment(Model):
                     "noc_all_services": [
                         s["id"] for s in self.get_services_description()
                         if not s.get("system")
-                    ]
+                    ],
+                    # All pools
+                    "noc_all_pools": [{
+                        "name": p.name,
+                        "description": p.description
+                    } for p in Pool.select().where(Pool.environment == self).order_by(Pool.name)]
                 }
             },
             "_meta": {
