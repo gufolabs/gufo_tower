@@ -12,6 +12,9 @@ import sys
 import json
 from optparse import OptionParser
 # Tower modules
+os.chdir(
+    os.path.join(os.path.dirname(sys.argv[0]), "..")
+)
 from tower.models.environment import Environment
 
 
