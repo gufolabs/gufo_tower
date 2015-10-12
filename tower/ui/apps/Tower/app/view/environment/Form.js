@@ -126,7 +126,6 @@ Ext.define("Tower.view.environment.Form", {
                     name: "installation_name",
                     xtype: "textfield",
                     fieldLabel: "Installation Name",
-                    value: "127.0.0.1:8000",
                     width: 300
                 }
             ]
