@@ -62,8 +62,8 @@ class DeployHandler(BaseHandler):
         self.write("Starting job #%d\n\n" % self.job_log.id)
         bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
         ansible_ssh_cp = os.path.join(
-            os.environ["HOME"],
-            ".ansible/cp/%%r-%%h-%%r"
+            os.getcwd(),
+            "var/tower/ansible/cp/%%r-%%h-%%r"
         )
         self.sp = tornado.process.Subprocess(
             [

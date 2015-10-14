@@ -21,7 +21,7 @@ class TowerInstall(install):
     def run(self):
         install.run(self)
         # Create directories
-        for d in ["db", "repo", "log/jobs"]:
+        for d in ["db", "repo", "log/jobs", "ansible/cp"]:
             path = os.path.join(self.prefix, "var", "tower", d)
             if not os.path.exists(path):
                 os.makedirs(path)
