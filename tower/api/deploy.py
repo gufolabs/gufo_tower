@@ -77,7 +77,8 @@ class DeployHandler(BaseHandler):
             },
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
-            cwd=os.path.join(self.env.playbook_path, "ansible")
+            cwd=os.path.join(self.env.playbook_path, "ansible"),
+            close_fds=True
         )
         self.sp.stdout.set_close_callback(self.on_stream_close)
         self.read_future = self.sp.stdout.read_bytes(
