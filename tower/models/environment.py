@@ -12,6 +12,7 @@ import hashlib
 import base64
 import logging
 from collections import defaultdict
+import itertools
 # Third-party modules
 from peewee import CharField, TextField, DateTimeField
 from playhouse.signals import Model
@@ -72,6 +73,8 @@ class Environment(Model):
         ]
     )
 
+    BASE_PORT = 19000
+
     def list_item(self):
         return {
             "id": str(self.id),
@@ -121,6 +124,8 @@ class Environment(Model):
         else:
             revision = self.changeset
 
+        services_description = self.get_services_description()
+        #
         r = {
             "nodes": {
                 "hosts": [],
@@ -154,8 +159,8 @@ class Environment(Model):
                     "tower_data": self.data_path,
                     # All services
                     "noc_all_services": [
-                        s["id"] for s in self.get_services_description()
-                        if not s.get("system")
+                        s["id"] for s in services_description
+                        if s.get("level") != "system"
                     ],
                     # All pools
                     "noc_all_pools": [{
@@ -169,13 +174,16 @@ class Environment(Model):
             }
         }
         #
+        active_services = set(s["id"] for s in services_description)
         service_data = defaultdict(list)
         service_nodes = defaultdict(list)
+        node_services = defaultdict(list)
         with db.atomic():
             nodes = list(Node.select().where(Node.environment == self))
             for s in Service.select().where(Service.environment == self):
-                if s.n_instances > 0:
+                if s.service in active_services and s.n_instances > 0:
                     service_data[s.service] += [s]
+                    node_services[s.node.name] += [s]
         for s in service_data:
             service_nodes[s] = sorted(set(sd.node.name for sd in service_data[s]))
         # Hosts variables
@@ -184,6 +192,7 @@ class Environment(Model):
             r["_meta"]["hostvars"][node.name] = {
                 "ansible_ssh_host": node.address,
                 "ansible_ssh_user": node.login_as,
+                "ansible_ssh_pipelining": True,
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name
             }
@@ -193,11 +202,11 @@ class Environment(Model):
                     "hosts": []
                 }
             r[dcn]["hosts"] += [node.name]
-            # @todo: noc_svc_<name>_loglevel
-            # @todo: num instances
+            for s in node_services[node.name]:
+                r["_meta"]["hostvars"][node.name]["noc_svc_%s_loglevel" % s.service] = s.loglevel
             # @todo: Import node data from system inventory
         # Service groups
-        all_services = [s["id"] for s in self.get_services_description()]
+        all_services = [s["id"] for s in services_description]
         for s in all_services:
             r["svc-%s" % s] = {
                 "hosts": service_nodes[s]
@@ -230,6 +239,65 @@ class Environment(Model):
             r["svc-postgres-master"] = {
                 "hosts": [pri.node.name]
             }
+        # Generate etc/noc.json
+        port_number = defaultdict(
+            lambda: itertools.count(self.BASE_PORT)
+        )
+        cfg = {
+            "services": {},
+            "config": {},
+            "pools": {},
+            "nodes": {}
+        }
+        cfg["config"]["noc"] = {
+            "user": self.sys_user,
+            "group": self.sys_group
+        }
+        for sd in services_description:
+            if sd["name"] not in service_data:
+                continue
+            for d in service_data[sd["name"]]:
+                pool_name = d.pool.name if d.pool else None
+                sp = "%s-%s" % (sd["name"], pool_name) if pool_name else sd["name"]
+                if sp not in cfg["services"]:
+                    cfg["services"][sp] = []
+                # Assign ports
+                port = sd["port"] or port_number[d.node.name].next()
+                listen = "%s:%s" % (d.node.address, port)
+                cfg["services"][sp] += [listen]
+                if not sd["port"] and d.n_instances > 1 and sd["level"] != "system":
+                    # Skip required amount of ports
+                    for i in range(d.n_instances - 1):
+                        cfg["services"][sp] += ["%s:%s" % (
+                            d.node.address,
+                            port_number[d.node.name].next()
+                        )]
+                if sd["level"] == "system":
+                    continue
+                #
+                ncfg = "%s-%s-%s" % (
+                    sd["name"], pool_name or "global", d.node.name
+                )
+                if ncfg not in cfg["config"]:
+                    cfg["config"][ncfg] = {
+                        "listen": listen,
+                        "loglevel": d.loglevel,
+                        "n_instances": d.n_instances
+                    }
+        # Apply pools data
+        with db.atomic():
+            for p in Pool.select().where(Pool.environment == self):
+                cfg["pools"][p.name] = {
+                    "description": p.description
+                }
+        # Apply node data
+        for n in nodes:
+            cfg["nodes"][n.name] = {
+                "address": n.address,
+                "environment": self.name,
+                "datacenter": n.datacenter.name
+            }
+        r["nodes"]["vars"]["noc_config"] = cfg
         return r
 
     @property
@@ -273,6 +341,6 @@ class Environment(Model):
             "name": n,
             "description": d["services"][n]["description"],
             "level": d["services"][n]["level"],
-            "system": d["services"][n].get("system", False)
+            "port": d["services"][n].get("port")
         } for n in sorted(d["services"])]
         return r
