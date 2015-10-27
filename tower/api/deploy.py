@@ -60,6 +60,9 @@ class DeployHandler(BaseHandler):
             )
             self.job_log.save()
         self.write("Starting job #%d\n\n" % self.job_log.id)
+        # Generate ssh keys
+        self.env.build_ssh_keys()
+        # Run playbook
         bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
         ansible_ssh_cp = os.path.join(
             os.getcwd(),
@@ -73,7 +76,8 @@ class DeployHandler(BaseHandler):
             ],
             env={
                 "NOC_ENV": str(self.env.name),
-                "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp
+                "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
+                "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible"
             },
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,

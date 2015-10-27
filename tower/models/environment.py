@@ -13,6 +13,7 @@ import base64
 import logging
 from collections import defaultdict
 import itertools
+import subprocess
 # Third-party modules
 from peewee import CharField, TextField, DateTimeField
 from playhouse.signals import Model
@@ -157,6 +158,7 @@ class Environment(Model):
                     "noc_mongo_admin_password": self.mongo_password,
                     # Tower local settings
                     "tower_data": self.data_path,
+                    "tower_ssh_keys": self.ssh_keys_path,
                     # All services
                     "noc_all_services": [
                         s["id"] for s in services_description
@@ -329,6 +331,12 @@ class Environment(Model):
             os.path.join("var", "tower", "data", self.name)
         )
 
+    @property
+    def ssh_keys_path(self):
+        return os.path.abspath(
+            os.path.join("var", "tower", "ssh", self.name)
+        )
+
     def get_services_description(self):
         import yaml
         # Load services description
@@ -344,3 +352,29 @@ class Environment(Model):
             "port": d["services"][n].get("port")
         } for n in sorted(d["services"])]
         return r
+
+    def build_ssh_keys(self):
+        """
+        Generate all necessary ssh keys
+        """
+        from pool import Pool
+        key_types = [("rsa", 4096)]
+
+        if not os.path.isdir(self.ssh_keys_path):
+            logging.info("Create directory %s", self.ssh_keys_path)
+            os.makedirs(self.ssh_keys_path)
+        for pool in Pool.select().where(Pool.environment == self):
+            prefix = os.path.join(self.ssh_keys_path, pool.name)
+            if not os.path.isdir(prefix):
+                logging.info("Create directory %s", prefix)
+                os.mkdir(prefix, 0o0700)
+            for t, b in key_types:
+                fn = os.path.join(prefix, "id_%s" % t)
+                if not os.path.isfile(fn):
+                    logging.info("Generating %s key for pool %s",
+                                 t, pool.name)
+                    subprocess.check_call(
+                        ["ssh-keygen", "-q", "-t", t, "-b", str(b),
+                         "-f", fn,
+                         "-N", "", "-C", "%s@noc" % pool.name]
+                    )
