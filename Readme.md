@@ -20,7 +20,7 @@ $ virtualenv .
  - Install tower
 ```
 #!shell
-$ ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a3.tar.gz
+$ ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a7.tar.gz
 ```
 
  - Run tower
@@ -30,5 +30,5 @@ $ TOWER_REPO_URL=http://<IP>:8888/hg ./bin/tower-web
 ```
  where <IP> is external IP address of your tower server
 
- - Enter the magical mistery tower
-   Open http://<IP>:8888/ in your browser. Login as admin/admin
+ - Enter the magical mistery tower.
+   Open http://IP:8888/ in your browser. Login as admin/admin
