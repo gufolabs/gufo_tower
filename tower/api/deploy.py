@@ -68,17 +68,19 @@ class DeployHandler(BaseHandler):
             os.getcwd(),
             "var/tower/ansible/cp/%%r-%%h-%%r"
         )
+        env = os.environ.copy()
+        env.update({
+            "NOC_ENV": str(self.env.name),
+            "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
+            "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible"
+        })
         self.sp = tornado.process.Subprocess(
             [
                 os.path.join(bin_path, "ansible-playbook"),
                 "-i", os.path.join(bin_path, "tower-inv"),
                 "site.yml"
             ],
-            env={
-                "NOC_ENV": str(self.env.name),
-                "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
-                "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible"
-            },
+            env=env,
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
             cwd=os.path.join(self.env.playbook_path, "ansible"),
