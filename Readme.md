@@ -20,7 +20,7 @@ $ virtualenv .
  - Install tower
 ```
 #!shell
-$ ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a7.tar.gz
+$ ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a8.tar.gz
 ```
 
  - Run tower
