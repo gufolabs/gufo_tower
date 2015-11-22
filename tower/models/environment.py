@@ -217,7 +217,7 @@ class Environment(Model):
             # and lowest address
             pri = sorted(
                 service_data["mongod"],
-                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.address.split(".")]
+                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.address.split(":")[0].split(".")]
             )[0]
             r["svc-mongod-master"] = {
                 "hosts": [pri.node.name]
@@ -233,7 +233,7 @@ class Environment(Model):
             # and lowest address
             pri = sorted(
                 service_data["postgres"],
-                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.address.split(".")]
+                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.address.split(":")[0].split(".")]
             )[0]
             r["svc-postgres-master"] = {
                 "hosts": [pri.node.name]
