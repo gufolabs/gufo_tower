@@ -15,7 +15,8 @@ class SettingsAPI(API):
     name = "Settings"
 
     DEFAULTS = {
-        "url": "http://example.com/"
+        "url": "http://example.com/",
+        "repo_url": "http://example.com/hg"
     }
 
     @api
@@ -25,6 +26,8 @@ class SettingsAPI(API):
         :return:
         """
         r = self.DEFAULTS.copy()
+        r["url"] = "http://%s/" % self.handler.request.headers["Host"]
+        r["repo_url"] = "%shg" % r["url"]
         r.update(Settings.get_items(list(self.DEFAULTS)))
         return r
 

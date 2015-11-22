@@ -79,3 +79,14 @@ class Settings(Model):
             return Settings.get_item("url")
         except KeyError:
             return None
+
+    @classmethod
+    def get_repo_url(cls):
+        """
+        Return tower's URL
+        :return:
+        """
+        try:
+            return Settings.get_item("repo_url")
+        except KeyError:
+            return None

@@ -24,6 +24,14 @@ Ext.define("Tower.view.settings.Settings",{
             fieldLabel: "Base URL",
             anchor: "100%",
             allowBlank: false
+        },
+
+        {
+            xtype: "textfield",
+            name: "repo_url",
+            fieldLabel: "Repo URL",
+            anchor: "100%",
+            allowBlank: false
         }
     ],
 

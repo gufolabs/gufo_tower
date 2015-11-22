@@ -115,10 +115,7 @@ class Environment(Model):
         from service import Service
         from pool import Pool
 
-        repo = Settings.get_url()
-        if not repo.endswith("/"):
-            repo += "/"
-        repo += "hg/%s" % self.repo_hash
+        repo = Settings.get_repo_url()
 
         if self.changeset == "tip":
             revision = self.branch
