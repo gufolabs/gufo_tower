@@ -29,7 +29,7 @@ NOC (http://nocproject.org/) installations.
  - Install Tower
 ```
 #!shell
-/opt/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a9.tar.gz
+/opt/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a10.tar.gz
 /opt/tower# chown -R tower var/
 ```
  - Generate Tower ssh keys
