@@ -11,6 +11,15 @@ NOC (http://nocproject.org/) installations.
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 ```
 
+### FreeBSD
+```
+#!shell
+# pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite ca_root_nss
+# pw groupadd -n tower
+# pw useradd -g tower -s /bin/sh -d /home/tower -n tower -m
+```
+
+
 ## Installation
  - Create Tower directory
 
@@ -29,7 +38,7 @@ NOC (http://nocproject.org/) installations.
  - Install Tower
 ```
 #!shell
-/opt/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a10.tar.gz
+/opt/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a11.tar.gz
 /opt/tower# chown -R tower var/
 ```
  - Generate Tower ssh keys
@@ -42,14 +51,6 @@ NOC (http://nocproject.org/) installations.
 ```
 #!shell
 /opt/tower# su - tower -c "cd /opt/tower && ./bin/tower-web"
-```
-
-### FreeBSD
-```
-#!shell
-# pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite ca_root_nss
-# pw groupadd -n tower
-# pw useradd -g tower -s /bin/sh -d /home/tower -n tower -m
 ```
 
 ## Installation
