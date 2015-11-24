@@ -85,7 +85,7 @@ NOC (http://nocproject.org/) installations.
 /usr/local/tower# su - tower -c "cd /usr/local/tower && ./bin/tower-web"
 ```
 
-
+## Deploying
 
  - Enter the magical mistery tower.
    Open http://<IP>:8888/ in your browser. Login as admin/admin
