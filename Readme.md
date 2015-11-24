@@ -44,6 +44,49 @@ NOC (http://nocproject.org/) installations.
 /opt/tower# su - tower -c "cd /opt/tower && ./bin/tower-web"
 ```
 
+### FreeBSD
+```
+#!shell
+# pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite ca_root_nss
+# pw groupadd -n tower
+# pw useradd -g tower -s /bin/sh -d /home/tower -n tower -m
+```
+
+## Installation
+ - Create Tower directory
+
+```
+#!shell
+# mkdir /usr/local/tower
+# cd /usr/local/tower
+```
+
+ - Create virtualenv
+```
+#!shell
+/usr/local/tower# virtualenv .
+```
+
+ - Install Tower
+```
+#!shell
+/usr/local/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a10.tar.gz
+/usr/local/tower# chown -R tower var/
+```
+ - Generate Tower ssh keys
+```
+#!shell
+/usr/local/tower# su - tower -c "ssh-keygen -t rsa -b 4096"
+```
+
+ - Run Tower
+```
+#!shell
+/usr/local/tower# su - tower -c "cd /usr/local/tower && ./bin/tower-web"
+```
+
+
+
  - Enter the magical mistery tower.
    Open http://<IP>:8888/ in your browser. Login as admin/admin
 
