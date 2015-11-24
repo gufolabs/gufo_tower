@@ -76,7 +76,7 @@ NOC (http://nocproject.org/) installations.
  - Generate Tower ssh keys
 ```
 #!shell
-/usr/local/tower# su - tower -c "ssh-keygen -t rsa -b 4096"
+/usr/local/tower# su - tower -c "ssh-keygen -t dsa -b 1024"
 ```
 
  - Run Tower
