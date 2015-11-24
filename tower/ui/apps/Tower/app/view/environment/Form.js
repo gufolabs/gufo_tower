@@ -59,6 +59,7 @@ Ext.define("Tower.view.environment.Form", {
             xtype: "textarea",
             fieldLabel: "Description",
             allowBlank: true,
+            height: 60,
             anchor: "100%"
         },
         {
@@ -126,6 +127,7 @@ Ext.define("Tower.view.environment.Form", {
                     name: "installation_name",
                     xtype: "textfield",
                     fieldLabel: "Installation Name",
+                    emptyText: "Unconfigured Installation",
                     width: 300
                 }
             ]
