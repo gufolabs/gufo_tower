@@ -116,6 +116,9 @@ class Environment(Model):
         from pool import Pool
 
         repo = Settings.get_repo_url()
+        if not repo.endswith("/"):
+            repo += "/"
+        repo += "%s" % self.repo_hash
 
         if self.changeset == "tip":
             revision = self.branch
@@ -187,9 +190,16 @@ class Environment(Model):
             service_nodes[s] = sorted(set(sd.node.name for sd in service_data[s]))
         # Hosts variables
         for node in nodes:
+            if ":" in node.address:
+                ssh_host, ssh_port = node.address.split(":")
+                ssh_port = int(ssh_port)
+            else:
+                ssh_host = node.address
+                ssh_port = 22
             r["nodes"]["hosts"] += [node.name]
             r["_meta"]["hostvars"][node.name] = {
-                "ansible_ssh_host": node.address,
+                "ansible_ssh_host": ssh_host,
+                "ansible_ssh_port": ssh_port,
                 "ansible_ssh_user": node.login_as,
                 "ansible_ssh_pipelining": True,
                 "node_id": node.id,
