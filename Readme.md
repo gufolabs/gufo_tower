@@ -22,7 +22,6 @@ NOC (http://nocproject.org/) installations.
 
 ## Installation
 ### Debian
-```
  - Create Tower directory
 
 ```
@@ -56,7 +55,6 @@ NOC (http://nocproject.org/) installations.
 ```
 
 ### FreeBSD
-```
  - Create Tower directory
 
 ```
