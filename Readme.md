@@ -21,6 +21,8 @@ NOC (http://nocproject.org/) installations.
 
 
 ## Installation
+### Debian
+```
  - Create Tower directory
 
 ```
@@ -53,7 +55,8 @@ NOC (http://nocproject.org/) installations.
 /opt/tower# su - tower -c "cd /opt/tower && ./bin/tower-web"
 ```
 
-## Installation
+### FreeBSD
+```
  - Create Tower directory
 
 ```
