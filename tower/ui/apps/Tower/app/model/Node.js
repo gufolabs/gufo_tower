@@ -2,7 +2,8 @@ Ext.define("Tower.model.Node", {
     extend: "Ext.data.Model",
     requires: [
         "Tower.model.Environment",
-        "Tower.model.Datacenter"
+        "Tower.model.Datacenter",
+        "Tower.model.NodeType"
     ],
     fields: [
         {name: "id", type: "string"},
@@ -24,6 +25,34 @@ Ext.define("Tower.model.Node", {
                     };
                 }
                 m = Tower.model.Datacenter.create();
+                m.set(value);
+                return m;
+            },
+            serialize: function(value, record) {
+                if(!value) {
+                    return null;
+                }
+                if(value.id) {
+                    return value.id;
+                } else {
+                    return value;
+                }
+            }
+        },
+        {
+            name: "node_type",
+            type: "auto",
+            convert: function(value, record) {
+                var m;
+                if(!value) {
+                    return null;
+                }
+                if(!value.id) {
+                    value = {
+                        id: value
+                    };
+                }
+                m = Tower.model.NodeType.create();
                 m.set(value);
                 return m;
             },

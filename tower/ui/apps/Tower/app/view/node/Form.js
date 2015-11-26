@@ -9,7 +9,8 @@ Ext.define("Tower.view.node.Form", {
         "Ext.form.field.TextArea",
         "Ext.form.field.ComboBox",
         "Ext.form.FieldSet",
-        "Tower.store.Datacenter"
+        "Tower.store.Datacenter",
+        "Tower.store.NodeType"
     ],
 
     header: {
@@ -63,7 +64,8 @@ Ext.define("Tower.view.node.Form", {
             },
             fieldLabel: "Datacenter",
             valueField: "id",
-            displayField: "name"
+            displayField: "name",
+            allowBlank: false
         },
         {
             name: "description",
@@ -81,6 +83,17 @@ Ext.define("Tower.view.node.Form", {
                 padding: "0 2 0 0"
             },
             items: [
+                {
+                    name: "node_type",
+                    xtype: "combobox",
+                    store: {
+                        type: "nodetype"
+                    },
+                    fieldLabel: "Node Type",
+                    valueField: "id",
+                    displayField: "name",
+                    allowBlank: false
+                },
                 {
                     name: "address",
                     xtype: "textfield",

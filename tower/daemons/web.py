@@ -21,6 +21,7 @@ from tower.api.login import LoginAPI
 from tower.api.environment import EnvironmentAPI
 from tower.api.datacenter import DatacenterAPI
 from tower.api.pool import PoolAPI
+from tower.api.nodetype import NodeType
 from tower.api.node import NodeAPI
 from tower.api.service import ServiceAPI
 from tower.api.pull import PullAPI

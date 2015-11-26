@@ -197,14 +197,17 @@ class Environment(Model):
                 ssh_host = node.address
                 ssh_port = 22
             r["nodes"]["hosts"] += [node.name]
-            r["_meta"]["hostvars"][node.name] = {
+            hostvars = {
                 "ansible_ssh_host": ssh_host,
                 "ansible_ssh_port": ssh_port,
                 "ansible_ssh_user": node.login_as,
-                "ansible_ssh_pipelining": True,
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name
             }
+            hv = node.get_vars()
+            if hv:
+                hostvars.update(hv)
+            r["_meta"]["hostvars"][node.name] = hostvars
             dcn = "dc-%s" % node.datacenter.name
             if dcn not in r:
                 r[dcn] = {

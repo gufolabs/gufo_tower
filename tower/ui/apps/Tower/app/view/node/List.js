@@ -14,6 +14,22 @@ Ext.define("Tower.view.node.List", {
         {
             text: "Datacenter",
             dataIndex: "datacenter",
+            width: 150,
+            renderer: function(v) {
+                if(!v) {
+                    return "-";
+                }
+                if(v.get) {
+                    return v.get("name");
+                } else {
+                    return "" + v;
+                }
+            }
+        },
+        {
+            text: "Node Type",
+            dataIndex: "node_type",
+            width: 100,
             renderer: function(v) {
                 if(!v) {
                     return "-";
