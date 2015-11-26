@@ -3,7 +3,7 @@ NOC Tower is the tool for deployment and maintaining multiple
 NOC (http://nocproject.org/) installations.
 
 ## Preparation
-### Debian
+### Linux
 ```
 #!shell
 # apt-get install python-virtualenv libffi6 libffi-dev python-dev gcc
@@ -16,11 +16,15 @@ NOC (http://nocproject.org/) installations.
 #!shell
 # pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite ca_root_nss
 # pw groupadd -n tower
-# pw useradd -g tower -s /bin/sh -d /home/tower -n tower -m
+# pw useradd -g tower -s /bin/csh -d /home/tower -n tower -m
 ```
 
 
 ## Installation
+Tower is installed into /opt/tower directory by default, though you
+can use arbitrary directory (i.e. /usr/local/tower) as well.
+Replace /opt/tower/ to directory of your choice
+
  - Create Tower directory
 
 ```
@@ -53,39 +57,6 @@ NOC (http://nocproject.org/) installations.
 /opt/tower# su - tower -c "cd /opt/tower && ./bin/tower-web"
 ```
 
-## Installation
- - Create Tower directory
-
-```
-#!shell
-# mkdir /usr/local/tower
-# cd /usr/local/tower
-```
-
- - Create virtualenv
-```
-#!shell
-/usr/local/tower# virtualenv .
-```
-
- - Install Tower
-```
-#!shell
-/usr/local/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a13.tar.gz
-/usr/local/tower# chown -R tower var/
-```
- - Generate Tower ssh keys
-```
-#!shell
-/usr/local/tower# su - tower -c "ssh-keygen -t dsa -b 1024"
-```
-
- - Run Tower
-```
-#!shell
-/usr/local/tower# su - tower -c "cd /usr/local/tower && ./bin/tower-web"
-```
-
 ## Deploying
 
  - Enter the magical mistery tower.
@@ -101,5 +72,5 @@ NOC (http://nocproject.org/) installations.
 ## Prepare nodes
 On each node create ansible user (*ansible* by default),
 grant it passwordless sudo privileges and copy Tower's
-public ssh key (/home/tower/.ssh/id_rsa.pub) to *ansible's*
+public ssh key (*/home/tower/.ssh/id_rsa.pub*) to *ansible's*
 *authorized_keys* (*/home/ansible/.ssh/authorized_keys*)
