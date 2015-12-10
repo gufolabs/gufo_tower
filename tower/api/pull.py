@@ -101,7 +101,7 @@ class PullAPI(API):
         try:
             # Pull Repo
             if not os.path.exists(env.repo_path):
-                logging.info("Cloning %s to %s", env.repo, env.repo_path)
+                logger.info("Cloning %s to %s", env.repo, env.repo_path)
                 # Clone directory
                 subprocess.check_call(
                     [
@@ -114,7 +114,7 @@ class PullAPI(API):
                     ]
                 )
             # Pull updates
-            logging.info("Updating %s", env.repo_path)
+            logger.info("Updating %s", env.repo_path)
             subprocess.check_call(
                 [
                     "./bin/hg",
@@ -124,7 +124,7 @@ class PullAPI(API):
                 ]
             )
             # Fetch playbooks
-            logging.info("Updating playbooks")
+            logger.info("Updating playbooks")
             shutil.rmtree(env.playbook_path, ignore_errors=True)
             if env.changeset == "tip":
                 rev = env.branch
@@ -141,11 +141,11 @@ class PullAPI(API):
                     os.path.join("..", "..", "..", "..", env.playbook_path)
                 ]
             )
-            logging.info("Pulling complete")
+            logger.info("Pulling complete")
         except KeyboardInterrupt:
             raise
         except:
-            logging.error("Pull error")
+            logger.error("Pull error")
             status = False
         with db.atomic():
             job.complete_ts = datetime.datetime.now()
