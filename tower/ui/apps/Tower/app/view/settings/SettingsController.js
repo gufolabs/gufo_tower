@@ -28,6 +28,6 @@ Ext.define('Tower.view.settings.SettingsController', {
                     align: "t"
                 });
             }
-        })
+        });
     }
 });

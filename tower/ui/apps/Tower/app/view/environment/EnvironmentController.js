@@ -12,14 +12,21 @@ Ext.define('Tower.view.environment.EnvironmentController', {
     ITEM_INVENTORY: 2,
     ITEM_DEPLOY: 3,
 
+    setActiveItem: function(item) {
+        var me = this;
+        Ext.suspendLayouts();
+        me.getView().getLayout().setActiveItem(item);
+        Ext.resumeLayouts(true);
+    },
+
     showGrid: function () {
         var me = this;
-        me.getView().getLayout().setActiveItem(me.ITEM_GRID);
+        me.setActiveItem(me.ITEM_GRID);
     },
 
     showForm: function () {
         var me = this;
-        me.getView().getLayout().setActiveItem(me.ITEM_FORM);
+        me.setActiveItem(me.ITEM_FORM);
     },
 
     onItemSelected: function (sender, record) {
@@ -100,7 +107,7 @@ Ext.define('Tower.view.environment.EnvironmentController', {
             function (result, status) {
                 var html = "<pre>" + JSON.stringify(result, undefined, 2) + "</pre>";
                 me.lookupReference("inventory").setHtml(html);
-                me.getView().getLayout().setActiveItem(me.ITEM_INVENTORY);
+                me.setActiveItem(me.ITEM_INVENTORY);
             }
         )
     },
@@ -198,7 +205,7 @@ Ext.define('Tower.view.environment.EnvironmentController', {
         xhr.onerror = function () {
             vm.set("deployStatus", true);
         };
-        me.getView().getLayout().setActiveItem(me.ITEM_DEPLOY);
+        me.setActiveItem(me.ITEM_DEPLOY);
         xhr.send();
     },
 

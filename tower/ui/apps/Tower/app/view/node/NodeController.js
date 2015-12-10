@@ -2,14 +2,24 @@ Ext.define('Tower.view.node.NodeController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.node-node',
 
-    showGrid: function() {
+    ITEM_GRID: 0,
+    ITEM_FORM: 1,
+
+    setActiveItem: function(item) {
         var me = this;
-        me.getView().getLayout().setActiveItem(0);
+        Ext.suspendLayouts();
+        me.getView().getLayout().setActiveItem(item);
+        Ext.resumeLayouts(true);
     },
 
-    showForm: function() {
+    showGrid: function () {
         var me = this;
-        me.getView().getLayout().setActiveItem(1);
+        me.setActiveItem(me.ITEM_GRID);
+    },
+
+    showForm: function () {
+        var me = this;
+        me.setActiveItem(me.ITEM_FORM);
     },
 
     onItemSelected: function(sender, record) {

@@ -129,6 +129,13 @@ Ext.define("Tower.view.environment.Form", {
                     fieldLabel: "Installation Name",
                     emptyText: "Unconfigured Installation",
                     width: 300
+                },
+                {
+                    name: "cert",
+                    xtype: "textarea",
+                    width: 300,
+                    fieldLabel: "SSL Cert + Key",
+                    emptyText: "Copy&Paste private key, certificate and all intermediate certificates in PEM format"
                 }
             ]
         },

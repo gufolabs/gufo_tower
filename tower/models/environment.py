@@ -14,6 +14,8 @@ import logging
 from collections import defaultdict
 import itertools
 import subprocess
+import re
+import tempfile
 # Third-party modules
 from peewee import CharField, TextField, DateTimeField
 from playhouse.signals import Model
@@ -56,6 +58,7 @@ class Environment(Model):
     changeset = CharField(default="tip")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
+    cert = TextField(default="")
     # @todo: Certificate
     # PostgreSQL settings
     pg_db = CharField(default="noc")
@@ -90,6 +93,7 @@ class Environment(Model):
             "branch": self.branch,
             "changeset": self.changeset,
             "web_host": self.web_host,
+            "cert": self.cert,
             "pg_db": self.pg_db,
             "pg_user": self.pg_user,
             "pg_password": self.pg_password,
@@ -201,6 +205,7 @@ class Environment(Model):
                 "ansible_ssh_host": ssh_host,
                 "ansible_ssh_port": ssh_port,
                 "ansible_ssh_user": node.login_as,
+                "ansible_python_interpreter": node.node_type.python_interpreter,
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name
             }
@@ -218,11 +223,18 @@ class Environment(Model):
                 r["_meta"]["hostvars"][node.name]["noc_svc_%s_loglevel" % s.service] = s.loglevel
             # @todo: Import node data from system inventory
         # Service groups
-        all_services = [s["id"] for s in services_description]
+        all_services = dict((s["id"], s) for s in services_description)
         for s in all_services:
-            r["svc-%s" % s] = {
-                "hosts": service_nodes[s]
+            scfg = {
+                "hosts": service_nodes[s],
+                "vars": {}
             }
+            if all_services[s]["require_cert"]:
+                (
+                    scfg["noc_ssl_key"],
+                    scfg["noc_ssl_cert"]
+                ) = self.get_ssl_certificate()
+            r["svc-%s" % s] = scfg
         # Calculate mongo primary and arbiters
         if "mongod" in service_data:
             # Elect master
@@ -359,7 +371,8 @@ class Environment(Model):
             "name": n,
             "description": d["services"][n]["description"],
             "level": d["services"][n]["level"],
-            "port": d["services"][n].get("port")
+            "port": d["services"][n].get("port"),
+            "require_cert": bool(d["services"][n].get("require_cert"))
         } for n in sorted(d["services"])]
         return r
 
@@ -388,3 +401,48 @@ class Environment(Model):
                          "-f", fn,
                          "-N", "", "-C", "%s@noc" % pool.name]
                     )
+
+    rx_pk = re.compile(
+        r"-----BEGIN (?P<type>\S*\s*)PRIVATE KEY-----"
+        r".+"
+        r"-----END (?P=type)PRIVATE KEY-----\n?",
+        re.MULTILINE | re.DOTALL
+    )
+
+    def get_ssl_certificate(self):
+        """
+        Returns public and private keys extracted from
+        web server certificate
+
+        :return: (private key, public key)
+        """
+        if not self.cert:
+            self.generate_certificate()
+        match = self.rx_pk.search(self.cert)
+        if not match:
+            raise ValueError("Invalid SSL certificate")
+        priv_key = self.cert[match.start():match.end()]
+        pub_key = self.cert[:match.start()] + self.cert[match.end():]
+        return priv_key, pub_key
+
+    def generate_certificate(self):
+        """
+        Generate self-signed certificate
+        :return:
+        """
+        kf = tempfile.NamedTemporaryFile(delete=True)
+        cf = tempfile.NamedTemporaryFile(delete=True)
+        subprocess.check_call([
+            "openssl", "req", "-x509", "-nodes",
+            "-newkey", "rsa:4096",
+            "-keyout", kf.name,
+            "-out", cf.name,
+            "-days", "3650",
+            "-subj", "/CN=%s" % (self.web_host or "noc")
+        ])
+        r = [
+            kf.read(),
+            cf.read()
+        ]
+        self.cert = "".join(r)
+        self.save()

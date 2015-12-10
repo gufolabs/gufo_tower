@@ -13,6 +13,7 @@ Ext.define("Tower.model.Environment", {
         {name: "branch", type: "string"},
         {name: "changeset", type: "string"},
         {name: "web_host", type: "string"},
+        {name: "cert", type: "string"},
         {name: "pg_db", type: "string"},
         {name: "pg_user", type: "string"},
         {name: "pg_password", type: "string"},
