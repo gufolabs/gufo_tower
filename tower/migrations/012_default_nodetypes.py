@@ -25,14 +25,16 @@ def migrate(migrator):
 
     d = NodeType(
         name="Linux",
-        ssh_pipelining=True
+        ssh_pipelining=True,
+        ansible_connection="ssh"
     )
     d.save()
 
     NodeType(
         name="FreeBSD",
         python_interpreter="/usr/local/bin/python2",
-        ssh_pipelining=True
+        ssh_pipelining=True,
+        ansible_connection="ssh"
     ).save()
 
     for n in Node.select():
