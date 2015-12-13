@@ -77,7 +77,9 @@ class DeployHandler(BaseHandler):
         env.update({
             "NOC_ENV": str(self.env.name),
             "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
-            "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible"
+            "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
+            "ANSIBLE_HOST_KEY_CHECKING": "False",
+            "PYTHONUNBUFFERED": "1"
         })
         self.sp = tornado.process.Subprocess(
             [
