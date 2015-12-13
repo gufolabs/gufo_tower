@@ -194,16 +194,10 @@ class Environment(Model):
             service_nodes[s] = sorted(set(sd.node.name for sd in service_data[s]))
         # Hosts variables
         for node in nodes:
-            if ":" in node.address:
-                ssh_host, ssh_port = node.address.split(":")
-                ssh_port = int(ssh_port)
-            else:
-                ssh_host = node.address
-                ssh_port = 22
             r["nodes"]["hosts"] += [node.name]
             hostvars = {
-                "ansible_ssh_host": ssh_host,
-                "ansible_ssh_port": ssh_port,
+                "ansible_ssh_host": node.get_address(),
+                "ansible_ssh_port": node.get_ssh_port(),
                 "ansible_ssh_user": node.login_as,
                 "ansible_python_interpreter": node.node_type.python_interpreter,
                 "node_id": node.id,
@@ -231,8 +225,8 @@ class Environment(Model):
             }
             if all_services[s]["require_cert"]:
                 (
-                    scfg["noc_ssl_key"],
-                    scfg["noc_ssl_cert"]
+                    scfg["vars"]["noc_ssl_key"],
+                    scfg["vars"]["noc_ssl_cert"]
                 ) = self.get_ssl_certificate()
             r["svc-%s" % s] = scfg
         # Calculate mongo primary and arbiters
@@ -242,7 +236,7 @@ class Environment(Model):
             # and lowest address
             pri = sorted(
                 service_data["mongod"],
-                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.address.split(":")[0].split(".")]
+                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.get_address().split(".")]
             )[0]
             r["svc-mongod-master"] = {
                 "hosts": [pri.node.name]
@@ -258,7 +252,7 @@ class Environment(Model):
             # and lowest address
             pri = sorted(
                 service_data["postgres"],
-                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.address.split(":")[0].split(".")]
+                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.get_address().split(".")]
             )[0]
             r["svc-postgres-master"] = {
                 "hosts": [pri.node.name]
@@ -287,13 +281,13 @@ class Environment(Model):
                     cfg["services"][sp] = []
                 # Assign ports
                 port = sd["port"] or port_number[d.node.name].next()
-                listen = "%s:%s" % (d.node.address, port)
+                listen = "%s:%s" % (d.node.get_address(), port)
                 cfg["services"][sp] += [listen]
                 if not sd["port"] and d.n_instances > 1 and sd["level"] != "system":
                     # Skip required amount of ports
                     for i in range(d.n_instances - 1):
                         cfg["services"][sp] += ["%s:%s" % (
-                            d.node.address,
+                            d.node.get_address(),
                             port_number[d.node.name].next()
                         )]
                 if sd["level"] == "system":
@@ -317,7 +311,7 @@ class Environment(Model):
         # Apply node data
         for n in nodes:
             cfg["nodes"][n.name] = {
-                "address": n.address,
+                "address": n.get_address(),
                 "environment": self.name,
                 "datacenter": n.datacenter.name
             }
