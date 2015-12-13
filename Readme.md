@@ -42,7 +42,7 @@ Replace /opt/tower/ to directory of your choice
  - Install Tower
 ```
 #!shell
-/opt/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a14.tar.gz
+/opt/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-0.1a18.tar.gz
 /opt/tower# chown -R tower var/
 ```
  - Generate Tower ssh keys
