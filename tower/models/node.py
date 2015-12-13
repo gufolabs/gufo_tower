@@ -29,6 +29,7 @@ class Node(Model):
     name = CharField()
     description = TextField()
     # Ansible settings
+    # Node address or address:port
     address = CharField()
     login_as = CharField()
 
@@ -46,3 +47,20 @@ class Node(Model):
 
     def get_vars(self):
         return self.node_type.get_vars()
+
+    def get_address(self):
+        """
+        Returns node addess
+        :return:
+        """
+        return str(self.address.split(":")[0])
+
+    def get_ssh_port(self):
+        """
+        Returns node ssh port
+        :return:
+        """
+        if ":" in self.address:
+            return int(self.address.split(":")[1])
+        else:
+            return 22
