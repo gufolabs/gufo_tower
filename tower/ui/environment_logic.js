@@ -18,6 +18,11 @@ var environment_logic = {
         $$("environment_form_panel").show();
     },
 
+    on_add: function() {
+        $$("environment_form").clear();
+        environment_logic.show_form();
+    },
+
     on_save: function () {
         var data,
             form = $$("environment_form");
@@ -27,6 +32,7 @@ var environment_logic = {
             if(data.id === undefined) {
                 API.environment.create_item(data).then(
                     function(result) {
+                        form.setValues(result);
                         form.save();
                         environment_logic.show_list();
                         Tower.msg.complete("Created");
@@ -38,6 +44,7 @@ var environment_logic = {
             } else {
                 API.environment.update_item(data).then(
                     function(result) {
+                        form.setValues(result);
                         form.save();
                         environment_logic.show_list();
                         Tower.msg.complete("Changed");
@@ -70,6 +77,26 @@ var environment_logic = {
         console.log("Search", nv, ov);
     },
 
+    on_delete: function() {
+        var data = $$("environment_form").getValues();
+        if(data.id) {
+            API.environment.delete_item(data).then(
+                function() {
+                    Tower.msg.complete("Deleted");
+                    $$("environment_list").remove(data.id);
+                    // @todo: Unselect environment
+                    environment_logic.show_list();
+                },
+                function() {
+                    Tower.msg.failed("Failed to delete");
+                }
+            );
+        } else {
+            Tower.msg.complete("Deleted");
+            environment_logic.show_list();
+        }
+    },
+    
     on_show_inventory: function () {
         API.environment.ansible_inventory(app_logic.current_env.id).then(function (result) {
             $$("environment_inventory_text").setValues({

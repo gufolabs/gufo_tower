@@ -14,6 +14,14 @@ var environment_list = {
                 },
                 {
                     view: "button",
+                    type: "icon",
+                    icon: "plus",
+                    autowidth: true,
+                    label: "Create new...",
+                    click: "environment_logic.on_add"
+                },
+                {
+                    view: "button",
                     id: "environment_inventory_button",
                     type: "icon",
                     icon: "search",
