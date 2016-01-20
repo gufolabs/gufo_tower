@@ -11,6 +11,14 @@ var pool_list = {
                     on: {
                         "onChange": "pool_logic.on_search"
                     }
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "plus",
+                    autowidth: true,
+                    label: "Create new...",
+                    click: "pool_logic.on_add"
                 }
             ]
         },
