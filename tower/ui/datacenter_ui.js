@@ -11,6 +11,14 @@ var datacenter_list = {
                     on: {
                         "onChange": "datacenter_logic.on_search"
                     }
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "plus",
+                    autowidth: true,
+                    label: "Create new...",
+                    click: "datacenter_logic.on_add"
                 }
             ]
         },
@@ -84,7 +92,7 @@ var datacenter_form = {
                     name: "name",
                     label: "Name",
                     required: true,
-                    placeholder: "Environment name",
+                    placeholder: "Datacenter name (unique)",
                     invalidMessage: "Cannot be empty"
                 },
                 {
@@ -92,7 +100,8 @@ var datacenter_form = {
                     name: "description",
                     label: "Description",
                     height: 150
-                }
+                },
+                {}
             ]
         }
     ]

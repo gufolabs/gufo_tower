@@ -10,7 +10,7 @@
 import peewee
 # Tower modules
 from tower.models.db import db
-from base import API, api
+from base import API, api, APIError
 
 
 class ModelAPI(API):
@@ -71,15 +71,13 @@ class ModelAPI(API):
             try:
                 record = self.model.get(self.model.id == int(cfg["id"]))
             except peewee.DoesNotExist:
-                return {
-                    "success": False
-                }
+                raise APIError("Does not exists")
             for f in cfg:
                 if f == "id":
                     continue
                 setattr(record, f, cfg[f])
             record.save()
-            return record.list_item()
+        return record.list_item()
 
     @api
     def delete_item(self, cfg):
@@ -87,10 +85,6 @@ class ModelAPI(API):
             try:
                 record = self.model.get(self.model.id == int(cfg["id"]))
             except peewee.DoesNotExist:
-                return {
-                    "success": False
-                }
+                raise APIError("Does not exists")
             record.delete_instance()
-            return {
-                "success": True
-            }
+        return True
