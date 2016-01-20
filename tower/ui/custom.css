@@ -82,6 +82,7 @@ div[view_id="environment_deploy_output"] > DIV {
     font-family: monospace;
     line-height: 14px;
     white-space: pre;
+    word-wrap: break-word;
 }
 
 .ansible-status {
@@ -151,6 +152,8 @@ div[view_id="environment_deploy_output"] > DIV {
 .ansible-task {
     font-weight: bold;
     background-color: #bdc3c7;
+    width: 100%;
+    display: block;
 }
 
 .ansible-ok {
