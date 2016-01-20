@@ -57,7 +57,6 @@ var environment_list = {
             view: "datatable",
             id: "environment_list",
             select: "row",
-            url: "rpc->environment",
             columns: [
                 {
                     id: "name",

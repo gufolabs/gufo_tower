@@ -8,14 +8,21 @@ var environment_logic = {
 
     show: function () {
         environment_logic.show_list();
+        //self.load();
     },
 
     show_list: function () {
         $$("environment_list_panel").show();
+        environment_logic.load();
     },
 
     show_form: function () {
         $$("environment_form_panel").show();
+    },
+
+    // Load data info list
+    load: function() {
+        $$("environment_list").load("rpc->environment");
     },
 
     on_add: function() {
