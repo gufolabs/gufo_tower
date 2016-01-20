@@ -15,6 +15,11 @@ var node_logic = {
         $$("node_form_panel").show();
     },
 
+    on_add: function() {
+        $$("node_form").clear();
+        node_logic.show_form();
+    },
+
     on_save: function() {
         var data,
             form = $$("node_form");
@@ -25,6 +30,7 @@ var node_logic = {
             if(data.id === undefined) {
                 API.node.create_item(data).then(
                     function(result) {
+                        form.setValues(result);
                         form.save();
                         node_logic.show_list();
                         Tower.msg.complete("Created");
@@ -36,6 +42,7 @@ var node_logic = {
             } else {
                 API.node.update_item(data).then(
                     function(result) {
+                        form.setValues(result);
                         form.save();
                         node_logic.show_list();
                         Tower.msg.complete("Changed");
@@ -63,5 +70,24 @@ var node_logic = {
 
     on_search: function(nv, ov) {
         console.log("Search", nv, ov);
+    },
+    
+    on_delete: function() {
+        var data = $$("node_form").getValues();
+        if(data.id) {
+            API.node.delete_item(data).then(
+                function() {
+                    Tower.msg.complete("Deleted");
+                    $$("node_list").remove(data.id);
+                    node_logic.show_list();
+                },
+                function() {
+                    Tower.msg.failed("Failed to delete");
+                }
+            );
+        } else {
+            Tower.msg.complete("Deleted");
+            node_logic.show_list();
+        }
     }
 };
