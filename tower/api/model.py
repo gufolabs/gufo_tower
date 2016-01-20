@@ -63,10 +63,7 @@ class ModelAPI(API):
         record = self.model(**cfg)
         with db.atomic():
             record.save()
-        return {
-            "success": True,
-            "data": [record.list_item()]
-        }
+        return record.list_item()
 
     @api
     def update_item(self, cfg):
@@ -82,10 +79,7 @@ class ModelAPI(API):
                     continue
                 setattr(record, f, cfg[f])
             record.save()
-            return {
-                "success": True,
-                "data": [record.list_item()]
-            }
+            return record.list_item()
 
     @api
     def delete_item(self, cfg):
