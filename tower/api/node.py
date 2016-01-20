@@ -12,5 +12,5 @@ from tower.models.node import Node
 
 
 class NodeAPI(ModelAPI):
-    name = "Node"
+    name = "node"
     model = Node

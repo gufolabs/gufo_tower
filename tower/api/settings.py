@@ -12,11 +12,12 @@ from tower.models.settings import Settings
 
 
 class SettingsAPI(API):
-    name = "Settings"
+    name = "settings"
 
     DEFAULTS = {
         "url": "http://example.com/",
-        "repo_url": "http://example.com/hg"
+        "repo_url": "http://example.com/hg",
+        "installation_name": "Unconfigured installation"
     }
 
     @api

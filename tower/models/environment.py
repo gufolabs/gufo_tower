@@ -16,6 +16,7 @@ import itertools
 import subprocess
 import re
 import tempfile
+import json
 # Third-party modules
 from peewee import CharField, TextField, DateTimeField
 from playhouse.signals import Model
@@ -76,6 +77,9 @@ class Environment(Model):
             ("mmapv1", "MMAPv1")
         ]
     )
+    # json-serialized service configuration
+    # pool id -> service -> key -> value
+    service_config = TextField(default="")
 
     BASE_PORT = 19000
 
@@ -439,4 +443,14 @@ class Environment(Model):
             cf.read()
         ]
         self.cert = "".join(r)
+        self.save()
+
+    def get_service_config(self):
+        if self.service_config:
+            return json.loads(self.service_config)
+        else:
+            return {}
+
+    def set_service_config(self, config):
+        self.service_config = json.dumps(config)
         self.save()

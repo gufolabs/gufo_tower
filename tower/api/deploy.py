@@ -70,13 +70,13 @@ class DeployHandler(BaseHandler):
         # Run playbook
         bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
         ansible_ssh_cp = os.path.join(
-            os.getcwd(),
-            "var/tower/ansible/cp/%%r-%%h-%%r"
+            "/tmp/tower-%%r-%%h-%%r"
         )
         env = os.environ.copy()
         env.update({
             "NOC_ENV": str(self.env.name),
             "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
+            "ANSIBLE_SSH_PIPELINING": "1",
             "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
             "ANSIBLE_HOST_KEY_CHECKING": "False",
             "PYTHONUNBUFFERED": "1"

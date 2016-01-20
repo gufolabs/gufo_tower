@@ -90,3 +90,14 @@ class Settings(Model):
             return Settings.get_item("repo_url")
         except KeyError:
             return None
+
+    @classmethod
+    def get_installation_name(cls):
+        """
+        Return tower's installation name
+        :return:
+        """
+        try:
+            return Settings.get_item("installation_name")
+        except KeyError:
+            return None

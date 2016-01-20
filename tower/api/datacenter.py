@@ -12,5 +12,5 @@ from tower.models.datacenter import Datacenter
 
 
 class DatacenterAPI(ModelAPI):
-    name = "Datacenter"
+    name = "datacenter"
     model = Datacenter

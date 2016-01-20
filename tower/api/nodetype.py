@@ -12,5 +12,5 @@ from tower.models.nodetype import NodeType
 
 
 class NodeTypeAPI(ModelAPI):
-    name = "NodeType"
+    name = "nodetype"
     model = NodeType

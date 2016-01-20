@@ -34,24 +34,20 @@ class BaseHandler(tornado.web.RequestHandler):
         return None
 
 
-SDL = {}
-SERVICES = {}
+SDL = {}  # api -> [methods]
+APIClasses = {}  # api -> API class
 
 
 class APIBase(type):
     def __new__(mcs, name, bases, attrs):
-        global SDL, SERVICES
+        global SDL, APIClasses
         m = type.__new__(mcs, name, bases, attrs)
-        for n in dir(m):
-            a = getattr(m, n)
-            if getattr(a, "api", False):
-                if m.name not in SDL:
-                    SDL[m.name] = []
-                    SERVICES[m.name] = m
-                SDL[m.name] += [{
-                    "name": n,
-                    "len": a.im_func.func_code.co_argcount - 1
-                }]
+        if m.name:
+            SDL[m.name] = [
+                n for n in dir(m)
+                if getattr(getattr(m, n), "api", False)
+            ]
+            APIClasses[m.name] = m
         return m
 
 
@@ -69,7 +65,7 @@ def open_api(method):
     Open API method decorator
     """
     method.api = True
-    method.open_api = False
+    method.open_api = True
     return method
 
 
@@ -79,3 +75,7 @@ class API(object):
 
     def __init__(self, handler):
         self.handler = handler
+
+
+class APIError(Exception):
+    pass

@@ -9,14 +9,14 @@
 # Python modules
 import logging
 import os
-#
+# Third-party modules
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
 # Tower modules
 import tower
-from tower.api.direct import DirectRequestHandler
+from tower.api.jsonrpc import JSONRPCHandler
 from tower.api.login import LoginAPI
 from tower.api.environment import EnvironmentAPI
 from tower.api.datacenter import DatacenterAPI
@@ -28,6 +28,7 @@ from tower.api.pull import PullAPI
 from tower.api.settings import SettingsAPI
 from tower.api.deploy import DeployHandler
 from tower.api.repo import RepoHandler
+from tower.api.ui import UIHandler
 from tower.models.settings import Settings
 from tower.models.migration import Migration
 
@@ -48,7 +49,7 @@ def run():
     )
     tornado.options.define(
         "children",
-        default=os.environ.get("TOWER_CHILDREN", 4),
+        default=os.environ.get("TOWER_CHILDREN", 1),
         help="Run several processes",
         type=int
     )
@@ -57,19 +58,27 @@ def run():
     logger.info("Applying database migrations")
     Migration.migrate()
     logger.info("Loading service")
+    # Get static files path
+    ui_root = os.path.join(tower.__path__[0], "ui")
+    logger.info("Serving UI files from %s", ui_root)
     settings = {
         "template_path": os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "templates")),
         "cookie_secret": Settings.get_cookie_secret()
     }
-    # Get static files path
-    ui_root = os.path.join(tower.__path__[0], "ui/build/production/Tower")
-    logger.info("Serving UI files from %s", ui_root)
     app = tornado.web.Application([
-        (r"^/direct/", DirectRequestHandler),
-        (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {"path": ui_root}),
+        (r"^/api/(sdl.js|.+/)$", JSONRPCHandler),
+        (r"^/ui/$", UIHandler, {
+            "path": ui_root
+        }),
+        (r"^/ui/cache/([0-9a-f]{8}.js)$", tornado.web.StaticFileHandler, {
+            "path": UIHandler.CACHE_ROOT
+        }),
+        (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {
+            "path": ui_root
+        }),
         (r"^/hg.*$", RepoHandler),
         (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
-        (r"^/$", tornado.web.RedirectHandler, {"url": "/ui/index.html"})
+        (r"^/$", tornado.web.RedirectHandler, {"url": "/ui/"})
     ], **settings)
     if ":" in tornado.options.options.listen:
         addr, port = tornado.options.options.listen.split(":")

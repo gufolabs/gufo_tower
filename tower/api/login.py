@@ -12,7 +12,7 @@ from tower.models.user import User, db
 
 
 class LoginAPI(API):
-    name = "Login"
+    name = "login"
 
     USER_COOKIE = "user"
 

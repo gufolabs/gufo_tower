@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class PullAPI(API):
-    name = "Pull"
+    name = "pull"
     executor = ThreadPoolExecutor(2)
 
     @api

@@ -12,5 +12,5 @@ from tower.models.pool import Pool
 
 
 class PoolAPI(ModelAPI):
-    name = "Pool"
+    name = "pool"
     model = Pool

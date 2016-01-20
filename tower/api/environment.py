@@ -12,7 +12,7 @@ from tower.models.environment import Environment
 
 
 class EnvironmentAPI(ModelAPI):
-    name = "Environment"
+    name = "environment"
     model = Environment
 
     @api

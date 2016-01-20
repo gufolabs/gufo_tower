@@ -17,7 +17,7 @@ class ModelAPI(API):
     model = None  # ORM Model
 
     @api
-    def read_items(self, cfg):
+    def get_items(self, cfg=None):
         """
         Returns list of items
         cfg may contain:
@@ -28,6 +28,7 @@ class ModelAPI(API):
         :param cfg:
         :return:
         """
+        cfg = cfg or {}
         limit = int(cfg.get("limit", 0))
         page = int(cfg.get("page", 0))
         filters = []
@@ -50,9 +51,9 @@ class ModelAPI(API):
                 q = q.paginate(page, limit)
             data = [o.list_item() for o in q]
         return {
-            "data": data,
-            "total": len(data),
-            "success": True
+            "pos": 0,
+            "total_count": len(data),
+            "data": data
         }
 
     @api
