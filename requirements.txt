@@ -1,6 +1,6 @@
-ansible==1.9.4
-peewee==2.6.3
-tornado==4.2.1
+ansible==2.0.0.2
+peewee==2.8.0
+tornado==4.3
 bcrypt==2.0.0
 mercurial>=3.5.1
 futures==3.0.3
