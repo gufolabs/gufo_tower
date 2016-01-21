@@ -13,6 +13,18 @@ var desktop_logic = {
         $$("sidebar").select("environment");
     },
 
+    on_before_select_app: function(app) {
+        var logic = window[app + "_logic"],
+            can_run = true;
+        if(logic && logic.can_run) {
+            can_run = logic.can_run();
+        }
+        if(!can_run) {
+            Tower.msg.failed("Select environment");
+        }
+        return can_run;
+    },
+
     on_select_app: function(selection) {
         var logic = window[selection[0] + "_logic"];
         if(logic) {

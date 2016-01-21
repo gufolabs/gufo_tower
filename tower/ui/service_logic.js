@@ -2,6 +2,10 @@ var service_logic = {
     init: function () {
     },
 
+    can_run: function() {
+        return app_logic.is_environment_selected();
+    },
+
     show: function () {
         $$("service_panel").show();
         service_logic.load();

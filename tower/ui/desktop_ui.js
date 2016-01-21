@@ -88,7 +88,8 @@ var desktop = {
                         }
                     ],
                     on: {
-                        onSelectChange: "desktop_logic.on_select_app"
+                        onSelectChange: "desktop_logic.on_select_app",
+                        onBeforeSelecT: "desktop_logic.on_before_select_app"
                     }
                 },
                 {

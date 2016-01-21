@@ -3,6 +3,10 @@ var node_logic = {
         $$("node_form").bind($$("node_list"));
     },
 
+    can_run: function() {
+        return app_logic.is_environment_selected();
+    },
+
     show: function() {
         node_logic.show_list();
     },

@@ -3,6 +3,10 @@ var pool_logic = {
         $$("pool_form").bind($$("pool_list"));
     },
 
+    can_run: function() {
+        return app_logic.is_environment_selected();
+    },
+
     show: function() {
         pool_logic.show_list();
     },
