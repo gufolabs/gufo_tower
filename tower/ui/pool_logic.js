@@ -9,10 +9,16 @@ var pool_logic = {
 
     show_list: function() {
         $$("pool_list_panel").show();
+        pool_logic.load();
     },
 
     show_form: function() {
         $$("pool_form_panel").show();
+    },
+    
+    // Load data info list
+    load: function() {
+        $$("pool_list").load("rpc->pool");
     },
     
     on_add: function() {

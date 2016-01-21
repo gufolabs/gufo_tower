@@ -26,7 +26,6 @@ var datacenter_list = {
             view: "datatable",
             id: "datacenter_list",
             select: "row",
-            url: "rpc->datacenter",
             columns: [
                 {
                     id: "name",

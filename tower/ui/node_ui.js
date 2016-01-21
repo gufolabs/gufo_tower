@@ -26,7 +26,6 @@ var node_list = {
             view: "datatable",
             id: "node_list",
             select: "row",
-            url: "rpc->node",
             columns: [
                 {
                     id: "name",

@@ -394,7 +394,19 @@ var environment_deploy = {
                         status: "Waiting"
                     }
                 },
-                {}
+                {},
+                {
+                    view: "template",
+                    id: "environment_deploy_clock",
+                    type: "header",
+                    align: "right",
+                    width: 70,
+                    borderless: true,
+                    template: "#time#",
+                    data: {
+                        time: "00:00"
+                    }
+                }
             ]
         },
         {

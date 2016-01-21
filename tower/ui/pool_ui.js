@@ -26,7 +26,6 @@ var pool_list = {
             view: "datatable",
             id: "pool_list",
             select: "row",
-            url: "rpc->pool",
             columns: [
                 {
                     id: "name",

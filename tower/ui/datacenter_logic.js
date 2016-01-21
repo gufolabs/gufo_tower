@@ -8,10 +8,16 @@ var datacenter_logic = {
 
     show_list: function() {
         $$("datacenter_list_panel").show();
+        datacenter_logic.load();
     },
 
     show_form: function() {
         $$("datacenter_form_panel").show();
+    },
+    
+    // Load data info list
+    load: function() {
+        $$("datacenter_list").load("rpc->datacenter");
     },
 
     on_add: function() {

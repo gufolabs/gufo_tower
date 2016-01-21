@@ -170,13 +170,32 @@ var environment_logic = {
                     offset = 0,
                     output_panel = $$("environment_deploy_output"),
                     badges_panel = $$("environment_deploy_badges"),
+                    clock = $$("environment_deploy_clock"),
                     output = "",
+                    start_time = Date.now(),
+                    running=true,
                     status = {
                         ok: 0,
                         changed: 0,
                         unreach: 0,
                         failed: 0,
                         status: "<i class='fa fa-cog fa-spin'></i> Running"
+                    },
+                    //
+                    // Update wall clocks
+                    //
+                    update_clock = function() {
+                        var dt = Math.floor((Date.now() - start_time) / 1000),
+                            s = dt % 60,  // Seconds
+                            m = Math.floor((dt - s) / 60),
+                            t; // Minutes
+                        s = (s > 10) ? ("" + s) : ("0" + s);
+                        m = (m > 10) ? ("" + m) : ("0" + m);
+                        t = m + ":" + s;
+                        clock.setValues({time: t});
+                        if(running) {
+                            webix.delay(update_clock, output_panel, [], 1000);
+                        }
                     };
                 // Reset badges
                 badges_panel.setValues(status);
@@ -235,17 +254,22 @@ var environment_logic = {
                     if (status.unreach || status.failed) {
                         status.status = "<i class='fa fa-bolt'></i> Failed";
                         Tower.msg.failed("Deploy failed");
+                        running = false;  // Stop clock
                     } else {
                         status.status = "<i class='fa fa-check-circle'></i> Complete";
                         Tower.msg.complete("Deploy completed");
+                        running = false;  // Stop clock
                     }
                     badges_panel.setValues(status);
                 };
                 xhr.onerror = function () {
                     badges_panel.setValues(status);
+                    status.status = "<i class='fa fa-bolt'></i> Failed";
                     Tower.msg.failed("Deploy failed");
+                    running = false;  // Stop clock
                 };
                 xhr.send();
+                update_clock();
             };
 
         API.pull.is_pulled(env_id).then(

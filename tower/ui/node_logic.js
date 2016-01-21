@@ -9,10 +9,16 @@ var node_logic = {
 
     show_list: function() {
         $$("node_list_panel").show();
+        node_logic.load();
     },
 
     show_form: function() {
         $$("node_form_panel").show();
+    },
+
+    // Load data info list
+    load: function() {
+        $$("node_list").load("rpc->node");
     },
 
     on_add: function() {
