@@ -30,5 +30,5 @@ class Datacenter(Model):
     def reference_item(self):
         return {
             "id": str(self.id),
-            "name": self.name
+            "value": self.name
         }
