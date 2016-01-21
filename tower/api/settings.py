@@ -14,22 +14,16 @@ from tower.models.settings import Settings
 class SettingsAPI(API):
     name = "settings"
 
-    DEFAULTS = {
-        "url": "http://example.com/",
-        "repo_url": "http://example.com/hg",
-        "installation_name": "Unconfigured installation"
-    }
-
     @api
     def get_settings(self):
         """
         Returns a list of current settings
         :return:
         """
-        r = self.DEFAULTS.copy()
+        r = Settings.DEFAULTS.copy()
         r["url"] = "http://%s/" % self.handler.request.headers["Host"]
         r["repo_url"] = "%shg" % r["url"]
-        r.update(Settings.get_items(list(self.DEFAULTS)))
+        r.update(Settings.get_items(list(Settings.DEFAULTS)))
         return r
 
     @api
@@ -38,12 +32,10 @@ class SettingsAPI(API):
         Save current settings
         :return:
         """
-        current = Settings.get_items(list(self.DEFAULTS))
+        current = Settings.get_items(list(Settings.DEFAULTS))
         for k in data:
-            if k not in self.DEFAULTS:
+            if k not in Settings.DEFAULTS:
                 continue
             if k not in current or current[k] != data[k]:
                 Settings.set_item(k, data[k])
-        return {
-            "success": True
-        }
+        return True

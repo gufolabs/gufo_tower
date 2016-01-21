@@ -26,6 +26,12 @@ class Settings(Model):
     key = CharField(primary_key=True)
     value = TextField()
 
+    DEFAULTS = {
+        "url": "http://example.com/",
+        "repo_url": "http://example.com/hg",
+        "installation_name": "Unconfigured installation"
+    }
+
     @classmethod
     def get_item(cls, name):
         with db.atomic():
@@ -78,7 +84,7 @@ class Settings(Model):
         try:
             return Settings.get_item("url")
         except KeyError:
-            return None
+            return cls.DEFAULTS["url"]
 
     @classmethod
     def get_repo_url(cls):
@@ -89,7 +95,7 @@ class Settings(Model):
         try:
             return Settings.get_item("repo_url")
         except KeyError:
-            return None
+            return cls.DEFAULTS["repo_url"]
 
     @classmethod
     def get_installation_name(cls):
@@ -100,4 +106,4 @@ class Settings(Model):
         try:
             return Settings.get_item("installation_name")
         except KeyError:
-            return None
+            return cls.DEFAULTS["installation_name"]
