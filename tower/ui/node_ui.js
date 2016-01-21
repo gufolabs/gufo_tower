@@ -33,9 +33,16 @@ var node_list = {
                     width: 100
                 },
                 {
+                    id: "node_type",
+                    header: "Type",
+                    width: 100,
+                    format: Tower.format.lookup
+                },
+                {
                     id: "datacenter",
                     header: "Datacenter",
-                    width: 150
+                    width: 150,
+                    format: Tower.format.lookup
                 },
                 {
                     id: "address",
@@ -108,7 +115,7 @@ var node_form = {
                     view: "combo",
                     name: "datacenter",
                     label: "Datacenter",
-                    options: [],
+                    options: "rpc->datacenter:lookup",
                     required: true
                 },
                 {

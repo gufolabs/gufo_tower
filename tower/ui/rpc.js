@@ -49,7 +49,7 @@ webix.proxy.rpc = {
         var r = {dynamic: true},
             state = {},
             source = this.source,
-            i, j, p, v;
+            i, j, p, v, method;
         if(view.getState) {
             state = view.getState();
         }
@@ -69,7 +69,14 @@ webix.proxy.rpc = {
             }
             source = source.substring(0, i);
         }
-        API[source].get_items(r).then(
+        if(source.substring(source.length - 7) === ":lookup") {
+            // Combo lookup
+            source = source.substring(0, source.length - 7);
+            method = "lookup_items";
+        } else {
+            method = "get_items";
+        }
+        API[source][method](r).then(
             function(data) {
                 webix.ajax.$callback(
                     view,
