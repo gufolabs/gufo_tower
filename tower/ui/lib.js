@@ -41,5 +41,14 @@ Tower = {
                 expire: 2000
             });
         }
+    },
+    format: {
+        lookup: function(v) {
+            if(v.id === undefined) {
+                return v;
+            } else {
+                return v.value;
+            }
+        }
     }
 };
