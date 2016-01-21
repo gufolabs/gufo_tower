@@ -18,8 +18,7 @@ class ModelAPI(API):
 
     DYNAMIC_FIRST_BATCH_SIZE = 30
 
-    @api
-    def get_items(self, cfg=None):
+    def render_items(self, cfg, format):
         """
         Returns list of items
         cfg may contain:
@@ -30,7 +29,6 @@ class ModelAPI(API):
         :param cfg:
         :return:
         """
-        cfg = cfg or {}
         dynamic = "dynamic" in cfg
         start = int(cfg.get("start", 0))
         count = int(cfg.get("count", 0))
@@ -75,7 +73,7 @@ class ModelAPI(API):
                 q = q.limit(count)
             if sorters:
                 q = q.order_by(*sorters)
-            data = [o.list_item() for o in q]
+            data = [format(o) for o in q]
         r = {
             "pos": start,
             "data": data
@@ -83,6 +81,16 @@ class ModelAPI(API):
         if dynamic and not start:
             r["total_count"] = total_count
         return r
+
+    @api
+    def get_items(self, cfg=None):
+        cfg = cfg or {}
+        return self.render_items(cfg, lambda x: x.list_item())
+
+    @api
+    def lookup_items(self, cfg):
+        cfg = cfg or {}
+        return self.render_items(cfg, lambda x: x.reference_item())
 
     @api
     def create_item(self, cfg):
