@@ -55,10 +55,9 @@ var pool_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    autowidth: true,
+                    width: 20,
                     click: "pool_logic.show_list"
                 },
-                {},
                 {
                     view: "button",
                     type: "icon",
@@ -67,7 +66,6 @@ var pool_form = {
                     autowidth: true,
                     click: "pool_logic.on_save"
                 },
-                {},
                 {
                     view: "button",
                     type: "icon",
@@ -85,6 +83,7 @@ var pool_form = {
             elementsConfig: {
                 labelWidth: 110
             },
+            scroll: true,
             elements: [
                 {
                     view: "text",
@@ -99,7 +98,8 @@ var pool_form = {
                     name: "description",
                     label: "Description",
                     height: 150
-                }
+                },
+                {}
             ]
         }
     ]

@@ -55,10 +55,9 @@ var datacenter_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    autowidth: true,
-                    click: "datacenter_logic.show_list"
+                    click: "datacenter_logic.show_list",
+                    width: 20
                 },
-                {},
                 {
                     view: "button",
                     type: "icon",
@@ -67,7 +66,6 @@ var datacenter_form = {
                     autowidth: true,
                     click: "datacenter_logic.on_save"
                 },
-                {},
                 {
                     view: "button",
                     type: "icon",
@@ -85,6 +83,7 @@ var datacenter_form = {
             elementsConfig: {
                 labelWidth: 110
             },
+            scroll: true,
             elements: [
                 {
                     view: "text",

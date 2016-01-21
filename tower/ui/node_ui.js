@@ -65,8 +65,8 @@ var node_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    autowidth: true,
-                    click: "node_logic.show_list"
+                    click: "node_logic.show_list",
+                    width: 20
                 },
                 {
                     view: "button",
@@ -83,7 +83,8 @@ var node_form = {
                     label: "Delete",
                     autowidth: true,
                     click: "node_logic.on_delete"
-                }
+                },
+                {}
             ]
         },
         {
@@ -92,6 +93,7 @@ var node_form = {
             elementsConfig: {
                 labelWidth: 110
             },
+            scroll: true,
             elements: [
                 {
                     view: "text",
@@ -110,7 +112,8 @@ var node_form = {
                 {
                     view: "textarea",
                     name: "description",
-                    label: "Description"
+                    label: "Description",
+                    height: 150
                 },
                 {
                     view: "fieldset",
@@ -139,7 +142,8 @@ var node_form = {
                             }
                         ]
                     }
-                }
+                },
+                {}
             ]
         }
     ]
