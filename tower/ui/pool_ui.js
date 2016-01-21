@@ -40,7 +40,9 @@ var pool_list = {
             ],
             on: {
                 onItemDblClick: "pool_logic.on_edit"
-            }
+            },
+            datafetch: Tower.config.datafetch,
+            loadahead: Tower.config.loadahead
         }
     ]
 };

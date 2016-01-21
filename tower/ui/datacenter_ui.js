@@ -6,6 +6,7 @@ var datacenter_list = {
             elements: [
                 {
                     view: "search",
+                    id: "datacenter_search",
                     placeholder: "Search...",
                     width: 150,
                     on: {
@@ -30,7 +31,8 @@ var datacenter_list = {
                 {
                     id: "name",
                     header: "Datacenter",
-                    width: 100
+                    width: 100,
+                    sort: "server"
                 },
                 {
                     id: "description",
@@ -40,7 +42,9 @@ var datacenter_list = {
             ],
             on: {
                 onItemDblClick: "datacenter_logic.on_edit"
-            }
+            },
+            datafetch: Tower.config.datafetch,
+            loadahead: Tower.config.loadahead
         }
     ]
 };

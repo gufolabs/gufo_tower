@@ -61,7 +61,8 @@ var environment_list = {
                 {
                     id: "name",
                     header: "Environment",
-                    width: 100
+                    width: 100,
+                    sort: "server"
                 },
                 {
                     id: "env_type",
@@ -85,7 +86,9 @@ var environment_list = {
             on: {
                 onSelectChange: "environment_logic.on_select",
                 onItemDblClick: "environment_logic.on_edit"
-            }
+            },
+            datafetch: Tower.config.datafetch,
+            loadahead: Tower.config.loadahead
         }
     ]
 };

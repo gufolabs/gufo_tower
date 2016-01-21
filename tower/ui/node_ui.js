@@ -50,7 +50,9 @@ var node_list = {
             ],
             on: {
                 onItemDblClick: "node_logic.on_edit"
-            }
+            },
+            datafetch: Tower.config.datafetch,
+            loadahead: Tower.config.loadahead
         }
     ]
 };
@@ -102,13 +104,13 @@ var node_form = {
                     required: true,
                     validate: Tower.rules.regex(/^[a-zA-Z][a-zA-Z0-9\-_]*$/)
                 },
-                //{
-                //    view: "combo",
-                //    name: "datacenter",
-                //    label: "Datacenter",
-                //    //@!@
-                //    required: true
-                //},
+                {
+                    view: "combo",
+                    name: "datacenter",
+                    label: "Datacenter",
+                    options: [],
+                    required: true
+                },
                 {
                     view: "textarea",
                     name: "description",
@@ -120,13 +122,13 @@ var node_form = {
                     label: "Connect",
                     body: {
                         cols: [
-                            //{
-                            //    view: "combo",
-                            //    name: "node_type",
-                            //    label: "Node Type",
-                            //    // @!@
-                            //    allowBlank: false
-                            //},
+                            {
+                                view: "combo",
+                                name: "node_type",
+                                label: "Node Type",
+                                options: [],
+                                required: true
+                            },
                             {
                                 view: "text",
                                 name: "address",

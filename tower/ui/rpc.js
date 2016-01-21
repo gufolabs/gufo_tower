@@ -46,9 +46,31 @@ webix.proxy.rpc = {
     $proxy: true,
 
     load: function(view, callback, params) {
-        API[this.source].get_items(params).then(
+        var r = {dynamic: true},
+            state = {},
+            source = this.source,
+            i, j, p, v;
+        if(view.getState) {
+            state = view.getState();
+        }
+        if(state.sort) {
+            // Todo: Convert to list
+            r.sort = state.sort;
+        }
+        // Strip query from url
+        if((i = source.indexOf("?")) !== -1) {
+            p = source.substring(i + 1).split("&");
+            // Process parameters
+            for(j in p) {
+                v = p[j].split("=");
+                if((v[0] === "start") || (v[0] === "count")) {
+                    r[v[0]] = parseInt(v[1]);
+                }
+            }
+            source = source.substring(0, i);
+        }
+        API[source].get_items(r).then(
             function(data) {
-
                 webix.ajax.$callback(
                     view,
                     callback,

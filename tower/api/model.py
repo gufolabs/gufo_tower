@@ -16,22 +16,42 @@ from base import API, api, APIError
 class ModelAPI(API):
     model = None  # ORM Model
 
+    DYNAMIC_FIRST_BATCH_SIZE = 30
+
     @api
     def get_items(self, cfg=None):
         """
         Returns list of items
         cfg may contain:
-            limit
-            page
             start
+            count
             filter
+            sort - list of {name: ..., dir: <asc|desc>}
         :param cfg:
         :return:
         """
         cfg = cfg or {}
-        limit = int(cfg.get("limit", 0))
-        page = int(cfg.get("page", 0))
+        dynamic = "dynamic" in cfg
+        start = int(cfg.get("start", 0))
+        count = int(cfg.get("count", 0))
+        sort = cfg.get("sort", [])
         filters = []
+        sorters = []
+        total_count = None
+        # Apply dynamic limits
+        if dynamic and not count:
+            count = self.DYNAMIC_FIRST_BATCH_SIZE
+        # Process sorters
+        if type(sort) == dict:
+            sort = [sort]
+        for s in sort:
+            name = str(s.get("id"))
+            direction = s.get("dir", "asc")
+            if direction == "desc":
+                sorters += [-getattr(self.model, name)]
+            else:
+                sorters += [getattr(self.model, name)]
+        # Process filters
         for fd in cfg.get("filter", []):
             prop = fd.get("property")
             value = fd.get("value")
@@ -47,14 +67,22 @@ class ModelAPI(API):
             q = self.model.select()
             if filters:
                 q = q.where(*filters)
-            if limit:
-                q = q.paginate(page, limit)
+            if dynamic and not start:
+                total_count = q.count()
+            if start:
+                q = q.offset(start)
+            if count:
+                q = q.limit(count)
+            if sorters:
+                q = q.order_by(*sorters)
             data = [o.list_item() for o in q]
-        return {
-            "pos": 0,
-            "total_count": len(data),
+        r = {
+            "pos": start,
             "data": data
         }
+        if dynamic and not start:
+            r["total_count"] = total_count
+        return r
 
     @api
     def create_item(self, cfg):
