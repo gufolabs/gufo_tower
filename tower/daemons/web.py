@@ -67,9 +67,6 @@ def run():
     }
     app = tornado.web.Application([
         (r"^/api/(sdl.js|.+/)$", JSONRPCHandler),
-        (r"^/ui/$", UIHandler, {
-            "path": ui_root
-        }),
         (r"^/ui/cache/([0-9a-f]{8}.js)$", tornado.web.StaticFileHandler, {
             "path": UIHandler.CACHE_ROOT
         }),
@@ -78,7 +75,9 @@ def run():
         }),
         (r"^/hg.*$", RepoHandler),
         (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
-        (r"^/$", tornado.web.RedirectHandler, {"url": "/ui/"})
+        (r"^/$", UIHandler, {
+            "path": ui_root
+        })
     ], **settings)
     if ":" in tornado.options.options.listen:
         addr, port = tornado.options.options.listen.split(":")
