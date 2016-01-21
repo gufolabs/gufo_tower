@@ -18,7 +18,7 @@ var node_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "datacenter_logic.on_add"
+                    click: "node_logic.on_add"
                 }
             ]
         },
@@ -133,7 +133,7 @@ var node_form = {
                                 view: "combo",
                                 name: "node_type",
                                 label: "Node Type",
-                                options: [],
+                                options: "rpc->nodetype:lookup",
                                 required: true
                             },
                             {

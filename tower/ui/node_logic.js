@@ -63,11 +63,6 @@ var node_logic = {
         }
     },
 
-    on_select: function() {
-        var data = $$("node_list").getSelectedItem();
-        app_logic.select_node(data.name);
-    },
-
     on_edit: function() {
         var data = $$("node_list").getSelectedItem();
         $$("node_form").setValues(data);
