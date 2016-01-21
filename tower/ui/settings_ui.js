@@ -41,8 +41,8 @@ var settings_form = {
                     labelWidth: 110,
                     required: true,
                     invalidMessage: "Repo URL cannot be empty"
-                }
-
+                },
+                {}
             ]
         }
     ]
