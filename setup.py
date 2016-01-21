@@ -39,7 +39,10 @@ def main():
         requirements = [x.strip() for x in requirements if x.strip()]
 
     tower_data = findall(os.path.join("tower", "ui"))
-    tower_data = [x[6:] for x in tower_data]
+    tower_data = [
+        x[6:] for x in tower_data
+        if not x.endswith("_debug.js") and not x.endswith(".js.map")
+    ]
 
     setup(
         name="noc-tower",

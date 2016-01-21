@@ -1,0 +1,16 @@
+syntax: glob
+.*
+*.pyc
+build/
+dist/
+bin/
+include/
+lib/
+lib64/
+man/
+*.egg-info/
+var/
+MANIFEST
+bootstrap.json
+*_debug.js
+*.js.map
