@@ -2,16 +2,14 @@
 # -----------------------------------------------------------------------
 # NOC Tower setup script
 # -----------------------------------------------------------------------
-# Copyright (C) 2015 The NOC Project
+# Copyright (C) 2015-1016 The NOC Project
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
 # Python modules
 import os
-import subprocess
 from setuptools import setup, find_packages, findall
 from setuptools.command.install import install
-from setuptools.command.sdist import sdist
 
 
 class TowerInstall(install):
@@ -27,15 +25,6 @@ class TowerInstall(install):
                 os.makedirs(path)
 
 
-class TowerSdist(sdist):
-    def run(self):
-        subprocess.check_call(
-            ["sencha", "app", "build"],
-            cwd="tower/ui/apps/Tower"
-        )
-        sdist.run(self)
-
-
 def main():
     kwargs = {}
 
@@ -49,7 +38,7 @@ def main():
         requirements = f.read().splitlines()
         requirements = [x.strip() for x in requirements if x.strip()]
 
-    tower_data = findall(os.path.join("tower", "ui", "build", "production", "Tower"))
+    tower_data = findall(os.path.join("tower", "ui"))
     tower_data = [x[6:] for x in tower_data]
 
     setup(
@@ -61,7 +50,6 @@ def main():
         author_email="info@nocproject.org",
         url="https://bitbucket.org/nocproject/noc-tower",
         cmdclass={
-            "sdist": TowerSdist,
             "install": TowerInstall
         },
         packages=find_packages(exclude=["tests"]),
