@@ -188,7 +188,12 @@ class ServiceAPI(API):
                 ecfg[cfg["pool"]][cfg["service"]][k] = v
             # Process nodes
             for n in cfg["nodes"]:
-                ncfg[cfg["pool"], cfg["service"], n["node_id"]] = n
+                nn = {
+                    "service": cfg["service"],
+                    "pool": cfg["pool"]
+                }
+                nn.update(n)
+                ncfg[cfg["pool"], cfg["service"], n["node_id"]] = nn
         env.set_service_config(ecfg)
         # Apply nodes config
         for s in Service.select().where(Service.environment == env):
