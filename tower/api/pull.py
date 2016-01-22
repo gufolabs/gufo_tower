@@ -108,6 +108,8 @@ class PullAPI(API):
                         "./bin/hg",
                         "-q",
                         "clone",
+                        "-b", env.branch,
+                        "-r", env.changeset,
                         "-U",
                         env.repo,
                         env.repo_path
@@ -120,7 +122,9 @@ class PullAPI(API):
                     "./bin/hg",
                     "-q",
                     "--cwd=%s" % env.repo_path,
-                    "pull"
+                    "pull",
+                    "-b", env.branch,
+                    "-r", env.changeset
                 ]
             )
             # Fetch playbooks
