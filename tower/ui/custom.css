@@ -160,18 +160,48 @@ div[view_id="environment_deploy_output"] > DIV {
     color: #2ecc71;
 }
 
+span.ansible-ok::before {
+    content: "\f00c";
+    font-family: FontAwesome;
+    padding-right: 4px;
+}
+
 .ansible-changed {
     color: #f1c40f;
+}
+
+span.ansible-changed::before {
+    content: "\f111";
+    font-family: FontAwesome;
+    padding-right: 4px;
 }
 
 .ansible-unreachable {
     color: #7f8c8d;
 }
 
+span.ansible-unreachable::before {
+    content: "\f088";
+    font-family: FontAwesome;
+    padding-right: 4px;
+}
+
 .ansible-failed {
     color: #c0392b;
 }
 
+span.ansible-failed::before {
+    content: "\f0e7";
+    font-family: FontAwesome;
+    padding-right: 4px;
+}
+
 .ansible-skipping {
     color: #7f8c8d;
+}
+
+span.ansible-skipping::before {
+    content: "\f04e";
+    font-family: FontAwesome;
+    padding-right: 4px;
 }
