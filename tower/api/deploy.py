@@ -60,6 +60,9 @@ class DeployHandler(BaseHandler):
                 playbook="site.yml"
             )
             self.job_log.save()
+        # Disable nginx proxy buffering
+        self.set_header("X-Accel-Buffering", "no")
+        # Stream output
         self.write("Starting job #%d\n\n" % self.job_log.id)
         # Check settings
         if not Settings.get_repo_url():
