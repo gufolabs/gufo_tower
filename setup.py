@@ -62,6 +62,7 @@ def main():
                 "tower-web = tower.daemons.web:run"
             ]
         },
+        scripts=["bin/tower-upgrade"],
         package_data={
             "tower": tower_data
         },
