@@ -104,7 +104,7 @@ var environment_form = {
                     type: "icon",
                     icon: "arrow-left",
                     click: "environment_logic.show_list",
-                    width: 20
+                    width: 32
                 },
                 {
                     view: "button",
@@ -378,7 +378,7 @@ var environment_deploy = {
                     type: "icon",
                     icon: "arrow-left",
                     click: "environment_logic.show_list",
-                    width: 20
+                    width: 32
                 },
                 {
                     view: "template",

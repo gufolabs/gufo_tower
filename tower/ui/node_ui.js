@@ -75,7 +75,7 @@ var node_form = {
                     type: "icon",
                     icon: "arrow-left",
                     click: "node_logic.show_list",
-                    width: 20
+                    width: 32
                 },
                 {
                     view: "button",
