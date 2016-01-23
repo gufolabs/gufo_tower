@@ -189,8 +189,8 @@ var environment_logic = {
                             s = dt % 60,  // Seconds
                             m = Math.floor((dt - s) / 60),
                             t; // Minutes
-                        s = (s > 10) ? ("" + s) : ("0" + s);
-                        m = (m > 10) ? ("" + m) : ("0" + m);
+                        s = (s >= 10) ? ("" + s) : ("0" + s);
+                        m = (m >= 10) ? ("" + m) : ("0" + m);
                         t = m + ":" + s;
                         clock.setValues({time: t});
                         if(running) {
