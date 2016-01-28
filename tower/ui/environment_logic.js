@@ -99,7 +99,6 @@ var environment_logic = {
         var data = $$("environment_list").getSelectedItem();
         $$("environment_form").setValues(data);
         environment_logic.show_form();
-        console.log("on_edit");
     },
 
     on_search: function (nv, ov) {
@@ -125,7 +124,7 @@ var environment_logic = {
             environment_logic.show_list();
         }
     },
-    
+
     on_show_inventory: function () {
         API.environment.ansible_inventory(app_logic.current_env.id).then(function (result) {
             $$("environment_inventory_text").setValues({
@@ -135,7 +134,6 @@ var environment_logic = {
         }, function (err) {
             Tower.msg.failed("Cannot get inventory");
         });
-        console.log("on_show_inventory");
     },
 
     on_pull: function () {

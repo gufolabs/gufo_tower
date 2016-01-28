@@ -14,7 +14,7 @@ var datacenter_logic = {
     show_form: function() {
         $$("datacenter_form_panel").show();
     },
-    
+
     // Load data info list
     load: function() {
         $$("datacenter_list").load("rpc->datacenter");

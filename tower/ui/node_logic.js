@@ -26,8 +26,10 @@ var node_logic = {
     },
 
     on_add: function() {
-        $$("node_form").clear();
         node_logic.show_form();
+        $$("node_form").setValues({
+            login_as: "ansible"
+        });
     },
 
     on_save: function() {
