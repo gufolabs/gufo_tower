@@ -20,6 +20,7 @@ import json
 # Third-party modules
 from peewee import CharField, TextField, DateTimeField
 from playhouse.signals import Model
+import yaml
 # Tower modules
 from db import db
 from settings import Settings
@@ -275,11 +276,13 @@ class Environment(Model):
             "user": self.sys_user,
             "group": self.sys_group
         }
+        sconf = self.get_service_config()
         for sd in services_description:
             if sd["name"] not in service_data:
                 continue
             for d in service_data[sd["name"]]:
                 pool_name = d.pool.name if d.pool else None
+                pool_id = d.pool.id if d.pool else None
                 sp = "%s-%s" % (sd["name"], pool_name) if pool_name else sd["name"]
                 if sp not in cfg["services"]:
                     cfg["services"][sp] = []
@@ -306,6 +309,11 @@ class Environment(Model):
                         "loglevel": d.loglevel,
                         "n_instances": d.n_instances
                     }
+                    if pool_id in sconf and sd["name"] in sconf[pool_id]:
+                        print "@@@@@ %s" % sconf[pool_id][sd["name"]]
+                        cfg["config"][ncfg].update(
+                            sconf[pool_id][sd["name"]]
+                        )
         # Apply pools data
         with db.atomic():
             for p in Pool.select().where(Pool.environment == self):
@@ -447,10 +455,10 @@ class Environment(Model):
 
     def get_service_config(self):
         if self.service_config:
-            return json.loads(self.service_config)
+            return yaml.load(self.service_config)
         else:
             return {}
 
     def set_service_config(self, config):
-        self.service_config = json.dumps(config)
+        self.service_config = yaml.dump(config)
         self.save()

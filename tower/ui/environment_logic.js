@@ -26,8 +26,29 @@ var environment_logic = {
     },
 
     on_add: function() {
-        $$("environment_form").clear();
+        var prefix = "/opt/noc";
+        if (navigator.platform.indexOf("FreeBSD") != -1)
+            prefix = "/usr/local/noc";
         environment_logic.show_form();
+        $$("environment_form").setValues({
+            env_type: "eval",
+            repo: "https://bitbucket.com/nocproject/noc",
+            branch: "feature/microservices",
+            changeset: "tip",
+            web_host: "noc.example.com",
+            installation_name: "Unconfigured installation",
+            sys_user: "noc",
+            sys_group: "noc",
+            sys_prefix: prefix,
+            pg_db: "noc",
+            pg_user: "noc",
+            pg_password: "noc",
+            mongo_db: "noc",
+            mongo_engine: "wiredTiger",
+            mongo_rs: "noc",
+            mongo_user: "noc",
+            mongo_password: "noc"
+        });
     },
 
     on_save: function () {
@@ -103,7 +124,7 @@ var environment_logic = {
             environment_logic.show_list();
         }
     },
-    
+
     on_show_inventory: function () {
         API.environment.ansible_inventory(app_logic.current_env.id).then(function (result) {
             $$("environment_inventory_text").setValues({
