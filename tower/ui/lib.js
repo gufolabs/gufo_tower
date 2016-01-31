@@ -50,5 +50,19 @@ Tower = {
                 return v.value;
             }
         }
+    },
+    notification: function(v) {
+        if(!("Notification" in window)) {
+            return; // Not supported
+        }
+        if(Notification.permission === "granted") {
+            new Notification(v);
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission(function(permission) {
+                if(permission === "granted") {
+                    new Notification(v);
+                }
+            });
+        }
     }
 };

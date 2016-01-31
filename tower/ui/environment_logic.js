@@ -124,8 +124,10 @@ var environment_logic = {
                             // Pull done
                             if (result.status) {
                                 Tower.msg.complete("Pull complete");
+                                Tower.notification("Pull complete");
                             } else {
                                 Tower.msg.failed("Failed to pull");
+                                Tower.notification("Failed to pull");
                             }
                             $$("environment_list").hideProgress();
                         } else {
@@ -137,6 +139,7 @@ var environment_logic = {
                     },
                     function (err) {
                         Tower.msg.failed("Failed to pull");
+                        Tower.notification("Failed to pull");
                         $$("environment_list").hideProgress();
                     }
                 );
@@ -254,10 +257,12 @@ var environment_logic = {
                     if (status.unreach || status.failed) {
                         status.status = "<i class='fa fa-bolt'></i> Failed";
                         Tower.msg.failed("Deploy failed");
+                        Tower.notification("Deploy failed");
                         running = false;  // Stop clock
                     } else {
                         status.status = "<i class='fa fa-check-circle'></i> Complete";
                         Tower.msg.complete("Deploy completed");
+                        Tower.notification("Deploy completed");
                         running = false;  // Stop clock
                     }
                     badges_panel.setValues(status);
@@ -266,6 +271,7 @@ var environment_logic = {
                     badges_panel.setValues(status);
                     status.status = "<i class='fa fa-bolt'></i> Failed";
                     Tower.msg.failed("Deploy failed");
+                    Tower.notification("Deploy failed");
                     running = false;  // Stop clock
                 };
                 xhr.send();
@@ -281,6 +287,7 @@ var environment_logic = {
                 }
             }, function (err) {
                 Tower.msg.failed("Cannot connect to server");
-            });
+            }
+        );
     }
 };
