@@ -310,7 +310,6 @@ class Environment(Model):
                         "n_instances": d.n_instances
                     }
                     if pool_id in sconf and sd["name"] in sconf[pool_id]:
-                        print "@@@@@ %s" % sconf[pool_id][sd["name"]]
                         cfg["config"][ncfg].update(
                             sconf[pool_id][sd["name"]]
                         )
