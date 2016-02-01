@@ -200,6 +200,7 @@ var environment_form = {
                                 name: "web_host",
                                 label: "Host",
                                 value: "noc.example.com",
+                                placeholder: "noc.example.com",
                                 required: true
                             },
                             {
