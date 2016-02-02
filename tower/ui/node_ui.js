@@ -140,7 +140,7 @@ var node_form = {
                                 view: "text",
                                 name: "address",
                                 label: "Address",
-                                placeholder: "nocnode.example.com",
+                                placeholder: "Type node IP address here",
                                 required: true
                             },
                             {

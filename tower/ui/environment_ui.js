@@ -294,11 +294,9 @@ var environment_form = {
                                 view: "combo",
                                 name: "mongo_engine",
                                 label: "Storage Engine",
+                                minWidth: 250,
                                 options: [
-                                    {
-                                        id: "wiredTiger",
-                                        value: "Wired Tiger"
-                                    },
+                                    {id: "wiredTiger", value: "Wired Tiger"},
                                     {id: "mmapv1", value: "MMAPv1"}
                                 ],
                                 value: "wiredTiger",
