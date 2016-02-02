@@ -9,6 +9,7 @@ var service_panel = {
                     type: "icon",
                     icon: "save",
                     label: "Save",
+                    autowidth: true,
                     click: "service_logic.on_save"
                 }
             ]

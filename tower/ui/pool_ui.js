@@ -57,7 +57,7 @@ var pool_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    width: 20,
+                    width: 32,
                     click: "pool_logic.show_list"
                 },
                 {
@@ -85,7 +85,7 @@ var pool_form = {
             elementsConfig: {
                 labelWidth: 110
             },
-            scroll: true,
+            scroll: false,
             elements: [
                 {
                     view: "text",

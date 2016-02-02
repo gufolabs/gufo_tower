@@ -2,6 +2,18 @@
 var change_password_form = {
     id: "change_password_panel",
     rows: [
+        {
+            view: "toolbar",
+            elements: [
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "arrow-left",
+                    click: "desktop_logic.show",
+                    width: 32
+                },
+            ]
+        },
         {},  // Top spacer
         {
             cols: [

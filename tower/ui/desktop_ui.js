@@ -22,6 +22,9 @@ var desktop = {
                     id: "desktop_menu",
                     height: "auto",
                     width: 50,
+                    submenuConfig:{
+                        width:200
+                    },
                     data: [
                         {
                             id: "user_menu",
