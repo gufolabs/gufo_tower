@@ -78,6 +78,10 @@ class Environment(Model):
             ("mmapv1", "MMAPv1")
         ]
     )
+    # InfluxDB settings
+    influxdb_db = CharField(default="noc")
+    influxdb_user = CharField(default="noc")
+    influxdb_password = CharField(default="noc")
     # json-serialized service configuration
     # pool id -> service -> key -> value
     service_config = TextField(default="")
@@ -106,7 +110,10 @@ class Environment(Model):
             "mongo_user": self.mongo_user,
             "mongo_password": self.mongo_password,
             "mongo_rs": self.mongo_rs,
-            "mongo_engine": self.mongo_engine
+            "mongo_engine": self.mongo_engine,
+            "influxdb_db": self.influxdb_db,
+            "influxdb_user": self.influxdb_user,
+            "influxdb_password": self.influxdb_password
         }
 
     def reference_item(self):
@@ -165,6 +172,10 @@ class Environment(Model):
                     "noc_mongo_password": self.mongo_password,
                     "noc_mongo_admin_user": "root",
                     "noc_mongo_admin_password": self.mongo_password,
+                    # InfluxDB settings
+                    "noc_influxdb_db": self.influxdb_db,
+                    "noc_influxdb_user": self.influxdb_user,
+                    "noc_influxdb_password": self.influxdb_password,
                     # Tower local settings
                     "tower_data": self.data_path,
                     "tower_ssh_keys": self.ssh_keys_path,

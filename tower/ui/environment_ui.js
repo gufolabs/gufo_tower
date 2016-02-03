@@ -329,6 +329,36 @@ var environment_form = {
                         ]
                     }
                 },
+                {
+                    view: "fieldset",
+                    label: "InfluxDB",
+                    body: {
+                        cols: [
+                            {
+                                view: "text",
+                                name: "influxdb_db",
+                                label: "Database",
+                                value: "noc",
+                                required: true
+                            },
+                            {
+                                view: "text",
+                                name: "influxdb_user",
+                                label: "User",
+                                value: "noc",
+                                required: true
+                            },
+                            {
+                                view: "text",
+                                type: "password",
+                                name: "influxdb_password",
+                                label: "Password",
+                                value: "noc",
+                                required: true
+                            }
+                        ]
+                    }
+                },
                 {}
             ]
         }
