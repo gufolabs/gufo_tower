@@ -189,6 +189,7 @@ var environment_logic = {
             rx_progress = /^(ok|changed|unreachable|failed|fatal): \[/mg,
             rx_task = /^.+?\*{5}\s*$/mg,
             rx_line = /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
+            rx_stars = /\s+\*{5,}/;
             deploy = function () {
                 var xhr = new XMLHttpRequest(),
                     offset = 0,
@@ -259,6 +260,7 @@ var environment_logic = {
                     }
                     // Update deploy log
                     ct = t.replace(rx_task, function (x) {
+                        x = x.replace(rx_stars, "");
                         return "<span class='ansible-task'>" + x + "</span>";
                     });
                     ct = ct.replace(rx_line, function (x) {

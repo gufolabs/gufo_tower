@@ -152,6 +152,7 @@ div[view_id="environment_deploy_output"] > DIV {
 .ansible-task {
     font-weight: bold;
     background-color: #bdc3c7;
+    border-bottom: 1px #7f8c8d solid;
     width: 100%;
     display: block;
 }
