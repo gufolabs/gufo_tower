@@ -35,7 +35,6 @@ var environment_logic = {
             repo: "https://bitbucket.com/nocproject/noc",
             branch: "feature/microservices",
             changeset: "tip",
-            web_host: "noc.example.com",
             installation_name: "Unconfigured installation",
             sys_user: "noc",
             sys_group: "noc",

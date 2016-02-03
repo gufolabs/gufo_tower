@@ -102,7 +102,7 @@ var node_form = {
             elementsConfig: {
                 labelWidth: 110
             },
-            scroll: true,
+            scroll: false,
             elements: [
                 {
                     view: "text",
@@ -140,6 +140,7 @@ var node_form = {
                                 view: "text",
                                 name: "address",
                                 label: "Address",
+                                placeholder: "Type node IP address here",
                                 required: true
                             },
                             {

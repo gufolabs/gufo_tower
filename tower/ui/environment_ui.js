@@ -131,7 +131,7 @@ var environment_form = {
             elementsConfig: {
                 labelWidth: 110
             },
-            scroll: true,
+            scroll: false,
             elements: [
                 {
                     view: "text",
@@ -200,6 +200,7 @@ var environment_form = {
                                 name: "web_host",
                                 label: "Host",
                                 value: "noc.example.com",
+                                placeholder: "noc.example.com",
                                 required: true
                             },
                             {
@@ -293,11 +294,9 @@ var environment_form = {
                                 view: "combo",
                                 name: "mongo_engine",
                                 label: "Storage Engine",
+                                minWidth: 250,
                                 options: [
-                                    {
-                                        id: "wiredTiger",
-                                        value: "Wired Tiger"
-                                    },
+                                    {id: "wiredTiger", value: "Wired Tiger"},
                                     {id: "mmapv1", value: "MMAPv1"}
                                 ],
                                 value: "wiredTiger",

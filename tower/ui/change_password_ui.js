@@ -10,7 +10,7 @@ var change_password_form = {
                     rows: [
                         {
                             type: "header",
-                            template: "Change tower password"
+                            template: "Change NOC Tower password"
                         },
                         // Login form
                         {
@@ -62,6 +62,12 @@ var change_password_form = {
                                             value: "Reset",
                                             width: 100,
                                             click: "change_password_logic.clear_form"
+                                        },
+                                        {
+                                            view: "button",
+                                            value: "Close",
+                                            width: 100,
+                                            click: "desktop_logic.show"
                                         }
                                     ]
                                 }
