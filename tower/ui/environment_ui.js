@@ -131,7 +131,7 @@ var environment_form = {
             elementsConfig: {
                 labelWidth: 110
             },
-            scroll: false,
+            scroll: true,
             elements: [
                 {
                     view: "text",
