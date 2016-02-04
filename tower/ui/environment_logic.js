@@ -46,7 +46,10 @@ var environment_logic = {
             mongo_engine: "wiredTiger",
             mongo_rs: "noc",
             mongo_user: "noc",
-            mongo_password: "noc"
+            mongo_password: "noc",
+            influxdb_db: "noc",
+            influxdb_user: "noc",
+            influxdb_password: "noc"
         });
     },
 
