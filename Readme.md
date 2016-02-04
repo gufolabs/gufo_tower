@@ -14,7 +14,7 @@ NOC (http://nocproject.org/) installations.
 ### FreeBSD
 ```
 #!shell
-# pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite ca_root_nss
+# pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite3 ca_root_nss
 # pw groupadd -n tower
 # pw useradd -g tower -s /bin/csh -d /home/tower -n tower -m
 ```
