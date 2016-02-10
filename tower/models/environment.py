@@ -209,6 +209,7 @@ class Environment(Model):
         for s in service_data:
             service_nodes[s] = sorted(set(sd.node.name for sd in service_data[s]))
         # Hosts variables
+        all_services = dict((s["id"], s) for s in services_description)
         for node in nodes:
             r["nodes"]["hosts"] += [node.name]
             hostvars = {
@@ -229,11 +230,12 @@ class Environment(Model):
                     "hosts": []
                 }
             r[dcn]["hosts"] += [node.name]
+            required_assets = []
             for s in node_services[node.name]:
-                r["_meta"]["hostvars"][node.name]["noc_svc_%s_loglevel" % s.service] = s.loglevel
+                required_assets += all_services[s.service]["required_assets"]
+            r["_meta"]["hostvars"][node.name]["required_assets"] = list(set(required_assets))
             # @todo: Import node data from system inventory
         # Service groups
-        all_services = dict((s["id"], s) for s in services_description)
         for s in all_services:
             scfg = {
                 "hosts": service_nodes[s],
@@ -388,7 +390,8 @@ class Environment(Model):
             "description": d["services"][n]["description"],
             "level": d["services"][n]["level"],
             "port": d["services"][n].get("port"),
-            "require_cert": bool(d["services"][n].get("require_cert"))
+            "require_cert": bool(d["services"][n].get("require_cert")),
+            "required_assets": d["services"][n].get("required_assets", [])
         } for n in sorted(d["services"])]
         return r
 
