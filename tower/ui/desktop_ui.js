@@ -28,7 +28,7 @@ var desktop = {
                     data: [
                         {
                             id: "user_menu",
-                            icon: "user",
+                            icon: "menu_user",
                             submenu: [
                                 {
                                     id: "change_password",

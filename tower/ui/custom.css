@@ -206,3 +206,11 @@ span.ansible-skipping::before {
     font-family: FontAwesome;
     padding-right: 4px;
 }
+
+.fa-menu_user:before {
+    content: "\f007";
+    font-family: FontAwesome;
+    font-size: 20pt;
+    padding-top: 5pt;
+    vertical-align: middle;
+}
