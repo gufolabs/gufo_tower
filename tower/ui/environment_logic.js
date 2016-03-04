@@ -214,8 +214,8 @@ var environment_logic = {
                     update_clock = function() {
                         var dt = Math.floor((Date.now() - start_time) / 1000),
                             s = dt % 60,  // Seconds
-                            m = Math.floor((dt - s) / 60),
-                            t; // Minutes
+                            m = Math.floor((dt - s) / 60), // Minutes
+                            t;
                         s = (s >= 10) ? ("" + s) : ("0" + s);
                         m = (m >= 10) ? ("" + m) : ("0" + m);
                         t = m + ":" + s;
@@ -263,7 +263,7 @@ var environment_logic = {
                     // Update deploy log
                     ct = t.replace(rx_task, function (x) {
                         x = x.replace(rx_stars, "");
-                        return "<span class='ansible-task'>" + x + "</span>";
+                        return "<span class='ansible-task' style=white-space:nowrap>" + x + "<span style=color:gray> - " + clock.getValues().time + "</span></span>";
                     });
                     ct = ct.replace(rx_line, function (x) {
                         var c = x.split(":")[0];
