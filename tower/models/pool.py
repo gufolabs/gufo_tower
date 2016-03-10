@@ -39,7 +39,6 @@ class Pool(Model):
 
 @post_save(sender=Environment)
 def on_save_environment(sender, instance, created):
-    print "on_save", sender, instance, created
     if created:
         # Create default pool
         Pool(
