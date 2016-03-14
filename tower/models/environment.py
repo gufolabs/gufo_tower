@@ -287,7 +287,21 @@ class Environment(Model):
         }
         cfg["config"]["noc"] = {
             "user": self.sys_user,
-            "group": self.sys_group
+            "group": self.sys_group,
+            "installation_name": self.installation_name,
+            # Postgres settings
+            "pg_db": self.pg_db,
+            "pg_user": self.pg_user,
+            "pg_password": self.pg_password,
+            # Mongo settings
+            "mongo_db": self.mongo_db,
+            "mongo_rs": self.mongo_rs,
+            "mongo_user": self.mongo_user,
+            "mongo_password": self.mongo_password,
+            # InfluxDB settings
+            "influx_db": self.influxdb_db,
+            "influx_user": self.influxdb_user,
+            "influx_password": self.influxdb_password,
         }
         sconf = self.get_service_config()
         for sd in services_description:
