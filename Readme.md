@@ -3,13 +3,22 @@ NOC Tower is the tool for deployment and maintaining multiple
 NOC (http://nocproject.org/) installations.
 
 ## Preparation
-### Linux
+### Debian based Linux
 ```
 #!shell
 # apt-get install python-virtualenv libffi6 libffi-dev python-dev gcc
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 ```
+
+### Rhel based Linux
+```
+#!shell
+# yum install python-virtualenv libffi libffi-devel python-devel gcc
+# groupadd tower
+# useradd -d /home/tower -g tower -s /bin/bash -m tower
+```
+
 
 ### FreeBSD
 ```
@@ -70,7 +79,13 @@ Replace /opt/tower/ to directory of your choice
  (Upper right menu > Change Password)
 
 ## Prepare nodes
-On each node create ansible user (*ansible* by default),
-grant it passwordless sudo privileges and copy Tower's
-public ssh key (*/home/tower/.ssh/id_rsa.pub*) to *ansible's*
-*authorized_keys* (*/home/ansible/.ssh/authorized_keys*)
+On each node 
+* create ansible user (*ansible* by default),
+* grant it passwordless sudo privileges and copy Tower's
+* copy public ssh key (*/home/tower/.ssh/id_rsa.pub*) to *ansible's*
+```
+#!shell
+/opt/tower# su - tower -c "ssh-copy-id node_ip"
+```
+* For RHEL based systems check if "Defaults    requiretty" is commented.
+* Ensure python2.7 package installed
