@@ -18,7 +18,7 @@ import re
 import tempfile
 import json
 # Third-party modules
-from peewee import CharField, TextField, DateTimeField
+from peewee import CharField, TextField, DateTimeField, BooleanField
 from playhouse.signals import Model
 import yaml
 # Tower modules
@@ -58,6 +58,11 @@ class Environment(Model):
     repo = CharField(default="https://bitbucket.org/nocproject/noc")
     branch = CharField(default="default")
     changeset = CharField(default="tip")
+    # Custom repo settings
+    custom_enabled = BooleanField(default=True)
+    custom_repo = CharField(default="")
+    custom_branch = CharField(default="default")
+    custom_changeset = CharField(default="tip")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
     cert = TextField(default="")
@@ -101,6 +106,9 @@ class Environment(Model):
             "repo": self.repo,
             "branch": self.branch,
             "changeset": self.changeset,
+            "custom_repo": self.custom_repo,
+            "custom_branch": self.custom_branch,
+            "custom_changeset": self.custom_changeset,
             "web_host": self.web_host,
             "cert": self.cert,
             "pg_db": self.pg_db,
@@ -158,6 +166,11 @@ class Environment(Model):
                     "noc_branch": self.branch,
                     "noc_changeset": self.changeset,
                     "noc_revision": revision,
+                    # Custom Repo settings
+                    "noc_custom_enabled": self.custom_enabled and bool(self.custom_repo),
+                    "noc_custom_repo": self.custom_repo,
+                    "noc_custom_branch": self.custom_branch,
+                    "noc_custom_changeset": self.custom_changeset,
                     # Web settions
                     "noc_web_host": self.web_host,
                     # Postgres settings
@@ -220,9 +233,14 @@ class Environment(Model):
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name
             }
+            # Update with node settings
             hv = node.get_vars()
             if hv:
                 hostvars.update(hv)
+            # Set up has_svc_XXXX variables
+            for s in node_services[node.name]:
+                hostvars["has_svc_%s" % s.service] = True
+            #
             r["_meta"]["hostvars"][node.name] = hostvars
             dcn = "dc-%s" % node.datacenter.name
             if dcn not in r:

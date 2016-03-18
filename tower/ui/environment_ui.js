@@ -192,6 +192,35 @@ var environment_form = {
                 },
                 {
                     view: "fieldset",
+                    label: "Custom Repo",
+                    body: {
+                        cols: [
+                            {
+                                view: "text",
+                                name: "custom_repo",
+                                label: "Repo URL",
+                                required: false,
+                                value: ""
+                            },
+                            {
+                                view: "text",
+                                name: "custom_branch",
+                                label: "Branch",
+                                required: false,
+                                value: "default"
+                            },
+                            {
+                                view: "text",
+                                name: "custom_changeset",
+                                required: false,
+                                label: "Changeset",
+                                value: "tip"
+                            }
+                        ]
+                    }
+                },
+                {
+                    view: "fieldset",
                     label: "Web",
                     body: {
                         cols: [
