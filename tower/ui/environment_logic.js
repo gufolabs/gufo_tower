@@ -263,7 +263,7 @@ var environment_logic = {
                     // Update deploy log
                     ct = t.replace(rx_task, function (x) {
                         x = x.replace(rx_stars, "");
-                        return "<span class='ansible-task' style=white-space:nowrap>" + x + "<span style=color:gray> - " + clock.getValues().time + "</span></span>";
+                        return "<span class='ansible-task' style=white-space:nowrap>" + x + "<span style='float: right'>" + clock.getValues().time + "</span></span>";
                     });
                     ct = ct.replace(rx_line, function (x) {
                         var c = x.split(":")[0];
