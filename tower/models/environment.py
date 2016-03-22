@@ -277,10 +277,12 @@ class Environment(Model):
             r["svc-mongod-master"] = {
                 "hosts": [pri.node.name]
             }
+            r["_meta"]["hostvars"][pri.node.name]["has_svc_mongod_master"] = True
             # Add arbiter node when necessary
             r["svc-mongod-arbiter"] = {"hosts": []}
             if not len(service_data["mongod"]) % 2:
                 r["svc-mongod-arbiter"]["hosts"] = [pri.node.name]
+                r["_meta"]["hostvars"][pri.node.name]["has_svc_mongod_arbiter"] = True
         # Calculate postgres primary
         if "postgres" in service_data:
             # Elect master
@@ -293,6 +295,7 @@ class Environment(Model):
             r["svc-postgres-master"] = {
                 "hosts": [pri.node.name]
             }
+            r["_meta"]["hostvars"][pri.node.name]["has_svc_postgres_master"] = True
         # Generate etc/noc.json
         port_number = defaultdict(
             lambda: itertools.count(self.BASE_PORT)
