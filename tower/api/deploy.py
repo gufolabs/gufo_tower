@@ -97,7 +97,7 @@ class DeployHandler(BaseHandler):
             [
                 os.path.join(bin_path, "ansible-playbook"),
                 "-i", os.path.join(bin_path, "tower-inv"),
-                "site.yml"
+                "site.yml", "-f 50"
             ],
             env=env,
             stdout=tornado.process.Subprocess.STREAM,
