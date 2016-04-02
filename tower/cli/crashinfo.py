@@ -36,7 +36,7 @@ def main():
     subparsers = parser.add_subparsers(dest="cmd")
     collect_parser = subparsers.add_parser("collect")
     #
-    options = parser.parse_args(sys.argv)
+    options = parser.parse_args(sys.argv[1:])
     cmd_options = vars(options)
     args = cmd_options.pop("args", ())
     if options.cmd == "collect":
