@@ -94,6 +94,7 @@ def collect_worker(q):
         log_dir = os.path.join(
             "var", "tower", "log",
             "crashinfo",
+            "collect",
             node.environment.name,
         )
         if not os.path.isdir(log_dir):
@@ -111,7 +112,8 @@ def collect_worker(q):
             "--rsync-path=sudo rsync",
             "%s@%s:%s/var/cp/crashinfo/new/*.json" % (
                 node.login_as, node.address,
-                node.environment.sys_prefix)
+                node.environment.sys_prefix),
+            "."
         ]
         subprocess.check_call(
             cmd, cwd=cwd,
