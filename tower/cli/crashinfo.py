@@ -22,8 +22,6 @@ from tower.models.environment import Environment
 from tower.models.node import Node
 from tower.models.crashinfo import Crashinfo
 
-N_JOBS = 5
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -32,6 +30,14 @@ def main():
         action="store", dest="env",
         help="Use environment [%default]",
         default=os.environ.get("NOC_ENV", "test")
+    )
+    parser.add_argument(
+        "--jobs",
+        action="store",
+        dest="jobs",
+        type=int,
+        help="Amount of nodes fetched concurrently",
+        default=5
     )
     subparsers = parser.add_subparsers(dest="cmd")
     collect_parser = subparsers.add_parser("collect")
@@ -51,13 +57,12 @@ def die(msg):
 def collect_crashinfo(options, args):
     try:
         env = Environment.get(Environment.name == options.env)
-        print json.dumps(env.ansible_inventory())
     except Environment.DoesNotExist:
         die("Invalid environment: '%s'" % options.env)
     q = Queue.Queue()
     # Start workers
     workers = []
-    for i in range(N_JOBS):
+    for i in range(options.jobs):
         w = threading.Thread(target=collect_worker, args=(q,))
         workers += [w]
         w.start()
@@ -65,7 +70,7 @@ def collect_crashinfo(options, args):
     for node in Node.select().where(Node.environment == env):
         q.put(node)
     # Wait for workers
-    for i in range(N_JOBS):
+    for i in range(options.jobs):
         q.put(None)
     for w in workers:
         w.join()
@@ -86,18 +91,31 @@ def collect_worker(q):
                 os.makedirs(cwd)
             except OSError as e:
                 die("Cannot create directory %s" % cwd)
+        log_dir = os.path.join(
+            "var", "tower", "log",
+            "crashinfo",
+            node.environment.name,
+        )
+        if not os.path.isdir(log_dir):
+            try:
+                os.makedirs(log_dir)
+            except OSError as e:
+                die("Cannot create directory %s" % log_dir)
+        log_file = "%s/%s.log" % (log_dir, node.name)
+        lf = open(log_file, "w")
 
         cmd = [
             "rsync",
             "-avz",
             "-e ssh",
-            "--rsync-path='sudo rsync'",
-            "--log-file=var/tower/log/crashinfo/collect/%s-%s.log" % (
-                node.environment.name, node.name),
+            "--rsync-path=sudo rsync",
             "%s@%s:%s/var/cp/crashinfo/new/*.json" % (
                 node.login_as, node.address,
                 node.environment.sys_prefix)
         ]
         subprocess.check_call(
-            cmd, cwd=cwd
+            cmd, cwd=cwd,
+            stdout=lf,
+            stderr=lf
         )
+        lf.close()
