@@ -1,4 +1,2 @@
 include VERSION
-include README.rst
-exclude tower/ui/workspace.json
-recursive-exclude tower/ui/apps *
+include Readme.md

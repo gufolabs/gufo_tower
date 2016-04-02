@@ -19,7 +19,10 @@ class TowerInstall(install):
     def run(self):
         install.run(self)
         # Create directories
-        for d in ["db", "cache", "repo", "log/jobs", "ansible/cp"]:
+        for d in ["db", "cache", "repo",
+                  "log/jobs",
+                  "log/crashinfo/collect",
+                  "ansible/cp", "crashinfo"]:
             path = os.path.join(self.prefix, "var", "tower", d)
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -59,6 +62,7 @@ def main():
         entry_points={
             "console_scripts": [
                 "tower-inv = tower.cli.inv:main",
+                "tower-collect-crashinfo = tower.cli.crashinfo:main",
                 "tower-web = tower.daemons.web:run"
             ]
         },
