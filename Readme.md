@@ -87,5 +87,12 @@ On each node
 #!shell
 /opt/tower# su - tower -c "ssh-copy-id node_ip"
 ```
+
+## RHEL Only
 * For RHEL based systems check if "Defaults    requiretty" is commented.
 * Ensure python2.7 package installed
+* Create new file on tower in /opt/tower/var/tower/playbooks/ENV_NAME/ansible/vars/local.yml with such lines
+```
+rhel_subscription_username: ""
+rhel_subscription_password: ""
+````
