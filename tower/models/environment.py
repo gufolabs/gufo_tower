@@ -296,10 +296,19 @@ class Environment(Model):
                 "hosts": [pri.node.name]
             }
             r["_meta"]["hostvars"][pri.node.name]["has_svc_postgres_master"] = True
-        # Generate etc/noc.json
+        # Generate etc/noc.yml
         port_number = defaultdict(
             lambda: itertools.count(self.BASE_PORT)
         )
+        # service -> offset
+        global_offset = defaultdict(int)
+        global_n_instances = defaultdict(int)
+        for sd in services_description:
+            for d in service_data[sd["name"]]:
+                pool_name = d.pool.name if d.pool else None
+                sp = "%s-%s" % (sd["name"], pool_name) if pool_name else sd["name"]
+                global_n_instances[sp] += d.n_instances
+        #
         cfg = {
             "services": {},
             "config": {},
@@ -355,8 +364,11 @@ class Environment(Model):
                     cfg["config"][ncfg] = {
                         "listen": listen,
                         "loglevel": d.loglevel,
-                        "n_instances": d.n_instances
+                        "n_instances": d.n_instances,
+                        "global_offset": global_offset[sp],
+                        "global_n_instances": global_n_instances[sp]
                     }
+                    global_offset[sp] += d.n_instances
                     if pool_id in sconf and sd["name"] in sconf[pool_id]:
                         cfg["config"][ncfg].update(
                             sconf[pool_id][sd["name"]]
