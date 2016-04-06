@@ -130,7 +130,7 @@ var environment_logic = {
     on_show_inventory: function () {
         API.environment.ansible_inventory(app_logic.current_env.id).then(function (result) {
             $$("environment_inventory_text").setValues({
-                text: JSON.stringify(result, undefined, 2)
+                text: result  // JSON.stringify(result, undefined, 2)
             });
             $$("environment_inventory_panel").show();
         }, function (err) {

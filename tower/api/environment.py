@@ -6,6 +6,8 @@
 ## See LICENSE for details
 ##----------------------------------------------------------------------
 
+# Third-party models
+import yaml
 # Tower models
 from model import ModelAPI, api
 from tower.models.environment import Environment
@@ -18,4 +20,4 @@ class EnvironmentAPI(ModelAPI):
     @api
     def ansible_inventory(self, env_id):
         e = Environment.get(Environment.id == int(env_id))
-        return e.ansible_inventory()
+        return yaml.dump(e.ansible_inventory())
