@@ -153,6 +153,8 @@ class ServiceAPI(API):
                 c["view"] = "text"
             elif v["type"] == "int":
                 c["view"] = "counter"
+            elif v["type"] == "bool":
+                c["view"] = "checkbox"
             description = v.get("description")
             if description:
                 c["bottomLabel"] = description
