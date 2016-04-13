@@ -466,7 +466,7 @@ class Environment(Model):
                         subprocess.check_call(
                             ["ssh-keygen", "-q", "-t", t, "-b", str(b),
                             "-f", fn,
-                            "-N", "\"\"", "-C", "%s@noc" % pool.name]
+                            "-N", "\\\\\"\\\\\"", "-C", "%s@noc" % pool.name]
                         )
                     else:
                         subprocess.check_call(
