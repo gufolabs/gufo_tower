@@ -96,3 +96,10 @@ On each node
 rhel_subscription_username: ""
 rhel_subscription_password: ""
 ````
+
+## Proxy 
+In cause of using proxy for internet acces you should set proxy settings to `/home/tower/.hgrc` that way
+```
+[http_proxy]
+host=192.168.1.1:3128
+```
