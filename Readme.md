@@ -92,6 +92,7 @@ On each node
 * For RHEL based systems check if "Defaults    requiretty" is commented.
 * Ensure python2.7 package installed
 * Create new file on tower in /opt/tower/var/tower/playbooks/ENV_NAME/ansible/vars/local.yml with such lines
+
 ```
 rhel_subscription_username: ""
 rhel_subscription_password: ""
@@ -99,6 +100,7 @@ rhel_subscription_password: ""
 
 ## Proxy 
 In cause of using proxy for internet acces you should set proxy settings to `/home/tower/.hgrc` that way
+
 ```
 [http_proxy]
 host=192.168.1.1:3128
