@@ -354,8 +354,6 @@ class Environment(Model):
                             d.node.get_address(),
                             port_number[d.node.name].next()
                         )]
-                if sd["level"] == "system":
-                    continue
                 #
                 ncfg = "%s-%s-%s" % (
                     sd["name"], pool_name or "global", d.node.name
