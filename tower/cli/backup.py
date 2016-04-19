@@ -25,7 +25,7 @@ def dump():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--output",
-        default="/sys/stdout",
+        default="/dev/stdout",
         help="Output path"
     )
     args = parser.parse_args()
