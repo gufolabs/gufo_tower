@@ -1,0 +1,12 @@
+[Unit]
+Description=NOC supervisor service
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/tower
+User=tower
+ExecStart=/opt/tower/bin/tower-web
+Environment="https_proxy=10.36.141.6:8080"
+
+[Install]
+WantedBy=multi-user.target

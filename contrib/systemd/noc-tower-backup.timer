@@ -1,0 +1,6 @@
+[Unit]
+Description=Run tower-backup.service every day
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=180
