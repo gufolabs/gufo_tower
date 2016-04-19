@@ -48,7 +48,7 @@ def restore():
     db = db_path()
     if os.path.exists(db):
         shutil.move(db, db + ".bak")
-    with open(args.input, "r") as f:
+    with open(args.input[0], "r") as f:
         subprocess.check_call([
             sqlite_path(),
             db
