@@ -63,7 +63,9 @@ def main():
             "console_scripts": [
                 "tower-inv = tower.cli.inv:main",
                 "tower-collect-crashinfo = tower.cli.crashinfo:main",
-                "tower-web = tower.daemons.web:run"
+                "tower-web = tower.daemons.web:run",
+                "tower-dump = tower.cli.backup:dump",
+                "tower-restore = tower.cli.backup:restore"
             ]
         },
         scripts=["bin/tower-upgrade"],
