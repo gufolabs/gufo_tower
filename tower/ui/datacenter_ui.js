@@ -103,6 +103,12 @@ var datacenter_form = {
                     label: "Description",
                     height: 150
                 },
+                {
+                    view: "text",
+                    name: "proxy",
+                    label: "Proxy",
+                    placeholder: "Proxy address:port"
+                },
                 {}
             ]
         }
