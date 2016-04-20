@@ -19,12 +19,14 @@ class Datacenter(Model):
 
     name = CharField(unique=True)
     description = TextField()
+    proxy = CharField(null=True)
 
     def list_item(self):
         return {
             "id": str(self.id),
             "name": self.name,
-            "description": self.description
+            "description": self.description,
+            "proxy": self.proxy
         }
 
     def reference_item(self):

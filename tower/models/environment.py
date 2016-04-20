@@ -245,8 +245,11 @@ class Environment(Model):
             dcn = "dc-%s" % node.datacenter.name
             if dcn not in r:
                 r[dcn] = {
-                    "hosts": []
+                    "hosts": [],
+                    "vars": {}
                 }
+                if node.datacenter.proxy:
+                    r[dcn]["vars"]["proxy"] = node.datacenter.proxy
             r[dcn]["hosts"] += [node.name]
             required_assets = []
             for s in node_services[node.name]:
