@@ -63,6 +63,7 @@ class Environment(Model):
     custom_repo = CharField(default="")
     custom_branch = CharField(default="default")
     custom_changeset = CharField(default="tip")
+    metrics_collector = CharField(default="")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
     cert = TextField(default="")
@@ -109,6 +110,7 @@ class Environment(Model):
             "custom_repo": self.custom_repo,
             "custom_branch": self.custom_branch,
             "custom_changeset": self.custom_changeset,
+            "metrics_collector": self.metrics_collector,
             "web_host": self.web_host,
             "cert": self.cert,
             "pg_db": self.pg_db,
@@ -171,6 +173,7 @@ class Environment(Model):
                     "noc_custom_repo": self.custom_repo,
                     "noc_custom_branch": self.custom_branch,
                     "noc_custom_changeset": self.custom_changeset,
+                    "noc_metrics_collector": self.metrics_collector,
                     # Web settions
                     "noc_web_host": self.web_host,
                     # Postgres settings

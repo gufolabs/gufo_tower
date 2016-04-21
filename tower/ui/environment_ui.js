@@ -387,6 +387,22 @@ var environment_form = {
                         ]
                     }
                 },
+                {
+                    view: "fieldset",
+                    label: "Additional Infrastructure",
+                    body: {
+                        cols: [
+                            {
+                                view: "text",
+                                name: "metrics_collector",
+                                label: "Metrics collector",
+                                value: "",
+                                required: false
+                            }
+                        ]
+                    }
+                },
+
                 {}
             ]
         }
