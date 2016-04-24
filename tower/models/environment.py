@@ -161,6 +161,7 @@ class Environment(Model):
                     "noc_installation_name": self.installation_name,
                     # System settings
                     "noc_root": self.sys_prefix,
+                    "noc_env_type": self.env_type,
                     "noc_user": self.sys_user,
                     "noc_group": self.sys_group,
                     # Repo settings
