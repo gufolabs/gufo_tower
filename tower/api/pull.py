@@ -145,6 +145,37 @@ class PullAPI(API):
                     os.path.join("..", "..", "..", "..", env.playbook_path)
                 ]
             )
+            if env.custom_repo:
+                logger.info("Pulling custom repo")
+                # Pull Repo
+                if not os.path.exists(env.custom_repo_path):
+                    logger.info("Cloning %s to %s",
+                                env.custom_repo, env.custom_repo_path)
+                    # Clone directory
+                    subprocess.check_call(
+                        [
+                            "./bin/hg",
+                            "-q",
+                            "clone",
+                            "-b", env.custom_branch,
+                            "-r", env.custom_changeset,
+                            "-U",
+                            env.custom_repo,
+                            env.custom_repo_path
+                        ]
+                    )
+                # Pull updates
+                logger.info("Updating %s", env.repo_path)
+                subprocess.check_call(
+                    [
+                        "./bin/hg",
+                        "-q",
+                        "--cwd=%s" % env.custom_repo_path,
+                        "pull",
+                        "-b", env.custom_branch,
+                        "-r", env.custom_changeset
+                    ]
+                )
             logger.info("Pulling complete")
         except KeyboardInterrupt:
             raise
