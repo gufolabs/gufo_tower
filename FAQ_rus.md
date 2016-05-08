@@ -4,7 +4,7 @@
 **В**: Зачем вообще нужна tower ?
 
 **О**: Конфигурации NOC разрослась настолько сильно, что сконфигурировать NOC на крупной инсталляции руками стало очень сложно.
-Tower позволяет сделать service registry. Gодробности можно почитать тут https://www.nginx.com/blog/service-discovery-in-a-microservices-architecture/
+Tower позволяет сделать service registry. Подробности можно почитать тут https://www.nginx.com/blog/service-discovery-in-a-microservices-architecture/
 
 **В**: Что такое `Environment`
 
@@ -32,7 +32,17 @@ Tower позволяет сделать service registry. Gодробности 
  * пользователь ansible должен иметь возможность сделать `sudo -s` *без пароля*
  * на ноде должен быть установлен python2
 
-**В**: Как должна быть настроен сервер tower ?
+**В**: Что делать с ошибкой `ERROR! SSH Error: data could not be sent to the remote host. Make sure this host can be reached over ssh", "unreachable"`?
+
+**О**: Проверить так
+ ```
+ tower# su - tower
+ tower% ssh ansible@host
+ host% sudo -s
+ ```
+Команды должны пройти легко и без ошибок.
+
+**В**: Как должен быть настроен сервер tower ?
 
 **О**: В целом конфигурация описана в Readme.md. Однако в подробностях процесс выглядит так
 * Сам web сервис запускается из под пользователя tower. С консоли в простейшем случае или через systemd (см. `contrib/systemd`)
@@ -45,7 +55,7 @@ Tower позволяет сделать service registry. Gодробности 
 ```
 где `NAME` это имя заданное в названии `Environment`. После задания переменных и начальной конфигурации системы  можно вполне пользоваться консольными командами. А не нажимать кнопку в web интерфейсе
 
-**В**: В чем еще преимущества пользования консолью вместо web ?
+**В**: В чем еще преимущества использования консоли вместо web ?
 
 **О**: Там можно более точно управлять что именно и как именно должно происходить. К примеру
 * Пропустить все шаги playbook кроме обновления исходного кода.
@@ -65,17 +75,10 @@ Tower позволяет сделать service registry. Gодробности 
 В целом это может поломать деплой. Особенно когда происходят изменения в postgres схеме
 Ну и конечно теги можно комбинировать примерно так `--tags config,mercurial` главное не делать между ними пробелов
 
-**В**: На чем написаны deploy скрипты
+**В**: На чем написаны deploy скрипты?
 
 **О**: На ansible. http://docs.ansible.com/ansible/intro.html
 
+**В**: Я поставил по инструкции и все проверил, однако при инсталяции у меня ошибка. Где спросить помощи?
 
-**В**: Что делать с ошибкой `ERROR! SSH Error: data could not be sent to the remote host. Make sure this host can be reached over ssh", "unreachable"`
-
-**О**: Проверить так
- ```
- tower# su - tower
- tower% ssh ansible@host
- host% sudo -s
- ```
-Команды доджны пройти легко и без ошибок.
+**О**: Можно тут https://telegram.me/nocproject
