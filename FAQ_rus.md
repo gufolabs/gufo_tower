@@ -1,0 +1,81 @@
+Типовые вопросы при установке с башни
+====================================
+
+**В**: Зачем вообще нужна tower ?
+
+**О**: Конфигурации NOC разрослась настолько сильно, что сконфигурировать NOC на крупной инсталляции руками стало очень сложно.
+Tower позволяет сделать service registry. Gодробности можно почитать тут https://www.nginx.com/blog/service-discovery-in-a-microservices-architecture/
+
+**В**: Что такое `Environment`
+
+**О**: Это окружение. Грубо со временем в компании появляется две и более установки системы, например одна для тестов, а другая продуктовая. Соответственно можно задать в tower два окружения и управлять через нее.
+
+**В**: Можно ли поставить tower и noc на один сервер?
+
+**О**: Мы рекомендуем разделить командную ноду и саму систему.
+С точки зрения последующей эксплуатации предполагается, что на tower будет разворачиваться дополнительные инфраструктурные сервисы, анализатор логов, сбор метрик работы самой системы.
+Однако поставить всё таки можно. Для этого при создании node надо задать вариант установки Linux/FreeBSD, позже в консоли выполнить следующие команды
+ ```
+ sqlite3 /opt/tower/var/tower/db/config.db
+ update node_type set ansible_connection='local' where id=2;
+ ```
+соответственно `id=2` это FreeBSD. Однако, такая конфигурация не совсем тестируется и может поломаться.
+
+**В**: Что такое `node` ?
+
+**О**: В терминологии системы нода это сервер на котором будет крутится часть сервисов системы. Например DB или web сервер.
+
+**В**: Как должна быть настроена нода ?
+
+**О**: На ноде должен быть:
+ * создан пользователь ansible
+ * пользователь ansible должен иметь возможность сделать `sudo -s` *без пароля*
+ * на ноде должен быть установлен python2
+
+**В**: Как должна быть настроен сервер tower ?
+
+**О**: В целом конфигурация описана в Readme.md. Однако в подробностях процесс выглядит так
+* Сам web сервис запускается из под пользователя tower. С консоли в простейшем случае или через systemd (см. `contrib/systemd`)
+* Через web интерфейс принимается команда Deploy. Она выполняется из под пользователя tower и условно делает следующие команды
+```
+# su - tower
+% cd /opt/tower/var/tower/playbooks/<NAME>/ansible/
+% export ANSIBLE_SSH_PIPELINING=1 ANSIBLE_HOST_KEY_CHECKING=1 PYTHONUNBUFFERED=1 NOC_ENV=<NAME>
+% /opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 50;
+```
+где `NAME` это имя заданное в названии `Environment`. После задания переменных и начальной конфигурации системы  можно вполне пользоваться консольными командами. А не нажимать кнопку в web интерфейсе
+
+**В**: В чем еще преимущества пользования консолью вместо web ?
+
+**О**: Там можно более точно управлять что именно и как именно должно происходить. К примеру
+* Пропустить все шаги playbook кроме обновления исходного кода.
+```
+# su - tower
+% cd /opt/tower/var/tower/playbooks/<NAME>/ansible/
+% export ANSIBLE_SSH_PIPELINING=1 ANSIBLE_HOST_KEY_CHECKING=1 PYTHONUNBUFFERED=1 NOC_ENV=<NAME>
+/opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --tags mercurial;
+```
+* А так можно выполнить реконфигурацию системы. При этом рестарт системы будет плавным. Выключаться всё на время деплоя не будет. только последним шагом будет сделан плавный рестарт.
+```
+# su - tower
+% cd /opt/tower/var/tower/playbooks/<NAME>/ansible/
+% export ANSIBLE_SSH_PIPELINING=1 ANSIBLE_HOST_KEY_CHECKING=1 PYTHONUNBUFFERED=1 NOC_ENV=<NAME>
+/opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --tags config;
+```
+В целом это может поломать деплой. Особенно когда происходят изменения в postgres схеме
+Ну и конечно теги можно комбинировать примерно так `--tags config,mercurial` главное не делать между ними пробелов
+
+**В**: На чем написаны deploy скрипты
+
+**О**: На ansible. http://docs.ansible.com/ansible/intro.html
+
+
+**В**: Что делать с ошибкой `ERROR! SSH Error: data could not be sent to the remote host. Make sure this host can be reached over ssh", "unreachable"`
+
+**О**: Проверить так
+ ```
+ tower# su - tower
+ tower% ssh ansible@host
+ host% sudo -s
+ ```
+Команды доджны пройти легко и без ошибок.
