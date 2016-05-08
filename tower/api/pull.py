@@ -2,7 +2,7 @@
 ##----------------------------------------------------------------------
 ## Pull repo
 ##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
+## Copyright (C) 2007-2016 The NOC Project
 ## See LICENSE for details
 ##----------------------------------------------------------------------
 
@@ -12,6 +12,7 @@ import subprocess
 import datetime
 import os
 import shutil
+import urlparse
 # Third-party modules
 from concurrent.futures import ThreadPoolExecutor
 # Tower modules
@@ -95,6 +96,24 @@ class PullAPI(API):
         :param env:
         :return:
         """
+        def update_hgrc(hgrc, url):
+            p = urlparse.urlsplit(url)
+            r = []
+            if p.scheme in ("http", "https"):
+                if "@" in p.netloc:
+                    if p.username and p.password:
+                        url = "%s://%s%s" % (p.scheme, p.netloc.rsplit("@")[-1], p.path)
+                        r += ["[auth]"]
+                        r += ["bb.prefix = %s" % url]
+                        r += ["bb.username = %s" % p.username]
+                        r += ["bb.password = %s" % p.password]
+            r += ["[paths]"]
+            r += ["default = %s" % url]
+            r += ["[ui]"]
+            logger.info("Updating %s", hgrc)
+            with open(hgrc, "w") as f:
+                f.write("\n".join(r))
+
         env = job.environment
         status = True
         log = []
@@ -115,6 +134,8 @@ class PullAPI(API):
                         env.repo_path
                     ]
                 )
+            #
+            update_hgrc(os.path.join(env.repo_path, ".hg", "hgrc"), env.repo)
             # Pull updates
             logger.info("Updating %s", env.repo_path)
             subprocess.check_call(
@@ -145,11 +166,44 @@ class PullAPI(API):
                     os.path.join("..", "..", "..", "..", env.playbook_path)
                 ]
             )
+            if env.custom_repo:
+                logger.info("Pulling custom repo")
+                # Pull Repo
+                if not os.path.exists(env.custom_repo_path):
+                    logger.info("Cloning %s to %s",
+                                env.custom_repo, env.custom_repo_path)
+                    # Clone directory
+                    subprocess.check_call(
+                        [
+                            "./bin/hg",
+                            "-q",
+                            "clone",
+                            "-b", env.custom_branch,
+                            "-r", env.custom_changeset,
+                            "-U",
+                            env.custom_repo,
+                            env.custom_repo_path
+                        ]
+                    )
+                #
+                update_hgrc(os.path.join(env.custom_repo_path, ".hg", "hgrc"), env.custom_repo)
+                # Pull updates
+                logger.info("Updating %s", env.custom_repo_path)
+                subprocess.check_call(
+                    [
+                        "./bin/hg",
+                        "-q",
+                        "--cwd=%s" % env.custom_repo_path,
+                        "pull",
+                        "-b", env.custom_branch,
+                        "-r", env.custom_changeset
+                    ]
+                )
             logger.info("Pulling complete")
         except KeyboardInterrupt:
             raise
-        except:
-            logger.error("Pull error")
+        except Exception as e:
+            logger.error("Pull error: %s", e)
             status = False
         with db.atomic():
             job.complete_ts = datetime.datetime.now()

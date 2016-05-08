@@ -151,6 +151,19 @@ class Environment(Model):
         else:
             revision = self.changeset
 
+        if self.custom_repo:
+            custom_repo = Settings.get_repo_url()
+            if not custom_repo.endswith("/"):
+                custom_repo += "/"
+                custom_repo += "%s" % self.custom_repo_hash
+            if self.custom_changeset == "tip":
+                custom_revision = self.custom_branch
+            else:
+                custom_revision = self.custom_changeset
+        else:
+            custom_repo = None
+            custom_revision = None
+
         services_description = self.get_services_description()
         #
         r = {
@@ -171,9 +184,10 @@ class Environment(Model):
                     "noc_revision": revision,
                     # Custom Repo settings
                     "noc_custom_enabled": self.custom_enabled and bool(self.custom_repo),
-                    "noc_custom_repo": self.custom_repo,
+                    "noc_custom_repo": custom_repo,
                     "noc_custom_branch": self.custom_branch,
                     "noc_custom_changeset": self.custom_changeset,
+                    "noc_custom_revision": custom_revision,
                     "noc_metrics_collector": self.metrics_collector,
                     # Web settions
                     "noc_web_host": self.web_host,
@@ -401,6 +415,12 @@ class Environment(Model):
         )[:6]
 
     @property
+    def custom_repo_hash(self):
+        return base64.b32encode(
+            hashlib.sha1(self.custom_repo).digest()
+        )[:6]
+
+    @property
     def playbook_path(self):
         return os.path.join("var", "tower", "playbooks", self.name)
 
@@ -416,6 +436,10 @@ class Environment(Model):
     @property
     def repo_path(self):
         return os.path.join("var", "tower", "repo", self.repo_hash)
+
+    @property
+    def custom_repo_path(self):
+        return os.path.join("var", "tower", "repo", self.custom_repo_hash)
 
     @property
     def data_path(self):
