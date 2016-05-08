@@ -51,6 +51,7 @@ RHEL 7+, Debian, Ubuntu, Centos, FreeBSD. Однако лучше всего т�
  tower# su - tower
  tower% ssh ansible@host
  host% sudo -s
+ host# python
  ```
 Команды должны пройти легко и без ошибок.
 
