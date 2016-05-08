@@ -5,6 +5,15 @@
 /*
  * Desktop styling
  */
+ 
+.checked{
+    background:green;
+    width:16px; height:16px; margin-top:8px;
+}
+.notchecked{
+    background:red;
+    width:16px; height:16px; margin-top:8px;
+}
 div[view_id="desktop_header"],
 div[view_id="desktop_menu"],
 div[view_id="desktop_menu"] .webix_list_item {
