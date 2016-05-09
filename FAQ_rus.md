@@ -87,10 +87,23 @@ RHEL 7+, Debian, Ubuntu, Centos, FreeBSD. Однако лучше всего т�
 ```
 В целом это может поломать деплой. Особенно когда происходят изменения в postgres схеме
 Ну и конечно теги можно комбинировать примерно так `--tags config,mercurial` главное не делать между ними пробелов
+* Бывает что в результате каких то изменений коллекции ломаются. Обычно это выглядит вот так
+```
+TASK [migrate : Synchronize collections] ***************************************
+fatal: [host]: FAILED! => {"changed": true, "cmd": ["./noc", "collection", "--sync"], "delta": "0:00:41.528846", "end": "2016-05-09 10:30:52.375631", "failed": true, "rc": 1, "start": "2016-05-09 10:30:10.846785", "stderr": "Error: Checksum mismatch for file 'XXX.json'", "stdout": "", "stdout_lines": [], "warnings": []}
+```
+в таких случаях процесс синхронизации коллекций можно временно пропустить, вот так
+```
+% NOC_ENV=<NAME> /opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --skip-tags coll_sync
+```
 
 **В**: На чем написаны deploy скрипты?
 
 **О**: На ansible. http://docs.ansible.com/ansible/intro.html
+
+**В**: Где лежат deploy скрипты ?
+
+**О**: В основном репозитарии [тут](https://bitbucket.org/nocproject/noc/src/e053b5692507e3fa67951873150fbca15d3cbcf5/ansible/?at=feature/microservices)
 
 **В**: Я поставил по инструкции и все проверил, однако при инсталяции у меня ошибка. Где спросить помощи?
 
