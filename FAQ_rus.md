@@ -112,3 +112,7 @@ fatal: [host]: FAILED! => {"changed": true, "cmd": ["./noc", "collection", "--sy
 **В**: А где же deploy через `docker` ?
 
 **О**: Пока нету. Будем думать об этом как только поймем, что делать с FreeBSD. https://wiki.freebsd.org/Docker
+
+**В**: Где хранится конфиг services на башне?
+
+**О**: В `/opt/tower/var/tower/db/config.db` в таблице `service` некоторые в `environment`.
