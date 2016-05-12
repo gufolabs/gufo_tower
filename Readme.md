@@ -6,7 +6,7 @@ NOC (http://nocproject.org/) installations.
 ### Debian based Linux
 ```
 #!shell
-# apt-get install python-virtualenv libffi6 libffi-dev python-dev gcc
+# apt-get install python-virtualenv libffi6 libffi-dev python-dev gcc libssl-dev
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 ```
