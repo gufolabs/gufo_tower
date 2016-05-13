@@ -116,3 +116,15 @@ fatal: [host]: FAILED! => {"changed": true, "cmd": ["./noc", "collection", "--sy
 **В**: Где хранится конфиг services на башне?
 
 **О**: В `/opt/tower/var/tower/db/config.db` в таблице `service` некоторые в `environment`.
+
+**В**: Как диагностировать ошибку "No handlers could be found for logger \"noc.lib.nosql\""
+
+**О**: Команды диагностики нужно выполнять на сервере с поставленным, пусть и не до конца, сервером noc
+```
+# cd /opt/noc
+# ./noc shell
+import logging
+logging.basicConfig(level=logging.DEBUG)
+from noc.sa.models.managedobject import ManagedObject
+```
+Дальше по обстоятельсвам.
