@@ -5,7 +5,7 @@ After=network.target
 [Service]
 WorkingDirectory=/opt/tower
 User=tower
-ExecStart=/opt/tower/bin/tower-web
+ExecStart=/opt/tower/bin/tower-web --listen=127.0.0.1:8888
 
 [Install]
 WantedBy=multi-user.target
