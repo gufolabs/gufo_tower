@@ -4,3 +4,4 @@ tornado==4.3
 bcrypt==2.0.0
 mercurial>=3.5.1
 futures==3.0.3
+setuptools>=11.3
