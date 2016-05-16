@@ -46,7 +46,8 @@ var login_form = {
                                             view: "button",
                                             value: "Login",
                                             width: 100,
-                                            click: "login_logic.on_login"
+                                            click: "login_logic.on_login",
+                                            hotkey: "enter"
                                         },
                                         {
                                             view: "button",
