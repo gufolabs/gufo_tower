@@ -62,6 +62,7 @@ def main():
         entry_points={
             "console_scripts": [
                 "tower-inv = tower.cli.inv:main",
+                "tower-pull = tower.cli.pull:main",
                 "tower-collect-crashinfo = tower.cli.crashinfo:main",
                 "tower-web = tower.daemons.web:run",
                 "tower-dump = tower.cli.backup:dump",
