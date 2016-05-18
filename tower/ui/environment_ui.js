@@ -49,6 +49,16 @@ var environment_list = {
                     click: "environment_logic.on_deploy",
                     autowidth: true,
                     disabled: true
+                },
+                {
+                    view: "button",
+                    id: "environment_deploy_src_button",
+                    type: "icon",
+                    icon: "play",
+                    label: "Deploy only sources",
+                    click: "environment_logic.on_deploy_src",
+                    autowidth: true,
+                    disabled: true
                 }
 
             ]
