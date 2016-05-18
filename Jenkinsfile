@@ -1,8 +1,7 @@
 stage 'Build'
 node {
    stage 'Clone'
-   sh 'hg clone https://bitbucket.org/nocproject/noc-tower'
-   sh 'cd noc-tower'
+   checkout scm
    stage 'Stage 1 build bztar'
    sh "./contrib/scripts/build.sh"
 }
