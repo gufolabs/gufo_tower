@@ -1,6 +1,7 @@
 # NOC Tower
 NOC Tower is the tool for deployment and maintaining multiple
 NOC (http://nocproject.org/) installations.
+[![Build Status](https://ci.nocproject.org/job/tower-pipeline/badge/icon)](https://ci.nocproject.org/job/tower-pipeline/)
 
 ## Preparation
 ### Debian based Linux
