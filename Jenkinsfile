@@ -1,4 +1,4 @@
-Stage build
+stage 'Build'
 node {
    Stage 'Clone'
    hg clone https://bitbucket.org/nocproject/noc-tower
