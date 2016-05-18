@@ -365,7 +365,7 @@ var environment_logic = {
                 output_panel.setHTML("");  // Clean output
                 xhr.open(
                     "GET",
-                    "/deploy/" + env_name + "/",
+                    "/deploy_src/" + env_name + "/",
                     true
                 );
                 xhr.onprogress = function () {
