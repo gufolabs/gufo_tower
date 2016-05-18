@@ -127,4 +127,4 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 from noc.sa.models.managedobject import ManagedObject
 ```
-Дальше по обстоятельсвам.
+Дальше по обстоятельсвам. Чаще всего это означает, что слетеле авторизация в mongo.
