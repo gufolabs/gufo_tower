@@ -492,17 +492,17 @@ class Environment(Model):
                     logging.info("Generating %s key for pool %s",
                                  t, pool.name)
                     if os.getenv("OSTYPE") == "FreeBSD":
-                        subprocess.check_call(
-                        ["ssh-keygen", "-q", "-t", t, "-b", str(b),
-                        "-f", fn,
-                        "-N", "\\\\\"\\\\\"", "-C", "%s@noc" % pool.name]
-                        )
+                        subprocess.check_call([
+                            "ssh-keygen", "-q", "-t", t, "-b", str(b),
+                            "-f", fn,
+                            "-N", "\\\\\"\\\\\"", "-C", "%s@noc" % pool.name
+                        ])
                     else:
-                        subprocess.check_call(
-                        ["ssh-keygen", "-q", "-t", t, "-b", str(b),
-                        "-f", fn,
-                        "-N", "", "-C", "%s@noc" % pool.name]
-                        )
+                        subprocess.check_call([
+                            "ssh-keygen", "-q", "-t", t, "-b", str(b),
+                            "-f", fn,
+                            "-N", "", "-C", "%s@noc" % pool.name
+                        ])
 
     rx_pk = re.compile(
         r"-----BEGIN (?P<type>\S*\s*)PRIVATE KEY-----"
