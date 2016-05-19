@@ -28,7 +28,7 @@ from tower.models.settings import Settings
 logger = logging.getLogger(__name__)
 
 
-class DeployScrHandler(BaseHandler):
+class DeploySrcHandler(BaseHandler):
     SUPPORTED_METHODS = ("GET",)
     BUFFSIZE = 1048576
 
@@ -86,12 +86,12 @@ class DeployScrHandler(BaseHandler):
             "PYTHONUNBUFFERED": "1"
         })
         # Generate md5 checksum for requirements files
-        for i in ['activator', 'classifier', 'dev', 'node', 'notebook', \
-            'notifier', 'web']:
+        for i in ['activator', 'classifier', 'dev', 'node', 'notebook',
+        'notifier', 'web']:
             f = os.path.join(self.env.sys_prefix, "requirements", i + ".txt")
             if os.path.isfile(f):
                 md5 = hashlib.md5(open(f, 'rb').read()).hexdigest()
-                env.update({"NOC_" + i.upper() +"_MD5": md5})
+                env.update({"NOC_" + i.upper() + "_MD5": md5})
 
         self.sp = tornado.process.Subprocess(
             [

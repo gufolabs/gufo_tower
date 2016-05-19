@@ -90,7 +90,7 @@ class ServiceAPI(API):
         # Load existing configuration
         svc_cfg = env.get_service_config()
         # Load nodes config
-        node_cfg = {} # pool, service, node_id -> config
+        node_cfg = {}  # pool, service, node_id -> config
         for c in Service.select().where(Service.environment == env):
             node_cfg[c.pool.id if c.pool else None, c.service, c.node_id] = {
                 "n_instances": c.n_instances,
@@ -203,7 +203,7 @@ class ServiceAPI(API):
             c = ncfg.get((pool, s.service, s.node.id))
             if c:
                 if (c["n_instances"] != s.n_instances or
-                            c["loglevel"] != s.loglevel):
+                    c["loglevel"] != s.loglevel):
                     # Changed
                     s.n_instances = c["n_instances"]
                     s.loglevel = c["loglevel"]
