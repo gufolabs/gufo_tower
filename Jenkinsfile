@@ -2,8 +2,11 @@ stage 'Build'
 node {
    stage 'Clone'
    checkout scm
+   stage 'Stage 0 clean up'
+   sh 'rm -r dist/* build/*'
+   sh 'python setup.py clean'
    stage 'Stage 1 test pep8'
-   sh 'pep8 --ignore=E265,E266,E501 .'
+   sh 'pep8 --ignore=E265,E266,E501,E402 .'
    stage 'Stage 2 build bztar'
    sh 'python setup.py sdist --format=bztar'
    stage 'Stage 99 artifact'
