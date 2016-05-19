@@ -28,7 +28,7 @@ from tower.models.settings import Settings
 logger = logging.getLogger(__name__)
 
 
-class DeployScrHandler(BaseHandler):
+class DeploySrcHandler(BaseHandler):
     SUPPORTED_METHODS = ("GET",)
     BUFFSIZE = 1048576
 
