@@ -493,15 +493,15 @@ class Environment(Model):
                                  t, pool.name)
                     if os.getenv("OSTYPE") == "FreeBSD":
                         subprocess.check_call(
-                            ["ssh-keygen", "-q", "-t", t, "-b", str(b),
-                            "-f", fn,
-                            "-N", "\\\\\"\\\\\"", "-C", "%s@noc" % pool.name]
+                        ["ssh-keygen", "-q", "-t", t, "-b", str(b),
+                        "-f", fn,
+                        "-N", "\\\\\"\\\\\"", "-C", "%s@noc" % pool.name]
                         )
                     else:
                         subprocess.check_call(
-                            ["ssh-keygen", "-q", "-t", t, "-b", str(b),
-                            "-f", fn,
-                            "-N", "", "-C", "%s@noc" % pool.name]
+                        ["ssh-keygen", "-q", "-t", t, "-b", str(b),
+                        "-f", fn,
+                        "-N", "", "-C", "%s@noc" % pool.name]
                         )
 
     rx_pk = re.compile(
