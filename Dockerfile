@@ -10,6 +10,7 @@ RUN apt-get update \
         python-dev gcc \
         openssh-client \
         libssl-dev \
+    && rm -rf /var/cache/apk/* && rm -rf /var/lib/apt/lists/*
     && mkdir /opt/tower \
     && cd /opt/tower \
     && virtualenv . \
