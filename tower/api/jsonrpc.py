@@ -49,7 +49,7 @@ class JSONRPCHandler(BaseHandler):
         params = req.get("params", [])
         method = req.get("method")
         # Get handler
-        if not method or not method in SDL[api_name]:
+        if not method or not (method in SDL[api_name]):
             raise HTTPError(400, "Bad method: %s" % method)
         api = api_class(self)
         handler = getattr(api, method)
