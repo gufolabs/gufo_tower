@@ -6,9 +6,8 @@ node {
    sh 'python setup.py sdist --format=bztar'
    stage 'Upload artifact'
    sshagent(['ci-cdn-nocproject-org']) {
-     sh 'echo SSH_AUTH_SOCK=$SSH_AUTH_SOCK'
-     sh 'ls -al $SSH_AUTH_SOCK || true'
-     sh 'scp -o StrictHostKeyChecking=no -P 2228 dist/*.tar.bz2 ci@cdn.nocproject.org:/www/cdn/tower/'
+     sh '''export VERSION=$(basename dist/*.tar.bz2)
+     scp -o StrictHostKeyChecking=no -P 2228 dist/${VERSION} ci@cdn.nocproject.org:/www/cdn/tower/
+     ssh -o StrictHostKeyChecking=no -p 2228 ci@cdn.nocproject.org /www/cdn/tower/make-latest ${VERSION}'''
    }
-
 }
