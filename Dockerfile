@@ -12,9 +12,10 @@ RUN apt-get update \
         libssl-dev \
     && rm -rf /var/cache/apk/* && rm -rf /var/lib/apt/lists/*
     && mkdir /opt/tower \
+    && python setup.py install --prefix=/opt/tower \
     && cd /opt/tower \
     && virtualenv . \
-    && ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-latest.tar.bz2
+
 
 COPY entrypoint.sh /
 
