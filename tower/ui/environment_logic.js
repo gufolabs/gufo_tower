@@ -315,7 +315,7 @@ var environment_logic = {
                 Tower.msg.failed("Cannot connect to server");
             }
         );
-    }
+    },
 
     on_deploy_src: function () {
         var env_id = app_logic.current_env.id,
