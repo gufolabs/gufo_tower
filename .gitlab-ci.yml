@@ -9,4 +9,5 @@ before_script:
 build:
   stage: build
   script:
-    - env
+    - env|sort
+    - ls -lRa
