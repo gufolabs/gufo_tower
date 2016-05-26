@@ -2,8 +2,8 @@ build:
   stage: build
   image: python:2.7.11-alpine
   script:
-    - pwd
-    - env |sort
+    - apk add --update py-pep8
+    - pep8 --ignore=E265,E266,E501 .
     - python setup.py sdist --format=bztar
   artifacts:
     paths:
