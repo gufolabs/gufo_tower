@@ -4,7 +4,7 @@ before_script:
 build:
   stage: build
   script:
-    - docker run -v ${PWD}:/app python:2.7.11-alpine  python setup.py sdist format=targz
+    - docker run -v ${PWD}:/app python:2.7.11-alpine ls -la&& cd /app && python setup.py sdist format=targz
   artifacts:
     paths:
       - sdist/*
