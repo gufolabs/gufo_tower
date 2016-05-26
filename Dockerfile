@@ -17,6 +17,7 @@ RUN apt-get update \
 ADD * /mnt/
 RUN mkdir /opt/tower \
     && cd /mnt \
+    && ls -lar /opt/tower/ && ls -lar /mnt \
     && python setup.py install --prefix=/opt/tower \
     && ls -lar /opt/tower/ && ls -lar /mnt \
     && cd /opt/tower \
