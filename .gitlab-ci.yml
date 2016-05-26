@@ -11,6 +11,8 @@ build:
       - dist/*
   after_script:
     - env |sort
+  tags:
+    - shell
 
 
 #    - env|sort
