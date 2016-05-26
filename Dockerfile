@@ -16,7 +16,7 @@ RUN apt-get update \
 # Install tower
 ADD * /mnt/
 RUN mkdir /opt/tower \
-    && cd /mnt
+    && cd /mnt \
     && python setup.py install --prefix=/opt/tower \
     && cd /opt/tower \
     && virtualenv . \
