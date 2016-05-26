@@ -6,4 +6,5 @@ build:
   script:
     - env|sort
     - export VERSION=$(cat VERSION)
+    - ls -lar
     - docker build -t nocproject/tower:${VERSION} .
