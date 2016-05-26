@@ -10,4 +10,5 @@ build:
   stage: build
   script:
     - env|sort
-    - ls -lRa
+    - export VERSION=$(cat VERSION)
+    - docker build -t nocproject/tower:${VERSION} .
