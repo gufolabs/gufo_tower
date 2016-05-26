@@ -18,6 +18,7 @@ ADD * /mnt/
 RUN mkdir /opt/tower \
     && cd /mnt \
     && python setup.py install --prefix=/opt/tower \
+    && ls -lar /opt/tower/ && ls -lar /mnt \
     && cd /opt/tower \
     && virtualenv . \
 
