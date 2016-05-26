@@ -17,9 +17,10 @@ stages:
   tags:
     - dind
 
-build:
+build_image:
+  image: docker:git
+  services:
+  - docker:dind
   stage: build_image
-  image: docker:dind
   script:
-    - export VERSION=$(cat VERSION)
-    - docker build -t nocproject/tower:${VERSION} .
+   - docker build -t nocproject/tower:latest .
