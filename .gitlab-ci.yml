@@ -1,4 +1,8 @@
-build:
+stages:
+#  - build
+  - build_image
+
+.build:
   stage: build
   image: python:2.7.11-alpine
   script:
@@ -13,8 +17,9 @@ build:
   tags:
     - dind
 
-
-#    - env|sort
-#    - export VERSION=$(cat VERSION)
-#    - ls -lar
-#    - docker build -t nocproject/tower:${VERSION} .
+build:
+  stage: build_image
+  image: docker:dind
+  script:
+    - export VERSION=$(cat VERSION)
+    - docker build -t nocproject/tower:${VERSION} .
