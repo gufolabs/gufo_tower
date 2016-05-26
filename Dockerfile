@@ -14,6 +14,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install tower
+RUN ls -lar
 RUN mkdir /opt/tower \
     && python setup.py install --prefix=/opt/tower \
     && cd /opt/tower \
