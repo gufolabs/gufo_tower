@@ -20,7 +20,7 @@ COPY dist/noc-tower-*.tar.bz2 /tmp/
 WORKDIR /opt/tower 
 
 RUN virtualenv . \
-    && ./bin/pip install /tmp/noc-tower-*
+    && ./bin/pip install /tmp/noc-tower-*.tar.bz2
 
 COPY entrypoint.sh /
 
