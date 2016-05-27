@@ -6,6 +6,7 @@ build_tgz:
   stage: build
   image: python:2.7.11-alpine
   script:
+    - env
     - apk add --update py-pep8 py-setuptools
     - pep8 --ignore=E265,E266,E501,E402 .
     - python setup.py sdist --format=bztar
@@ -27,7 +28,7 @@ build_image:
   stage: build_image
   script:
    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-   - docker build --build-arg="http_proxy=http://127.0.0.1:3128" --build-arg="https_proxy=http://127.0.0.1:3128" -t registry.gitlab.com/nocproject/tower:latest . 
+   - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" -t registry.gitlab.com/nocproject/tower:latest . 
    - docker push registry.gitlab.com/nocproject/tower
   dependencies:
   - build_tgz
