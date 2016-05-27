@@ -11,16 +11,16 @@ RUN apt-get update \
         openssh-client \
         libssl-dev \
     && rm -rf /var/cache/apk/* \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir /opt/tower 
 
 # Install tower
-ADD dist/noc-tower-*.tar.bz2 /mnt/
+ADD dist/noc-tower-*.tar.bz2 /tmp/
 
-RUN mkdir /opt/tower \
-    && cd /opt/tower \
-    && virtualenv . \
-    && ./bin/pip install /mnt/noc-tower-*.tar.bz2
+WORKDIR /opt/tower 
 
+RUN virtualenv . \
+    && ./bin/pip install /tmp/noc-tower-*.tar.bz2
 
 COPY entrypoint.sh /
 
