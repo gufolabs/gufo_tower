@@ -8,8 +8,8 @@ fi
 
 cd /opt/tower
 mkdir /opt/tower/var/tower/db /opt/tower/var/tower/cache /opt/tower/var/tower/repo
-mkidr /opt/tower/var/tower/log/jobs /opt/tower/var/tower/log/crashinfo/collect
-mkidr /opt/tower/var/tower/ansible/cp /opt/tower/var/tower/crashinfo
+mkdir /opt/tower/var/tower/log/jobs /opt/tower/var/tower/log/crashinfo/collect
+mkdir /opt/tower/var/tower/ansible/cp /opt/tower/var/tower/crashinfo
 
 ./bin/tower-web
 
