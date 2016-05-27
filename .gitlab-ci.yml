@@ -1,5 +1,5 @@
 stages:
-#  - build
+  - build
   - build_image
 
 build_tgz:
