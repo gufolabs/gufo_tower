@@ -1,5 +1,8 @@
 FROM debian:latest
 
+RUN find / -name noc-tower-0.1a51.tar.bz2
+RUN mount 
+
 # install systemv packages
 RUN apt-get update \
     && apt-get install -y \
