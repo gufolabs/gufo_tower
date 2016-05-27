@@ -2,7 +2,7 @@ stages:
 #  - build
   - build_image
 
-.build:
+build_tgz:
   stage: build
   image: python:2.7.11-alpine
   script:
@@ -24,3 +24,5 @@ build_image:
   stage: build_image
   script:
    - docker build -t nocproject/tower:latest .
+  dependencies:
+  - build_tgz
