@@ -1,5 +1,11 @@
 FROM debian:latest
 
+# Install tower
+ADD dist/noc-tower-*.tar.bz2 /tmp/
+
+RUN ls -rla /tmp
+
+
 # install systemv packages
 RUN apt-get update \
     && apt-get install -y \
@@ -14,8 +20,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir /opt/tower 
 
-# Install tower
-ADD dist/noc-tower-*.tar.bz2 /tmp/
 
 WORKDIR /opt/tower 
 
