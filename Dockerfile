@@ -1,8 +1,5 @@
 FROM debian:latest
 
-RUN find / -name noc-tower-0.1a51.tar.bz2
-RUN mount 
-
 # install systemv packages
 RUN apt-get update \
     && apt-get install -y \
@@ -17,14 +14,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install tower
-ADD * /mnt/
+ADD noc-tower-*.tar.bz2 /mnt/
 RUN mkdir /opt/tower \
-    && cd /mnt \
-    && ls -lar /opt/tower/ && ls -lar /mnt \
-    && python setup.py install --prefix=/opt/tower \
-    && ls -lar /opt/tower/ && ls -lar /mnt \
     && cd /opt/tower \
     && virtualenv . \
+    && ./bin/pip install /mnt/noc-tower-*.tar.bz2
 
 COPY entrypoint.sh /
 
