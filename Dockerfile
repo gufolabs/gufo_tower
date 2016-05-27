@@ -1,14 +1,5 @@
 FROM debian:latest
 
-# Install tower
-ADD dist/noc-tower-*.tar.bz2 /mnt/
-
-RUN mkdir /opt/tower \
-    && cd /opt/tower \
-    && virtualenv . \
-    && ./bin/pip install /mnt/noc-tower-*.tar.bz2
-
-
 # install systemv packages
 RUN apt-get update \
     && apt-get install -y \
@@ -21,6 +12,14 @@ RUN apt-get update \
         libssl-dev \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/*
+
+# Install tower
+ADD dist/noc-tower-*.tar.bz2 /mnt/
+
+RUN mkdir /opt/tower \
+    && cd /opt/tower \
+    && virtualenv . \
+    && ./bin/pip install /mnt/noc-tower-*.tar.bz2
 
 
 COPY entrypoint.sh /
