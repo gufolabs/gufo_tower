@@ -26,9 +26,9 @@ build_image:
   - docker:dind
   stage: build_image
   script:
-   - mount 
-   - find / -name noc-tower-0.1a51.tar.bz2
-   - docker build -t nocproject/tower:latest .
+   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+   - docker build -t registry.gitlab.com/nocproject/tower:latest .
+   - docker push registry.gitlab.com/nocproject/tower
   dependencies:
   - build_tgz
   tags:
