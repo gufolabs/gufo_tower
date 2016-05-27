@@ -26,3 +26,5 @@ build_image:
    - docker build -t nocproject/tower:latest .
   dependencies:
   - build_tgz
+  tags:
+    - dind
