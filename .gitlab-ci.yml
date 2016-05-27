@@ -27,7 +27,7 @@ build_image:
   stage: build_image
   script:
    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-   - docker build -t registry.gitlab.com/nocproject/tower:latest .
+   - docker build --build-arg="http_proxy=http://127.0.0.1:3128" --build-arg="https_proxy=http://127.0.0.1:3128" -t registry.gitlab.com/nocproject/tower:latest . 
    - docker push registry.gitlab.com/nocproject/tower
   dependencies:
   - build_tgz
