@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ ! -f /opt/tower/var/tower/keys/id_rsa ]; then
   mkdir -p /opt/tower/var/tower/keys
@@ -11,5 +11,7 @@ mkdir /opt/tower/var/tower/db /opt/tower/var/tower/cache /opt/tower/var/tower/re
 mkidr /opt/tower/var/tower/log/jobs /opt/tower/var/tower/log/crashinfo/collect
 mkidr /opt/tower/var/tower/ansible/cp /opt/tower/var/tower/crashinfo
 
-./bin/tower-web"
+./bin/tower-web
+
+exec "$@"
 
