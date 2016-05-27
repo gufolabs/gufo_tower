@@ -23,6 +23,8 @@ build_image:
   - docker:dind
   stage: build_image
   script:
+   - mount 
+   - find / -name noc-tower-0.1a51.tar.bz2
    - docker build -t nocproject/tower:latest .
   dependencies:
   - build_tgz
