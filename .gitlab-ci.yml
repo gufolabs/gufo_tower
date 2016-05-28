@@ -9,10 +9,10 @@ build_tgz:
     - env
     - apk add --update py-pep8 py-setuptools
     - pep8 --ignore=E265,E266,E501,E402 .
-    - python setup.py sdist --format=bztar
+    - python setup.py sdist --format=zip
   artifacts:
     paths:
-      - dist/*
+      - dist/*.zip
   after_script:
     - env |sort
   tags:

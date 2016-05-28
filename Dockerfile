@@ -2,7 +2,7 @@ FROM debian:latest
 
 # install systemv packages
 RUN apt-get update \
-    && apt-get install -y \
+ && apt-get install -y \
         python-virtualenv \
         virtualenv \
         python-setuptools \
@@ -15,12 +15,12 @@ RUN apt-get update \
     && mkdir /opt/tower 
 
 # Install tower
-COPY dist/noc-tower-*.tar.bz2 /tmp/
+COPY dist/noc-tower-*.zip /tmp/
 
 WORKDIR /opt/tower 
 
 RUN virtualenv . \
-    && ./bin/pip install /tmp/noc-tower-*.tar.bz2
+    && ./bin/pip install /tmp/noc-tower-*.zip
 
 COPY entrypoint.sh /
 
