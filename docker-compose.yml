@@ -1,0 +1,15 @@
+version: '2'
+services:
+  tower:
+    image: registry.gitlab.com/nocproject/tower:latest
+    expose:
+      - "8888"
+    volume:
+      - "/data/tower:/opt/tower/var/"
+
+  nginx:
+    image: nginx:1.10.0-alpine
+    links:
+      - tower
+    ports:
+      - "80:80"
