@@ -4,7 +4,7 @@ services:
     image: registry.gitlab.com/nocproject/tower:latest
     expose:
       - "8888"
-    volume:
+    volumes:
       - "/data/tower:/opt/tower/var/"
 
   nginx:
