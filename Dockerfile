@@ -26,6 +26,8 @@ COPY entrypoint.sh /
 
 ENTRYPOINT /entrypoint.sh
 
+CMD ./bin/tower-web
+
 VOLUME /opt/tower/var
 
 EXPOSE 8888
