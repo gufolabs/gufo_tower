@@ -12,4 +12,8 @@ if [ ! -f /opt/tower/var/tower/keys/id_rsa ]; then
     mkdir -p /opt/tower/var/tower/ansible/cp /opt/tower/var/tower/crashinfo
 fi
 
-exec "$@"
+if [ $# -eq 0 ]; then
+    ./bin/tower-web
+else
+    exec "$@"
+fi
