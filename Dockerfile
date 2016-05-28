@@ -24,9 +24,7 @@ RUN virtualenv . \
 
 COPY entrypoint.sh /
 
-ENTRYPOINT /entrypoint.sh
-
-CMD ./bin/tower-web
+ENTRYPOINT ["/entrypoint.sh"]
 
 VOLUME /opt/tower/var
 
