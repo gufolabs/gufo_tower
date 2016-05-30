@@ -247,6 +247,7 @@ class Environment(Model):
                 "ansible_ssh_host": node.get_address(),
                 "ansible_ssh_port": node.get_ssh_port(),
                 "ansible_ssh_user": node.login_as,
+                "ansible_ssh_private_key_file": node.ssh_key(),
                 "ansible_python_interpreter": node.node_type.python_interpreter,
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name
@@ -451,6 +452,12 @@ class Environment(Model):
     def ssh_keys_path(self):
         return os.path.abspath(
             os.path.join("var", "tower", "ssh", self.name)
+        )
+
+    @property
+    def ssh_key(self):
+        return os.path.abspath(
+            os.path.join("var", "tower", "keys", "id_rsa")
         )
 
     def get_services_description(self):
