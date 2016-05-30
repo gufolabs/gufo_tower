@@ -1,6 +1,8 @@
 stages:
   - build
   - build_image
+  - deploy 
+  - 
 
 build_tgz:
   stage: build
@@ -27,9 +29,11 @@ build_image:
   - docker:dind
   stage: build_image
   script:
+   - export VERSION=$(cat VERSION)
    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
    - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" -t registry.gitlab.com/nocproject/tower:latest . 
-   - docker push registry.gitlab.com/nocproject/tower
+   - docker push registry.gitlab.com/nocproject/tower:${VERSION}
+   - docker push registry.gitlab.com/nocproject/tower:latest
   dependencies:
   - build_tgz
   tags:
