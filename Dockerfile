@@ -1,6 +1,7 @@
 FROM debian:latest
 
-ENV VERSION=${VERSION}
+ARG VERSION=${VERSION}
+ENV PATH /opt/tower/bin:$PATH
 
 # install systemv packages
 RUN apt-get update \
