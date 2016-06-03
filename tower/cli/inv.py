@@ -40,7 +40,7 @@ def get_default_env():
     if os.environ.get("NOC_ENV", "test"):
         env = os.environ.get("NOC_ENV", "test")
     else:
-        env = Environment.get(id=1)
+        env = Environment.get(is_default=True)
     return env
 
 def die(msg):

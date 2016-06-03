@@ -91,6 +91,7 @@ class Environment(Model):
     # json-serialized service configuration
     # pool id -> service -> key -> value
     service_config = TextField(default="")
+    is_default = BooleanField(default=False)
 
     BASE_PORT = 19000
 
