@@ -24,7 +24,7 @@ def main():
         "--env",
         action="store", dest="env",
         help="Use environment [%default]",
-        default=os.environ.get("NOC_ENV", "test")
+        default=get_default_env()
     )
     # Ansible dynamic inventory interface
     parser.add_option(
@@ -36,6 +36,12 @@ def main():
     if options.cmd == "list":
         ansible_list(options, args)
 
+def get_default_env():
+    if os.environ.get("NOC_ENV", "test"):
+        env = os.environ.get("NOC_ENV", "test")
+    else:
+        env = Environment.get(id=1)
+    return env
 
 def die(msg):
     print msg + "\n"
