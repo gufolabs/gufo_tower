@@ -48,17 +48,19 @@ var environment_list = {
                     label: "Deploy",
                     click: "environment_logic.on_deploy",
                     autowidth: true,
-                    disabled: true
+                    disabled: true,
+                    tooltip: "Stop all daemons, update everything, restart everything"
                 },
                 {
                     view: "button",
                     id: "environment_deploy_src_button",
                     type: "icon",
                     icon: "play",
-                    label: "Deploy only sources",
+                    label: "Update system",
                     click: "environment_logic.on_deploy_src",
                     autowidth: true,
-                    disabled: true
+                    disabled: true,
+                    tooltip: "Only update sources and serial restart all noc daemons"
                 }
 
             ]

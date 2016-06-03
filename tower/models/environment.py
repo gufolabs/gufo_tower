@@ -247,7 +247,6 @@ class Environment(Model):
                 "ansible_ssh_host": node.get_address(),
                 "ansible_ssh_port": node.get_ssh_port(),
                 "ansible_ssh_user": node.login_as,
-                "ansible_ssh_private_key_file": "/opt/tower/var/towers/keys/id_rsa",  # todo make in better way
                 "ansible_python_interpreter": node.node_type.python_interpreter,
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name
