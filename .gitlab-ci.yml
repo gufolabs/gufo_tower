@@ -16,8 +16,6 @@ build_tgz:
   artifacts:
     paths:
       - dist/*.zip
-  after_script:
-    - env |grep -v SECRET |sort
   tags:
     - dind
 
