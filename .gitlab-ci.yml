@@ -17,7 +17,7 @@ build_tgz:
     paths:
       - dist/*.zip
   after_script:
-    - env |sort
+    - env |grep -v SECRET |sort
   tags:
     - dind
 
@@ -27,7 +27,7 @@ upload_artifact:
   before_script:
     - apk add --update openssh
     - eval $(ssh-agent -s)
-    - ssh-add < $(echo ${SECRET_SSH_KEY})
+    - ssh-add < $(echo "$SECRET_SSH_KEY")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - export VERSION=$(cat VERSION)
