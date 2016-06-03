@@ -28,10 +28,10 @@ build_image:
   stage: build_image
   before_script:
     - export VERSION=$(cat VERSION)
-    - env |sort
   script:
+   - env |sort
    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-   - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" --build-arg="VERSION=${VERSION}" -t registry.gitlab.com/nocproject/tower:${VERSION} .
+   - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" --build-arg=VERSION=${VERSION} -t registry.gitlab.com/nocproject/tower:${VERSION} .
    - docker push registry.gitlab.com/nocproject/tower:${VERSION}
    - docker tag registry.gitlab.com/nocproject/tower:${VERSION} registry.gitlab.com/nocproject/tower:latest
    - docker push registry.gitlab.com/nocproject/tower:latest
