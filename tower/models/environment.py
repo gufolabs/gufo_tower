@@ -249,7 +249,7 @@ class Environment(Model):
                 "ansible_port": node.get_ssh_port(),
                 "ansible_user": node.login_as,
                 "ansible_python_interpreter": node.node_type.python_interpreter,
-                "ansible_ssh_private_key_file": "/opt/tower/var/tower/keys/id_rsa",  # todo make in better way
+                "ansible_ssh_private_key_file": self.deploy_keys,
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name
             }
@@ -447,6 +447,12 @@ class Environment(Model):
     def data_path(self):
         return os.path.abspath(
             os.path.join("var", "tower", "data", self.name)
+        )
+
+    @property
+    def deploy_keys(self):
+        return os.path.abspath(
+            os.path.join("var", "tower", "data", "deploy_keys", "id_rsa")
         )
 
     @property
