@@ -13,7 +13,7 @@ RUN apt-get update \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir /opt/tower \
-    && export VERSION=$(cat VERSION)
+    && env | sort
 
 # Install tower
 COPY dist/noc-tower-${VERSION}.zip /tmp/
