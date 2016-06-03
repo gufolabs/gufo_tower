@@ -1,6 +1,6 @@
 FROM debian:latest
 
-ENV VERSION ${VERSION}
+ENV VERSION \${VERSION}
 
 # install systemv packages
 RUN apt-get update \
@@ -25,6 +25,8 @@ RUN virtualenv . \
     && ./bin/pip install /tmp/noc-tower-${VERSION}.zip
 
 COPY entrypoint.sh /
+
+STOPSIGNAL SIGINT
 
 ENTRYPOINT ["/entrypoint.sh"]
 
