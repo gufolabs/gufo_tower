@@ -39,9 +39,3 @@ build_image:
   - build_tgz
   tags:
     - dind
-  cache:
-    key: "$CI_BUILD_NAME"
-    untracked: true
-
-deploy image:
-  script:
