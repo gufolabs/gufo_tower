@@ -32,12 +32,13 @@ class Node(Model):
     # Node address or address:port
     address = CharField()
     login_as = CharField()
-    is_enable = BooleanField(default=True)
+    is_enabled = BooleanField(default=True)
 
     def list_item(self):
         return {
             "id": str(self.id),
             "environment": self.environment.reference_item(),
+            "is_enabled": self.is_enabled,
             "datacenter": self.datacenter.reference_item(),
             "node_type": self.node_type.reference_item(),
             "name": self.name,

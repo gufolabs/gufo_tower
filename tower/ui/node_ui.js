@@ -35,8 +35,8 @@ var node_list = {
                 {
                     id: "is_enabled",
                     header: "Enabled",
-                    width: 10,
-                    template: "{common.checkbox()}"
+                    width: 70,
+                    format: Tower.format.lookup
                 },
 
                 {
@@ -122,8 +122,8 @@ var node_form = {
                     view: "checkbox",
                     name: "is_enabled",
                     label: "Enabled",
-                    value: 1,
-                    required: true
+                    value: true,
+                    required: true,
                 },
                 {
                     view: "combo",
