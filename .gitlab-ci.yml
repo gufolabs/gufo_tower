@@ -33,7 +33,7 @@ upload_artifact:
     - export VERSION=$(cat VERSION)
     - export FNAME=${noc-tower-${VERSION}.zip}
   script:
-    - echo "put dist/${FNAME} tower/noc-tower-latest.tar.zip" | sftp -P 2228 ci@cdn.nocproject.org
+    - echo "put dist/${FNAME} tower/noc-tower-latest.zip" | sftp -P 2228 ci@cdn.nocproject.org
   dependencies:
   - build_tgz
 
