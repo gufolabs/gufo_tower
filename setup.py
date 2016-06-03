@@ -69,7 +69,6 @@ def main():
                 "tower-restore = tower.cli.backup:restore"
             ]
         },
-        scripts=["bin/tower-upgrade"],
         package_data={
             "tower": tower_data
         },
