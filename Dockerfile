@@ -1,6 +1,6 @@
 FROM debian:latest
 
-RUN env | sort
+ENV VERSION ${VERSION}
 
 # install systemv packages
 RUN apt-get update \
