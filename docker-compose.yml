@@ -5,11 +5,4 @@ services:
     expose:
       - "8888"
     volumes:
-      - "/data/tower:/opt/tower/var/"
-
-  nginx:
-    image: nginx:1.10.0-alpine
-    links:
-      - tower
-    ports:
-      - "80:80"
+      - "/mnt/sda1/data/tower:/opt/tower/var/"
