@@ -1,5 +1,6 @@
 stages:
   - build
+  - upload_artifact
   - build_image
 
 build_tgz:
@@ -7,7 +8,6 @@ build_tgz:
   image: python:2.7.11-alpine
   before_script:
     - export VERSION=$(cat VERSION)
-    - env |sort
     - if [ -d dist ]; then  rm -R dist/*.zip; fi
   script:
     - apk add --update py-pep8 py-setuptools
@@ -21,6 +21,21 @@ build_tgz:
   tags:
     - dind
 
+upload_artifact:
+  stage: upload_artifact
+  image: alpine:3.4
+  before_script:
+    - apk add --update openssh
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "${SECRET_SSH_KEY}")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - export VERSION=$(cat VERSION)
+  script:
+    - echo "put dist/${VERSION} tower/noc-tower-latest.tar.zip" | sftp -P 2228 ci@cdn.nocproject.org'''
+  dependencies:
+  - build_tgz
+
 build_image:
   image: docker:git
   services:
@@ -29,7 +44,6 @@ build_image:
   before_script:
     - export VERSION=$(cat VERSION)
   script:
-   - env |sort
    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
    - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" --build-arg=VERSION=${VERSION} -t registry.gitlab.com/nocproject/tower:${VERSION} .
    - docker push registry.gitlab.com/nocproject/tower:${VERSION}
