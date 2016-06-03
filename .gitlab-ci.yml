@@ -6,7 +6,7 @@ build_tgz:
   stage: build
   image: python:2.7.11-alpine
   script:
-    - env
+    - rm -R dist/*.zip
     - apk add --update py-pep8 py-setuptools
     - pep8 --ignore=E265,E266,E501,E402 .
     - python setup.py sdist --format=zip
@@ -17,10 +17,7 @@ build_tgz:
     - env |sort
   tags:
     - dind
-  cache:
-    key: "$CI_BUILD_NAME"
-    untracked: true
-  
+
 build_image:
   image: docker:git
   services:
