@@ -2,6 +2,7 @@ FROM debian:latest
 
 ARG VERSION=${VERSION}
 ENV PATH /opt/tower/bin:$PATH
+RUN env |sort
 
 # install systemv packages
 RUN apt-get update \
