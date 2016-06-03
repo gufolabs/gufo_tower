@@ -2,6 +2,10 @@ FROM debian:latest
 
 ARG VERSION=${VERSION}
 ENV PATH /opt/tower/bin:$PATH
+ENV ANSIBLE_HOST_KEY_CHECKING=False
+ENV ANSIBLE_SSH_PIPELINING=1
+ENV PYTHONUNBUFFERED=1
+
 
 # install systemv packages
 RUN apt-get update \
