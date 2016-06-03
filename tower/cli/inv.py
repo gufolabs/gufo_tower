@@ -11,6 +11,7 @@ import os
 import sys
 import json
 from optparse import OptionParser
+
 # Tower modules
 os.chdir(
     os.path.join(os.path.dirname(sys.argv[0]), "..")
@@ -36,6 +37,7 @@ def main():
     if options.cmd == "list":
         ansible_list(options, args)
 
+
 def get_default_env():
     if os.environ.get("NOC_ENV", "test"):
         env = os.environ.get("NOC_ENV", "test")
@@ -43,9 +45,11 @@ def get_default_env():
         env = Environment.get(is_default=True)
     return env
 
+
 def die(msg):
     print msg + "\n"
     sys.exit(1)
+    re
 
 
 def ansible_list(options, args):
