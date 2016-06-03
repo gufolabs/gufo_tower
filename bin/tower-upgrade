@@ -1,4 +1,0 @@
-#!/bin/sh
-
-cd `dirname $0`/..
-./bin/pip install https://cdn.nocproject.org/tower/noc-tower-latest.tar.bz2
