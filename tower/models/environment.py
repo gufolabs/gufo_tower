@@ -244,10 +244,11 @@ class Environment(Model):
         for node in nodes:
             r["nodes"]["hosts"] += [node.name]
             hostvars = {
-                "ansible_ssh_host": node.get_address(),
-                "ansible_ssh_port": node.get_ssh_port(),
-                "ansible_ssh_user": node.login_as,
+                "ansible_host": node.get_address(),
+                "ansible_port": node.get_ssh_port(),
+                "ansible_user": node.login_as,
                 "ansible_python_interpreter": node.node_type.python_interpreter,
+                "ansible_ssh_private_key_file": "/opt/tower/var/tower/keys/id_rsa",  # todo make in better way
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name
             }
