@@ -12,15 +12,16 @@ RUN apt-get update \
         libssl-dev \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir /opt/tower 
+    && mkdir /opt/tower \
+    && export VERSION=$(cat VERSION)
 
 # Install tower
-COPY dist/noc-tower-*.zip /tmp/
+COPY dist/noc-tower-${VERSION}.zip /tmp/
 
 WORKDIR /opt/tower 
 
 RUN virtualenv . \
-    && ./bin/pip install /tmp/noc-tower-*.zip
+    && ./bin/pip install /tmp/noc-tower-${VERSION}.zip
 
 COPY entrypoint.sh /
 
