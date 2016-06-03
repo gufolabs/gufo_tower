@@ -1,5 +1,7 @@
 FROM debian:latest
 
+RUN env | sort
+
 # install systemv packages
 RUN apt-get update \
  && apt-get install -y \
@@ -12,8 +14,7 @@ RUN apt-get update \
         libssl-dev \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir /opt/tower \
-    && env | sort
+    && mkdir /opt/tower
 
 # Install tower
 COPY dist/noc-tower-${VERSION}.zip /tmp/

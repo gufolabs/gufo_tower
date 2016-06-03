@@ -6,6 +6,7 @@ build_tgz:
   stage: build
   image: python:2.7.11-alpine
   before_script:
+    - export VERSION=$(cat VERSION)
     - env |sort
     - if [ -d dist ]; then  rm -R dist/*.zip; fi
   script:
@@ -25,10 +26,12 @@ build_image:
   services:
   - docker:dind
   stage: build_image
+  before_script:
+    - export VERSION=$(cat VERSION)
+    - env |sort
   script:
-   - export VERSION=$(cat VERSION)
    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-   - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" -t registry.gitlab.com/nocproject/tower:${VERSION} . 
+   - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" --build-arg="VERSION=${VERSION}" -t registry.gitlab.com/nocproject/tower:${VERSION} .
    - docker push registry.gitlab.com/nocproject/tower:${VERSION}
    - docker tag registry.gitlab.com/nocproject/tower:${VERSION} registry.gitlab.com/nocproject/tower:latest
    - docker push registry.gitlab.com/nocproject/tower:latest
@@ -39,3 +42,6 @@ build_image:
   cache:
     key: "$CI_BUILD_NAME"
     untracked: true
+
+deploy image:
+  script:
