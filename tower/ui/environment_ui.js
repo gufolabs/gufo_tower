@@ -150,8 +150,8 @@ var environment_form = {
                     name: "name",
                     label: "Name",
                     required: true,
-                    placeholder: "Environment name",
-                    invalidMessage: "Cannot be empty"
+                    invalidMessage: "Cannot be empty",
+                    value: "NOC"
                 },
                 {
                     view: "textarea",
@@ -240,8 +240,7 @@ var environment_form = {
                                 view: "text",
                                 name: "web_host",
                                 label: "Host",
-                                value: "noc.example.com",
-                                placeholder: "noc.example.com",
+                                value: "noc",
                                 required: true
                             },
                             {
