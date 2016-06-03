@@ -31,11 +31,7 @@ upload_artifact:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - export VERSION=$(cat VERSION)
-    - export FNAME=${noc-tower-${VERSION}.tar.bz2}
-    - mount
-    - pwd
-    - ls -la
-    - ls dist/
+    - export FNAME=${noc-tower-${VERSION}.zip}
   script:
     - echo "put dist/${FNAME} tower/noc-tower-latest.tar.zip" | sftp -P 2228 ci@cdn.nocproject.org
   dependencies:
