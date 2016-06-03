@@ -33,6 +33,13 @@ var node_list = {
                     width: 100
                 },
                 {
+                    id: "is_enabled",
+                    header: "Enabled",
+                    width: 10,
+                    template: "{common.checkbox()}"
+                },
+
+                {
                     id: "node_type",
                     header: "Type",
                     width: 100,
@@ -112,6 +119,13 @@ var node_form = {
                     validate: Tower.rules.regex(/^[a-zA-Z][a-zA-Z0-9\-_]*$/)
                 },
                 {
+                    view: "checkbox",
+                    name: "is_enabled",
+                    label: "Enabled",
+                    value: 1,
+                    required: true
+                },
+                {
                     view: "combo",
                     name: "datacenter",
                     label: "Datacenter",
@@ -141,7 +155,8 @@ var node_form = {
                                 name: "address",
                                 label: "Address",
                                 placeholder: "Type node IP address here",
-                                required: true
+                                required: true,
+                                validate: Tower.rules.regex(/^[0-9\.]*$/)
                             },
                             {
                                 view: "text",

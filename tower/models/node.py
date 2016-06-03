@@ -7,7 +7,7 @@
 ##----------------------------------------------------------------------
 
 # Third-party modules
-from peewee import Model, CharField, TextField, ForeignKeyField
+from peewee import Model, CharField, TextField, ForeignKeyField, BooleanField
 # Tower modules
 from db import db
 from environment import Environment
@@ -32,6 +32,7 @@ class Node(Model):
     # Node address or address:port
     address = CharField()
     login_as = CharField()
+    is_enable = BooleanField(default=True)
 
     def list_item(self):
         return {
