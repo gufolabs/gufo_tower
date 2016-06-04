@@ -78,12 +78,12 @@ RHEL 7+, Debian, Ubuntu, Centos и FreeBSD. Однако лучше всего �
 % export ANSIBLE_SSH_PIPELINING=1 ANSIBLE_HOST_KEY_CHECKING=1 PYTHONUNBUFFERED=1 NOC_ENV=<NAME>
 /opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --tags mercurial;
 ```
-* А так можно выполнить реконфигурацию системы. При этом рестарт системы будет плавным. Выключаться всё на время деплоя не будет. только последним шагом будет сделан плавный рестарт.
+* А так можно выполнить реконфигурацию системы. При этом рестарт системы будет плавным. Выключаться всё на время деплоя не будет. Последним шагом будет сделан плавный рестарт.
 ```
 # su - tower
 % cd /opt/tower/var/tower/playbooks/<NAME>/ansible/
 % export ANSIBLE_SSH_PIPELINING=1 ANSIBLE_HOST_KEY_CHECKING=1 PYTHONUNBUFFERED=1 NOC_ENV=<NAME>
-/opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --tags config;
+/opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --tags config,sort_restart;
 ```
 В целом это может поломать deploy. Особенно когда происходят изменения в postgres схеме
 Ну и конечно теги можно комбинировать примерно так `--tags config,mercurial` главное, не делать между ними пробелов
