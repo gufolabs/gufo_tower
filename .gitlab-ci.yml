@@ -37,11 +37,10 @@ upload_artifact:
     - if [ -n ${CI_BUILD_TAG}	]; then echo "put dist/${FNAME} tower/noc-tower-latest.zip" | sftp -P 2228 ci@cdn.nocproject.org; fi
   dependencies:
     - build_tgz
+  tags:
+    - shell
 
 build_image:
-  image: docker:git
-  services:
-    - docker:dind
   stage: build_image
   before_script:
     - export VERSION=$(cat VERSION)
@@ -54,4 +53,4 @@ build_image:
   dependencies:
     - build_tgz
   tags:
-    - dind
+    - shell
