@@ -31,6 +31,7 @@ upload_artifact:
     - export VERSION=$(cat VERSION)
     - export FNAME=noc-tower-${VERSION}.zip
   script:
+    - echo ${CI_BUILD_TAG}
     - echo "put dist/${FNAME} tower/noc-tower-master.zip" | sftp -P 2228 ci@cdn.nocproject.org
     - if [ -n ${CI_BUILD_TAG}	]; then echo "put dist/${FNAME} tower/noc-tower-${VERSION}.zip" | sftp -P 2228 ci@cdn.nocproject.org; fi
     - if [ -n ${CI_BUILD_TAG}	]; then echo "put dist/${FNAME} tower/noc-tower-latest.zip" | sftp -P 2228 ci@cdn.nocproject.org; fi
