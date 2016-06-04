@@ -58,10 +58,12 @@ var environment_list = {
                     labelWidth: 100,
                     options: [
                         {id: 1, value: "Update sources", tooltip: "Only update sources"},
-                        {id: 2, value: "Update configs", tooltip: "Rebuild configs"},
+                        {id: 2, value: "Update configs", tooltip: "Rebuild configs, and restart services"},
                         {id: 3, value: "Install requirements"},
                         {id: 10, value: "Restart quick", tooltip: "Stop all, start all"},
                         {id: 11, value: "Restart gentle", tooltip: "Restart one by one"},
+                        {id: 90, value: "Be verbose", tooltip: "Debug output -v"},
+                        {id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv"},
                     ],
                     value: "1,11"
                 }

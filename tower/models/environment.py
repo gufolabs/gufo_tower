@@ -233,7 +233,7 @@ class Environment(Model):
         service_nodes = defaultdict(list)
         node_services = defaultdict(list)
         with db.atomic():
-            nodes = list(Node.select().where(Node.environment == self and Node.is_enabled))
+            nodes = list(Node.select().where(Node.environment == self).where(Node.is_enabled))
             for s in Service.select().where(Service.environment == self):
                 if s.service in active_services and s.n_instances > 0:
                     service_data[s.service] += [s]
