@@ -31,11 +31,11 @@ upload_artifact:
     - export VERSION=$(cat VERSION)
     - export FNAME=noc-tower-${VERSION}.zip
   script:
-    - echo "put dist/${FNAME} tower/noc-tower-latest.zip" | sftp -P 2228 ci@cdn.nocproject.org
+    - echo "put dist/${FNAME} tower/noc-tower-master.zip" | sftp -P 2228 ci@cdn.nocproject.org
+    - if [ -n ${CI_BUILD_TAG}	]; then echo "put dist/${FNAME} tower/noc-tower-${VERSION}.zip" | sftp -P 2228 ci@cdn.nocproject.org; fi
+    - if [ -n ${CI_BUILD_TAG}	]; then echo "put dist/${FNAME} tower/noc-tower-latest.zip" | sftp -P 2228 ci@cdn.nocproject.org; fi
   dependencies:
     - build_tgz
-  only:
-    - tags
 
 build_image:
   image: docker:git
@@ -48,8 +48,8 @@ build_image:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" --build-arg=VERSION=${VERSION} -t registry.gitlab.com/nocproject/tower:master .
     - docker push registry.gitlab.com/nocproject/tower:master
-    - if [ -n CI_BUILD_TAG	]; then docker tag registry.gitlab.com/nocproject/tower:master registry.gitlab.com/nocproject/tower:${CI_BUILD_TAG}; docker push registry.gitlab.com/nocproject/tower:${CI_BUILD_TAG} fi
-    - if [ -n CI_BUILD_TAG	]; then docker tag registry.gitlab.com/nocproject/tower:master registry.gitlab.com/nocproject/tower:latest; docker push registry.gitlab.com/nocproject/tower:latest fi
+    - if [ -n ${CI_BUILD_TAG}	]; then docker tag registry.gitlab.com/nocproject/tower:master registry.gitlab.com/nocproject/tower:${CI_BUILD_TAG}; docker push registry.gitlab.com/nocproject/tower:${CI_BUILD_TAG} fi
+    - if [ -n ${CI_BUILD_TAG}	]; then docker tag registry.gitlab.com/nocproject/tower:master registry.gitlab.com/nocproject/tower:latest; docker push registry.gitlab.com/nocproject/tower:latest fi
   dependencies:
     - build_tgz
   tags:
