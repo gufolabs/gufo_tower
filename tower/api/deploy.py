@@ -55,20 +55,26 @@ class DeployHandler(BaseHandler):
         except Environment.DoesNotExist:
             raise tornado.web.HTTPError(404)
         try:
-            self.deploy_options = self.get_argument("deployment_options").split(",")
+            self.deploy_options = set([int(i) for i in self.get_argument("deployment_options").split(",")])
         except:
             raise tornado.web.HTTPError(404)
         if self.get_argument("deployment_options"):
             tags = []
-            if "1" in self.deploy_options:
+            if 1 in self.deploy_options:
+                self.deploy_options -= set(range(90))
+            if 10 in self.deploy_options:
                 tags.append("mercurial")
-            if "2" in self.deploy_options:
+            if 11 in self.deploy_options:
                 tags.append("config")
-            if "3" in self.deploy_options:
-                tags.append("requirments")
-            if "90" in self.deploy_options:
+            if 12 in self.deploy_options:
+                tags.append("requirements")
+            if 50 in self.deploy_options and 51 not in self.deploy_options:
+                tags.append("restart")
+            if 51 in self.deploy_options:
+                tags.append("soft_restart")
+            if 90 in self.deploy_options:
                 self.ansible_verbose = "-v"
-            if "91" in self.deploy_options:
+            if 91 in self.deploy_options:
                 self.ansible_verbose = "-vvvvvvvv"
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
