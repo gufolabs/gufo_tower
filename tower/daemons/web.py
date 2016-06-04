@@ -27,7 +27,6 @@ from tower.api.service import ServiceAPI
 from tower.api.pull import PullAPI
 from tower.api.settings import SettingsAPI
 from tower.api.deploy import DeployHandler
-from tower.api.deploysrc import DeploySrcHandler
 from tower.api.repo import RepoHandler
 from tower.api.ui import UIHandler
 from tower.models.settings import Settings
