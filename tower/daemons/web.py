@@ -76,7 +76,6 @@ def run():
         }),
         (r"^/hg.*$", RepoHandler),
         (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
-        (r"^/deploy_src/([a-zA-Z0-9]+)/$", DeploySrcHandler),
         (r"^/$", UIHandler, {
             "path": ui_root
         })

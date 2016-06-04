@@ -52,15 +52,18 @@ var environment_list = {
                     tooltip: "Stop all daemons, update everything, restart everything"
                 },
                 {
-                    view: "button",
-                    id: "environment_deploy_src_button",
-                    type: "icon",
-                    icon: "play",
-                    label: "Update system",
-                    click: "environment_logic.on_deploy_src",
-                    autowidth: true,
-                    disabled: true,
-                    tooltip: "Only update sources and serial restart all noc daemons"
+                    view: "multiselect",
+                    label: "Deploy options",
+                    id: "deployment_options",
+                    labelWidth: 100,
+                    options: [
+                        {id: 1, value: "Update sources", tooltip: "Only update sources"},
+                        {id: 2, value: "Update configs", tooltip: "Rebuild configs"},
+                        {id: 3, value: "Install requirements"},
+                        {id: 10, value: "Restart quick", tooltip: "Stop all, start all"},
+                        {id: 11, value: "Restart gentle", tooltip: "Restart one by one"},
+                    ],
+                    value: "1,11"
                 }
 
             ]
@@ -472,12 +475,11 @@ var environment_deploy = {
                     id: "environment_deploy_badges",
                     type: "header",
                     borderless: true,
-                    template:
-                        "<span class='ansible-ok-tag' title='ok'>#ok#</span> " +
-                        "<span class='ansible-changed-tag' title='changed'>#changed#</span> " +
-                        "<span class='ansible-unreachable-tag' title='unreachable'>#unreach#</span> " +
-                        "<span class='ansible-failed-tag' title='failed'>#failed#</span> " +
-                        "Deploy: #status#",
+                    template: "<span class='ansible-ok-tag' title='ok'>#ok#</span> " +
+                    "<span class='ansible-changed-tag' title='changed'>#changed#</span> " +
+                    "<span class='ansible-unreachable-tag' title='unreachable'>#unreach#</span> " +
+                    "<span class='ansible-failed-tag' title='failed'>#failed#</span> " +
+                    "Deploy: #status#",
                     data: {
                         ok: 0,
                         changed: 0,

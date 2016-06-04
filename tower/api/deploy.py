@@ -44,6 +44,7 @@ class DeployHandler(BaseHandler):
         self.play_log = []
         self.env = None
         self.job_log = None
+        self.tags = ""
 
     @tornado.web.authenticated
     @tornado.web.asynchronous
@@ -52,7 +53,20 @@ class DeployHandler(BaseHandler):
             self.env = Environment.get(Environment.name == env_name)
         except Environment.DoesNotExist:
             raise tornado.web.HTTPError(404)
-        logger.info("Running deploy on %s", self.env.name)
+        try:
+            self.deploy_options = self.get_argument("deployment_options").split(",")
+        except:
+            raise tornado.web.HTTPError(404)
+        if self.deploy_options:
+            tags= []
+            if "1" in self.deploy_options:
+                tags.append("mercurial")
+            if "2" in self.deploy_options:
+                tags.append("config")
+            if "3" in self.deploy_options:
+                tags.append("requirments")
+            self.tags ="--tags=" + ",".join(tags)
+        logger.info("Running deploy on %s %s", self.env.name, self.deploy_options)
         with db.atomic():
             self.job_log = JobLog(
                 environment=self.env,
@@ -95,12 +109,14 @@ class DeployHandler(BaseHandler):
                 md5 = hashlib.md5(open(f, 'rb').read()).hexdigest()
                 env.update({"NOC_" + i.upper() + "_MD5": md5})
 
-        self.sp = tornado.process.Subprocess(
-            [
+        command = [
                 os.path.join(bin_path, "ansible-playbook"),
                 "-i", os.path.join(bin_path, "tower-inv"),
-                "site.yml", "-f 50"
-            ],
+                "site.yml", "-f 50", self.tags
+            ]
+        logger.info("Running command %s", command)
+        self.sp = tornado.process.Subprocess(
+            command,
             env=env,
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
