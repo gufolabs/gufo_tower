@@ -109,10 +109,6 @@ fatal: [host]: FAILED! => {"changed": true, "cmd": ["./noc", "collection", "--sy
 
 **О**: Можно тут https://telegram.me/nocproject
 
-**В**: А где же deploy через `docker` ?
-
-**О**: Пока нету. Будем думать об этом как только поймем, что делать с FreeBSD. https://wiki.freebsd.org/Docker
-
 **В**: Где хранится конфиг services на башне?
 
 **О**: В `/opt/tower/var/tower/db/config.db` в таблице `service` некоторые в `environment`.
@@ -128,3 +124,42 @@ logging.basicConfig(level=logging.DEBUG)
 from noc.sa.models.managedobject import ManagedObject
 ```
 Дальше по обстоятельсвам. Чаще всего это означает, что слетеле авторизация в mongo.
+
+**В**: Как поставить башню через `docker` ?
+
+**О**: Довольно просто. Тут [реестр](https://gitlab.com/nocproject/tower/container_registry). Есть три типа контейнеров
+* `master` - последняя доступная ревизия из `git`.
+* `latest` - последняя стабильная версия.
+* остальные. как правило, согласно выпущенным версиям.
+
+Для утсновки можно использовать такой примерно `docker-compose.yml`
+```
+version: '2'
+services:
+  tower:
+    image: registry.gitlab.com/nocproject/tower:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - "/opt/tower/var:/opt/tower/var/"
+    environment:
+      http_proxy: http://192.168.0.1:3128
+```
+По желанию перед `tower` можно поставить `nginx` или добавить, что то еще. Каталог для `volume` произвольный.
+В каталоге `/opt/tower/var/tower/data/deploy_keys` дожны лежать два файла - `id_rsa` и `id_rsa.pub`
+Именно эти ключи будут использоваться для доступа к нодам.
+При желании этот каталог тоже можно перемапить с помощью `docker` например так:
+```
+version: '2'
+services:
+  tower:
+    image: registry.gitlab.com/nocproject/tower:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - "/opt/tower/var:/opt/tower/var/"
+      - "/etc/tower/keys:/opt/tower/var/tower/data/deploy_keys"
+    environment:
+      http_proxy: http://192.168.0.1:3128
+```
+Entrypoint скрипт если не обнаружит директорию с ключами создаст свои ключи.
