@@ -45,6 +45,7 @@ class DeployHandler(BaseHandler):
         self.env = None
         self.job_log = None
         self.tags = ""
+        self.ansible_verbose = ""
 
     @tornado.web.authenticated
     @tornado.web.asynchronous
@@ -57,15 +58,20 @@ class DeployHandler(BaseHandler):
             self.deploy_options = self.get_argument("deployment_options").split(",")
         except:
             raise tornado.web.HTTPError(404)
-        if self.deploy_options:
-            tags= []
+        if self.get_argument("deployment_options"):
+            tags = []
             if "1" in self.deploy_options:
                 tags.append("mercurial")
             if "2" in self.deploy_options:
                 tags.append("config")
             if "3" in self.deploy_options:
                 tags.append("requirments")
-            self.tags ="--tags=" + ",".join(tags)
+            if "90" in self.deploy_options:
+                self.ansible_verbose = "-v"
+            if "91" in self.deploy_options:
+                self.ansible_verbose = "-vvvvvvvv"
+            if tags:
+                self.tags = "--tags=" + ",".join(tags)
         logger.info("Running deploy on %s %s", self.env.name, self.deploy_options)
         with db.atomic():
             self.job_log = JobLog(
@@ -110,10 +116,14 @@ class DeployHandler(BaseHandler):
                 env.update({"NOC_" + i.upper() + "_MD5": md5})
 
         command = [
-                os.path.join(bin_path, "ansible-playbook"),
-                "-i", os.path.join(bin_path, "tower-inv"),
-                "site.yml", "-f 50", self.tags
-            ]
+            os.path.join(bin_path, "ansible-playbook"),
+            "-i", os.path.join(bin_path, "tower-inv"),
+            "site.yml", "-f 50"
+        ]
+        if self.ansible_verbose:
+            command.append(self.ansible_verbose)
+        if self.tags:
+            command.append(self.tags)
         logger.info("Running command %s", command)
         self.sp = tornado.process.Subprocess(
             command,
