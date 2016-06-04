@@ -21,15 +21,6 @@ build_tgz:
 
 upload_artifact:
   stage: upload_artifact
-  image: alpine:3.4
-  before_script:
-    - apk add --update openssh
-    - eval $(ssh-agent -s)
-    - echo "$SECRET_SSH_KEY" | ssh-add -
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - export VERSION=$(cat VERSION)
-    - export FNAME=noc-tower-${VERSION}.zip
   script:
     - env | sort
     - echo "put dist/${FNAME} tower/noc-tower-master.zip" | sftp -P 2228 ci@cdn.nocproject.org
