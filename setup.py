@@ -72,6 +72,7 @@ def main():
         package_data={
             "tower": tower_data
         },
+        scripts=["bin/tower-upgrade"],
         install_requires=requirements,
         zip_safe=False,
         classifiers=[
