@@ -64,6 +64,8 @@ class Environment(Model):
     custom_branch = CharField(default="default")
     custom_changeset = CharField(default="tip")
     metrics_collector = CharField(default="")
+    alerta_url = CharField(default="")
+    alerta_token = CharField(default="")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
     cert = TextField(default="")
@@ -112,6 +114,8 @@ class Environment(Model):
             "custom_branch": self.custom_branch,
             "custom_changeset": self.custom_changeset,
             "metrics_collector": self.metrics_collector,
+            "alert_url": self.alerta_url,
+            "alerta_token": self.alerta_token,
             "web_host": self.web_host,
             "cert": self.cert,
             "pg_db": self.pg_db,
@@ -190,6 +194,8 @@ class Environment(Model):
                     "noc_custom_changeset": self.custom_changeset,
                     "noc_custom_revision": custom_revision,
                     "noc_metrics_collector": self.metrics_collector,
+                    "alerta_url": self.alerta_url,
+                    "alerta_token": self.alerta_token,
                     # Web settions
                     "noc_web_host": self.web_host,
                     # Postgres settings
