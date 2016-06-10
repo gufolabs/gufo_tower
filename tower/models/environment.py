@@ -224,7 +224,7 @@ class Environment(Model):
                             if s.get("level") != "system"
                         ],
                     # All pools
-                    "noc_all_pools": 
+                    "noc_all_pools":
                         [
                             {
                                 "name": p.name,
@@ -481,7 +481,8 @@ class Environment(Model):
             return []
         with open(self.services_path) as f:
             d = yaml.load(f)
-        r = [{
+        r = [
+            {
                 "id": n,
                 "name": n,
                 "description": d["services"][n]["description"],
@@ -489,7 +490,7 @@ class Environment(Model):
                 "port": d["services"][n].get("port"),
                 "require_cert": bool(d["services"][n].get("require_cert")),
                 "required_assets": d["services"][n].get("required_assets", [])
-             } for n in sorted(d["services"])]
+            } for n in sorted(d["services"])]
         return r
 
     def build_ssh_keys(self):
