@@ -218,17 +218,19 @@ class Environment(Model):
                     "tower_data": self.data_path,
                     "tower_ssh_keys": self.ssh_keys_path,
                     # All services
-                    "noc_all_services": [
-                        s["id"] for s in services_description
-                        if s.get("level") != "system"
+                    "noc_all_services":
+                        [
+                            s["id"] for s in services_description
+                            if s.get("level") != "system"
                         ],
                     # All pools
-                    "noc_all_pools": [
-                        {
-                            "name": p.name,
-                            "description": p.description
-                        } for p in Pool.select().where(Pool.environment == self).order_by(Pool.name)
-                                    ]
+                    "noc_all_pools": 
+                        [
+                            {
+                                "name": p.name,
+                                "description": p.description
+                            } for p in Pool.select().where(Pool.environment == self).order_by(Pool.name)
+                        ]
                 }
             },
             "_meta": {
