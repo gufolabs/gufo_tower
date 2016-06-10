@@ -417,6 +417,20 @@ var environment_form = {
                                 label: "Metrics collector",
                                 value: "",
                                 required: false
+                            },
+                            {
+                                view: "text",
+                                name: "alerta_url",
+                                label: "Alerta URL",
+                                value: "",
+                                required: false
+                            },
+                            {
+                                view: "text",
+                                name: "alerta_token",
+                                label: "alerta_token",
+                                value: "",
+                                required: false
                             }
                         ]
                     }
