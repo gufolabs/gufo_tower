@@ -11,4 +11,4 @@ def migrate(migrator):
         "environment",
         "alerta_token",
         CharField(default="")
-)
+    )
