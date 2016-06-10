@@ -348,6 +348,9 @@ class Environment(Model):
             "user": self.sys_user,
             "group": self.sys_group,
             "installation_name": self.installation_name,
+            "installation_type": self.env_type,
+            "alerta_url": self.alerta_url,
+            "alerta_token": self.alerta_token,
             # Postgres settings
             "pg_db": self.pg_db,
             "pg_user": self.pg_user,
