@@ -464,7 +464,6 @@ class Environment(Model):
         elif os.path.exists(os.path.expanduser("~/.ssh/id_rsa")):
             return os.path.expanduser("~/.ssh/id_rsa")
 
-
     @property
     def ssh_keys_path(self):
         return os.path.abspath(
