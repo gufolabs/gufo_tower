@@ -428,7 +428,7 @@ var environment_form = {
                             {
                                 view: "text",
                                 name: "alerta_token",
-                                label: "alerta_token",
+                                label: "Alerta token",
                                 value: "",
                                 required: false
                             }
