@@ -480,13 +480,13 @@ class Environment(Model):
         with open(self.services_path) as f:
             d = yaml.load(f)
         r = [{
-                 "id": n,
-                 "name": n,
-                 "description": d["services"][n]["description"],
-                 "level": d["services"][n]["level"],
-                 "port": d["services"][n].get("port"),
-                 "require_cert": bool(d["services"][n].get("require_cert")),
-                 "required_assets": d["services"][n].get("required_assets", [])
+                "id": n,
+                "name": n,
+                "description": d["services"][n]["description"],
+                "level": d["services"][n]["level"],
+                "port": d["services"][n].get("port"),
+                "require_cert": bool(d["services"][n].get("require_cert")),
+                "required_assets": d["services"][n].get("required_assets", [])
              } for n in sorted(d["services"])]
         return r
 
