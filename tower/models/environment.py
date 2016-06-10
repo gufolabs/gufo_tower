@@ -218,19 +218,15 @@ class Environment(Model):
                     "tower_data": self.data_path,
                     "tower_ssh_keys": self.ssh_keys_path,
                     # All services
-                    "noc_all_services":
-                        [
-                            s["id"] for s in services_description
-                            if s.get("level") != "system"
-                        ],
+                    "noc_all_services": [
+                        s["id"] for s in services_description
+                        if s.get("level") != "system"
+                    ],
                     # All pools
-                    "noc_all_pools":
-                        [
-                            {
-                                "name": p.name,
-                                "description": p.description
-                            } for p in Pool.select().where(Pool.environment == self).order_by(Pool.name)
-                        ]
+                    "noc_all_pools": [{
+                        "name": p.name,
+                        "description": p.description
+                    } for p in Pool.select().where(Pool.environment == self).order_by(Pool.name)]
                 }
             },
             "_meta": {
@@ -468,6 +464,7 @@ class Environment(Model):
         elif os.path.exists(os.path.expanduser("~/.ssh/id_rsa")):
             return os.path.expanduser("~/.ssh/id_rsa")
 
+
     @property
     def ssh_keys_path(self):
         return os.path.abspath(
@@ -481,16 +478,15 @@ class Environment(Model):
             return []
         with open(self.services_path) as f:
             d = yaml.load(f)
-        r = [
-            {
-                "id": n,
-                "name": n,
-                "description": d["services"][n]["description"],
-                "level": d["services"][n]["level"],
-                "port": d["services"][n].get("port"),
-                "require_cert": bool(d["services"][n].get("require_cert")),
-                "required_assets": d["services"][n].get("required_assets", [])
-            } for n in sorted(d["services"])]
+        r = [{
+            "id": n,
+            "name": n,
+            "description": d["services"][n]["description"],
+            "level": d["services"][n]["level"],
+            "port": d["services"][n].get("port"),
+            "require_cert": bool(d["services"][n].get("require_cert")),
+            "required_assets": d["services"][n].get("required_assets", [])
+        } for n in sorted(d["services"])]
         return r
 
     def build_ssh_keys(self):
