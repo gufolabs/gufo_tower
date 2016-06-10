@@ -223,10 +223,12 @@ class Environment(Model):
                         if s.get("level") != "system"
                         ],
                     # All pools
-                    "noc_all_pools": [{
-                                          "name": p.name,
-                                          "description": p.description
-                                      } for p in Pool.select().where(Pool.environment == self).order_by(Pool.name)]
+                    "noc_all_pools": [
+                        {
+                            "name": p.name,
+                            "description": p.description
+                        } for p in Pool.select().where(Pool.environment == self).order_by(Pool.name)
+                                    ]
                 }
             },
             "_meta": {
