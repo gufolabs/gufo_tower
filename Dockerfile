@@ -7,7 +7,6 @@ ENV ANSIBLE_SSH_PIPELINING=1
 ENV PYTHONUNBUFFERED=1
 ENV VERSION=${VERSION}
 
-
 # install systemv packages
 RUN apt-get update \
  && apt-get install -y \
