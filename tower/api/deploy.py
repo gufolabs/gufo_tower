@@ -68,6 +68,8 @@ class DeployHandler(BaseHandler):
                 tags.append("config")
             if 12 in self.deploy_options:
                 tags.append("requirements")
+            if 13 in self.deploy_options:
+                tags.append("migrate")
             if 50 in self.deploy_options and 51 not in self.deploy_options:
                 tags.append("restart")
             if 51 in self.deploy_options:

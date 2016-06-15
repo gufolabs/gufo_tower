@@ -176,6 +176,7 @@ Entrypoint скрипт если не обнаружит директорию с
  * Update Sources - выполняет `hg pull -u` в директории noc и в директории custom
  * Update configs - конфигурирует все сервисы.
  * Install requirements - выполняет команды аналогичные ./bin/pip install -r requirements/noc.txt. Бывает полезно при впиливании каких то новых фич.
+ * Do database migrations - проведет миграции базы. Для успешного выполнения требует полной остановки сервисов NOC.  Опция (Restart quick)
 
  Дальше идут подряд два варианта перезапуска NOC после применения `playbook`
  * Restart quick - делает рестарт нока средствами системы аналогично `/etc/init.d/noc restart`

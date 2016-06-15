@@ -61,6 +61,7 @@ var environment_list = {
                         {id: 10, value: "Update sources", tooltip: "Only update sources"},
                         {id: 11, value: "Update configs", tooltip: "Rebuild configs, and restart services"},
                         {id: 12, value: "Install requirements"},
+                        {id: 13, value: "Do database migrations"},
                         {id: 50, value: "Restart quick", tooltip: "Stop all, start all"},
                         {id: 51, value: "Restart gentle", tooltip: "Restart one by one"},
                         {id: 90, value: "Be verbose", tooltip: "Debug output -v"},
