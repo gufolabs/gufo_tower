@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 class DeployHandler(BaseHandler):
     SUPPORTED_METHODS = ("GET",)
-    BUFFSIZE = 1048576
+    BUFFSIZE = 10485760
 
     rx_recap = re.compile(
         r"^(\S+)\s*:\s+"
