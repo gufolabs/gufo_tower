@@ -46,6 +46,7 @@ class DeployHandler(BaseHandler):
         self.job_log = None
         self.tags = ""
         self.ansible_verbose = ""
+        self.ansible_check = ""
 
     @tornado.web.authenticated
     @tornado.web.asynchronous
@@ -78,6 +79,9 @@ class DeployHandler(BaseHandler):
                 self.ansible_verbose = "-v"
             if 91 in self.deploy_options:
                 self.ansible_verbose = "-vvvvvvvv"
+            if 92 in self.deploy_options:
+                self.ansible_check = "--check"
+                self.ansible_check = "--diff"
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
         logger.info("Running deploy on %s %s", self.env.name, self.deploy_options)
@@ -130,6 +134,8 @@ class DeployHandler(BaseHandler):
         ]
         if self.ansible_verbose:
             command.append(self.ansible_verbose)
+        if self.ansible_check:
+            command.append(self.ansible_check)
         if self.tags:
             command.append(self.tags)
         logger.info("Running command %s", command)
