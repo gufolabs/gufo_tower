@@ -1,8 +1,9 @@
 version: '2'
 services:
   tower:
-    image: registry.gitlab.com/nocproject/tower:latest
-    expose:
-      - "8888"
+    image: registry.gitlab.com/nocproject/tower:master
+    restart: always 
+    ports:
+      - "8888:8888"
     volumes:
-      - "/mnt/sda1/data/tower:/opt/tower/var/"
+      - "/opt/tower/var:/opt/tower/var/"
