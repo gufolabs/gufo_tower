@@ -248,10 +248,9 @@ var environment_form = {
                                 view: "text",
                                 name: "web_host",
                                 label: "Host",
-                                value: "noc",
                                 required: true,
                                 placeholder: "noc.example.com",
-                                validate: Tower.rules.regex(/^[a-zA-Z][a-zA-Z0-9\-_\.]*$/)
+                                validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/)
                             },
                             {
                                 view: "text",
