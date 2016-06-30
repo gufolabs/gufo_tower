@@ -81,7 +81,6 @@ class DeployHandler(BaseHandler):
                 self.ansible_verbose = "-vvvvvvvv"
             if 92 in self.deploy_options:
                 self.ansible_check = "--check"
-                self.ansible_check = "--diff"
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
         logger.info("Running deploy on %s %s", self.env.name, self.deploy_options)
@@ -130,7 +129,7 @@ class DeployHandler(BaseHandler):
         command = [
             os.path.join(bin_path, "ansible-playbook"),
             "-i", os.path.join(bin_path, "tower-inv"),
-            "site.yml", "-f 50"
+            "site.yml", "-f 50", "--diff"
         ]
         if self.ansible_verbose:
             command.append(self.ansible_verbose)
