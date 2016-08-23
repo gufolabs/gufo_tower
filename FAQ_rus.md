@@ -163,6 +163,7 @@ services:
     volumes:
       - "/opt/tower/var:/opt/tower/var/"
       - "/etc/tower/keys:/opt/tower/var/tower/data/deploy_keys"
+      - "./root:/root"
     environment:
       http_proxy: http://192.168.0.1:3128
 ```
