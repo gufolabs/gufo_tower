@@ -140,7 +140,7 @@ class ServiceAPI(API):
 
     def get_service_form(self, cfg, service):
         r = []
-        sc = cfg["config"].get(service, {})
+        sc = cfg["config"].get(service, {}) or {}
         for k, v in sc.iteritems():
             c = {
                 "id": k,
