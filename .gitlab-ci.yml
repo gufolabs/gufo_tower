@@ -17,7 +17,7 @@ build_tgz:
     paths:
       - dist/*.zip
   tags:
-    - dind
+    - docker
 
 upload_artifact:
   stage: upload_artifact
