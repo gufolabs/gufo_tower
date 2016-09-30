@@ -30,9 +30,9 @@ upload_artifact:
   script:
     - export VERSION=$(cat VERSION)
     - export FNAME=noc-tower-${VERSION}.zip
-    - docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_FILE=noc-tower-master.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master
-    - if [ -n "${CI_BUILD_TAG}" ]; then  docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_FILE=noc-tower-${VERSION}.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master ; fi
-    - if [ -n "${CI_BUILD_TAG}" ]; then docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_FILE=noc-tower-latest.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master ; fi
+    - docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_NAME=noc-tower-master.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master
+    - if [ -n "${CI_BUILD_TAG}" ]; then  docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_NAME=noc-tower-${VERSION}.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master ; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_NAME=noc-tower-latest.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master ; fi
   dependencies:
     - build_tgz
   tags:
