@@ -1,3 +1,9 @@
+variables:
+  PROXY: http://192.168.60.21:3128
+  REG_NAME: registry.getnoc.com
+  S3_BASE: https://s3.getnoc.com
+  S3_BUCKET: tower
+
 stages:
   - build
   - upload_artifact
@@ -24,10 +30,9 @@ upload_artifact:
   script:
     - export VERSION=$(cat VERSION)
     - export FNAME=noc-tower-${VERSION}.zip
-    - env | sort
-    - echo "put dist/${FNAME} tower/noc-tower-master.zip" | sftp -P 2228 ci@cdn.nocproject.org
-    - if [ -n "${CI_BUILD_TAG}" ]; then echo "put dist/${FNAME} tower/noc-tower-${VERSION}.zip" | sftp -P 2228 ci@cdn.nocproject.org; fi
-    - if [ -n "${CI_BUILD_TAG}" ]; then echo "put dist/${FNAME} tower/noc-tower-latest.zip" | sftp -P 2228 ci@cdn.nocproject.org; fi
+    - docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_FILE=noc-tower-master.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master
+    - if [ -n "${CI_BUILD_TAG}" ]; then  docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_FILE=noc-tower-${VERSION}.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master ; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_FILE=noc-tower-latest.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master ; fi
   dependencies:
     - build_tgz
   tags:
@@ -37,12 +42,13 @@ build_image:
   stage: build_image
   before_script:
     - export VERSION=$(cat VERSION)
+    - export CONTAINER_NAME=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build --build-arg="http_proxy=http://192.168.60.21:3128" --build-arg="https_proxy=http://192.168.60.21:3128" --build-arg=VERSION=${VERSION} -t registry.gitlab.com/nocproject/tower:master .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $REG_NAME
+    - docker build --build-arg="http_proxy=$PROXY" --build-arg="https_proxy=$PROXY" --build-arg=VERSION=${VERSION} -t $CONTAINER_NAME .
     - docker push registry.gitlab.com/nocproject/tower:master
-    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag registry.gitlab.com/nocproject/tower:master registry.gitlab.com/nocproject/tower:${CI_BUILD_TAG}; docker push registry.gitlab.com/nocproject/tower:${CI_BUILD_TAG}; fi
-    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag registry.gitlab.com/nocproject/tower:master registry.gitlab.com/nocproject/tower:latest; docker push registry.gitlab.com/nocproject/tower:latest; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:latest; docker push $CI_REGISTRY_IMAGE:latest; fi
   dependencies:
     - build_tgz
   tags:
