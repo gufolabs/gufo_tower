@@ -156,7 +156,7 @@ var node_form = {
                                 label: "Address",
                                 placeholder: "Type node IP address here",
                                 required: true,
-                                validate: Tower.rules.regex(/[0-9]+.[0-9]+.[0-9]+.[0-9]+:[0-9]+/)
+                                validate: Tower.rules.regex(/[0-9]+.[0-9]+.[0-9]+.[0-9]+(:[0-9]+)?/)
                             },
                             {
                                 view: "text",

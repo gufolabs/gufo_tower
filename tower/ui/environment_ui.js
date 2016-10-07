@@ -322,6 +322,7 @@ var environment_form = {
                                 name: "pg_password",
                                 label: "Password",
                                 value: "noc",
+                                validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/),
                                 required: true
                             }
                         ]
@@ -371,6 +372,7 @@ var environment_form = {
                                 name: "mongo_password",
                                 label: "Password",
                                 value: "noc",
+                                validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/),
                                 inputType: "password",
                                 required: true
                             }
@@ -402,6 +404,7 @@ var environment_form = {
                                 name: "influxdb_password",
                                 label: "Password",
                                 value: "noc",
+                                validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/),
                                 required: true
                             }
                         ]
