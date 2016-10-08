@@ -5,7 +5,7 @@ variables:
 
 stages:
   - build
-  - upload_artifact
+  - upload
   - build_image
 
 build_tgz:
