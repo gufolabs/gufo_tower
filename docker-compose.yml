@@ -1,7 +1,7 @@
 version: '2'
 services:
   tower:
-    image: registry.gitlab.com/nocproject/tower:master
+    image: registry.getnoc.com/noc/tower:master
     restart: always 
     ports:
       - "8888:8888"

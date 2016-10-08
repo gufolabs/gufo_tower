@@ -1,6 +1,5 @@
 variables:
   PROXY: http://192.168.60.21:3128
-  REG_NAME: registry.getnoc.com
   S3_BASE: https://s3.getnoc.com
   S3_BUCKET: tower
 
@@ -25,18 +24,19 @@ build_tgz:
   tags:
     - docker
 
-upload_artifact:
-  stage: upload_artifact
+upload:
+  stage: upload 
+  image: registry.getnoc.com/infrastructure/s3helper:master
   script:
     - export VERSION=$(cat VERSION)
     - export FNAME=noc-tower-${VERSION}.zip
-    - docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_NAME=noc-tower-master.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master
-    - if [ -n "${CI_BUILD_TAG}" ]; then  docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_NAME=noc-tower-${VERSION}.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master ; fi
-    - if [ -n "${CI_BUILD_TAG}" ]; then docker run --rm -e S3_BASE=$S3_BASE -e S3_BUCKET=$S3_BUCKET -e AWS_ACCESS_KEY=$AWS_ACCESS_KEY -e AWS_SECRET_KEY=$AWS_SECRET_KEY -e FILE=${FNAME} -e DEST_NAME=noc-tower-latest.zip -v $PWD/dist:/cd registry.getnoc.com/infrastructure/s3helper:master ; fi
+    - /tmp/mc -q cp dist/$FNAME cdn/$S3_BUCKET/noc-tower-master.zip
+    - if [ -n "${CI_BUILD_TAG}" ]; then /tmp/mc -q cp dist/$FNAME cdn/$S3_BUCKET/noc-tower-${VERSION}.zip; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then /tmp/mc -q cp dist/$FNAME cdn/$S3_BUCKET/noc-tower-latest.zip; fi
   dependencies:
     - build_tgz
   tags:
-    - shell
+    - docker 
 
 build_image:
   stage: build_image
@@ -44,7 +44,7 @@ build_image:
     - export VERSION=$(cat VERSION)
     - export CONTAINER_NAME=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $REG_NAME
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build --build-arg="http_proxy=$PROXY" --build-arg="https_proxy=$PROXY" --build-arg=VERSION=${VERSION} -t $CONTAINER_NAME .
     - docker push $CONTAINER_NAME 
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
