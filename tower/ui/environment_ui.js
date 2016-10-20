@@ -65,8 +65,7 @@ var environment_list = {
                         {id: 50, value: "Restart quick", tooltip: "Stop all, start all"},
                         {id: 51, value: "Restart gentle", tooltip: "Restart one by one"},
                         {id: 90, value: "Be verbose", tooltip: "Debug output -v"},
-                        {id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv"},
-                        {id: 92, value: "Check install", tooltip: "Check install do nothing"}
+                        {id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv"}
                     ],
                     value: "10,51"
                 }

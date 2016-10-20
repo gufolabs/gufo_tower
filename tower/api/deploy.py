@@ -79,8 +79,6 @@ class DeployHandler(BaseHandler):
                 self.ansible_verbose = "-v"
             if 91 in self.deploy_options:
                 self.ansible_verbose = "-vvvvvvvv"
-            if 92 in self.deploy_options:
-                self.ansible_check = "--check"
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
         logger.info("Running deploy on %s %s", self.env.name, self.deploy_options)
