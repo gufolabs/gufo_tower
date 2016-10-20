@@ -18,6 +18,7 @@ RUN apt-get update \
         openssh-client \
         libssl-dev \
         vim-tiny \
+        git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir /opt/tower
