@@ -2,13 +2,13 @@
 NOC Tower is the tool for deployment and maintaining multiple
 NOC (http://nocproject.org/) installations.
 
-[![build status](https://gitlab.com/nocproject/tower/badges/master/build.svg)](https://gitlab.com/nocproject/tower/commits/master)
+[![build status](https://code.getnoc.com/noc/tower/badges/master/build.svg)](https://code.getnoc.com/noc/tower/commits/master)
 
 ## Preparation
 ### Debian based Linux
 ```
 #!shell
-# apt-get install python-virtualenv libffi6 libffi-dev python-dev gcc libssl-dev
+# apt-get install python-virtualenv libffi6 libffi-dev python-dev gcc libssl-dev git
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 ```
@@ -16,7 +16,7 @@ NOC (http://nocproject.org/) installations.
 ### Rhel based Linux
 ```
 #!shell
-# yum install python-virtualenv libffi libffi-devel python-devel gcc openssl-devel
+# yum install python-virtualenv libffi libffi-devel python-devel gcc openssl-devel git
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 ```
@@ -25,7 +25,7 @@ NOC (http://nocproject.org/) installations.
 ### FreeBSD
 ```
 #!shell
-# pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite3 ca_root_nss
+# pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite3 ca_root_nss git
 # pw groupadd -n tower
 # pw useradd -g tower -s /bin/csh -d /home/tower -n tower -m
 ```
@@ -53,7 +53,7 @@ Replace /opt/tower/ to directory of your choice
  - Install Tower
 ```
 #!shell
-/opt/tower# ./bin/pip install https://cdn.nocproject.org/tower/noc-tower-latest.zip
+/opt/tower# ./bin/pip install https://cdn.getnoc.com/tower/noc-tower-latest.zip
 /opt/tower# chown -R tower var/
 ```
  - Generate Tower ssh keys

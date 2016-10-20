@@ -197,4 +197,3 @@ Entrypoint скрипт если не обнаружит директорию с
  * Be verbose  - аналогична ключу `-v` в `ansible-playbook`. Немного больше вывода.
  * Be extremelly verbose  - аналогична ключу `-vvvvv` в `ansible-playbook`. Режим отладки.
 
- * Check install - добавляет опции `--check` инсталяция просто проверяется. Никаких действий не выполняется.
