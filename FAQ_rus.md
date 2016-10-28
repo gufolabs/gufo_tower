@@ -139,7 +139,7 @@ from noc.sa.models.managedobject import ManagedObject
 
 **В**: Как поставить башню через `docker` ?
 
-**О**: Довольно просто. Тут [реестр](https://gitlab.com/nocproject/tower/container_registry). Есть три типа контейнеров
+**О**: Довольно просто. Тут [реестр](https://code.getnoc.com/noc/tower/container_registry). Есть три типа контейнеров
 * `master` - последняя доступная ревизия из `git`.
 * `latest` - последняя стабильная версия.
 * остальные. как правило, согласно выпущенным версиям.
@@ -149,7 +149,7 @@ from noc.sa.models.managedobject import ManagedObject
 version: '2'
 services:
   tower:
-    image: registry.gitlab.com/nocproject/tower:latest
+    image: registry.getnoc.com/noc/tower:master
     ports:
       - "8888:8888"
     volumes:
@@ -166,7 +166,7 @@ services:
 version: '2'
 services:
   tower:
-    image: registry.gitlab.com/nocproject/tower:latest
+    image: registry.getnoc.com/noc/tower:master
     ports:
       - "8888:8888"
     volumes:
