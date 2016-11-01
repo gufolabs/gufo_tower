@@ -1,4 +1,4 @@
-ansible==2.1.0.0
+ansible==2.2.0.0
 peewee==2.8.0
 tornado==4.3
 bcrypt==2.0.0
