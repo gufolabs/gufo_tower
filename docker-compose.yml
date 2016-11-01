@@ -1,7 +1,7 @@
 version: '2'
 services:
   tower:
-    image: registry.getnoc.com/noc/tower:master
+    image: registry.getnoc.com/noc/tower:latest
     restart: always 
     ports:
       - "8888:8888"
