@@ -1,1 +1,4 @@
 .idea/*
+noc_tower.egg-info/
+build/
+dist/
