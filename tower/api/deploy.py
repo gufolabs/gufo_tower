@@ -112,6 +112,7 @@ class DeployHandler(BaseHandler):
             "ANSIBLE_SSH_PIPELINING": "1",
             "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
             "ANSIBLE_HOST_KEY_CHECKING": "False",
+            "ANSIBLE_STDOUT_CALLBACK": "debug",
             "PYTHONUNBUFFERED": "1"
         })
         # Generate md5 checksum for requirements files
