@@ -111,6 +111,10 @@ var node_form = {
             },
             scroll: false,
             elements: [
+                {   view:"label",
+                    label: "Name of node equals `hostname` of physical node",
+                    align:"left"
+                },
                 {
                     view: "text",
                     name: "name",
