@@ -11,6 +11,9 @@ services:
       - "./root:/root"
     environment:
       CONSUL_MASTER_TOKEN: ${CONSUL_MASTER_TOKEN}
+      CONSUL_ENCRYPTION_KEY: ${CONSUL_ENCRYPTION_KEY}
+      CONSUL_TOKEN: ${CONSUL_MASTER_TOKEN}
+      CONSUL_URL: ${CONSUL_URL:-http://consul:8500/}
 
   consul:
     image: consul:0.7.2
@@ -29,7 +32,7 @@ services:
       - "./consul:/consul/data"
       - "./contrib/consul/consul.json:/consul/config/1.json"
     network_mode: host
-    command: consul agent -server -config-dir=/consul/config/ #-bind=192.168.1.1
+    command: consul agent -server -config-dir=/consul/config/ -bind=192.168.1.46
     environment:
-      CONSUL_LOCAL_CONFIG: '{"acl_master_token": "${CONSUL_MASTER_TOKEN}"}'
+      CONSUL_LOCAL_CONFIG: '{"acl_master_token": "${CONSUL_MASTER_TOKEN}", "encrypt": "${CONSUL_ENCRYPTION_KEY}"}'
       CONSUL_ALLOW_PRIVILEGED_PORTS: 1
