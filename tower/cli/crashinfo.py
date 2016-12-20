@@ -56,7 +56,7 @@ def die(msg):
 
 def collect_crashinfo(options, args):
     try:
-        env = Environment.get(Environment.name == options.env.lower())
+        env = Environment.get(Environment.name == options.env)
     except Environment.DoesNotExist:
         die("Invalid environment: '%s'" % options.env)
     q = Queue.Queue()

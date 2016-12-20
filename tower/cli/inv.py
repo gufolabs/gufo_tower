@@ -40,7 +40,7 @@ def main():
 
 def get_default_env():
     if os.environ.get("NOC_ENV"):
-        env = os.environ.get("NOC_ENV").lower()
+        env = os.environ.get("NOC_ENV")
     else:
         env = Environment.get(is_default=1).name
     return env
