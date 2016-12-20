@@ -63,6 +63,12 @@ Replace /opt/tower/ to directory of your choice
 /opt/tower# su - tower -c "ssh-keygen -t rsa -b 4096"
 ```
 
+## For single node installation only
+Add user tower to sudo group.
+* For example: `adduser tower sudo`
+* Select Local installation type with local ip on Nodes screen. 
+
+
  - Run Tower
 ```
 #!shell

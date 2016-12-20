@@ -7,5 +7,6 @@ services:
       - "8888:8888"
     volumes:
       - "/opt/tower/var:/opt/tower/var/"
+      - ./tower/migrations/022_add_local_connection.py:/opt/tower/local/lib/python2.7/site-packages/tower/migrations/022_add_local_connection.py
       #https://groups.google.com/forum/#!topic/ansible-project/y8ohlv_dRi4
       - "./root:/root"
