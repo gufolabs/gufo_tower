@@ -32,7 +32,7 @@ services:
       - "./consul:/consul/data"
       - "./contrib/consul/consul.json:/consul/config/1.json"
     network_mode: host
-    command: consul agent -server -config-dir=/consul/config/ -bind=192.168.1.46
+    command: consul agent -server -config-dir=/consul/config/ -bind=${BIND_ADDRESS}
     environment:
       CONSUL_LOCAL_CONFIG: '{"acl_master_token": "${CONSUL_MASTER_TOKEN}", "encrypt": "${CONSUL_ENCRYPTION_KEY}"}'
       CONSUL_ALLOW_PRIVILEGED_PORTS: 1
