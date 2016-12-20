@@ -2,10 +2,34 @@ version: '2'
 services:
   tower:
     image: registry.getnoc.com/noc/tower:latest
-    restart: always 
+    restart: always
     ports:
       - "8888:8888"
     volumes:
       - "/opt/tower/var:/opt/tower/var/"
       #https://groups.google.com/forum/#!topic/ansible-project/y8ohlv_dRi4
       - "./root:/root"
+    environment:
+      CONSUL_MASTER_TOKEN: ${CONSUL_MASTER_TOKEN}
+
+  consul:
+    image: consul:0.7.2
+    hostname: tower-db
+    #restart: always
+    ports:
+     - 8300:8300
+     - 8301:8301
+     - 8301:8301/udp
+     - 8302:8302
+     - 8500:8500
+     - 8302:8302/udp
+     - 53:53
+     - 53:53/udp
+    volumes:
+      - "./consul:/consul/data"
+      - "./contrib/consul/consul.json:/consul/config/1.json"
+    network_mode: host
+    command: consul agent -server -config-dir=/consul/config/ #-bind=192.168.1.1
+    environment:
+      CONSUL_LOCAL_CONFIG: '{"acl_master_token": "${CONSUL_MASTER_TOKEN}"}'
+      CONSUL_ALLOW_PRIVILEGED_PORTS: 1
