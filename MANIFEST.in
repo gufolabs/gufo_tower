@@ -1,3 +1,6 @@
 include VERSION
 include Readme.md
 include requirements.txt
+graft contrib
+graft docs
+graft conf

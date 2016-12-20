@@ -1,7 +1,12 @@
-ansible==2.1.0.0
-peewee==2.8.0
-tornado==4.3
 bcrypt==2.0.0
-mercurial==3.8.4
-futures==3.0.3
+certifi==2016.9.26
+cffi>=0.8.5
+futures>=2.2.0
+peewee==2.8.0
+pycparser>=2.10
+singledispatch>=3.4.0.0
+six>=1.8.0
+tornado==4.4.2
+ansible
+mercurial
 setuptools>=11.3
