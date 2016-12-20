@@ -52,7 +52,7 @@ class DeployHandler(BaseHandler):
     @tornado.web.asynchronous
     def get(self, env_name, *args, **kwargs):
         try:
-            self.env = Environment.get(Environment.name == env_name)
+            self.env = Environment.get(Environment.name == env_name.lower())
         except Environment.DoesNotExist:
             raise tornado.web.HTTPError(404)
         try:
