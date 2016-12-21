@@ -40,7 +40,7 @@
 абсолютный минимум. что бы кластер увидел ансибл надо задать ssh-ключ и имя пользователя
 ```
   {
-    "Key": "noc/<ENV>/all",
+    "Key": "noc/{ENV}/all",
     "Value": "{\"ansible_ssh_private_key_file\": \"/opt/tower/var/tower/data/deploy_keys/id_rsa\",\"ansible_user\": \"ansible\"}",
   }
 ```
@@ -50,8 +50,8 @@
 
 Переменные уровня всего env
 ---------------------------
-* noc/<ENV>/all -> json
-* noc/<ENV>/all/
+* noc/{ENV}/all -> json
+* noc/{ENV}/all/
 ```
         "alerta_token": "",
         "alerta_url": "",
@@ -81,8 +81,8 @@
 Переменные для DC
 -----------------
 
-* noc/<ENV>/<DC> -> json
-* noc/<ENV>/<DC>/
+* noc/{ENV}/{DC} -> json
+* noc/{ENV}/{DC}/
 ```
         "proxy": "http://192.168.1.1:3128",
         "noc_metrics_collector": "http://local_collector:8086",
@@ -91,8 +91,8 @@
 Переменные для всех сервисов
 ----------------------------
 
-* noc/<ENV>/<DC>/groups/all -> json
-* noc/<ENV>/<DC>/groups/all/
+* noc/{ENV}/{DC}/groups/all -> json
+* noc/{ENV}/{DC}/groups/all/
 ```
 		пусто
 ```
@@ -100,8 +100,8 @@
 Переменные для сервиса
 ----------------------
 
-* noc/<ENV>/<DC>/groups/<SERVICE_NAME> -> json
-* noc/<ENV>/<DC>/groups/<SERVICE_NAME>/
+* noc/{ENV}/{DC}/groups/{SERVICE_NAME} -> json
+* noc/{ENV}/{DC}/groups/{SERVICE_NAME}/
 ```
         "noc_mongo_admin_password": "noc",
         "noc_mongo_admin_user": "root",
@@ -124,8 +124,8 @@
 переменные включения сервиса
 ----------------------------
 
-* noc/<ENV>/<DC>/groups/<NODE_NAME> -> json
-* noc/<ENV>/<DC>/groups/<NODE_NAME>/
+* noc/{ENV}/{DC}/groups/{NODE_NAME} -> json
+* noc/{ENV}/{DC}/groups/{NODE_NAME}/
 ```
         "ansible_host": "192.168.1.27",
         "has_svc_activator": true,
@@ -165,5 +165,5 @@
 
 принадлежность ноды окружению. хак.
 -----------------------------------
-* noc/<ENV>/nodes/<NODE_NAME>
-* noc/<ENV>/<DC>/nodes/<NODE_NAME>
+* noc/{ENV}/nodes/{NODE_NAME}
+* noc/{ENV}/{DC}/nodes/{NODE_NAME}
