@@ -103,9 +103,12 @@ class DeployHandler(BaseHandler):
         self.env.build_ssh_keys()
         # Run playbook
         bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
-        ansible_ssh_cp = os.path.join(
-            "/tmp/tower-%%r-%%h-%%r"
-        )
+        if os.path.exists("/.dockerenv"):
+            ansible_ssh_cp = os.path.join("/root/.ansible/cp/ansible-ssh-%h-%p-%r")
+        else:
+            ansible_ssh_cp = os.path.join(
+                "/tmp/tower-%%r-%%h-%%r"
+            )
         env = os.environ.copy()
         env.update({
             "NOC_ENV": str(self.env.name),
