@@ -94,6 +94,7 @@ class DeployHandler(BaseHandler):
         self.set_header("X-Accel-Buffering", "no")
         # Stream output
         self.write("Starting job #%d\n\n" % self.job_log.id)
+        self.get_version()
         # Check settings
         if not Settings.get_repo_url():
             self.write("ERROR: Repo URL is not set. Setup Repo URL in the Settings tab\n")
@@ -113,7 +114,8 @@ class DeployHandler(BaseHandler):
             "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
             "ANSIBLE_HOST_KEY_CHECKING": "False",
             "ANSIBLE_STDOUT_CALLBACK": "debug",
-            "PYTHONUNBUFFERED": "1"
+            "PYTHONUNBUFFERED": "1",
+            "TOWER_VERSION": self.version
         })
         # Generate md5 checksum for requirements files
         for i in [
@@ -151,6 +153,15 @@ class DeployHandler(BaseHandler):
             streaming_callback=self.on_data,
             partial=True
         )
+
+    def get_version(self):
+        from os.path import realpath, join, dirname, abspath
+        version_path = realpath(join(dirname(abspath(__file__)), '../../../../../VERSION'))
+        if not os.path.exists(version_path):
+            self.version = 'old'
+        else:
+            with open(version_path, "r") as f:
+                self.version=f.read().splitlines()[0]
 
     def on_connection_close(self, *args, **kwargs):
         logger.info("Connection terminated")

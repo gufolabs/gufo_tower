@@ -52,6 +52,7 @@ def main():
         version=VERSION,
         description="NOC Tower",
         author="Dmitry Volodin",
+        maintainer="Aleksey Shirokih",
         license="BSD",
         author_email="info@nocproject.org",
         url="https://bitbucket.org/nocproject/noc-tower",
@@ -72,6 +73,7 @@ def main():
         package_data={
             "tower": tower_data
         },
+        data_files=["VERSION"],
         scripts=["bin/tower-upgrade"],
         install_requires=requirements,
         zip_safe=False,
