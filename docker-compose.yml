@@ -9,9 +9,9 @@ services:
       - "/opt/tower/var:/opt/tower/var/"
       #see for details https://groups.google.com/forum/#!topic/ansible-project/y8ohlv_dRi4
       - "./root:/root"
-    environment:
 ## provide them only for distributed installations
 ## for single node installation there is no need for consul info
+#    environment:
 #      CONSUL_MASTER_TOKEN: ${CONSUL_MASTER_TOKEN}
 #      CONSUL_ENCRYPTION_KEY: ${CONSUL_ENCRYPTION_KEY}
 #      CONSUL_TOKEN: ${CONSUL_MASTER_TOKEN}
