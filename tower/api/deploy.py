@@ -104,7 +104,7 @@ class DeployHandler(BaseHandler):
         # Run playbook
         bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
         if os.path.exists("/.dockerenv"):
-            ansible_ssh_cp = os.path.join("/root/.ansible/cp/ansible-ssh-%h-%p-%r")
+            ansible_ssh_cp = os.path.join("/root/.ansible/cp/ansible-ssh-%%r-%%h-%%r")
         else:
             ansible_ssh_cp = os.path.join(
                 "/tmp/tower-%%r-%%h-%%r"
