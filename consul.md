@@ -1,6 +1,7 @@
 Как постаивть нок для крупной инсталцяии > 10k устройст
 
-h1. подготовка
+подготовка
+==========
 
 * ставим docker
 * ставим docker-compose
@@ -9,13 +10,22 @@ h1. подготовка
 * docker-compouse up -d
 
 На остальных нодах
+------------------
 * скачиваем consul в диретокрию /tmp
 * запускаем sudo /tmp/consul agent -join=<TOWER_IP>  -data-dir /tmp -encrypt=<CONSUL_ENCRYPTION_KEY>
 * на управляющей ноде
 ** проверяем что видим кластер
-```
+    ```
 	./consul members
-```
+	```
+	вывод должет быть примерно таким
+	```
+    Node             Address               Status  Type    Build  Protocol  DC
+    tower            192.168.1.0.10:8301   alive   server  0.7.2  2         dc1
+    db-node          192.168.1.0.241:8301  alive   client  0.7.2  2         dc1
+    node2            192.168.1.0.242:8301  alive   client  0.7.2  2         dc1
+	```
+
 ** выполняем команды аналогичные
 ```
 	./consul exec -node="noc-debian" "adduser --home /home/ansible --shell /bin/sh ansible"
@@ -26,25 +36,23 @@ h1. подготовка
 ```
 
 Начальное наполнение consul kv
-абсолютный минимум
+------------------------------
+абсолютный минимум. что бы кластер увидел ансибл надо задать ssh-ключ и имя пользователя
 ```
   {
     "Key": "noc/<ENV>/all",
-    "CreateIndex": 245,
-    "ModifyIndex": 511,
-    "LockIndex": 0,
-    "Flags": 0,
     "Value": "{\"ansible_ssh_private_key_file\": \"/opt/tower/var/tower/data/deploy_keys/id_rsa\",\"ansible_user\": \"ansible\"}",
-    "Session": ""
   }
 ```
 
-h1. Модель данных
+Модель данных
+==============
 
-Переменные уровня всего env.
-noc/<ENV>/all -> json
-noc/<ENV>/all/
-
+Переменные уровня всего env
+---------------------------
+* noc/<ENV>/all -> json
+* noc/<ENV>/all/
+```
         "alerta_token": "",
         "alerta_url": "",
         "ansible_python_interpreter": "/usr/bin/python2.7",
@@ -68,22 +76,33 @@ noc/<ENV>/all/
         "noc_revision": "feature/microservices",
         "noc_root": "/opt/noc",
         "noc_user": "noc",
+```
 
 Переменные для DC
-noc/<ENV>/<DC> -> json
-noc/<ENV>/<DC>/
+-----------------
+
+* noc/<ENV>/<DC> -> json
+* noc/<ENV>/<DC>/
+```
         "proxy": "http://192.168.1.1:3128",
         "noc_metrics_collector": "http://local_collector:8086",
+```
 
 Переменные для всех сервисов
-noc/<ENV>/<DC>/groups/all -> json
-noc/<ENV>/<DC>/groups/all/
+----------------------------
+
+* noc/<ENV>/<DC>/groups/all -> json
+* noc/<ENV>/<DC>/groups/all/
+```
 		пусто
+```
 
 Переменные для сервиса
-noc/<ENV>/<DC>/groups/<SERVICE_NAME> -> json
-noc/<ENV>/<DC>/groups/<SERVICE_NAME>/
+----------------------
 
+* noc/<ENV>/<DC>/groups/<SERVICE_NAME> -> json
+* noc/<ENV>/<DC>/groups/<SERVICE_NAME>/
+```
         "noc_mongo_admin_password": "noc",
         "noc_mongo_admin_user": "root",
         "noc_mongo_db": "noc",
@@ -100,10 +119,14 @@ noc/<ENV>/<DC>/groups/<SERVICE_NAME>/
         "noc_web_host": "192.168.1.27",
         "noc_ssl_cert": "-----BEGIN CERTIFICATE-----",
         "noc_ssl_key": "-----BEGIN PRIVATE KEY-----",
+```
 
+переменные включения сервиса
+----------------------------
 
-noc/<ENV>/<DC>/groups/<NODE_NAME> -> json
-noc/<ENV>/<DC>/groups/<NODE_NAME>/
+* noc/<ENV>/<DC>/groups/<NODE_NAME> -> json
+* noc/<ENV>/<DC>/groups/<NODE_NAME>/
+```
         "ansible_host": "192.168.1.27",
         "has_svc_activator": true,
         "has_svc_bi": true,
@@ -138,8 +161,9 @@ noc/<ENV>/<DC>/groups/<NODE_NAME>/
         "has_svc_syslogcollector": true,
         "has_svc_trapcollector": true,
         "has_svc_web": true,
-
+ ```
 
 принадлежность ноды окружению. хак.
-noc/<ENV>/nodes/<NODE_NAME>
-noc/<ENV>/<DC>/nodes/<NODE_NAME>
+-----------------------------------
+* noc/<ENV>/nodes/<NODE_NAME>
+* noc/<ENV>/<DC>/nodes/<NODE_NAME>
