@@ -161,7 +161,7 @@ class DeployHandler(BaseHandler):
             self.version = 'old'
         else:
             with open(version_path, "r") as f:
-                self.version=f.read().splitlines()[0]
+                self.version = f.read().splitlines()[0]
 
     def on_connection_close(self, *args, **kwargs):
         logger.info("Connection terminated")
