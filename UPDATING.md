@@ -12,6 +12,14 @@ Traditional installation
 ========================
 Meanwhile old method of updating noc-tower is still supported. 
 To do so 
+check if pip version is greater than 1.5 to do so 
+```
+# cd /opt/noc
+# ./bin/pip --version 
+# ./bin/pip install --upgrade pip
+# ./bin/pip --version 
+```
+than 
 ```
 # cd /opt/noc
 # ./bin/tower-upgrade
