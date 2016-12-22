@@ -58,6 +58,6 @@ def ansible_list(options, args):
     """
     try:
         env = Environment.get(Environment.name == options.env)
-        print json.dumps(env.ansible_inventory())
+        print json.dumps(env.ansible_inventory(), sort_keys=True)
     except Environment.DoesNotExist:
         die("Invalid environment: '%s'" % options.env)
