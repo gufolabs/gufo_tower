@@ -17,3 +17,15 @@ To do so
 # ./bin/tower-upgrade
 ```
 After it please recheck if ansible version is good enough. Current is is 2.2
+
+If you get 
+```ERROR! Invalid callback for stdout specified: debug``` 
+error after updating Please double check ansible version with
+```
+# cd /opt/tower
+# ./bin/ansible --version
+ansible 2.2.0.0
+  config file = 
+  configured module search path = Default w/o overrides
+
+```
