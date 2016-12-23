@@ -67,7 +67,7 @@ var environment_list = {
                         {id: 90, value: "Be verbose", tooltip: "Debug output -v"},
                         {id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv"}
                     ],
-                    value: "10,51"
+                    value: "1"
                 }
 
             ]
