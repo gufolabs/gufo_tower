@@ -13,6 +13,12 @@ NOC (http://nocproject.org/) installations.
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 ```
 
+## Debian only
+```
+#!shell
+/opt/tower# apt-get install dbus
+```
+
 ### Rhel based Linux
 ```
 #!shell
