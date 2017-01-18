@@ -32,7 +32,7 @@ var environment_logic = {
         environment_logic.show_form();
         $$("environment_form").setValues({
             env_type: "eval",
-            repo: "https://bitbucket.com/nocproject/noc",
+            repo: "https://bitbucket.org/nocproject/noc",
             branch: "feature/microservices",
             changeset: "tip",
             installation_name: "Unconfigured installation",

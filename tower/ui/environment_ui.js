@@ -190,7 +190,7 @@ var environment_form = {
                                 name: "repo",
                                 label: "Repo URL",
                                 required: true,
-                                value: "https://bitbucket.com/nocproject/noc"
+                                value: "https://bitbucket.org/nocproject/noc"
                             },
                             {
                                 view: "text",
