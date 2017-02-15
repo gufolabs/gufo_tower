@@ -10,4 +10,4 @@ tornado==4.4.2
 ansible
 mercurial
 setuptools>=11.3
-python-consul
+#python-consul
