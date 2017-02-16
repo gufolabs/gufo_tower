@@ -204,3 +204,41 @@ Entrypoint скрипт если не обнаружит директорию с
  * INFLUXDB_ENABLED - включает отправку данных о телеметрии в  https://github.com/influxdata/influxdb. Выбран по умолчанию
 
  Возможно включение обоих сразу, однако какой то один должен быть включен всегда. Иначе telegraf просто не сможет стартануть. 
+
+**В**: Есть ли рекомендации по разбивке диска для системы ? 
+
+**О**: Да, рекомендации есть и описаны в (RunBook)[https://kb.nocproject.org/pages/viewpage.action?pageId=22970894]
+
+Для автоматизации рутинных операций есть возможность запустить playbook для разбивк. Сделать это можно тольль из консоли сервера. Веб интерфейс для этих задач не предусмотрен.
+
+```ansible-playbook -i /opt/tower/bin/tower-inv /opt/tower/var/tower/playbooks/$NOC_ENV/ansible/disks.yml -f 50 --diff```
+В результате будет собрана следующая схема
+```
+# mount
+...
+/dev/mapper/vg00-nsq_cache on /opt/noc/var/db/nsq type xfs (rw,relatime,attr2,inode64,noquota)
+/dev/mapper/vg00-opt on /opt/noc type xfs (rw,relatime,attr2,inode64,noquota)
+/dev/mapper/vg00-wal on /wal type xfs (rw,relatime,attr2,inode64,noquota)
+/dev/mapper/vg00-mongo_data on /data/mongo type xfs (rw,relatime,attr2,inode64,noquota)
+/dev/mapper/vg00-postgres_data on /data/postgres type xfs (rw,relatime,attr2,inode64,noquota)
+/dev/mapper/vg00-influx_data on /data/influx type xfs (rw,relatime,attr2,inode64,noquota)
+/dev/mapper/vg00-mongo_index on /data/mongo_index type xfs (rw,relatime,attr2,inode64,noquota)
+
+# lvs
+  LV            VG            Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  influx_data   vg00          -wi-ao----   1.00g                                                    
+  mongo_data    vg00          -wi-ao----   1.00g                                                    
+  mongo_index   vg00          -wi-ao----   1.00g                                                    
+  nsq_cache     vg00          -wi-ao----   1.00g                                                    
+  opt           vg00          -wi-ao----   1.00g                                                    
+  postgres_data vg00          -wi-ao----   1.00g                                                    
+  wal           vg00          -wi-ao---- 128.00m                                    
+```
+По умолчанию используется xfs. 
+Если же предоплагается использоват другую файловую систему перед запуском плейбука имеет смысл отредактировать файл 
+`/opt/tower/var/tower/playbooks/$NOC_ENV/ansible/vars/main.yml`
+Там же можно задать целевые размеры дисков. 
+
+Плейбук предполагается, что будет запускаться однократно при начальной настройке системы. 
+Запуск его на регулярной основе не предусмотрен. 
+Хотя его многократный прогон не приводит к форматированию файловых систем или изменению размеров томов.   
