@@ -11,3 +11,5 @@ ansible
 mercurial
 setuptools>=11.3
 #python-consul
+packaging
+appdirs
