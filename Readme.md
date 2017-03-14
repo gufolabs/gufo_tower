@@ -73,9 +73,7 @@ Replace /opt/tower/ to directory of your choice
 Add user tower to sudo group.
 * For example: `adduser tower sudo`
 * Select Local installation type with local ip on Nodes screen. 
-
-
- - Run Tower
+* Run Tower
 ```
 #!shell
 /opt/tower# su - tower -c "cd /opt/tower && ./bin/tower-web"
@@ -96,8 +94,7 @@ Add user tower to sudo group.
 ## Prepare nodes
 On each node 
 * create ansible user (*ansible* by default),
-* grant it passwordless sudo privileges and copy Tower's
-* copy public ssh key (*/home/tower/.ssh/id_rsa.pub*) to *ansible's*
+* grant it passwordless sudo privileges and copy Tower's public ssh key (*/home/tower/.ssh/id_rsa.pub*) to *ansible's*
 ```
 #!shell
 /opt/tower# su - tower -c "ssh-copy-id node_ip"
