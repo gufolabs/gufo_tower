@@ -325,6 +325,20 @@ class Environment(Model):
                 "hosts": [pri.node.name]
             }
             r["_meta"]["hostvars"][pri.node.name]["has_svc_postgres_master"] = True
+
+        # Select consul servers
+        if "consul" in service_data:
+            # Elect master
+            # As node with largest n_instances
+            # and lowest address
+            pri = sorted(
+                service_data["consul"],
+                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.get_address().split(".")]
+            )[0]
+            r["svc-consul-server"] = {
+                "hosts": [pri.node.name]
+            }
+            r["_meta"]["hostvars"][pri.node.name]["has_svc_consul_server"] = True
         # Generate etc/noc.yml
         port_number = defaultdict(
             lambda: itertools.count(self.BASE_PORT)
