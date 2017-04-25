@@ -85,7 +85,7 @@ var service_panel = {
                                     value: "Info"
                                 },
                                 {
-                                    id: "warn",
+                                    id: "warning",
                                     value: "Warning"
                                 },
                                 {
