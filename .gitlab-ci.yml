@@ -37,6 +37,8 @@ upload:
     - build_tgz
   tags:
     - docker
+  only:
+    - master
 
 build_image:
   stage: build_image
@@ -54,3 +56,5 @@ build_image:
     - build_tgz
   tags:
     - shell
+  only:
+    - master
