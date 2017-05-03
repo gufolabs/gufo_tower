@@ -25,6 +25,8 @@ NOC (http://nocproject.org/) installations.
 # yum install python-virtualenv libffi libffi-devel python-devel gcc openssl-devel
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
+
+You need set 'SELINUX=disabled' in /etc/sysconfig/selinux  and reboot system
 ```
 
 
