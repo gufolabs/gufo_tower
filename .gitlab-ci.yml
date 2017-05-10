@@ -39,6 +39,7 @@ upload:
     - docker
   only:
     - master
+    - tags
 
 build_image:
   stage: build_image
@@ -58,3 +59,4 @@ build_image:
     - shell
   only:
     - master
+    - tags
