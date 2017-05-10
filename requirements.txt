@@ -13,3 +13,4 @@ mercurial
 setuptools>=11.3
 packaging
 appdirs
+netaddr
