@@ -14,17 +14,17 @@ Meanwhile old method of updating noc-tower is still supported.
 To do so 
 check if pip version is greater than 1.5 to do so 
 ```
-# cd /opt/noc
+# cd /opt/tower
 # ./bin/pip --version 
 # ./bin/pip install --upgrade pip
 # ./bin/pip --version 
 ```
 than 
 ```
-# cd /opt/noc
+# cd /opt/tower
 # ./bin/tower-upgrade
 ```
-After it please recheck if ansible version is good enough. Current is is 2.2
+After it please recheck if ansible version is good enough. Current is is 2.3
 
 If you get 
 ```ERROR! Invalid callback for stdout specified: debug``` 
@@ -32,7 +32,7 @@ error after updating Please double check ansible version with
 ```
 # cd /opt/tower
 # ./bin/ansible --version
-ansible 2.2.0.0
+ansible 2.3.0.0
   config file = 
   configured module search path = Default w/o overrides
 
