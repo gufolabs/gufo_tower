@@ -48,7 +48,6 @@ build_image:
     - export CONTAINER_NAME=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker pull $CONTAINER_NAME
     - docker build --pull --build-arg="http_proxy=$PROXY" --build-arg="https_proxy=$PROXY" --build-arg=VERSION=${VERSION} -t $CONTAINER_NAME .
     - docker push $CONTAINER_NAME
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
