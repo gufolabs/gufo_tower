@@ -37,3 +37,8 @@ ansible 2.3.0.0
   configured module search path = Default w/o overrides
 
 ```
+
+If ansible version is too old update it with 
+```
+# ./bin/pip install --upgrade ansible
+```
