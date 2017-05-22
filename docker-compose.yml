@@ -1,42 +1,21 @@
 version: '2.1'
 services:
   tower:
-    image: registry.getnoc.com/noc/tower:latest
+    image: registry.getnoc.com/noc/tower:master
     restart: always
     ports:
       - "8888:8888"
     volumes:
       - "/opt/tower/var:/opt/tower/var/"
       #see for details https://groups.google.com/forum/#!topic/ansible-project/y8ohlv_dRi4
-      - "./root:/root"
+      - "$PWD/root:/root"
 ## provide them only for distributed installations
 ## for single node installation there is no need for consul info
-#    environment:
-#      CONSUL_MASTER_TOKEN: ${CONSUL_MASTER_TOKEN}
-#      CONSUL_ENCRYPTION_KEY: ${CONSUL_ENCRYPTION_KEY}
-#      CONSUL_TOKEN: ${CONSUL_MASTER_TOKEN}
-#      CONSUL_URL: ${CONSUL_URL:-http://consul:8500/}
+    environment:
+#      PROMETHEUS_ENABLED: "True"
+#      INFLUXDB_ENABLED: "False"
+      HISTCONTROL: "ignoreboth:erasedups"
+#      MONGO_VERSION: 3.4
+#      POSTGRES_VERSION: 9.6
 
-## provide that service only for distributed installations
 
-#  consul:
-#    image: consul:0.7.2
-#    hostname: tower-db
-#    #restart: always
-#    ports:
-#     - 8300:8300
-#     - 8301:8301
-#     - 8301:8301/udp
-#     - 8302:8302
-#     - 8500:8500
-#     - 8302:8302/udp
-#     - 53:53
-#     - 53:53/udp
-#    volumes:
-#      - "./consul:/consul/data"
-#      - "./contrib/consul/consul.json:/consul/config/1.json"
-#    network_mode: host
-#    command: consul agent -server -config-dir=/consul/config/ -bind=${BIND_ADDRESS}
-#    environment:
-#      CONSUL_LOCAL_CONFIG: '{"acl_master_token": "${CONSUL_MASTER_TOKEN}", "encrypt": "${CONSUL_ENCRYPTION_KEY}"}'
-#      CONSUL_ALLOW_PRIVILEGED_PORTS: 1
