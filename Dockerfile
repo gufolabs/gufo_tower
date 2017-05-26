@@ -20,6 +20,8 @@ RUN apt-get update \
         libssl-dev \
         vim-tiny \
         sqlite3 \
+        curl \
+        telnet \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir /opt/tower
@@ -27,7 +29,7 @@ RUN apt-get update \
 # Install tower
 COPY dist/noc-tower-${VERSION}.zip /tmp/
 
-WORKDIR /opt/tower 
+WORKDIR /opt/tower
 
 RUN virtualenv . \
     && ./bin/pip install /tmp/noc-tower-${VERSION}.zip
