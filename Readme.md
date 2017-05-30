@@ -53,12 +53,14 @@ Replace /opt/tower/ to directory of your choice
 ```
 
  - Create virtualenv
+
 ```
 #!shell
 /opt/tower# virtualenv .
 ```
 
  - Install Tower
+
 ```
 #!shell
 /opt/tower# ./bin/pip install --upgrade pip
@@ -66,6 +68,7 @@ Replace /opt/tower/ to directory of your choice
 /opt/tower# chown -R tower var/
 ```
  - Generate Tower ssh keys
+
 ```
 #!shell
 /opt/tower# su - tower -c "ssh-keygen -t rsa -b 4096"
@@ -76,6 +79,7 @@ Add user tower to sudo group.
 * For example: `adduser tower sudo`
 * Select Local installation type with local ip on Nodes screen. 
 * Run Tower
+
 ```
 #!shell
 /opt/tower# su - tower -c "cd /opt/tower && ./bin/tower-web"
@@ -96,7 +100,8 @@ Add user tower to sudo group.
 ## Prepare nodes
 On each node 
 * create ansible user (*ansible* by default),
-* grant it passwordless sudo privileges and copy Tower's public ssh key (*/home/tower/.ssh/id_rsa.pub*) to *ansible's*
+* grant it passwordless `sudo` privileges and copy Tower's public ssh key (*/home/tower/.ssh/id_rsa.pub*) to *ansible's*
+
 ```
 #!shell
 /opt/tower# su - tower -c "ssh-copy-id node_ip"
@@ -112,8 +117,6 @@ rhel_subscription_username: ""
 rhel_subscription_password: ""
 ```
 
-## FreeBSD Only
-* Add *ansible* user to /usr/local/etc/sudoers files in each nodes
 
 ## Proxy 
 In cause of using proxy for internet acces you should set proxy settings to `/home/tower/.hgrc` that way
