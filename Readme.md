@@ -112,6 +112,9 @@ rhel_subscription_username: ""
 rhel_subscription_password: ""
 ```
 
+## FreeBSD Only
+* Add *ansible* user to /usr/local/etc/sudoers files in each nodes
+
 ## Proxy 
 In cause of using proxy for internet acces you should set proxy settings to `/home/tower/.hgrc` that way
 
