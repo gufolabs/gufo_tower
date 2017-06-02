@@ -159,7 +159,6 @@ class PullAPI(API):
                     "-p", "noc",
                     "-t", "tbz2",
                     "%s/src_dist/noc.bz2" % env.data_path,
-                    "-b", env.branch,
                     "-r", env.changeset
                 ]
             )
