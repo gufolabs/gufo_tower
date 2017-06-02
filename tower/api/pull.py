@@ -158,7 +158,7 @@ class PullAPI(API):
                     "archive",
                     "-p", "noc",
                     "-t", "tbz2",
-                    "%s/src_dist/noc.bz2" % env.data_path,
+                    "%s/noc.bz2" % env.src_path,
                     "-r", env.changeset
                 ]
             )
@@ -223,7 +223,7 @@ class PullAPI(API):
                         "archive",
                         "-p", "noc",
                         "-t", "tbz2",
-                        "%s/src_dist/custom.bz2" % env.data_path,
+                        "%s/custom.bz2" % env.src_path,
                         "-r", env.changeset
                     ]
                 )

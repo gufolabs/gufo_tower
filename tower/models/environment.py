@@ -473,6 +473,11 @@ class Environment(Model):
         )
 
     @property
+    def src_path(self):
+        return os.path.abspath(
+            os.path.join("var", "tower", "data", "src_dist"))
+
+    @property
     def deploy_keys(self):
         if os.path.exists("/.dockerenv"):
             return os.path.abspath(
