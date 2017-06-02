@@ -148,6 +148,21 @@ class PullAPI(API):
                     "-r", env.changeset
                 ]
             )
+            #making noc.bz2
+            logger.info("Archiving %s", env.repo_path)
+            subprocess.check_call(
+                [
+                    "./bin/hg",
+                    "-q",
+                    "--cwd=%s" % env.repo_path,
+                    "archive",
+                    "-p", "noc",
+                    "-t", "tbz2",
+                    "%s/src_dist/noc.bz2" % env.data_path,
+                    "-b", env.branch,
+                    "-r", env.changeset
+                ]
+            )
             # Fetch playbooks
             logger.info("Updating playbooks")
             shutil.rmtree(env.playbook_path, ignore_errors=True)
@@ -197,6 +212,20 @@ class PullAPI(API):
                         "pull",
                         "-b", env.custom_branch,
                         "-r", env.custom_changeset
+                    ]
+                )
+                #making custom.bz2
+                logger.info("Archiving %s", env.custom_repo_path)
+                subprocess.check_call(
+                    [
+                        "./bin/hg",
+                        "-q",
+                        "--cwd=%s" % env.custom_repo_path,
+                        "archive",
+                        "-p", "noc",
+                        "-t", "tbz2",
+                        "%s/src_dist/custom.bz2" % env.data_path,
+                        "-r", env.changeset
                     ]
                 )
             logger.info("Pulling complete")
