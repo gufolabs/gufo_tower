@@ -22,6 +22,7 @@ RUN apt-get update \
         sqlite3 \
         curl \
         telnet \
+        git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir /opt/tower
