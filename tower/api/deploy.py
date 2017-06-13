@@ -117,7 +117,7 @@ class DeployHandler(BaseHandler):
             "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
             "ANSIBLE_HOST_KEY_CHECKING": "False",
             "ANSIBLE_STDOUT_CALLBACK": "debug",
-            "DEPLOY_HAVE_ARCHIVES": 1,
+            "DEPLOY_HAVE_ARCHIVES": "1",
             "PYTHONUNBUFFERED": "1",
             "TOWER_VERSION": self.version
         })
