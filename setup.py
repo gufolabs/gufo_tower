@@ -22,6 +22,7 @@ class TowerInstall(install):
         for d in ["db", "cache", "repo",
                   "log/jobs",
                   "log/crashinfo/collect",
+                  "data/src_dist",
                   "ansible/cp", "crashinfo"]:
             path = os.path.join(self.prefix, "var", "tower", d)
             if not os.path.exists(path):
