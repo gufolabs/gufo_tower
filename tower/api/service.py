@@ -8,14 +8,15 @@
 
 # Python modules
 import os
+
 # Third-party modules
 import yaml
+
 # Tower modules
 from base import API, api, APIError
-from tower.models.db import db
 from tower.models.environment import Environment
-from tower.models.pool import Pool
 from tower.models.node import Node
+from tower.models.pool import Pool
 from tower.models.service import Service
 
 
@@ -140,7 +141,6 @@ class ServiceAPI(API):
 
     def get_service_form(self, cfg, service):
         r = []
-        print cfg["services"].get(service, {}).get("description", "") or ""
         help = {
             "id": "help",
             "label": "Service info",
@@ -170,7 +170,7 @@ class ServiceAPI(API):
             if description:
                 c["bottomLabel"] = description
             r += [c]
-        r +=[help]
+        r += [help]
         return r
 
     @api
@@ -215,7 +215,7 @@ class ServiceAPI(API):
             c = ncfg.get((pool, s.service, s.node.id))
             if c:
                 if c["n_instances"] != s.n_instances or \
-                        c["loglevel"] != s.loglevel:
+                                c["loglevel"] != s.loglevel:
                     # Changed
                     s.n_instances = c["n_instances"]
                     s.loglevel = c["loglevel"]
