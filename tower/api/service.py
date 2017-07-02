@@ -132,7 +132,7 @@ class ServiceAPI(API):
                 sd = d["services"][n]
                 svc += [{
                     "name": n,
-                    "description": sd["level"],
+                    "description": sd["description"],
                     "level": sd["level"],
                     "form": self.get_service_form(d, n)
                 }]
@@ -140,6 +140,15 @@ class ServiceAPI(API):
 
     def get_service_form(self, cfg, service):
         r = []
+        print cfg["services"].get(service, {}).get("description", "") or ""
+        help = {
+            "id": "help",
+            "label": "Service info",
+            "view": "template",
+            "position": "bottom",
+            "autoheight": "true",
+            "template": cfg["services"].get(service, {}).get("description", "") or ""
+        }
         sc = cfg["config"].get(service, {}) or {}
         for k, v in sc.iteritems():
             c = {
@@ -155,10 +164,13 @@ class ServiceAPI(API):
                 c["view"] = "counter"
             elif v["type"] == "bool":
                 c["view"] = "checkbox"
+            elif v["type"] == "password":
+                c["view"] = "password"
             description = v.get("description")
             if description:
                 c["bottomLabel"] = description
             r += [c]
+        r +=[help]
         return r
 
     @api
