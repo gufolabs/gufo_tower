@@ -1,0 +1,25 @@
+FROM python:2.7-alpine3.6
+
+ENV ANSIBLE_HOST_KEY_CHECKING=False \
+    ANSIBLE_SSH_PIPELINING=1 \
+    ANSIBLE_STDOUT_CALLBACK=debug \
+    PYTHONUNBUFFERED=1 \
+    VERSION=${VERSION}
+
+# install systemv packages
+RUN  apk add --update ca-certificates openssh-client vim sqlite curl git libffi-dev gcc  musl-dev openssl-dev libffi\
+    && mkdir -p /opt/tower \
+    && pip install https://cdn.getnoc.com/tower/noc-tower-latest.zip \
+    && apk del libffi-dev gcc  musl-dev openssl-dev 
+
+WORKDIR /usr/local/
+
+COPY entrypoint-alpine.sh /
+
+STOPSIGNAL SIGINT
+
+ENTRYPOINT ["/entrypoint-alpine.sh"]
+
+VOLUME /usr/local/var/tower/
+
+EXPOSE 8888
