@@ -1,6 +1,5 @@
 FROM debian:latest
 
-ARG VERSION=${VERSION}
 ENV PATH /opt/tower/bin:${PATH}
 ENV ANSIBLE_HOST_KEY_CHECKING=False \
     ANSIBLE_SSH_PIPELINING=1 \
@@ -10,9 +9,10 @@ ENV ANSIBLE_HOST_KEY_CHECKING=False \
 
 # install systemv packages
 RUN apt-get update \
- && apt-get install -y \
+ && apt-get install -y --no-install-recommends \
         python-virtualenv \
         virtualenv \
+        ca-certificates \
         python-setuptools \
         libffi6 libffi-dev \
         python-dev gcc \
@@ -25,15 +25,15 @@ RUN apt-get update \
         git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir /opt/tower
-
-# Install tower
-COPY dist/noc-tower-${VERSION}.zip /tmp/
+    && mkdir /opt/tower \
+    && curl https://cdn.getnoc.com/tower/noc-tower-latest.zip -Lo /tmp/noc-tower-latest.zip \
+    && virtualenv /opt/tower \
+    && /opt/tower/bin/pip install /tmp/noc-tower-latest.zip \
+    && rm /tmp/noc-tower-latest.zip \
+    && apt-get -y purge libffi6 libffi-dev python-dev gcc libssl-dev gcc-6 cpp-6 libc6-dev \
+    && apt-get -y autoremove 
 
 WORKDIR /opt/tower
-
-RUN virtualenv . \
-    && ./bin/pip install /tmp/noc-tower-${VERSION}.zip
 
 COPY entrypoint.sh /
 

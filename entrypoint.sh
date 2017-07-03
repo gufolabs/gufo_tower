@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -xe
 
 if [ ! -f /opt/tower/var/tower/data/deploy_keys/id_rsa ]; then
     mkdir -p /opt/tower/var/tower/data/deploy_keys
@@ -10,6 +10,7 @@ if [ ! -f /opt/tower/var/tower/data/deploy_keys/id_rsa ]; then
     mkdir -p /opt/tower/var/tower/db /opt/tower/var/tower/cache /opt/tower/var/tower/repo
     mkdir -p /opt/tower/var/tower/log/jobs /opt/tower/var/tower/log/crashinfo/collect
     mkdir -p /opt/tower/var/tower/ansible/cp /opt/tower/var/tower/crashinfo
+    mkdir -p /opt/tower/var/tower/data/src_dist/
 fi
 
 if [ $# -eq 0 ]; then
