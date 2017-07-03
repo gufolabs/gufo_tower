@@ -214,8 +214,7 @@ class ServiceAPI(API):
             pool = s.pool.id if s.pool else None
             c = ncfg.get((pool, s.service, s.node.id))
             if c:
-                if c["n_instances"] != s.n_instances or \
-                                c["loglevel"] != s.loglevel:
+                if c["n_instances"] != s.n_instances or c["loglevel"] != s.loglevel:
                     # Changed
                     s.n_instances = c["n_instances"]
                     s.loglevel = c["loglevel"]
