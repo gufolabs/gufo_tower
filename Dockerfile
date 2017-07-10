@@ -11,10 +11,7 @@ ENV ANSIBLE_HOST_KEY_CHECKING=False \
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
         python-virtualenv \
-        virtualenv \
-        ca-certificates \
-        python-setuptools \
-        libffi6 libffi-dev \
+        libffi-dev \
         python-dev gcc \
         openssh-client \
         libssl-dev \
@@ -25,13 +22,9 @@ RUN apt-get update \
         git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
-    && mkdir /opt/tower \
-    && curl https://cdn.getnoc.com/tower/noc-tower-latest.zip -Lo /tmp/noc-tower-latest.zip \
     && virtualenv /opt/tower \
-    && /opt/tower/bin/pip install /tmp/noc-tower-latest.zip \
-    && rm /tmp/noc-tower-latest.zip \
-    && apt-get -y purge libffi6 libffi-dev python-dev gcc libssl-dev gcc-6 cpp-6 libc6-dev \
-    && apt-get -y autoremove 
+    && /opt/tower/bin/pip install https://cdn.getnoc.com/tower/noc-tower-latest.zip \
+    && apt-get -y purge gcc libssl-dev libffi-dev
 
 WORKDIR /opt/tower
 
