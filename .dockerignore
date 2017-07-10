@@ -1,2 +1,19 @@
-/tmp/noc-tower-*.tar.bz2
-/root
+.idea/*
+noc_tower.egg-info/
+build/
+dist/
+root/
+var/*
+pip-selfcheck.json
+local/**
+lib/*
+include/*
+bin/*
+share/*
+*.pyc
+.idea/
+include/
+lib/
+Would skip repository local/
+share/
+var/

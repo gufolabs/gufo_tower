@@ -3,11 +3,12 @@ noc_tower.egg-info/
 build/
 dist/
 root/
-var/*
+var/
 pip-selfcheck.json
-local/**
-lib/*
-include/*
+local/
+lib/
+include/
 bin/*
-share/*
+share/
 *.pyc
+.idea/
