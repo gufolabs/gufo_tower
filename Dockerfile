@@ -22,7 +22,7 @@ RUN apt-get update \
         git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
-    && virtualenv /opt/tower \
+    && python /usr/lib/python2.7/dist-packages/virtualenv.py /opt/tower \
     && /opt/tower/bin/pip install https://cdn.getnoc.com/tower/noc-tower-latest.zip \
     && apt-get -y purge gcc libssl-dev libffi-dev
 
