@@ -25,7 +25,7 @@ RUN  apk add --update ca-certificates openssh-client vim sqlite curl git libffi
 
 WORKDIR /opt/tower
 
-COPY entrypoint.sh /
+COPY entrypoint-alpine.sh /entrypoint.sh
 
 STOPSIGNAL SIGINT
 
