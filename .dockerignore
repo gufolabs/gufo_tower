@@ -1,19 +1,17 @@
-.idea/*
+.idea/
 noc_tower.egg-info/
 build/
 dist/
 root/
-var/*
+var/
 pip-selfcheck.json
 local/**
-lib/*
-include/*
-bin/*
-share/*
+lib/
+include/
+share/
 *.pyc
 .idea/
 include/
 lib/
-Would skip repository local/
 share/
 var/

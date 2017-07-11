@@ -1,30 +1,37 @@
-FROM debian:latest
+FROM python:2.7 as builder
+
+RUN mkdir /mnt/tower
+WORKDIR /mnt/tower/
+COPY . /mnt/tower/
+RUN python setup.py sdist --format=zip
+
+WORKDIR /opt/tower
+RUN virtualenv /opt/tower && ./bin/pip install /mnt/tower/dist/*.zip
+
+FROM debian:latest as app
 
 ENV PATH /opt/tower/bin:${PATH}
 ENV ANSIBLE_HOST_KEY_CHECKING=False \
     ANSIBLE_SSH_PIPELINING=1 \
     ANSIBLE_STDOUT_CALLBACK=debug \
     PYTHONUNBUFFERED=1 \
-    VERSION=${VERSION}
+    VERSION=${VERSION} \
+    PYTHONPATH=/opt/tower/lib/python2.7:/usr/lib/python2.7
+
+COPY --from=builder /opt/tower /opt/tower
 
 # install systemv packages
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-        python-virtualenv \
-        libffi-dev \
-        python-dev gcc \
+        libpython2.7 \
+        libpython2.7-stdlib \
+        libpython-stdlib \
+        python2.7 \
+        python-minimal \
+        ca-certificates \
         openssh-client \
-        libssl-dev \
-        vim-tiny \
-        sqlite3 \
-        curl \
-        telnet \
-        git \
     && rm -rf /var/cache/apk/* \
-    && rm -rf /var/lib/apt/lists/* \
-    && python /usr/lib/python2.7/dist-packages/virtualenv.py /opt/tower \
-    && /opt/tower/bin/pip install https://cdn.getnoc.com/tower/noc-tower-latest.zip \
-    && apt-get -y purge gcc libssl-dev libffi-dev
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/tower
 
