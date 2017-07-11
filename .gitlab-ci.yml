@@ -41,8 +41,8 @@ upload:
     - master
     - tags
 
-build_image:
-  stage: build_image_debian
+build_image_debian:
+  stage: build_image
   before_script:
     - export VERSION=$(cat VERSION)
     - export CONTAINER_NAME=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
@@ -60,8 +60,8 @@ build_image:
     - master
     - tags
 
-build_image:
-  stage: build_image_alpine
+build_image_alpine:
+  stage: build_image
   before_script:
     - export VERSION=$(cat VERSION)
     - export CONTAINER_NAME=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME_alpine
