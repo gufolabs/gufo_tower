@@ -50,8 +50,8 @@ build_image_debian:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build --pull --build-arg="http_proxy=$PROXY" --build-arg="https_proxy=$PROXY" --build-arg=VERSION=${VERSION} -t $CONTAINER_NAME .
     - docker push $CONTAINER_NAME
-    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
-    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:latest; docker push $CI_REGISTRY_IMAGE:latest; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME ${CI_REGISTRY_IMAGE}:${CI_BUILD_TAG}; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME ${CI_REGISTRY_IMAGE}:latest; docker push ${CI_REGISTRY_IMAGE}:latest; fi
   tags:
     - shell
   only:
@@ -62,13 +62,13 @@ build_image_alpine:
   stage: build
   before_script:
     - export VERSION=$(cat VERSION)
-    - export CONTAINER_NAME=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME_alpine
+    - export CONTAINER_NAME=${CI_REGISTRY_IMAGE}:${CI_BUILD_REF_NAME}_alpine
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build --pull --build-arg="http_proxy=$PROXY" --build-arg="https_proxy=$PROXY" --build-arg=VERSION=${VERSION} -t $CONTAINER_NAME .
     - docker push $CONTAINER_NAME
-    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}_alpine; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
-    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:alpine; docker push $CI_REGISTRY_IMAGE:latest; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME ${CI_REGISTRY_IMAGE}:${CI_BUILD_TAG}_alpine; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
+    - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME ${CI_REGISTRY_IMAGE}:alpine; docker push ${CI_REGISTRY_IMAGE}:alpine; fi
   tags:
     - shell
   only:
