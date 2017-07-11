@@ -17,6 +17,7 @@ ENV ANSIBLE_HOST_KEY_CHECKING=False \
     PYTHONUNBUFFERED=1 \
     VERSION=${VERSION} \
     PS1="\$(date +%H:%M:%S) \h \w \\$ " \
+    PATH /opt/tower/bin:${PATH} \
     PYTHONPATH=/opt/tower/lib/python2.7/site-packages/:/usr/local/lib/python2.7:/usr/local/lib/python2.7/site-packages
 
 COPY --from=builder /opt/tower /opt/tower
