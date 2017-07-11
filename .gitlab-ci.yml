@@ -52,8 +52,6 @@ build_image_debian:
     - docker push $CONTAINER_NAME
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:latest; docker push $CI_REGISTRY_IMAGE:latest; fi
-  dependencies:
-    - build_tgz
   tags:
     - shell
   only:
@@ -71,8 +69,6 @@ build_image_alpine:
     - docker push $CONTAINER_NAME
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}_alpine; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME $CI_REGISTRY_IMAGE:alpine; docker push $CI_REGISTRY_IMAGE:latest; fi
-  dependencies:
-    - build_tgz
   tags:
     - shell
   only:
