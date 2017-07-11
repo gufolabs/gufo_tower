@@ -15,7 +15,7 @@ ENV ANSIBLE_HOST_KEY_CHECKING=False \
     ANSIBLE_STDOUT_CALLBACK=debug \
     PYTHONUNBUFFERED=1 \
     VERSION=${VERSION} \
-    PATH /opt/tower/bin:${PATH} \
+    PATH=/opt/tower/bin:${PATH} \
     PYTHONPATH=/opt/tower/lib/python2.7:/usr/lib/python2.7
 
 COPY --from=builder /opt/tower /opt/tower
