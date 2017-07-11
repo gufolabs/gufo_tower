@@ -1,6 +1,10 @@
 #!/bin/bash
 
-set -xe
+set -e
+
+if [ "${1:0:1}" = '-' ]; then
+	set -- ./bin/tower-web "$@"
+fi
 
 if [ ! -f /opt/tower/var/tower/data/deploy_keys/id_rsa ]; then
     mkdir -p /opt/tower/var/tower/data/deploy_keys
@@ -13,8 +17,4 @@ if [ ! -f /opt/tower/var/tower/data/deploy_keys/id_rsa ]; then
     mkdir -p /opt/tower/var/tower/data/src_dist/
 fi
 
-if [ $# -eq 0 ]; then
-    ./bin/tower-web
-else
-    exec "$@"
-fi
+exec "$@"

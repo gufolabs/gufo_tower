@@ -44,3 +44,5 @@ ENTRYPOINT ["/entrypoint.sh"]
 VOLUME /opt/tower/var
 
 EXPOSE 8888
+
+CMD ["./bin/tower-web"]
