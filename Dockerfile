@@ -30,6 +30,7 @@ RUN apt-get update \
         python-minimal \
         ca-certificates \
         openssh-client \
+        openssl \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/*
 

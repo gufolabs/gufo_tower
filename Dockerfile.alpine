@@ -23,7 +23,7 @@ ENV ANSIBLE_HOST_KEY_CHECKING=False \
 COPY --from=builder /opt/tower /opt/tower
 
 # install systemv packages
-RUN  apk add --update ca-certificates openssh-client vim sqlite curl git libffi
+RUN  apk add --update ca-certificates openssh-client vim sqlite curl git libffi openssl
 
 WORKDIR /opt/tower
 

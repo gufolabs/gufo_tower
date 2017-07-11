@@ -26,6 +26,7 @@ class Service(Model):
     pool = ForeignKeyField(Pool, null=True)
     node = ForeignKeyField(Node)
     n_instances = IntegerField(default=0)
+    #n_backup_services = IntegerField(default=0)
     loglevel = CharField(default="info", choices=[
         "notset",
         "debug",
