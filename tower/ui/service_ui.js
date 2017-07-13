@@ -19,7 +19,7 @@ var service_panel = {
                 {
                     view: "grouplist",
                     id: "service_list",
-                    width: 170,
+                    width: 180,
                     scroll: true,
                     select: true,
                     navigation: true,
