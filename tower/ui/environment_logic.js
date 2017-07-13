@@ -261,6 +261,9 @@ var environment_logic = {
                                 break;
                         }
                     }
+                    if(t.match(/(...ignoring)/)){
+                        status.failed--;
+                    }
                     // Update deploy log
                     ct = t.replace(rx_task, function (x) {
                         x = x.replace(rx_stars, "");
