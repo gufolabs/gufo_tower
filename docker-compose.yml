@@ -3,10 +3,18 @@ services:
   tower:
     image: registry.getnoc.com/noc/tower:master_alpine
     restart: always
+    hostname: TEST-TOWER
     ports:
-      - "8889:8888"
+      - "8888:8888"
     volumes:
-      - "$PWD/config:/opt/tower/var"
-      - $PWD/tower:/opt/tower/lib/python2.7/site-packages/tower
+      - "/opt/tower/var:/opt/tower/var/"
+      #see for details https://groups.google.com/forum/#!topic/ansible-project/y8ohlv_dRi4
+      - "$PWD/root:/root"
+## provide them only for distributed installations
+## for single node installation there is no need for consul info
     environment:
+#      PROMETHEUS_ENABLED: "True"
+#      INFLUXDB_ENABLED: "False"
       HISTCONTROL: "ignoreboth:erasedups"
+#      MONGO_VERSION: 3.4
+#      POSTGRES_VERSION: 9.6
