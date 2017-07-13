@@ -42,6 +42,7 @@ class ServiceAPI(API):
                     "config": get_service_config(None, s["name"])
                 }]
                 r[-1]["n_instances"] = sum(n["n_instances"] for n in r[-1]["nodes"])
+                r[-1]["n_backup_instances"] = sum(n["n_backup_instances"] for n in r[-1]["nodes"])
             return r
 
         def get_pool_config(pool):
@@ -61,6 +62,7 @@ class ServiceAPI(API):
                     "config": get_service_config(pool, s["name"])
                 }]
                 r[-1]["n_instances"] = sum(n["n_instances"] for n in r[-1]["nodes"])
+                r[-1]["n_backup_instances"] = sum(n["n_backup_instances"] for n in r[-1]["nodes"])
             return r
 
         def get_service_nodes(pool, service):
@@ -95,6 +97,7 @@ class ServiceAPI(API):
         for c in Service.select().where(Service.environment == env):
             node_cfg[c.pool.id if c.pool else None, c.service, c.node_id] = {
                 "n_instances": c.n_instances,
+                "n_backup_instances": c.n_backup_instances,
                 "loglevel": c.loglevel
             }
         nodes = []
@@ -104,6 +107,7 @@ class ServiceAPI(API):
                 "node_id": n.id,
                 "node": n.name,
                 "n_instances": 0,
+                "n_backup_instances": 0,
                 "loglevel": "info"
             }]
         nodes = sorted(nodes, key=lambda x: (x["datacenter"], x["node"]))
@@ -214,9 +218,10 @@ class ServiceAPI(API):
             pool = s.pool.id if s.pool else None
             c = ncfg.get((pool, s.service, s.node.id))
             if c:
-                if c["n_instances"] != s.n_instances or c["loglevel"] != s.loglevel:
+                if c["n_instances"] != s.n_instances or c["loglevel"] != s.loglevel or c["n_backup_instances"] != s.n_backup_instances:
                     # Changed
                     s.n_instances = c["n_instances"]
+                    s.n_backup_instances = c["n_backup_instances"]
                     s.loglevel = c["loglevel"]
                     s.save()
                 del ncfg[pool, s.service, s.node.id]
@@ -231,6 +236,7 @@ class ServiceAPI(API):
                 service=c["service"],
                 node=c["node_id"],
                 n_instances=c["n_instances"],
+                n_backup_instances=c["n_backup_instances"],
                 loglevel=c["loglevel"]
             ).save()
         return True

@@ -23,7 +23,7 @@ var service_panel = {
                     scroll: true,
                     select: true,
                     navigation: true,
-                    templateItem: "<i class='fa fa-#icon#'></i> #value# <span class='webix_badge'>#n_instances#</span>",
+                    templateItem: "<i class='fa fa-#icon#'></i> #value# <span class='webix_badge' style='background-color: green !important;'>#n_backup_instances#</span><span class='webix_badge'>#n_instances#</span>",
                     on: {
                         "onSelectChange": "service_logic.on_select_service"
                     }
@@ -50,6 +50,25 @@ var service_panel = {
                         {
                             id: "n_instances",
                             header: "Instances",
+                            editor: "text",
+                            format: function (value) {
+                                if (typeof value === "string") {
+                                    value = parseInt(value);
+                                }
+                                switch (value) {
+                                    case 0:
+                                        return "<i class='fa fa-times'></i>";
+                                    case 1:
+                                        return "<i class='fa fa-check'></i>";
+                                    default:
+                                        return value;
+                                }
+                            },
+                            width: 100
+                        },
+                        {
+                            id: "n_backup_instances",
+                            header: "Backup",
                             editor: "text",
                             format: function (value) {
                                 if (typeof value === "string") {
