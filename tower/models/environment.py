@@ -409,6 +409,7 @@ class Environment(Model):
                         "listen": listen,
                         "loglevel": d.loglevel,
                         "n_instances": d.n_instances,
+                        "n_backup_instances": d.n_backup_instances,
                         "global_offset": global_offset[sp],
                         "global_n_instances": global_n_instances[sp]
                     }
