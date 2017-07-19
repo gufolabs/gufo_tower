@@ -45,7 +45,7 @@ build_image_debian:
   stage: build
   before_script:
     - export VERSION=$(cat VERSION)
-    - export CONTAINER_NAME=$CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+    - export CONTAINER_NAME=${CI_REGISTRY_IMAGE}:${CI_BUILD_REF_NAME}
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build --build-arg="http_proxy=$PROXY" --build-arg="https_proxy=$PROXY" --build-arg=VERSION=${VERSION} -t $CONTAINER_NAME .
@@ -64,6 +64,7 @@ build_image_alpine:
     - export VERSION=$(cat VERSION)
     - export CONTAINER_NAME=${CI_REGISTRY_IMAGE}:${CI_BUILD_REF_NAME}_alpine
   script:
+     set -xe
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build --build-arg="http_proxy=$PROXY" --build-arg="https_proxy=$PROXY" --build-arg=VERSION=${VERSION} -t $CONTAINER_NAME  -f Dockerfile.alpine .
     - docker push $CONTAINER_NAME
