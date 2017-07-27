@@ -64,8 +64,6 @@ class Environment(Model):
     custom_branch = CharField(default="default")
     custom_changeset = CharField(default="tip")
     metrics_collector = CharField(default="")
-    alerta_url = CharField(default="")
-    alerta_token = CharField(default="")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
     cert = TextField(default="")
@@ -94,8 +92,7 @@ class Environment(Model):
     # pool id -> service -> key -> value
     service_config = TextField(default="")
     is_default = BooleanField(default=False)
-
-    BASE_PORT = 19000
+    config_order = CharField(default="legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC")
 
     def list_item(self):
         return {
@@ -103,6 +100,7 @@ class Environment(Model):
             "name": self.name,
             "description": self.description,
             "env_type": self.env_type,
+            "config_order": self.config_order,
             "installation_name": self.installation_name,
             "sys_user": self.sys_user,
             "sys_group": self.sys_group,
@@ -114,8 +112,6 @@ class Environment(Model):
             "custom_branch": self.custom_branch,
             "custom_changeset": self.custom_changeset,
             "metrics_collector": self.metrics_collector,
-            "alert_url": self.alerta_url,
-            "alerta_token": self.alerta_token,
             "web_host": self.web_host,
             "cert": self.cert,
             "pg_db": self.pg_db,
@@ -177,6 +173,7 @@ class Environment(Model):
                 "vars": {
                     "noc_env": self.name,
                     "noc_installation_name": self.installation_name,
+                    "config_order": self.config_order,
                     # System settings
                     "noc_root": self.sys_prefix,
                     "noc_env_type": self.env_type,
@@ -194,8 +191,6 @@ class Environment(Model):
                     "noc_custom_changeset": self.custom_changeset,
                     "noc_custom_revision": custom_revision,
                     "noc_metrics_collector": self.metrics_collector,
-                    "alerta_url": self.alerta_url,
-                    "alerta_token": self.alerta_token,
                     # Web settions
                     "noc_web_host": self.web_host,
                     # Postgres settings
@@ -339,18 +334,11 @@ class Environment(Model):
                 "hosts": [pri.node.name]
             }
             r["_meta"]["hostvars"][pri.node.name]["has_svc_consul_server"] = True
-        # Generate etc/noc.yml
-        port_number = defaultdict(
-            lambda: itertools.count(self.BASE_PORT)
-        )
         # service -> offset
         global_offset = defaultdict(int)
-        global_n_instances = defaultdict(int)
         for sd in services_description:
             for d in service_data[sd["name"]]:
                 pool_name = d.pool.name if d.pool else None
-                sp = "%s-%s" % (sd["name"], pool_name) if pool_name else sd["name"]
-                global_n_instances[sp] += d.n_instances
         #
         cfg = {
             "services": {},
@@ -363,8 +351,6 @@ class Environment(Model):
             "group": self.sys_group,
             "installation_name": self.installation_name,
             "installation_type": self.env_type,
-            "alerta_url": self.alerta_url,
-            "alerta_token": self.alerta_token,
             # Postgres settings
             "pg_db": self.pg_db,
             "pg_user": self.pg_user,
@@ -390,28 +376,14 @@ class Environment(Model):
                 if sp not in cfg["services"]:
                     cfg["services"][sp] = []
                 # Assign ports
-                port = sd["port"] or port_number[d.node.name].next()
-                listen = "%s:%s" % (d.node.get_address(), port)
-                cfg["services"][sp] += [listen]
-                if not sd["port"] and d.n_instances > 1 and sd["level"] != "system":
-                    # Skip required amount of ports
-                    for i in range(d.n_instances - 1):
-                        cfg["services"][sp] += ["%s:%s" % (
-                            d.node.get_address(),
-                            port_number[d.node.name].next()
-                        )]
-                #
                 ncfg = "%s-%s-%s" % (
                     sd["name"], pool_name or "global", d.node.name
                 )
                 if ncfg not in cfg["config"]:
                     cfg["config"][ncfg] = {
-                        "listen": listen,
                         "loglevel": d.loglevel,
                         "n_instances": d.n_instances,
-                        "n_backup_instances": d.n_backup_instances,
-                        "global_offset": global_offset[sp],
-                        "global_n_instances": global_n_instances[sp]
+                        "n_backup_instances": d.n_backup_instances
                     }
                     global_offset[sp] += d.n_instances
                     if pool_id in sconf and sd["name"] in sconf[pool_id]:

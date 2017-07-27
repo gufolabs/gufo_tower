@@ -167,18 +167,34 @@ var environment_form = {
                     height: 150
                 },
                 {
-                    view: "combo",
-                    name: "env_type",
-                    label: "Type",
-                    required: true,
-                    options: [
-                        {id: "prod", value: "Productive"},
-                        {id: "test", value: "Test"},
-                        {id: "dev", value: "Develop"},
-                        {id: "eval", value: "Evaluation"},
-                        {id: "other", value: "Other"}
-                    ],
-                    value: "eval"
+                    view: "fieldset",
+                    label: "Generic",
+                    body: {
+                        cols: [
+                            {
+                                view: "combo",
+                                name: "env_type",
+                                label: "Type",
+                                required: true,
+                                options: [
+                                    {id: "prod", value: "Productive"},
+                                    {id: "test", value: "Test"},
+                                    {id: "dev", value: "Develop"},
+                                    {id: "eval", value: "Evaluation"},
+                                    {id: "other", value: "Other"}
+                                ],
+                                value: "eval"
+                            },
+                            {
+                                view: "text",
+                                name: "config_order",
+                                label: "Config load preference",
+                                required: true,
+                                value: "legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC"
+                            }
+
+                        ]
+                    }
                 },
                 {
                     view: "fieldset",
@@ -418,20 +434,6 @@ var environment_form = {
                                 view: "text",
                                 name: "metrics_collector",
                                 label: "Metrics collector",
-                                value: "",
-                                required: false
-                            },
-                            {
-                                view: "text",
-                                name: "alerta_url",
-                                label: "Alerta URL",
-                                value: "",
-                                required: false
-                            },
-                            {
-                                view: "text",
-                                name: "alerta_token",
-                                label: "Alerta token",
                                 value: "",
                                 required: false
                             }
