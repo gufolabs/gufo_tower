@@ -1,8 +1,10 @@
 # Third-party modules
 import yaml
 
+from peewee import OperationalError
+
 # Tower modules
-from tower.models.environment import Environment
+from tower.models.env_legacy import Environment
 
 
 def migrate(migrator):
