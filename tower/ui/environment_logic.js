@@ -49,7 +49,9 @@ var environment_logic = {
             mongo_password: "noc",
             influxdb_db: "noc",
             influxdb_user: "noc",
-            influxdb_password: "noc"
+            influxdb_password: "noc",
+            config_order: "legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC",
+            name: "NOC"
         });
     },
 

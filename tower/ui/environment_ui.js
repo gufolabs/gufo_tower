@@ -186,11 +186,11 @@ var environment_form = {
                                 value: "eval"
                             },
                             {
+                                placeholder: "legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC",
                                 view: "text",
                                 name: "config_order",
                                 label: "Config load preference",
-                                required: true,
-                                value: "legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC"
+                                required: true
                             }
 
                         ]

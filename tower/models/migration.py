@@ -90,8 +90,8 @@ class Migrator(object):
         operation = self.migrator.add_column(table, name, field)
         return operation.run()
 
-    def drop_column(self, table, name, field, cascade=True):
-        operation = self.migrator.drop_column(table, name, field, cascade=cascade)
+    def drop_column(self, table, field, cascade=True):
+        operation = self.migrator.drop_column(table, field, cascade=cascade)
         return operation.run()
 
     def rename_column(self, table, old_name, new_name):
