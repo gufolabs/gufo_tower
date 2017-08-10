@@ -170,6 +170,8 @@ class ServiceAPI(API):
                 c["view"] = "checkbox"
             elif v["type"] == "password":
                 c["view"] = "password"
+            elif v["type"] == "text":
+                c["view"] = "textarea"
             description = v.get("description")
             if description:
                 c["bottomLabel"] = description
