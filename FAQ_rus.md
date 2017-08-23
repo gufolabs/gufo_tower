@@ -15,7 +15,7 @@ Tower позволяет сделать service registry. Подробности
 
 **О**: Есть несколько вещей которые дополнительно делаются для инсталляции типа Prod.
   * Инсталляция типа `Prod` заботится о поддержании в чистоте каталога `/opt/noc`. *Все файлы, которые не внесены в репозитарий, удаляются.* Если Это поведение выглядит неразумным, используйте альтернативные варианты типов.
-  * Для этого типа инсталяции дополнительно открывается порт 9009 на прослушивание встроенным в `supervisord` http сервером. Для сбора информации о работе например в [nodervisor](https://github.com/TAKEALOT/nodervisor) или [cesi](https://github.com/gamegos/cesi).
+  * Для этого типа инсталяции дополнительно открывается порт 9001 на прослушивание встроенным в `supervisord` http сервером. Для сбора информации о работе например в [nodervisor](https://github.com/TAKEALOT/nodervisor) или [cesi](https://github.com/gamegos/cesi).
   * Для этого типа инсталяции ставятся пакеты из файла `requirements/prod.txt`. Сейчас это утилита [alerta](http://docs.alerta.io/en/latest/)
   * Также копируется файл для совместной работы supervisord и alerta
   * Также патчится supervisord на предмет поддержки oom_score_adj на linux системах. Патч основан на https://github.com/Supervisor/supervisor/pull/754
