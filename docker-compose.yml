@@ -10,8 +10,11 @@ services:
       - "/opt/tower/var:/opt/tower/var/"
       #see for details https://groups.google.com/forum/#!topic/ansible-project/y8ohlv_dRi4
       - "$PWD/root:/root"
-## provide them only for distributed installations
-## for single node installation there is no need for consul info
+      # use it for development purpose
+#      - "$PWD/tower:/opt/tower/lib/python2.7/site-packages/tower/"
+#      - "$PWD/entrypoint-alpine.sh:/entrypoint.sh"
+#      - "$PWD/requirements.txt:/opt/tower/requirements.txt"
+#      - "$PWD/var/db:/opt/tower/var/tower//db"
     environment:
 #      PROMETHEUS_ENABLED: "True"
 #      INFLUXDB_ENABLED: "False"
