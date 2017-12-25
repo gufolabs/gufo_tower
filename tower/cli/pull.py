@@ -41,13 +41,11 @@ def main():
             start_ts=datetime.datetime.now(),
             environment=env,
             user="cli",
-            repo=env.repo,
-            branch=env.branch,
-            changeset=env.changeset
+            repo=env.playbook_link
         )
         job.save()
     api = PullAPI(None)
-    api.pull_job(job)
+    api.pull_job_via_pip(job)
 
 
 def die(msg):

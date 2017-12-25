@@ -24,8 +24,11 @@ import yaml
 # Tower modules
 from db import db
 from settings import Settings
+from pip.index import Link
+
 
 logging.getLogger(__name__)
+
 
 
 class Environment(Model):
@@ -55,14 +58,13 @@ class Environment(Model):
     # Default installation prefix
     sys_prefix = CharField(default="/opt/noc")
     # Repo settings
-    repo = CharField(default="https://bitbucket.org/nocproject/noc")
-    branch = CharField(default="default")
-    changeset = CharField(default="tip")
+    repo = CharField(default="https://github.com/nocproject/noc.git")
+    version = CharField(default="microservices")
     # Custom repo settings
     custom_enabled = BooleanField(default=True)
     custom_repo = CharField(default="")
-    custom_branch = CharField(default="default")
-    custom_changeset = CharField(default="tip")
+    custom_version = CharField(default="default")
+    playbook_link = CharField(default="git+https://github.com/nocproject/ansible_deploy@microservices")
     metrics_collector = CharField(default="")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
@@ -93,6 +95,7 @@ class Environment(Model):
     service_config = TextField(default="")
     is_default = BooleanField(default=False)
     config_order = CharField(default="legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC")
+    install_method = CharField(default="git")
 
     def list_item(self):
         return {
@@ -106,11 +109,11 @@ class Environment(Model):
             "sys_group": self.sys_group,
             "sys_prefix": self.sys_prefix,
             "repo": self.repo,
-            "branch": self.branch,
-            "changeset": self.changeset,
+            "version": self.version,
             "custom_repo": self.custom_repo,
-            "custom_branch": self.custom_branch,
-            "custom_changeset": self.custom_changeset,
+            "custom_version": self.custom_version,
+            "playbook_link": self.playbook_link,
+            "install_method": self.install_method,
             "metrics_collector": self.metrics_collector,
             "web_host": self.web_host,
             "cert": self.cert,
@@ -142,29 +145,6 @@ class Environment(Model):
         from service import Service
         from pool import Pool
 
-        repo = Settings.get_repo_url()
-        if not repo.endswith("/"):
-            repo += "/"
-        repo += "%s" % self.repo_hash
-
-        if self.changeset == "tip":
-            revision = self.branch
-        else:
-            revision = self.changeset
-
-        if self.custom_repo:
-            custom_repo = Settings.get_repo_url()
-            if not custom_repo.endswith("/"):
-                custom_repo += "/"
-                custom_repo += "%s" % self.custom_repo_hash
-            if self.custom_changeset == "tip":
-                custom_revision = self.custom_branch
-            else:
-                custom_revision = self.custom_changeset
-        else:
-            custom_repo = None
-            custom_revision = None
-
         services_description = self.get_services_description()
         #
         r = {
@@ -180,16 +160,13 @@ class Environment(Model):
                     "noc_user": self.sys_user,
                     "noc_group": self.sys_group,
                     # Repo settings
-                    "noc_repo": repo,
-                    "noc_branch": self.branch,
-                    "noc_changeset": self.changeset,
-                    "noc_revision": revision,
+                    "noc_repo": self.repo,
+                    "noc_version": self.version,
                     # Custom Repo settings
                     "noc_custom_enabled": self.custom_enabled and bool(self.custom_repo),
-                    "noc_custom_repo": custom_repo,
-                    "noc_custom_branch": self.custom_branch,
-                    "noc_custom_changeset": self.custom_changeset,
-                    "noc_custom_revision": custom_revision,
+                    "noc_custom_repo": self.custom_repo,
+                    "noc_custom_version": self.custom_version,
+                    "playbook_link": self.playbook_link,
                     "noc_metrics_collector": self.metrics_collector,
                     # Web settions
                     "noc_web_host": self.web_host,
@@ -433,7 +410,7 @@ class Environment(Model):
 
     @property
     def repo_path(self):
-        return os.path.join("var", "tower", "repo", self.repo_hash)
+        return os.path.abspath(os.path.join("var", "tower", "repo", self.repo_hash))
 
     @property
     def custom_repo_path(self):

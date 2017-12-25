@@ -24,7 +24,5 @@ class PullLog(Model):
     environment = ForeignKeyField(Environment)
     user = CharField()
     repo = CharField()
-    branch = CharField()
-    changeset = CharField()
     status = BooleanField(default=False)
     log = TextField(default="")

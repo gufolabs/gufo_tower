@@ -20,8 +20,22 @@ from base import API, api
 from tower.models.db import db
 from tower.models.environment import Environment
 from tower.models.pulllog import PullLog
+from pip.index import Link
+from pip.download import unpack_url
+from pip.vcs import VersionControl
 
 logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
+
+
+def unpack(self, location):
+    """
+    monkey patch pip library cause they always remove downloaded dir. no idea why
+    """
+    self.obtain(location)
+
+
+VersionControl.unpack = unpack
 
 
 class PullAPI(API):
@@ -55,12 +69,10 @@ class PullAPI(API):
                 start_ts=datetime.datetime.now(),
                 environment=env,
                 user=self.handler.current_user.name,
-                repo=env.repo,
-                branch=env.branch,
-                changeset=env.changeset
+                repo=env.playbook_link
             )
             job.save()
-            self.executor.submit(self.pull_job, job)
+            self.executor.submit(self.pull_job_via_pip, job)
             return {
                 "success": True,
                 "job": job.id
@@ -90,144 +102,13 @@ class PullAPI(API):
             r["status"] = job.status
         return r
 
-    def pull_job(self, job):
-        """
-        Pull worker job
-        :param env:
-        :return:
-        """
-        def update_hgrc(hgrc, url):
-            p = urlparse.urlsplit(url)
-            r = []
-            if p.scheme in ("http", "https"):
-                if "@" in p.netloc:
-                    if p.username and p.password:
-                        url = "%s://%s%s" % (p.scheme, p.netloc.rsplit("@")[-1], p.path)
-                        r += ["[auth]"]
-                        r += ["bb.prefix = %s" % url]
-                        r += ["bb.username = %s" % p.username]
-                        r += ["bb.password = %s" % p.password]
-            r += ["[paths]"]
-            r += ["default = %s" % url]
-            r += ["[ui]"]
-            logger.info("Updating %s", hgrc)
-            with open(hgrc, "w") as f:
-                f.write("\n".join(r))
-
+    def pull_job_via_pip(self, job):
         env = job.environment
         status = True
         log = []
         try:
-            # Pull Repo
-            if not os.path.exists(env.repo_path):
-                logger.info("Cloning %s to %s", env.repo, env.repo_path)
-                # Clone directory
-                subprocess.check_call(
-                    [
-                        "./bin/hg",
-                        "-q",
-                        "clone",
-                        "-b", env.branch,
-                        "-r", env.changeset,
-                        "-U",
-                        env.repo,
-                        env.repo_path
-                    ]
-                )
-            #
-            update_hgrc(os.path.join(env.repo_path, ".hg", "hgrc"), env.repo)
-            # Pull updates
-            logger.info("Updating %s", env.repo_path)
-            subprocess.check_call(
-                [
-                    "./bin/hg",
-                    "-q",
-                    "--cwd=%s" % env.repo_path,
-                    "pull",
-                    "-b", env.branch,
-                    "-r", env.changeset
-                ]
-            )
-            #making noc.bz2
-            logger.info("Archiving %s", env.repo_path)
-            subprocess.check_call(
-                [
-                    "./bin/hg",
-                    "-q",
-                    "--cwd=%s" % env.repo_path,
-                    "archive",
-                    "-p", "noc",
-                    "-t", "tbz2",
-                    "%s/noc.bz2" % env.src_path,
-                    "-r", env.changeset
-                ]
-            )
-            # Fetch playbooks
-            logger.info("Updating playbooks")
-            shutil.rmtree(env.playbook_path, ignore_errors=True)
-            if env.changeset == "tip":
-                rev = env.branch
-            else:
-                rev = env.changeset
-            subprocess.check_call(
-                [
-                    "./bin/hg",
-                    "-q",
-                    "--cwd=%s" % env.repo_path,
-                    "archive",
-                    "-r", rev,
-                    "-I", "ansible/**",
-                    os.path.join("..", "..", "..", "..", env.playbook_path)
-                ]
-            )
-            if env.custom_repo:
-                logger.info("Pulling custom repo")
-                # Pull Repo
-                if not os.path.exists(env.custom_repo_path):
-                    logger.info("Cloning %s to %s",
-                                env.custom_repo, env.custom_repo_path)
-                    # Clone directory
-                    subprocess.check_call(
-                        [
-                            "./bin/hg",
-                            "-q",
-                            "clone",
-                            "-b", env.custom_branch,
-                            "-r", env.custom_changeset,
-                            "-U",
-                            env.custom_repo,
-                            env.custom_repo_path
-                        ]
-                    )
-                #
-                update_hgrc(os.path.join(env.custom_repo_path, ".hg", "hgrc"), env.custom_repo)
-                # Pull updates
-                logger.info("Updating %s", env.custom_repo_path)
-                subprocess.check_call(
-                    [
-                        "./bin/hg",
-                        "-q",
-                        "--cwd=%s" % env.custom_repo_path,
-                        "pull",
-                        "-b", env.custom_branch,
-                        "-r", env.custom_changeset
-                    ]
-                )
-                #making custom.bz2
-                logger.info("Archiving %s", env.custom_repo_path)
-                subprocess.check_call(
-                    [
-                        "./bin/hg",
-                        "-q",
-                        "--cwd=%s" % env.custom_repo_path,
-                        "archive",
-                        "-p", "noc",
-                        "-t", "tbz2",
-                        "%s/custom.bz2" % env.src_path,
-                        "-r", env.changeset
-                    ]
-                )
-            logger.info("Pulling complete")
+            unpack_url(Link(env.playbook_link), env.playbook_path)
+
         except KeyboardInterrupt:
             raise
         except Exception as e:
