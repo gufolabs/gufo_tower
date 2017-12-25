@@ -1,3 +1,4 @@
+pip==9.0.1
 pyparsing==2.2.0
 bcrypt==2.0.0
 certifi==2016.9.26
@@ -15,4 +16,4 @@ setuptools>=11.3
 packaging
 appdirs
 netaddr
-gittornado
+#gittornado
