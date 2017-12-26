@@ -6,29 +6,25 @@
 ## See LICENSE for details
 ##----------------------------------------------------------------------
 
+import base64
+import hashlib
+import logging
 # Python
 import os
-import hashlib
-import base64
-import logging
-from collections import defaultdict
-import itertools
-import subprocess
 import re
+import subprocess
 import tempfile
-import json
-# Third-party modules
-from peewee import CharField, TextField, DateTimeField, BooleanField
-from playhouse.signals import Model
+from collections import defaultdict
+
 import yaml
+# Third-party modules
+from peewee import CharField, TextField, BooleanField
+from playhouse.signals import Model
+
 # Tower modules
 from db import db
-from settings import Settings
-from pip.index import Link
-
 
 logging.getLogger(__name__)
-
 
 
 class Environment(Model):

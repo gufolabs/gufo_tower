@@ -57,7 +57,11 @@ var environment_list = {
                     id: "deployment_options",
                     labelWidth: 100,
                     options: [
-                        {id: 1, value: "Install Everything", tooltip: "Ignore other options except verbose. Normal install"},
+                        {
+                            id: 1,
+                            value: "Install Everything",
+                            tooltip: "Ignore other options except verbose. Normal install"
+                        },
                         {id: 10, value: "Update sources", tooltip: "Only update sources"},
                         {id: 11, value: "Update configs", tooltip: "Rebuild configs, and restart services"},
                         {id: 12, value: "Install requirements"},
