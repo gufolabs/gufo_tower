@@ -1,5 +1,5 @@
 from peewee import (Model, CharField, TextField, BooleanField)
-
+import os, shutil
 
 def migrate(migrator):
     class Environment(Model):
@@ -68,6 +68,10 @@ def migrate(migrator):
         is_default = BooleanField(default=False)
         config_order = CharField(default="legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC")
 
+        @property
+        def playbook_path(self):
+            return os.path.join("var", "tower", "playbooks", self.name)
+
     for env in Environment.select():
         if 'https://bitbucket.org/nocproject/noc' in env.repo:
             env.repo = "https://github.com/nocproject/noc.git"
@@ -80,6 +84,10 @@ def migrate(migrator):
         if 'tip' in env.changeset:
             env.changeset = 'HEAD'
         env.save()
+
+        # remove current playbook path
+        if os.path.exists(env.playbook_path):
+            shutil.rmtree(env.playbook_path)
 
     migrator.rename_column(
         "environment",
