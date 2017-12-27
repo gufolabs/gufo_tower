@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## JSON-RPC 2.0
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# JSON-RPC 2.0
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
-## Python modules
+# Python modules
+from __future__ import absolute_import
 import json
 import logging
-## Third-party modules
+
+# Third-party modules
 import tornado.gen
 from tornado.web import HTTPError
-## Tower modules
-from base import BaseHandler, SDL, APIClasses, APIError
+
+# Tower modules
+from .base import BaseHandler, SDL, APIClasses, APIError
 
 logger = logging.getLogger("rpc")
 
@@ -42,7 +45,7 @@ class JSONRPCHandler(BaseHandler):
         # Parse request
         try:
             req = json.loads(self.request.body)
-        except ValueError, why:
+        except ValueError as why:
             raise HTTPError(400, "Bad request: %s" % why)
         # Parse request
         id = req.get("id", None)
@@ -67,10 +70,10 @@ class JSONRPCHandler(BaseHandler):
         logger.info("CALL %s.%s", api_name, method)
         try:
             result = handler(*params)
-            if(tornado.gen.is_future(result)):
+            if (tornado.gen.is_future(result)):
                 result = yield result
             response["result"] = result
-        except APIError, why:
+        except APIError as why:
             response["error"] = str(why)
         # Return response
         self.set_header("Content-Type", self.MIME_TYPE)

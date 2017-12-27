@@ -124,8 +124,7 @@ var service_panel = {
                     id: "service_form",
                     borderless: true,
                     scroll: true,
-                    elements: [
-                    ]
+                    elements: []
                 }
             ]
         }

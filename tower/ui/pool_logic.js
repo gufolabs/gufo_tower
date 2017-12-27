@@ -1,63 +1,63 @@
 var pool_logic = {
-    init: function() {
+    init: function () {
         $$("pool_form").bind($$("pool_list"));
     },
 
-    can_run: function() {
+    can_run: function () {
         return app_logic.is_environment_selected();
     },
 
-    show: function() {
+    show: function () {
         pool_logic.show_list();
     },
 
-    show_list: function() {
+    show_list: function () {
         $$("pool_list_panel").show();
         pool_logic.load();
     },
 
-    show_form: function() {
+    show_form: function () {
         $$("pool_form_panel").show();
     },
-    
+
     // Load data info list
-    load: function() {
+    load: function () {
         $$("pool_list").load("rpc->pool");
     },
-    
-    on_add: function() {
+
+    on_add: function () {
         $$("pool_form").clear();
         pool_logic.show_form();
     },
 
-    on_save: function() {
+    on_save: function () {
         var data,
             form = $$("pool_form");
 
         if (form.validate()) {
             data = form.getValues();
             data.environment = app_logic.current_env.id;
-            if(data.id === undefined) {
+            if (data.id === undefined) {
                 API.pool.create_item(data).then(
-                    function(result) {
+                    function (result) {
                         form.setValues(result);
                         form.save();
                         pool_logic.show_list();
                         Tower.msg.complete("Created");
                     },
-                    function(err) {
+                    function (err) {
                         Tower.msg.failed("Failed to create");
                     }
                 );
             } else {
                 API.pool.update_item(data).then(
-                    function(result) {
+                    function (result) {
                         form.setValues(result);
                         form.save();
                         pool_logic.show_list();
                         Tower.msg.complete("Changed");
                     },
-                    function(err) {
+                    function (err) {
                         Tower.msg.failed("Failed to change");
                     }
                 );
@@ -67,26 +67,26 @@ var pool_logic = {
         }
     },
 
-    on_edit: function() {
+    on_edit: function () {
         var data = $$("pool_list").getSelectedItem();
         $$("pool_form").setValues(data);
         pool_logic.show_form();
     },
 
-    on_search: function(nv, ov) {
+    on_search: function (nv, ov) {
         console.log("Search", nv, ov);
     },
-    
-    on_delete: function() {
+
+    on_delete: function () {
         var data = $$("pool_form").getValues();
-        if(data.id) {
+        if (data.id) {
             API.pool.delete_item(data).then(
-                function() {
+                function () {
                     Tower.msg.complete("Deleted");
                     $$("pool_list").remove(data.id);
                     pool_logic.show_list();
                 },
-                function() {
+                function () {
                     Tower.msg.failed("Failed to delete");
                 }
             );

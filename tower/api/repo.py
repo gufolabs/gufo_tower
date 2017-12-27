@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Mercurial repo hosting
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Mercurial repo hosting
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Python modules
 import logging
+
 # Third-party modules
 import mercurial.ui
-from mercurial.hgweb.hgwebdir_mod import hgwebdir
 import tornado.web
 import tornado.wsgi
+from mercurial.hgweb.hgwebdir_mod import hgwebdir
 
 logger = logging.getLogger(__name__)
 

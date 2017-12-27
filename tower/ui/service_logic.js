@@ -2,7 +2,7 @@ var service_logic = {
     init: function () {
     },
 
-    can_run: function() {
+    can_run: function () {
         return app_logic.is_environment_selected();
     },
 
@@ -35,30 +35,30 @@ var service_logic = {
         // Set up form
         webix.ui(data.form, form);
         cv = form.getChildViews();
-        for(ci in cv) {
+        for (ci in cv) {
             fname = cv[ci].config.id;
             cv[ci].attachEvent(
                 "onChange",
-                (function(name) {
+                (function (name) {
                     return function (nv, ov) {
-                        if(this.validate()) {
+                        if (this.validate()) {
                             // Dynamically set tree data
                             data.config[name] = nv;
                         }
                     }
                 })(fname)
             );
-            if(data.config[fname]) {
+            if (data.config[fname]) {
                 cv[ci].setValue(data.config[fname]);
             }
         }
     },
 
-    on_save: function() {
+    on_save: function () {
         var r = [],
             env_id = app_logic.current_env.id;
-        $$("service_list").data.each(function(v) {
-            if(!v.nodes) {
+        $$("service_list").data.each(function (v) {
+            if (!v.nodes) {
                 return;
             }
             r.push({
@@ -69,10 +69,10 @@ var service_logic = {
             });
         });
         API.service.save_config(env_id, r).then(
-            function(result) {
+            function (result) {
                 Tower.msg.complete("Config saved");
             },
-            function(error) {
+            function (error) {
                 Tower.msg.failed("Failed to save");
             }
         );

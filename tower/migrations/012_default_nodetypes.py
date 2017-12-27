@@ -1,5 +1,5 @@
-from peewee import (Model, CharField, TextField, ForeignKeyField,
-                    DateTimeField, BooleanField, IntegerField)
+from peewee import (Model, CharField, ForeignKeyField,
+                    BooleanField)
 
 
 def migrate(migrator):

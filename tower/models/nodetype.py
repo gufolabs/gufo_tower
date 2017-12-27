@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Node Type Model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Node Type Model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Third-party modules
+from __future__ import absolute_import
 from peewee import Model, CharField, BooleanField
+
 # Tower modules
-from db import db
+from .db import db
 
 
 class NodeType(Model):

@@ -1,9 +1,7 @@
 # Third-party modules
 import yaml
 
-from peewee import OperationalError
-from peewee import (Model, CharField, TextField, ForeignKeyField,
-                    DateTimeField, BooleanField, IntegerField)
+from peewee import (Model, CharField, TextField, BooleanField)
 
 
 def migrate(migrator):

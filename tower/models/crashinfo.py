@@ -1,19 +1,24 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Crashinfo model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2016 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Crashinfo model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2016 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Python modules
-import json
+from __future__ import absolute_import
+import logging
 import os
+
 # Third-party modules
 from peewee import Model, CharField, TextField, DateTimeField, IntegerField, ForeignKeyField
+
 # Tower modules
-from db import db
-from environment import Environment
+from .db import db
+from .environment import Environment
+
+logger = logging.getLogger(__name__)
 
 
 class Crashinfo(Model):
@@ -92,8 +97,8 @@ class Crashinfo(Model):
         if os.path.exists(path):
             try:
                 with open(path) as f:
-                    return json_decode(f.read())
-            except Exception, why:
+                    return f.read()
+            except Exception as why:
                 logger.error(
                     "Unable to load and decode crashinfo %s: %s",
                     self.uuid, why

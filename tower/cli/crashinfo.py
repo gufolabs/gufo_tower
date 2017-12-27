@@ -6,21 +6,22 @@
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
+from __future__ import print_function
+import Queue
+import argparse
 # Python modules
 import os
-import sys
-import json
-import argparse
 import subprocess
+import sys
 import threading
-import Queue
+
 # Tower modules
 os.chdir(
     os.path.join(os.path.dirname(sys.argv[0]), "..")
 )
-from tower.models.environment import Environment
-from tower.models.node import Node
-from tower.models.crashinfo import Crashinfo
+from tower.models.environment import Environment  # noqa
+from tower.models.node import Node  # noqa
+from tower.models.crashinfo import Crashinfo  # noqa
 
 
 def main():
@@ -40,7 +41,7 @@ def main():
         default=5
     )
     subparsers = parser.add_subparsers(dest="cmd")
-    collect_parser = subparsers.add_parser("collect")
+    collect_parser = subparsers.add_parser("collect")  # noqa
     #
     options = parser.parse_args(sys.argv[1:])
     cmd_options = vars(options)
@@ -50,7 +51,7 @@ def main():
 
 
 def die(msg):
-    print msg + "\n"
+    print(msg + "\n")
     sys.exit(1)
 
 
@@ -101,7 +102,7 @@ def collect_worker(q):
             try:
                 os.makedirs(log_dir)
             except OSError as e:
-                die("Cannot create directory %s" % log_dir)
+                die("Cannot create directory %s %s" % (log_dir, e))
         log_file = "%s/%s.log" % (log_dir, node.name)
         lf = open(log_file, "w")
 

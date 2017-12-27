@@ -1,6 +1,3 @@
-from peewee import CharField
-
-
 def migrate(migrator):
     migrator.drop_column(
         "environment",

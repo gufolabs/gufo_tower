@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Pull repo
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2016 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Pull repo
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2016 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
+from __future__ import absolute_import
+
+import datetime
 # Python modules
 import logging
-import subprocess
-import datetime
 import os
-import shutil
-import urlparse
+
 # Third-party modules
 from concurrent.futures import ThreadPoolExecutor
-# Tower modules
-from base import API, api
+from pip.download import unpack_url
+from pip.index import Link
+from pip.vcs import VersionControl
+
 from tower.models.db import db
 from tower.models.environment import Environment
 from tower.models.pulllog import PullLog
-from pip.index import Link
-from pip.download import unpack_url
-from pip.vcs import VersionControl
+# Tower modules
+from .base import API, api
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -108,7 +109,6 @@ class PullAPI(API):
         log = []
         try:
             unpack_url(Link(env.playbook_link), env.playbook_path)
-
         except KeyboardInterrupt:
             raise
         except Exception as e:

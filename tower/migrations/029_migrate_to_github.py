@@ -1,5 +1,8 @@
+import os
+import shutil
+
 from peewee import (Model, CharField, TextField, BooleanField)
-import os, shutil
+
 
 def migrate(migrator):
     class Environment(Model):

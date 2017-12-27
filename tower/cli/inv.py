@@ -6,17 +6,18 @@
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
+from __future__ import print_function
+import json
 # Python modules
 import os
 import sys
-import json
 from optparse import OptionParser
 
 # Tower modules
 os.chdir(
     os.path.join(os.path.dirname(sys.argv[0]), "..")
 )
-from tower.models.environment import Environment
+from tower.models.environment import Environment  # noqa
 
 
 def main():
@@ -47,7 +48,7 @@ def get_default_env():
 
 
 def die(msg):
-    print msg + "\n"
+    print(msg + "\n")
     sys.exit(1)
 
 
@@ -58,6 +59,6 @@ def ansible_list(options, args):
     """
     try:
         env = Environment.get(Environment.name == options.env)
-        print json.dumps(env.ansible_inventory(), sort_keys=True)
+        print(json.dumps(env.ansible_inventory(), sort_keys=True))
     except Environment.DoesNotExist:
         die("Invalid environment: '%s'" % options.env)

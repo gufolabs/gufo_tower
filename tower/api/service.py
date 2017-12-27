@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Service API
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Service API
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Python modules
+from __future__ import absolute_import
 import os
 
 # Third-party modules
 import yaml
 
 # Tower modules
-from base import API, api, APIError
+from .base import API, api, APIError
 from tower.models.environment import Environment
 from tower.models.node import Node
 from tower.models.pool import Pool
@@ -220,7 +221,9 @@ class ServiceAPI(API):
             pool = s.pool.id if s.pool else None
             c = ncfg.get((pool, s.service, s.node.id))
             if c:
-                if c["n_instances"] != s.n_instances or c["loglevel"] != s.loglevel or c["n_backup_instances"] != s.n_backup_instances:
+                if c["n_instances"] != s.n_instances \
+                        or c["loglevel"] != s.loglevel \
+                        or c["n_backup_instances"] != s.n_backup_instances:
                     # Changed
                     s.n_instances = c["n_instances"]
                     s.n_backup_instances = c["n_backup_instances"]

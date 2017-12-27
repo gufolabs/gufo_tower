@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Tower web daemon
-##----------------------------------------------------------------------
-## Copyright (C) 2016 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Tower web daemon
+# ----------------------------------------------------------------------
+# Copyright (C) 2016 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
-## Python modules
-import os
 import hashlib
 import logging
-## Third-party modules
-import tornado.web
+# Python modules
+import os
+
+# Third-party modules
 import tornado.template
+
 try:
     import jsmin
 except ImportError:
     jsmin = None
-## Tower modules
+# Tower modules
 from tower.models.settings import Settings
 
 logger = logging.getLogger("ui")

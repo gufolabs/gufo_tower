@@ -33,7 +33,7 @@ var app_logic = {
         desktop_logic.select_environment(env);
     },
 
-    is_environment_selected: function() {
+    is_environment_selected: function () {
         return app_logic.current_env !== null;
     },
 

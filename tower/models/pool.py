@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Pool model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Pool model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Third-party modules
+from __future__ import absolute_import
 from peewee import CharField, TextField, ForeignKeyField
 from playhouse.signals import Model, post_save
+
 # Tower modules
-from db import db
-from environment import Environment
+from .db import db
+from .environment import Environment
 
 DEFAULT_POOL = "default"
 

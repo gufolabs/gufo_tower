@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Login API
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Login API
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Tower modules
-from base import API, api, open_api
+from __future__ import absolute_import
+from .base import API, api, open_api
 from tower.models.user import User, db
 
 

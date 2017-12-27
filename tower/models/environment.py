@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Environment model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Environment model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
+from __future__ import absolute_import
 import base64
 import hashlib
 import logging
@@ -22,7 +23,7 @@ from peewee import CharField, TextField, BooleanField
 from playhouse.signals import Model
 
 # Tower modules
-from db import db
+from .db import db
 
 logging.getLogger(__name__)
 
@@ -137,9 +138,9 @@ class Environment(Model):
         Generate ansible-compatible dynamic inventory
         :return:
         """
-        from node import Node
-        from service import Service
-        from pool import Pool
+        from .node import Node
+        from .service import Service
+        from .pool import Pool
 
         services_description = self.get_services_description()
         #
@@ -460,7 +461,7 @@ class Environment(Model):
         """
         Generate all necessary ssh keys
         """
-        from pool import Pool
+        from .pool import Pool
         key_types = [("rsa", 4096)]
 
         if not os.path.isdir(self.ssh_keys_path):

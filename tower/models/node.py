@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Node model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Node model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Third-party modules
+from __future__ import absolute_import
 from peewee import Model, CharField, TextField, ForeignKeyField, BooleanField
 # Tower modules
-from db import db
-from environment import Environment
-from datacenter import Datacenter
-from nodetype import NodeType
+from .db import db
+from .environment import Environment
+from .datacenter import Datacenter
+from .nodetype import NodeType
 
 
 class Node(Model):

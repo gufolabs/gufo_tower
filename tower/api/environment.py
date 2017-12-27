@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Service API handler
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Service API handler
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Third-party models
+from __future__ import absolute_import
 import yaml
+
 # Tower models
-from model import ModelAPI, api
+from .model import ModelAPI, api
 from tower.models.environment import Environment
 
 

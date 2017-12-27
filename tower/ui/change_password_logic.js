@@ -23,11 +23,11 @@ var change_password_logic = {
             return;
         }
         API.login.change_password(data.old_password, data.new_password).then(
-            function() {
+            function () {
                 Tower.msg.complete("Password changed");
                 desktop_logic.show();
             },
-            function() {
+            function () {
                 Tower.msg.failed("Failed to change password");
             }
         );

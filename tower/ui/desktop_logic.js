@@ -1,5 +1,5 @@
 var desktop_logic = {
-    init: function() {
+    init: function () {
         environment_logic.init();
         datacenter_logic.init();
         pool_logic.init();
@@ -8,36 +8,36 @@ var desktop_logic = {
         settings_logic.init();
     },
 
-    show: function() {
+    show: function () {
         $$("desktop").show();
         $$("sidebar").select("environment");
     },
 
-    on_before_select_app: function(app) {
+    on_before_select_app: function (app) {
         var logic = window[app + "_logic"],
             can_run = true;
-        if(logic && logic.can_run) {
+        if (logic && logic.can_run) {
             can_run = logic.can_run();
         }
-        if(!can_run) {
+        if (!can_run) {
             Tower.msg.failed("Select environment");
         }
         return can_run;
     },
 
-    on_select_app: function(selection) {
+    on_select_app: function (selection) {
         var logic = window[selection[0] + "_logic"];
-        if(logic) {
+        if (logic) {
             logic.show();
         }
     },
 
-    select_environment: function(env) {
+    select_environment: function (env) {
         $$("environment_label").setValue("NOC Tower: " + env.name);
     },
 
-    on_menu_click: function(item_id) {
-        switch(item_id) {
+    on_menu_click: function (item_id) {
+        switch (item_id) {
             case "logout":
                 app_logic.logout();
                 break;

@@ -1,17 +1,17 @@
-var API = (function() {
+var API = (function () {
     var r = {
         _base_url: "/api/",
         tid: 0
     };
-    for(var api in SDL) {
-        if(!SDL.hasOwnProperty(api)) {
+    for (var api in SDL) {
+        if (!SDL.hasOwnProperty(api)) {
             continue;
         }
         r[api] = {};
-        for(var mi in SDL[api]) {
+        for (var mi in SDL[api]) {
             var method = SDL[api][mi];
-            r[api][method] = (function(r, api, method) {
-                return function() {
+            r[api][method] = (function (r, api, method) {
+                return function () {
                     var defer = webix.promise.defer();
                     webix.ajax().headers({
                         "Content-Type": "text/json"
@@ -23,14 +23,14 @@ var API = (function() {
                             method: method,
                             params: Array.prototype.slice.call(arguments)
                         })
-                    ).then(function(resp) {
+                    ).then(function (resp) {
                         var data = resp.json();
-                        if(!data.error) {
+                        if (!data.error) {
                             defer.resolve(data.result);
                         } else {
                             defer.reject(data.error);
                         }
-                    }, function(err) {
+                    }, function (err) {
                         defer.reject(err);
                     });
                     return defer;
@@ -45,31 +45,31 @@ var API = (function() {
 webix.proxy.rpc = {
     $proxy: true,
 
-    load: function(view, callback, params) {
+    load: function (view, callback, params) {
         var r = {dynamic: true},
             state = {},
             source = this.source,
             i, j, p, v, method;
-        if(view.getState) {
+        if (view.getState) {
             state = view.getState();
         }
-        if(state.sort) {
+        if (state.sort) {
             // Todo: Convert to list
             r.sort = state.sort;
         }
         // Strip query from url
-        if((i = source.indexOf("?")) !== -1) {
+        if ((i = source.indexOf("?")) !== -1) {
             p = source.substring(i + 1).split("&");
             // Process parameters
-            for(j in p) {
+            for (j in p) {
                 v = p[j].split("=");
-                if((v[0] === "start") || (v[0] === "count")) {
+                if ((v[0] === "start") || (v[0] === "count")) {
                     r[v[0]] = parseInt(v[1]);
                 }
             }
             source = source.substring(0, i);
         }
-        if(source.substring(source.length - 7) === ":lookup") {
+        if (source.substring(source.length - 7) === ":lookup") {
             // Combo lookup
             source = source.substring(0, source.length - 7);
             method = "lookup_items";
@@ -77,7 +77,7 @@ webix.proxy.rpc = {
             method = "get_items";
         }
         API[source][method](r).then(
-            function(data) {
+            function (data) {
                 webix.ajax.$callback(
                     view,
                     callback,

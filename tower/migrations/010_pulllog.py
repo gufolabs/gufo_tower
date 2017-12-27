@@ -1,5 +1,5 @@
 from peewee import (Model, CharField, TextField, ForeignKeyField,
-                    DateTimeField, BooleanField, IntegerField)
+                    DateTimeField, BooleanField)
 
 
 class Environment(Model):
