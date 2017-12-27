@@ -1,4 +1,4 @@
-from peewee import CharField, BooleanField
+from peewee import CharField
 
 
 def migrate(migrator):

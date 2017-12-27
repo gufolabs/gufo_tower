@@ -57,7 +57,11 @@ var environment_list = {
                     id: "deployment_options",
                     labelWidth: 100,
                     options: [
-                        {id: 1, value: "Install Everything", tooltip: "Ignore other options except verbose. Normal install"},
+                        {
+                            id: 1,
+                            value: "Install Everything",
+                            tooltip: "Ignore other options except verbose. Normal install"
+                        },
                         {id: 10, value: "Update sources", tooltip: "Only update sources"},
                         {id: 11, value: "Update configs", tooltip: "Rebuild configs, and restart services"},
                         {id: 12, value: "Install requirements"},
@@ -148,7 +152,7 @@ var environment_form = {
             view: "form",
             id: "environment_form",
             elementsConfig: {
-                labelWidth: 110
+                labelWidth: 130
             },
             scroll: true,
             elements: [
@@ -189,7 +193,9 @@ var environment_form = {
                                 placeholder: "legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC",
                                 view: "text",
                                 name: "config_order",
+                                bottomLabel: "Read about that field <a href='https://kb.nocproject.org/x/8oKYAQ'> here</a>",
                                 label: "Config load preference",
+
                                 required: true
                             }
 
@@ -200,56 +206,61 @@ var environment_form = {
                     view: "fieldset",
                     label: "Repo",
                     body: {
-                        cols: [
+                        rows: [
                             {
-                                view: "text",
-                                name: "repo",
-                                label: "Repo URL",
-                                required: true,
-                                value: "https://bitbucket.org/nocproject/noc"
+                                cols: [
+                                    {
+                                        view: "text",
+                                        name: "repo",
+                                        required: true,
+                                        label: "GIT Repo URL"
+                                    },
+                                    {
+                                        view: "text",
+                                        name: "version",
+                                        label: "Version",
+                                        bottomLabel: "Changeset or branch or tag"
+                                    }
+                                ]
                             },
                             {
-                                view: "text",
-                                name: "branch",
-                                label: "Branch",
-                                required: true,
-                                value: "feature/microservices"
+                                cols: [
+                                    {
+                                        view: "text",
+                                        name: "custom_repo",
+                                        label: "Custom Repo URL",
+                                        required: false,
+                                        bottomLabel: "<strong>Git</strong> by default. Use 'hg+https://' for Mercurial",
+                                        value: ""
+                                    },
+                                    {
+                                        view: "text",
+                                        name: "custom_version",
+                                        label: "Custom Version",
+                                        required: false,
+                                        value: "default",
+                                        bottomLabel: "Changeset or branch or tag"
+                                    }
+                                ]
                             },
                             {
-                                view: "text",
-                                name: "changeset",
-                                required: true,
-                                label: "Changeset",
-                                value: "tip"
-                            }
-                        ]
-                    }
-                },
-                {
-                    view: "fieldset",
-                    label: "Custom Repo",
-                    body: {
-                        cols: [
-                            {
-                                view: "text",
-                                name: "custom_repo",
-                                label: "Repo URL",
-                                required: false,
-                                value: ""
-                            },
-                            {
-                                view: "text",
-                                name: "custom_branch",
-                                label: "Branch",
-                                required: false,
-                                value: "default"
-                            },
-                            {
-                                view: "text",
-                                name: "custom_changeset",
-                                required: false,
-                                label: "Changeset",
-                                value: "tip"
+                                cols: [
+                                    {
+                                        view: "text",
+                                        name: "playbook_link",
+                                        label: "Playbook Repo URL",
+                                        required: true,
+                                        bottomLabel: "Playbook repo format is <a href=https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support>written here</a>"
+                                    },
+                                    {
+                                        view: "text",
+                                        name: "install_method",
+                                        label: "Install method",
+                                        required: true,
+                                        bottomLabel: "Either <strong>git</strong> or custom recommendations",
+                                        value: "git"
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -258,29 +269,32 @@ var environment_form = {
                     view: "fieldset",
                     label: "Web",
                     body: {
-                        cols: [
+                        rows: [
                             {
-                                view: "text",
-                                name: "web_host",
-                                label: "Host",
-                                required: true,
-                                placeholder: "noc.example.com",
-                                validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/)
-                            },
-                            {
-                                view: "text",
-                                name: "installation_name",
-                                label: "Installation Name",
-                                value: "Unconfigured installation",
-                                required: true
+                                cols: [
+                                    {
+                                        view: "text",
+                                        name: "web_host",
+                                        label: "Host",
+                                        required: true,
+                                        placeholder: "noc.example.com",
+                                        validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/)
+                                    },
+                                    {
+                                        view: "text",
+                                        name: "installation_name",
+                                        label: "Installation Name",
+                                        value: "Unconfigured installation",
+                                        required: true
+                                    }
+                                ]
                             },
                             {
                                 view: "textarea",
                                 name: "cert",
                                 label: "SSL Cert + Key",
                                 placeholder: "Copy&Paste private key, certificate and all intermediate certificates in PEM format"
-                            }
-                        ]
+                            }]
                     }
                 },
                 {

@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Service API handler
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Service API handler
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Third-party modules
+from __future__ import absolute_import
 import peewee
+
+from .base import API, api, APIError
 # Tower modules
 from tower.models.db import db
-from base import API, api, APIError
 
 
 class ModelAPI(API):

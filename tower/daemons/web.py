@@ -1,37 +1,38 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Tower web daemon
-##----------------------------------------------------------------------
-## Copyright (C) 2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Tower web daemon
+# ----------------------------------------------------------------------
+# Copyright (C) 2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Python modules
 import logging
 import os
+
 # Third-party modules
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
+
 # Tower modules
 import tower
-from tower.api.jsonrpc import JSONRPCHandler
-from tower.api.login import LoginAPI
-from tower.api.environment import EnvironmentAPI
-from tower.api.datacenter import DatacenterAPI
-from tower.api.pool import PoolAPI
-from tower.api.nodetype import NodeType
-from tower.api.node import NodeAPI
-from tower.api.service import ServiceAPI
-from tower.api.pull import PullAPI
-from tower.api.settings import SettingsAPI
+from tower.api.login import LoginAPI  # noqa
+from tower.api.environment import EnvironmentAPI  # noqa
+from tower.api.datacenter import DatacenterAPI  # noqa
+from tower.api.pool import PoolAPI  # noqa
+from tower.api.nodetype import NodeType  # noqa
+from tower.api.node import NodeAPI  # noqa
+from tower.api.service import ServiceAPI  # noqa
+from tower.api.pull import PullAPI  # noqa
+from tower.api.settings import SettingsAPI  # noqa
 from tower.api.deploy import DeployHandler
+from tower.api.jsonrpc import JSONRPCHandler
 from tower.api.repo import RepoHandler
 from tower.api.ui import UIHandler
-from tower.models.settings import Settings
 from tower.models.migration import Migration
-
+from tower.models.settings import Settings
 
 logger = logging.getLogger(__name__)
 

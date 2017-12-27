@@ -2,8 +2,8 @@ FROM alpine:3.6 as builder
 
 RUN mkdir /mnt/tower
 WORKDIR /mnt/tower/
-COPY . /mnt/tower/
 RUN apk add --update  py2-cffi  py-virtualenv gcc python-dev musl-dev  libffi-dev openssl-dev ca-certificates
+COPY . /mnt/tower/
 RUN python setup.py sdist --format=zip
 
 WORKDIR /opt/tower

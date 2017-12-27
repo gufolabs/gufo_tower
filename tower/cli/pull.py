@@ -6,20 +6,23 @@
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
-## Python modules
+from __future__ import print_function
+import datetime
+# Python modules
 import logging
 import os
 import sys
-import datetime
 from optparse import OptionParser
-## Tower modules
-from tower.models.db import db
+
 from tower.api.pull import PullAPI
+# Tower modules
+from tower.models.db import db
 from tower.models.pulllog import PullLog
+
 os.chdir(
     os.path.join(os.path.dirname(sys.argv[0]), "..")
 )
-from tower.models.environment import Environment
+from tower.models.environment import Environment  # noqa
 
 
 def main():
@@ -41,15 +44,13 @@ def main():
             start_ts=datetime.datetime.now(),
             environment=env,
             user="cli",
-            repo=env.repo,
-            branch=env.branch,
-            changeset=env.changeset
+            repo=env.playbook_link
         )
         job.save()
     api = PullAPI(None)
-    api.pull_job(job)
+    api.pull_job_via_pip(job)
 
 
 def die(msg):
-    print msg + "\n"
+    print(msg + "\n")
     sys.exit(1)

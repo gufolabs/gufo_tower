@@ -21,20 +21,21 @@ var environment_logic = {
     },
 
     // Load data info list
-    load: function() {
+    load: function () {
         $$("environment_list").load("rpc->environment");
     },
 
-    on_add: function() {
+    on_add: function () {
         var prefix = "/opt/noc";
         if (navigator.platform.indexOf("FreeBSD") != -1)
             prefix = "/usr/local/noc";
         environment_logic.show_form();
         $$("environment_form").setValues({
             env_type: "eval",
-            repo: "https://bitbucket.org/nocproject/noc",
-            branch: "feature/microservices",
-            changeset: "tip",
+            repo: "https://github.com/nocproject/noc.git",
+            version: "microservices",
+            install_method: "git",
+            playbook_link: "git+https://github.com/nocproject/ansible_deploy@microservices",
             installation_name: "Unconfigured installation",
             sys_user: "noc",
             sys_group: "noc",
@@ -61,27 +62,27 @@ var environment_logic = {
 
         if (form.validate()) {
             data = form.getValues();
-            if(data.id === undefined) {
+            if (data.id === undefined) {
                 API.environment.create_item(data).then(
-                    function(result) {
+                    function (result) {
                         form.setValues(result);
                         form.save();
                         environment_logic.show_list();
                         Tower.msg.complete("Created");
                     },
-                    function(err) {
+                    function (err) {
                         Tower.msg.failed("Failed to create");
                     }
                 );
             } else {
                 API.environment.update_item(data).then(
-                    function(result) {
+                    function (result) {
                         form.setValues(result);
                         form.save();
                         environment_logic.show_list();
                         Tower.msg.complete("Changed");
                     },
-                    function(err) {
+                    function (err) {
                         Tower.msg.failed("Failed to change");
                     }
                 );
@@ -110,17 +111,17 @@ var environment_logic = {
         console.log("Search", nv, ov);
     },
 
-    on_delete: function() {
+    on_delete: function () {
         var data = $$("environment_form").getValues();
-        if(data.id) {
+        if (data.id) {
             API.environment.delete_item(data).then(
-                function() {
+                function () {
                     Tower.msg.complete("Deleted");
                     $$("environment_list").remove(data.id);
                     // @todo: Unselect environment
                     environment_logic.show_list();
                 },
-                function() {
+                function () {
                     Tower.msg.failed("Failed to delete");
                 }
             );
@@ -195,119 +196,119 @@ var environment_logic = {
             rx_task = /^.+?\*{5}\s*$/mg,
             rx_line = /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
             rx_stars = /\s+\*{5,}/;
-            deploy = function () {
-                var xhr = new XMLHttpRequest(),
-                    offset = 0,
-                    output_panel = $$("environment_deploy_output"),
-                    badges_panel = $$("environment_deploy_badges"),
-                    clock = $$("environment_deploy_clock"),
-                    output = "",
-                    start_time = Date.now(),
-                    running=true,
-                    status = {
-                        ok: 0,
-                        changed: 0,
-                        unreach: 0,
-                        failed: 0,
-                        status: "<i class='fa fa-cog fa-spin'></i> Running"
-                    },
-                    //
-                    // Update wall clocks
-                    //
-                    update_clock = function() {
-                        var dt = Math.floor((Date.now() - start_time) / 1000),
-                            s = dt % 60,  // Seconds
-                            m = Math.floor((dt - s) / 60), // Minutes
-                            t;
-                        s = (s >= 10) ? ("" + s) : ("0" + s);
-                        m = (m >= 10) ? ("" + m) : ("0" + m);
-                        t = m + ":" + s;
-                        clock.setValues({time: t});
-                        if(running) {
-                            webix.delay(update_clock, output_panel, [], 1000);
-                        }
-                    };
-                // Reset badges
+        deploy = function () {
+            var xhr = new XMLHttpRequest(),
+                offset = 0,
+                output_panel = $$("environment_deploy_output"),
+                badges_panel = $$("environment_deploy_badges"),
+                clock = $$("environment_deploy_clock"),
+                output = "",
+                start_time = Date.now(),
+                running = true,
+                status = {
+                    ok: 0,
+                    changed: 0,
+                    unreach: 0,
+                    failed: 0,
+                    status: "<i class='fa fa-cog fa-spin'></i> Running"
+                },
+                //
+                // Update wall clocks
+                //
+                update_clock = function () {
+                    var dt = Math.floor((Date.now() - start_time) / 1000),
+                        s = dt % 60,  // Seconds
+                        m = Math.floor((dt - s) / 60), // Minutes
+                        t;
+                    s = (s >= 10) ? ("" + s) : ("0" + s);
+                    m = (m >= 10) ? ("" + m) : ("0" + m);
+                    t = m + ":" + s;
+                    clock.setValues({time: t});
+                    if (running) {
+                        webix.delay(update_clock, output_panel, [], 1000);
+                    }
+                };
+            // Reset badges
+            badges_panel.setValues(status);
+            // Switch to deploy panel
+            $$("environment_deploy_panel").show();
+            Tower.msg.started("Deploying " + env_name);
+            // Run streaming http request
+            output_panel.setHTML("");  // Clean output
+            xhr.open(
+                "GET",
+                "/deploy/" + env_name + "/?deployment_options=" + $$("deployment_options").getValue(),
+                true
+            );
+            xhr.onprogress = function () {
+                var ft = xhr.responseText,
+                    match, t, ct;
+                // Process only last chunk
+                t = webix.template.escape(ft.substr(offset));
+                offset = ft.length;
+                // Get progress
+                while (match = rx_progress.exec(t)) {
+                    switch (match[1]) {
+                        case "ok":
+                            status.ok++;
+                            break;
+                        case "changed":
+                            status.changed++;
+                            break;
+                        case "unreachable":
+                            status.unreach++;
+                            break;
+                        case "failed":
+                        case "fatal":
+                            status.failed++;
+                            break;
+                    }
+                }
+                if (t.match(/(...ignoring)/)) {
+                    status.failed--;
+                }
+                // Update deploy log
+                ct = t.replace(rx_task, function (x) {
+                    x = x.replace(rx_stars, "");
+                    return "<span class='ansible-task' style=white-space:nowrap>" + x + "<span style='float: right'>" + clock.getValues().time + "</span></span>";
+                });
+                ct = ct.replace(rx_line, function (x) {
+                    var c = x.split(":")[0];
+                    if (c === "fatal") {
+                        c = "failed";
+                    }
+                    return "<span class='ansible-" + c + "'>" + x + "</span>";
+                });
+                output += ct;
+                output_panel.setHTML(output);
+                output_panel.scrollTo(0, 100000);
+                // Update badges
                 badges_panel.setValues(status);
-                // Switch to deploy panel
-                $$("environment_deploy_panel").show();
-                Tower.msg.started("Deploying " + env_name);
-                // Run streaming http request
-                output_panel.setHTML("");  // Clean output
-                xhr.open(
-                    "GET",
-                    "/deploy/" + env_name + "/?deployment_options=" + $$("deployment_options").getValue(),
-                    true
-                );
-                xhr.onprogress = function () {
-                    var ft = xhr.responseText,
-                        match, t, ct;
-                    // Process only last chunk
-                    t = webix.template.escape(ft.substr(offset));
-                    offset = ft.length;
-                    // Get progress
-                    while (match = rx_progress.exec(t)) {
-                        switch (match[1]) {
-                            case "ok":
-                                status.ok++;
-                                break;
-                            case "changed":
-                                status.changed++;
-                                break;
-                            case "unreachable":
-                                status.unreach++;
-                                break;
-                            case "failed":
-                            case "fatal":
-                                status.failed++;
-                                break;
-                        }
-                    }
-                    if(t.match(/(...ignoring)/)){
-                        status.failed--;
-                    }
-                    // Update deploy log
-                    ct = t.replace(rx_task, function (x) {
-                        x = x.replace(rx_stars, "");
-                        return "<span class='ansible-task' style=white-space:nowrap>" + x + "<span style='float: right'>" + clock.getValues().time + "</span></span>";
-                    });
-                    ct = ct.replace(rx_line, function (x) {
-                        var c = x.split(":")[0];
-                        if (c === "fatal") {
-                            c = "failed";
-                        }
-                        return "<span class='ansible-" + c + "'>" + x + "</span>";
-                    });
-                    output += ct;
-                    output_panel.setHTML(output);
-                    output_panel.scrollTo(0, 100000);
-                    // Update badges
-                    badges_panel.setValues(status);
-                };
-                xhr.onload = function () {
-                    if (status.unreach || status.failed) {
-                        status.status = "<i class='fa fa-bolt'></i> Failed";
-                        Tower.msg.failed("Deploy failed");
-                        Tower.notification("Deploy failed");
-                        running = false;  // Stop clock
-                    } else {
-                        status.status = "<i class='fa fa-check-circle'></i> Complete";
-                        Tower.msg.complete("Deploy completed");
-                        Tower.notification("Deploy completed");
-                        running = false;  // Stop clock
-                    }
-                    badges_panel.setValues(status);
-                };
-                xhr.onerror = function () {
-                    badges_panel.setValues(status);
+            };
+            xhr.onload = function () {
+                if (status.unreach || status.failed) {
                     status.status = "<i class='fa fa-bolt'></i> Failed";
                     Tower.msg.failed("Deploy failed");
                     Tower.notification("Deploy failed");
                     running = false;  // Stop clock
-                };
-                xhr.send();
-                update_clock();
+                } else {
+                    status.status = "<i class='fa fa-check-circle'></i> Complete";
+                    Tower.msg.complete("Deploy completed");
+                    Tower.notification("Deploy completed");
+                    running = false;  // Stop clock
+                }
+                badges_panel.setValues(status);
             };
+            xhr.onerror = function () {
+                badges_panel.setValues(status);
+                status.status = "<i class='fa fa-bolt'></i> Failed";
+                Tower.msg.failed("Deploy failed");
+                Tower.notification("Deploy failed");
+                running = false;  // Stop clock
+            };
+            xhr.send();
+            update_clock();
+        };
 
         API.pull.is_pulled(env_id).then(
             function (result) {

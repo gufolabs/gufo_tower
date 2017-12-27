@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Service model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Service model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Third-party modules
+from __future__ import absolute_import
 from peewee import CharField, IntegerField, ForeignKeyField
-from playhouse.signals import Model, post_save
+from playhouse.signals import Model
+
 # Tower modules
-from db import db
-from environment import Environment
-from pool import Pool
-from node import Node
+from .db import db
+from .environment import Environment
+from .node import Node
+from .pool import Pool
 
 
 class Service(Model):

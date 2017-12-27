@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## PullLog model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# PullLog model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Third-party modules
+from __future__ import absolute_import
 from peewee import (Model, CharField, TextField, ForeignKeyField,
-                    DateTimeField, IntegerField, BooleanField)
+                    DateTimeField, BooleanField)
+
 # Tower modules
-from db import db
-from environment import Environment
+from .db import db
+from .environment import Environment
 
 
 class PullLog(Model):
@@ -24,7 +26,5 @@ class PullLog(Model):
     environment = ForeignKeyField(Environment)
     user = CharField()
     repo = CharField()
-    branch = CharField()
-    changeset = CharField()
     status = BooleanField(default=False)
     log = TextField(default="")

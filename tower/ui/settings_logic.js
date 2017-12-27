@@ -1,22 +1,23 @@
 var settings_logic = {
-    init: function() {},
+    init: function () {
+    },
 
-    show: function() {
+    show: function () {
         $$("settings_form_panel").show();
-        API.settings.get_settings().then(function(result) {
+        API.settings.get_settings().then(function (result) {
             $$("settings_form").setValues(result);
-        }).fail(function(err) {
+        }).fail(function (err) {
             Tower.msg.failed("Failed to get settings")
         });
     },
 
-    on_save: function() {
+    on_save: function () {
         var form = $$("settings_form");
-        if(form.validate()) {
+        if (form.validate()) {
             API.settings.save_settings(form.getValues()).then(
-                function() {
+                function () {
                     Tower.msg.complete("Settings saved");
-                }, function() {
+                }, function () {
                     Tower.msg.failed("Failed to save settings");
                 }
             );

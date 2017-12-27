@@ -1,57 +1,58 @@
 var datacenter_logic = {
-    init: function() {},
+    init: function () {
+    },
 
-    show: function() {
+    show: function () {
         datacenter_logic.show_list();
         $$("datacenter_form").bind($$("datacenter_list"));
     },
 
-    show_list: function() {
+    show_list: function () {
         $$("datacenter_list_panel").show();
         datacenter_logic.load();
     },
 
-    show_form: function() {
+    show_form: function () {
         $$("datacenter_form_panel").show();
     },
 
     // Load data info list
-    load: function() {
+    load: function () {
         $$("datacenter_list").load("rpc->datacenter");
     },
 
-    on_add: function() {
+    on_add: function () {
         $$("datacenter_form").clear();
         datacenter_logic.show_form();
     },
 
-    on_save: function() {
+    on_save: function () {
         var data,
             form = $$("datacenter_form");
 
         if (form.validate()) {
             data = form.getValues();
-            if(data.id === undefined) {
+            if (data.id === undefined) {
                 API.datacenter.create_item(data).then(
-                    function(result) {
+                    function (result) {
                         form.setValues(result);
                         form.save();
                         datacenter_logic.show_list();
                         Tower.msg.complete("Created");
                     },
-                    function(err) {
+                    function (err) {
                         Tower.msg.failed("Failed to create");
                     }
                 );
             } else {
                 API.datacenter.update_item(data).then(
-                    function(result) {
+                    function (result) {
                         form.setValues(result);
                         form.save();
                         datacenter_logic.show_list();
                         Tower.msg.complete("Changed");
                     },
-                    function(err) {
+                    function (err) {
                         Tower.msg.failed("Failed to change");
                     }
                 );
@@ -61,26 +62,26 @@ var datacenter_logic = {
         }
     },
 
-    on_edit: function() {
+    on_edit: function () {
         var data = $$("datacenter_list").getSelectedItem();
         $$("datacenter_form").setValues(data);
         datacenter_logic.show_form();
     },
 
-    on_search: function(nv, ov) {
+    on_search: function (nv, ov) {
         console.log("Search", nv, ov);
     },
 
-    on_delete: function() {
+    on_delete: function () {
         var data = $$("datacenter_form").getValues();
-        if(data.id) {
+        if (data.id) {
             API.datacenter.delete_item(data).then(
-                function() {
+                function () {
                     Tower.msg.complete("Deleted");
                     $$("datacenter_list").remove(data.id);
                     datacenter_logic.show_list();
                 },
-                function() {
+                function () {
                     Tower.msg.failed("Failed to delete");
                 }
             );

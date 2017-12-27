@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Settings API
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Settings API
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Tower modules
-from base import API, api
+from __future__ import absolute_import
+from .base import API, api
 from tower.models.settings import Settings
 
 

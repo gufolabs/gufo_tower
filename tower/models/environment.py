@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Environment model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Environment model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
+from __future__ import absolute_import
+import base64
+import hashlib
+import logging
 # Python
 import os
-import hashlib
-import base64
-import logging
-from collections import defaultdict
-import itertools
-import subprocess
 import re
+import subprocess
 import tempfile
-import json
-# Third-party modules
-from peewee import CharField, TextField, DateTimeField, BooleanField
-from playhouse.signals import Model
+from collections import defaultdict
+
 import yaml
+# Third-party modules
+from peewee import CharField, TextField, BooleanField
+from playhouse.signals import Model
+
 # Tower modules
-from db import db
-from settings import Settings
+from .db import db
 
 logging.getLogger(__name__)
 
@@ -55,14 +55,13 @@ class Environment(Model):
     # Default installation prefix
     sys_prefix = CharField(default="/opt/noc")
     # Repo settings
-    repo = CharField(default="https://bitbucket.org/nocproject/noc")
-    branch = CharField(default="default")
-    changeset = CharField(default="tip")
+    repo = CharField(default="https://github.com/nocproject/noc.git")
+    version = CharField(default="microservices")
     # Custom repo settings
     custom_enabled = BooleanField(default=True)
     custom_repo = CharField(default="")
-    custom_branch = CharField(default="default")
-    custom_changeset = CharField(default="tip")
+    custom_version = CharField(default="default")
+    playbook_link = CharField(default="git+https://github.com/nocproject/ansible_deploy@microservices")
     metrics_collector = CharField(default="")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
@@ -93,6 +92,7 @@ class Environment(Model):
     service_config = TextField(default="")
     is_default = BooleanField(default=False)
     config_order = CharField(default="legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC")
+    install_method = CharField(default="git")
 
     def list_item(self):
         return {
@@ -106,11 +106,11 @@ class Environment(Model):
             "sys_group": self.sys_group,
             "sys_prefix": self.sys_prefix,
             "repo": self.repo,
-            "branch": self.branch,
-            "changeset": self.changeset,
+            "version": self.version,
             "custom_repo": self.custom_repo,
-            "custom_branch": self.custom_branch,
-            "custom_changeset": self.custom_changeset,
+            "custom_version": self.custom_version,
+            "playbook_link": self.playbook_link,
+            "install_method": self.install_method,
             "metrics_collector": self.metrics_collector,
             "web_host": self.web_host,
             "cert": self.cert,
@@ -138,32 +138,9 @@ class Environment(Model):
         Generate ansible-compatible dynamic inventory
         :return:
         """
-        from node import Node
-        from service import Service
-        from pool import Pool
-
-        repo = Settings.get_repo_url()
-        if not repo.endswith("/"):
-            repo += "/"
-        repo += "%s" % self.repo_hash
-
-        if self.changeset == "tip":
-            revision = self.branch
-        else:
-            revision = self.changeset
-
-        if self.custom_repo:
-            custom_repo = Settings.get_repo_url()
-            if not custom_repo.endswith("/"):
-                custom_repo += "/"
-                custom_repo += "%s" % self.custom_repo_hash
-            if self.custom_changeset == "tip":
-                custom_revision = self.custom_branch
-            else:
-                custom_revision = self.custom_changeset
-        else:
-            custom_repo = None
-            custom_revision = None
+        from .node import Node
+        from .service import Service
+        from .pool import Pool
 
         services_description = self.get_services_description()
         #
@@ -180,16 +157,13 @@ class Environment(Model):
                     "noc_user": self.sys_user,
                     "noc_group": self.sys_group,
                     # Repo settings
-                    "noc_repo": repo,
-                    "noc_branch": self.branch,
-                    "noc_changeset": self.changeset,
-                    "noc_revision": revision,
+                    "noc_repo": self.repo,
+                    "noc_version": self.version,
                     # Custom Repo settings
                     "noc_custom_enabled": self.custom_enabled and bool(self.custom_repo),
-                    "noc_custom_repo": custom_repo,
-                    "noc_custom_branch": self.custom_branch,
-                    "noc_custom_changeset": self.custom_changeset,
-                    "noc_custom_revision": custom_revision,
+                    "noc_custom_repo": self.custom_repo,
+                    "noc_custom_version": self.custom_version,
+                    "playbook_link": self.playbook_link,
                     "noc_metrics_collector": self.metrics_collector,
                     # Web settions
                     "noc_web_host": self.web_host,
@@ -433,7 +407,7 @@ class Environment(Model):
 
     @property
     def repo_path(self):
-        return os.path.join("var", "tower", "repo", self.repo_hash)
+        return os.path.abspath(os.path.join("var", "tower", "repo", self.repo_hash))
 
     @property
     def custom_repo_path(self):
@@ -487,7 +461,7 @@ class Environment(Model):
         """
         Generate all necessary ssh keys
         """
-        from pool import Pool
+        from .pool import Pool
         key_types = [("rsa", 4096)]
 
         if not os.path.isdir(self.ssh_keys_path):

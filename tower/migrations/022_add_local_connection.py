@@ -1,5 +1,4 @@
-from peewee import (Model, CharField, TextField, ForeignKeyField,
-                    DateTimeField, BooleanField, IntegerField)
+from peewee import (Model, CharField, BooleanField)
 
 
 def migrate(migrator):
@@ -7,6 +6,7 @@ def migrate(migrator):
         class Meta:
             database = migrator.db
             db_table = "node_type"
+
         name = CharField(max_length=64, unique=True)
         shell_type = CharField(max_length=256, default="sh")
         python_interpreter = CharField(max_length=255,

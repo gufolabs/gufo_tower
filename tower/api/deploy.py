@@ -1,25 +1,28 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Run ansible playbook
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Run ansible playbook
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
-# Python modules
-import logging
-import subprocess
-import os
-import re
+from __future__ import absolute_import
 import datetime
 import hashlib
-# Third-party modules
-import tornado.web
+# Python modules
+import logging
+import os
+import re
+import subprocess
+
 import tornado.ioloop
 import tornado.iostream
 import tornado.process
+# Third-party modules
+import tornado.web
+
 # Tower modules
-from base import BaseHandler
+from .base import BaseHandler
 from tower.models.db import db
 from tower.models.environment import Environment
 from tower.models.joblog import JobLog
@@ -57,7 +60,7 @@ class DeployHandler(BaseHandler):
             raise tornado.web.HTTPError(404)
         try:
             self.deploy_options = set([int(i) for i in self.get_argument("deployment_options").split(",")])
-        except:
+        except:  # noqa
             raise tornado.web.HTTPError(404)
         if self.get_argument("deployment_options"):
             tags = []
@@ -117,7 +120,6 @@ class DeployHandler(BaseHandler):
             "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
             "ANSIBLE_HOST_KEY_CHECKING": "False",
             "ANSIBLE_STDOUT_CALLBACK": "debug",
-            "DEPLOY_HAVE_ARCHIVES": "1",
             "PYTHONUNBUFFERED": "1",
             "TOWER_VERSION": self.version
         })

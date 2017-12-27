@@ -1,5 +1,5 @@
-# Third-party modules
-import yaml
+import os
+import shutil
 
 from peewee import (Model, CharField, TextField, BooleanField)
 
@@ -69,11 +69,45 @@ def migrate(migrator):
         # pool id -> service -> key -> value
         service_config = TextField(default="")
         is_default = BooleanField(default=False)
+        config_order = CharField(default="legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC")
+
+        @property
+        def playbook_path(self):
+            return os.path.join("var", "tower", "playbooks", self.name)
 
     for env in Environment.select():
-        config = yaml.load(env.service_config)
-        if "session_ttl" in config[None]["login"]:
-            if "d" not in str(config[None]["login"]["session_ttl"]):
-                config[None]["login"]["session_ttl"] = str(config[None]["login"]["session_ttl"]) + "d"
-                env.service_config = yaml.dump(config)
-                env.save()
+        if 'https://bitbucket.org/nocproject/noc' in env.repo:
+            env.repo = "https://github.com/nocproject/noc.git"
+        if 'https://bitbucket.com/nocproject/noc' in env.repo:
+            env.repo = "https://github.com/nocproject/noc.git"
+        if 'feature/microservices' in env.branch:
+            env.branch = 'microservices'
+        if 'git_migrate' in env.branch:
+            env.branch = 'microservices'
+        if 'tip' in env.changeset:
+            env.changeset = 'HEAD'
+        env.save()
+
+        # remove current playbook path
+        if os.path.exists(env.playbook_path):
+            shutil.rmtree(env.playbook_path)
+
+    migrator.rename_column(
+        "environment",
+        "branch",
+        "version"
+    )
+
+    migrator.rename_column(
+        "environment",
+        "custom_branch",
+        "custom_version"
+    )
+    migrator.drop_column(
+        "environment",
+        "custom_changeset"
+    ),
+    migrator.drop_column(
+        "environment",
+        "changeset"
+    )

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Service API handler
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Service API handler
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Python modules
 import base64
+
 # Third-party modules
 import tornado.web
+
 # Tower modules
 from tower.models.user import User
 

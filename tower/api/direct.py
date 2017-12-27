@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Service API handler
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Service API handler
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
-## Python modules
+# Python modules
+from __future__ import absolute_import
 import json
-## Third-party modules
-import tornado.web
+
+# Third-party modules
 from tornado.log import app_log
-## Tower modules
-from base import BaseHandler
-from base import SDL, SERVICES
+
+# Tower modules
+from .base import BaseHandler
 
 
 class DirectRequestHandler(BaseHandler):
@@ -55,7 +56,7 @@ class DirectRequestHandler(BaseHandler):
                              r["action"], r["method"], params)
                 try:
                     rd = method(*params)
-                except:
+                except:  # noqa
                     app_log.exception("ERROR:")
                     response += [{
                         "type": "rpc",

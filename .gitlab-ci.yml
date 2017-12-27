@@ -4,19 +4,29 @@ variables:
   S3_BUCKET: tower
 
 stages:
+  - lint
   - build
   - upload
   - build_image
 
+flake8:
+  stage: lint
+  image: registry.getnoc.com/infrastructure/noc-lint:master
+  script:
+    - flake8 tower/
+  tags:
+    - docker
+  except:
+    - master
+    - tags
+
 build_tgz:
   stage: build
-  image: python:2.7.11-alpine
+  image: python:2.7-alpine
   before_script:
     - export VERSION=$(cat VERSION)
     - if [ -d dist ]; then  rm -R dist/*.zip; fi
   script:
-    - apk add --update py-pep8 py-setuptools
-    - pep8 --ignore=E265,E266,E501,E402 .
     - python setup.py sdist --format=zip
   artifacts:
     paths:

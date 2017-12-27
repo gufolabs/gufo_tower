@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## User model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# User model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
+from __future__ import absolute_import
+import bcrypt
 # Third-party modules
 from peewee import Model, CharField, BooleanField, DoesNotExist
-import bcrypt
+
 # Tower modules
-from db import db
+from .db import db
 
 
 class User(Model):

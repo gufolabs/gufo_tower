@@ -111,16 +111,14 @@ var node_form = {
             },
             scroll: false,
             elements: [
-                {   view:"label",
-                    label: "Name of node equals `hostname` of physical node",
-                    align:"left"
-                },
                 {
                     view: "text",
                     name: "name",
                     label: "Name",
                     required: true,
-                    validate: Tower.rules.regex(/^[a-zA-Z][a-zA-Z0-9\-_]*$/)
+                    bottomLabel: "Name of server will be replaced with that name",
+                    invalidMessage: "Cannot be empty, have to be alphanumeric",
+                    validate: Tower.rules.regex(/^[a-zA-Z0-9\.-]*$/)
                 },
                 {
                     view: "checkbox",

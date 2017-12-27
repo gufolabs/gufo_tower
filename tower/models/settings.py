@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Settings model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Settings model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Python modules
+from __future__ import absolute_import
 import base64
 import json
-
 import os
 
 # Third-party modules
 from peewee import Model, CharField, TextField, DoesNotExist
+
 # Tower modules
-from db import db
+from .db import db
 
 
 class Settings(Model):

@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## JobLog model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# JobLog model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Python modules
+from __future__ import absolute_import
 import os
 # Third-party modules
 from peewee import (Model, CharField, TextField, ForeignKeyField,
                     DateTimeField, IntegerField, BooleanField)
 # Tower modules
-from db import db
-from environment import Environment
+from .db import db
+from .environment import Environment
 
 
 class JobLog(Model):

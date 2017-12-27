@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
-##----------------------------------------------------------------------
-## Migration model
-##----------------------------------------------------------------------
-## Copyright (C) 2007-2015 The NOC Project
-## See LICENSE for details
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Migration model
+# ----------------------------------------------------------------------
+# Copyright (C) 2007-2015 The NOC Project
+# See LICENSE for details
+# ----------------------------------------------------------------------
 
 # Python modules
+from __future__ import absolute_import
 import datetime
-import os
 import logging
+import os
+
 # Third-party modules
 from peewee import Model, CharField, DateTimeField
-from playhouse.migrate import SchemaMigrator, migrate
+from playhouse.migrate import SchemaMigrator
+
 # Tower modules
-from db import db
+from .db import db
 
 logger = logging.getLogger(__name__)
 
@@ -70,6 +73,7 @@ class Migration(Model):
 
 class Migrator(object):
     """ Borrowed from peewee_migrations """
+
     def __init__(self, db):
         self.db = db
         self.migrator = SchemaMigrator.from_database(self.db)
