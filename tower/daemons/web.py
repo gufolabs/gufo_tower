@@ -18,7 +18,6 @@ import tornado.web
 
 # Tower modules
 import tower
-from tower.api.jsonrpc import JSONRPCHandler  # noqa
 from tower.api.login import LoginAPI  # noqa
 from tower.api.environment import EnvironmentAPI  # noqa
 from tower.api.datacenter import DatacenterAPI  # noqa
