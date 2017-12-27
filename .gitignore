@@ -12,3 +12,4 @@ bin/*
 share/
 *.pyc
 .idea/
+config.db
