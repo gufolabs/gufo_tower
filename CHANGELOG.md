@@ -16,3 +16,4 @@ Noc Tower moved from mercurial to git.
 ### Bugfixes
 
 * Add missed checks for environmnet name. 
+* Fix Negative error counter

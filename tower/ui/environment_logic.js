@@ -264,8 +264,10 @@ var environment_logic = {
                             break;
                     }
                 }
-                if (t.match(/(...ignoring)/)) {
-                    status.failed--;
+                if (t.match(/(\.\.\.ignoring)/)) {
+                    if (status.failed > 0) {
+                        status.failed--;
+                    }
                 }
                 // Update deploy log
                 ct = t.replace(rx_task, function (x) {
