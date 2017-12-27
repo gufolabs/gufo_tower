@@ -8,6 +8,7 @@
 
 # Python modules
 import os
+
 from setuptools import setup, find_packages, findall
 from setuptools.command.install import install
 
@@ -16,6 +17,7 @@ class TowerInstall(install):
     """
     Create additional directories
     """
+
     def run(self):
         install.run(self)
         # Create directories
@@ -87,6 +89,7 @@ def main():
         ],
         **kwargs
     )
+
 
 if __name__ == "__main__":
     main()
