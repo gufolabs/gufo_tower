@@ -48,8 +48,8 @@ upload:
   tags:
     - docker
   only:
-    - master
-    - tags
+    - master@noc/tower
+    - tags@noc/tower
 
 build_image_debian:
   stage: build
@@ -65,8 +65,8 @@ build_image_debian:
   tags:
     - shell
   only:
-    - master
-    - tags
+    - master@noc/tower
+    - tags@noc/tower
 
 build_image_alpine:
   stage: build
@@ -82,5 +82,5 @@ build_image_alpine:
   tags:
     - shell
   only:
-    - master
-    - tags
+    - master@noc/tower
+    - tags@noc/tower
