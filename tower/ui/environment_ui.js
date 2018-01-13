@@ -328,119 +328,6 @@ var environment_form = {
                 },
                 {
                     view: "fieldset",
-                    label: "PostgreSQL",
-                    body: {
-                        cols: [
-                            {
-                                view: "text",
-                                name: "pg_db",
-                                label: "Database",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                name: "pg_user",
-                                label: "User",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                type: "password",
-                                name: "pg_password",
-                                label: "Password",
-                                value: "noc",
-                                validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/),
-                                required: true
-                            }
-                        ]
-                    }
-                },
-                {
-                    view: "fieldset",
-                    label: "MongoDB",
-                    body: {
-                        cols: [
-                            {
-                                view: "text",
-                                name: "mongo_db",
-                                label: "Database",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "combo",
-                                name: "mongo_engine",
-                                label: "Storage Engine",
-                                minWidth: 250,
-                                options: [
-                                    {id: "wiredTiger", value: "Wired Tiger"},
-                                    {id: "mmapv1", value: "MMAPv1"}
-                                ],
-                                value: "wiredTiger",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                name: "mongo_rs",
-                                label: "Replica Set",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                name: "mongo_user",
-                                label: "User",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                type: "password",
-                                name: "mongo_password",
-                                label: "Password",
-                                value: "noc",
-                                validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/),
-                                inputType: "password",
-                                required: true
-                            }
-                        ]
-                    }
-                },
-                {
-                    view: "fieldset",
-                    label: "InfluxDB",
-                    body: {
-                        cols: [
-                            {
-                                view: "text",
-                                name: "influxdb_db",
-                                label: "Database",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                name: "influxdb_user",
-                                label: "User",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                type: "password",
-                                name: "influxdb_password",
-                                label: "Password",
-                                value: "noc",
-                                validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/),
-                                required: true
-                            }
-                        ]
-                    }
-                },
-                {
-                    view: "fieldset",
                     label: "Additional Infrastructure",
                     body: {
                         cols: [
@@ -449,7 +336,8 @@ var environment_form = {
                                 name: "metrics_collector",
                                 label: "Metrics collector",
                                 value: "",
-                                required: false
+                                required: false,
+                                bottomLabel: "If you have external influxdb to collect metrics from NOC set it there"
                             }
                         ]
                     }

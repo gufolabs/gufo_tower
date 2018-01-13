@@ -10,6 +10,7 @@ from __future__ import absolute_import
 import base64
 import hashlib
 import logging
+from urlparse import urlparse
 # Python
 import os
 import re
@@ -67,31 +68,12 @@ class Environment(Model):
     web_host = CharField(default="127.0.0.1:8000")
     cert = TextField(default="")
     # @todo: Certificate
-    # PostgreSQL settings
-    pg_db = CharField(default="noc")
-    pg_user = CharField(default="noc")
-    pg_password = CharField(default="noc")
-    # MongoDB settins
-    mongo_db = CharField(default="noc")
-    mongo_user = CharField(default="noc")
-    mongo_password = CharField(default="noc")
-    mongo_rs = CharField(default="noc")
-    mongo_engine = CharField(
-        default="wiredTiger",
-        choices=[
-            ("wiredTiger", "WiredTiger"),
-            ("mmapv1", "MMAPv1")
-        ]
-    )
-    # InfluxDB settings
-    influxdb_db = CharField(default="noc")
-    influxdb_user = CharField(default="noc")
-    influxdb_password = CharField(default="noc")
     # json-serialized service configuration
     # pool id -> service -> key -> value
     service_config = TextField(default="")
     is_default = BooleanField(default=False)
-    config_order = CharField(default="legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC")
+    config_order = CharField(
+        default="yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/local.yml,env:///NOC")
     install_method = CharField(default="git")
 
     def list_item(self):
@@ -113,18 +95,7 @@ class Environment(Model):
             "install_method": self.install_method,
             "metrics_collector": self.metrics_collector,
             "web_host": self.web_host,
-            "cert": self.cert,
-            "pg_db": self.pg_db,
-            "pg_user": self.pg_user,
-            "pg_password": self.pg_password,
-            "mongo_db": self.mongo_db,
-            "mongo_user": self.mongo_user,
-            "mongo_password": self.mongo_password,
-            "mongo_rs": self.mongo_rs,
-            "mongo_engine": self.mongo_engine,
-            "influxdb_db": self.influxdb_db,
-            "influxdb_user": self.influxdb_user,
-            "influxdb_password": self.influxdb_password
+            "cert": self.cert
         }
 
     def reference_item(self):
@@ -145,12 +116,13 @@ class Environment(Model):
         services_description = self.get_services_description()
         #
         r = {
-            "nodes": {
-                "hosts": [],
+            "all": {
                 "vars": {
                     "noc_env": self.name,
                     "noc_installation_name": self.installation_name,
                     "config_order": self.config_order,
+                    "installation_type": self.env_type,
+                    "install_method": self.install_method,
                     # System settings
                     "noc_root": self.sys_prefix,
                     "noc_env_type": self.env_type,
@@ -167,30 +139,9 @@ class Environment(Model):
                     "noc_metrics_collector": self.metrics_collector,
                     # Web settions
                     "noc_web_host": self.web_host,
-                    # Postgres settings
-                    "noc_pg_db": self.pg_db,
-                    "noc_pg_user": self.pg_user,
-                    "noc_pg_password": self.pg_password,
-                    # Mongo settings
-                    "noc_mongo_db": self.mongo_db,
-                    "noc_mongo_replicaset": self.mongo_rs,
-                    "noc_mongo_storageengine": self.mongo_engine,
-                    "noc_mongo_user": self.mongo_user,
-                    "noc_mongo_password": self.mongo_password,
-                    "noc_mongo_admin_user": "root",
-                    "noc_mongo_admin_password": self.mongo_password,
-                    # InfluxDB settings
-                    "noc_influxdb_db": self.influxdb_db,
-                    "noc_influxdb_user": self.influxdb_user,
-                    "noc_influxdb_password": self.influxdb_password,
                     # Tower local settings
                     "tower_data": self.data_path,
                     "tower_ssh_keys": self.ssh_keys_path,
-                    # All services
-                    "noc_all_services": [
-                        s["id"] for s in services_description
-                        if s.get("level") != "system"
-                    ],
                     # All pools
                     "noc_all_pools": [{
                         "name": p.name,
@@ -200,6 +151,10 @@ class Environment(Model):
             },
             "_meta": {
                 "hostvars": {}
+            },
+            "nodes": {
+                "vars": {},
+                "hosts": []
             }
         }
         #
@@ -244,25 +199,103 @@ class Environment(Model):
                     "vars": {}
                 }
                 if node.datacenter.proxy:
-                    r[dcn]["vars"]["proxy"] = node.datacenter.proxy
+                    r[dcn]["vars"]["http_proxy"] = node.datacenter.proxy
             r[dcn]["hosts"] += [node.name]
             required_assets = []
             for s in node_services[node.name]:
                 required_assets += all_services[s.service]["required_assets"]
             r["_meta"]["hostvars"][node.name]["required_assets"] = list(set(required_assets))
             # @todo: Import node data from system inventory
-        # Service groups
-        for s in all_services:
-            scfg = {
-                "hosts": service_nodes[s],
-                "vars": {}
-            }
-            if all_services[s]["require_cert"]:
-                (
-                    scfg["vars"]["noc_ssl_key"],
-                    scfg["vars"]["noc_ssl_cert"]
-                ) = self.get_ssl_certificate()
-            r["svc-%s" % s] = scfg
+        sconf = self.get_service_config()
+        for sd in services_description:
+            if sd["name"] not in service_data:
+                continue
+            if sd["level"] in ('system', 'config'):
+                cfg = {
+                    "vars": sconf[None][sd["name"]].copy(),
+                    "children": [
+                        "svc-%s-read" % sd["name"],
+                        "svc-%s-exec" % sd["name"]
+                    ]
+                }
+                if sd['require_cert']:
+                    (
+                        cfg["vars"]["noc_ssl_key"],
+                        cfg["vars"]["noc_ssl_cert"]
+                    ) = self.get_ssl_certificate()
+                sv_exec = {
+                    "hosts": [service.node.name for service in service_data[sd["name"]]]
+                }
+                sv_read = {
+                    "hosts": [node.name for node in nodes]
+                }
+                r["svc-%s" % sd["name"]] = cfg
+                r["svc-%s-read" % sd["name"]] = sv_read
+                r["svc-%s-exec" % sd["name"]] = sv_exec
+                continue
+            for d in service_data[sd["name"]]:
+                pool_name = d.pool.name if d.pool else None
+                pool_id = d.pool.id if d.pool else None
+                sname = "noc-%s" % d.node.name
+                if sname not in r:
+                    r[sname] = {
+                        "vars": {
+                            "noc_services": []
+                        },
+                        "hosts": []
+                    }
+                srv = {
+                    "name": d.service,
+                    "config": sconf[pool_id][d.service].copy(),
+                    "loglevel": d.loglevel,
+                    "pool": pool_name,
+                    "n_instances": d.n_instances,
+                    "n_backup_instances": d.n_backup_instances,
+                    "environment": sd["environment"].copy()
+                }
+                # append pool configuration file to config string
+                if pool_name:
+                    order = self.config_order.split(",")
+                    for conf in order:
+                        if 'yaml://' in conf:
+                            path = urlparse(conf).path
+                            basepath = os.path.dirname(path)
+                            pool_config_path = "yaml://" + str(os.path.join(basepath, 'pool-%s.yml' % pool_name))
+                            order.insert(-1, pool_config_path)
+                            break
+                    pooled_order = ",".join(order)
+                    srv["config_order"] = pooled_order
+                else:
+                    srv["config_order"] = self.config_order
+                if "description" in srv["environment"]:
+                    del srv["environment"]["description"]
+                r[sname]["vars"]["noc_services"].append(srv)
+                if d.node.name not in r[sname]["hosts"]:
+                    r[sname]["hosts"].append(d.node.name)
+
+                # generete noc-srv-
+                gname = "noc-svc-%s" % d.service
+                if gname not in r:
+                    r[gname] = {
+                        "hosts": []
+                    }
+                if d.node.name not in r[gname]["hosts"]:
+                    r[gname]["hosts"].append(d.node.name)
+
+                # handle promote flag
+                # can be system for now. probably have to be dc and node
+                if 'promote' in sd["environment"]:
+                    pcfg = "noc-promote-%s" % d.service
+                    if pcfg not in r:
+                        r[pcfg] = {
+                            "vars": {
+                                d.service: sconf[pool_id][d.service].copy()
+                            },
+                            "hosts": []
+                        }
+                    if sd["environment"]["promote"] == 'system':
+                        r[pcfg]["hosts"] = [node.name for node in nodes]
+
         # Calculate mongo primary and arbiters
         if "mongod" in service_data:
             # Elect master
@@ -294,7 +327,6 @@ class Environment(Model):
                 "hosts": [pri.node.name]
             }
             r["_meta"]["hostvars"][pri.node.name]["has_svc_postgres_master"] = True
-
         # Select consul servers
         if "consul" in service_data:
             # Elect master
@@ -308,76 +340,7 @@ class Environment(Model):
                 "hosts": [pri.node.name]
             }
             r["_meta"]["hostvars"][pri.node.name]["has_svc_consul_server"] = True
-        # service -> offset
-        global_offset = defaultdict(int)
-        for sd in services_description:
-            for d in service_data[sd["name"]]:
-                pool_name = d.pool.name if d.pool else None
         #
-        cfg = {
-            "services": {},
-            "config": {},
-            "pools": {},
-            "nodes": {}
-        }
-        cfg["config"]["noc"] = {
-            "user": self.sys_user,
-            "group": self.sys_group,
-            "installation_name": self.installation_name,
-            "installation_type": self.env_type,
-            # Postgres settings
-            "pg_db": self.pg_db,
-            "pg_user": self.pg_user,
-            "pg_password": self.pg_password,
-            # Mongo settings
-            "mongo_db": self.mongo_db,
-            "mongo_rs": self.mongo_rs,
-            "mongo_user": self.mongo_user,
-            "mongo_password": self.mongo_password,
-            # InfluxDB settings
-            "influx_db": self.influxdb_db,
-            "influx_user": self.influxdb_user,
-            "influx_password": self.influxdb_password,
-        }
-        sconf = self.get_service_config()
-        for sd in services_description:
-            if sd["name"] not in service_data:
-                continue
-            for d in service_data[sd["name"]]:
-                pool_name = d.pool.name if d.pool else None
-                pool_id = d.pool.id if d.pool else None
-                sp = "%s-%s" % (sd["name"], pool_name) if pool_name else sd["name"]
-                if sp not in cfg["services"]:
-                    cfg["services"][sp] = []
-                # Assign ports
-                ncfg = "%s-%s-%s" % (
-                    sd["name"], pool_name or "global", d.node.name
-                )
-                if ncfg not in cfg["config"]:
-                    cfg["config"][ncfg] = {
-                        "loglevel": d.loglevel,
-                        "n_instances": d.n_instances,
-                        "n_backup_instances": d.n_backup_instances
-                    }
-                    global_offset[sp] += d.n_instances
-                    if pool_id in sconf and sd["name"] in sconf[pool_id]:
-                        cfg["config"][ncfg].update(
-                            sconf[pool_id][sd["name"]]
-                        )
-        # Apply pools data
-        with db.atomic():
-            for p in Pool.select().where(Pool.environment == self):
-                cfg["pools"][p.name] = {
-                    "description": p.description
-                }
-        # Apply node data
-        for n in nodes:
-            cfg["nodes"][n.name] = {
-                "address": n.get_address(),
-                "environment": self.name,
-                "datacenter": n.datacenter.name
-            }
-        r["nodes"]["vars"]["noc_config"] = cfg
         return r
 
     @property
@@ -449,11 +412,11 @@ class Environment(Model):
         r = [{
             "id": n,
             "name": n,
-            "description": d["services"][n]["description"],
             "level": d["services"][n]["level"],
             "port": d["services"][n].get("port"),
             "require_cert": bool(d["services"][n].get("require_cert")),
-            "required_assets": d["services"][n].get("required_assets", [])
+            "required_assets": d["services"][n].get("required_assets", []),
+            "environment": d["services"][n]
         } for n in sorted(d["services"])]
         return r
 
