@@ -40,7 +40,7 @@ class ServiceAPI(API):
                     "description": s["description"],
                     "nodes": get_service_nodes(None, s["name"]),
                     "form": s["form"],
-                    "config": get_service_config(None, s["name"])
+                    "config": get_service_config(None, s)
                 }]
                 r[-1]["n_instances"] = sum(n["n_instances"] for n in r[-1]["nodes"])
                 r[-1]["n_backup_instances"] = sum(n["n_backup_instances"] for n in r[-1]["nodes"])
@@ -60,7 +60,7 @@ class ServiceAPI(API):
                     "description": s["description"],
                     "nodes": get_service_nodes(pool.id, s["name"]),
                     "form": s["form"],
-                    "config": get_service_config(pool, s["name"])
+                    "config": get_service_config(pool, s)
                 }]
                 r[-1]["n_instances"] = sum(n["n_instances"] for n in r[-1]["nodes"])
                 r[-1]["n_backup_instances"] = sum(n["n_backup_instances"] for n in r[-1]["nodes"])
@@ -79,9 +79,11 @@ class ServiceAPI(API):
         def get_service_config(pool, service):
             r = {}
             p = pool.id if pool else None
+            if 'cfg' in service:
+                r = service['cfg']
             if p in svc_cfg:
-                if service in svc_cfg[p]:
-                    r = svc_cfg[p][service]
+                if service['name'] in svc_cfg[p]:
+                    r.update(svc_cfg[p][service['name']])
             return r
 
         # Find environment
@@ -102,7 +104,7 @@ class ServiceAPI(API):
                 "loglevel": c.loglevel
             }
         nodes = []
-        for n in Node.select().where(Node.environment == env):
+        for n in Node.select().where(Node.environment == env, Node.is_enabled == True):
             nodes += [{
                 "datacenter": n.datacenter.name,
                 "node_id": n.id,
@@ -140,9 +142,18 @@ class ServiceAPI(API):
                     "name": n,
                     "description": sd["description"],
                     "level": sd["level"],
-                    "form": self.get_service_form(d, n)
+                    "form": self.get_service_form(d, n),
+                    "cfg": self.get_service_config(d,n)
                 }]
         return svc
+
+    def get_service_config(self, cfg, service):
+        r = {}
+        sc = cfg["config"].get(service, {}) or {}
+        for k, v in sc.iteritems():
+            r[k] = v.get("default", None)
+
+        return r
 
     def get_service_form(self, cfg, service):
         r = []
