@@ -55,7 +55,7 @@ class NodeType(Model):
         r = {
             "ansible_ssh_pipelining": self.ssh_pipelining,
             "ansible_connection": self.ansible_connection,
-            "python_interpreter": self.python_interpreter,
+            "ansible_python_interpreter": self.python_interpreter,
             "ansible_shell_type": self.shell_type
         }
         if self.ssh_extra_args:
