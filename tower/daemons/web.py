@@ -89,7 +89,7 @@ def run():
     server = tornado.httpserver.HTTPServer(app, xheaders=True)
     server.bind(port, address=addr)
     server.start(tornado.options.options.children)
-    logger.info("Service is ready")
+    logger.info("Service is ready. Listening on %s:%s", addr, port)
     logging.root.setLevel(logging.DEBUG)
     tornado.ioloop.IOLoop.current().start()
 
