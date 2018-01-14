@@ -17,6 +17,7 @@ import re
 import subprocess
 import tempfile
 from collections import defaultdict
+import glob
 
 import yaml
 # Third-party modules
@@ -362,7 +363,7 @@ class Environment(Model):
     @property
     def services_path(self):
         return os.path.join("var", "tower", "playbooks", self.name,
-                            "ansible", "config", "services.yml")
+                            "ansible", "roles", "*", "meta", "tower.yml")
 
     @property
     def local_repo(self):
@@ -404,20 +405,26 @@ class Environment(Model):
 
     def get_services_description(self):
         import yaml
+        r = []
         # Load services description
-        if not os.path.exists(self.services_path):
-            return []
-        with open(self.services_path) as f:
-            d = yaml.load(f)
-        r = [{
-            "id": n,
-            "name": n,
-            "level": d["services"][n]["level"],
-            "port": d["services"][n].get("port"),
-            "require_cert": bool(d["services"][n].get("require_cert")),
-            "required_assets": d["services"][n].get("required_assets", []),
-            "environment": d["services"][n]
-        } for n in sorted(d["services"])]
+        for path in glob.glob(self.services_path):
+            if not os.path.exists(path):
+                continue
+            with open(path) as f:
+                d = yaml.load(f)
+            if not d:
+                continue
+            if "services" not in d or not d["services"]:
+                continue
+            r += [{
+                "id": n,
+                "name": n,
+                "level": d["services"][n]["level"],
+                "port": d["services"][n].get("port"),
+                "require_cert": bool(d["services"][n].get("require_cert")),
+                "required_assets": d["services"][n].get("required_assets", []),
+                "environment": d["services"][n]
+            } for n in sorted(d["services"])]
         return r
 
     def build_ssh_keys(self):

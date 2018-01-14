@@ -9,6 +9,7 @@
 # Python modules
 from __future__ import absolute_import
 import os
+import glob
 
 # Third-party modules
 import yaml
@@ -132,23 +133,31 @@ class ServiceAPI(API):
 
     def get_available_services(self, env):
         svc = []
-        if not os.path.exists(env.services_path):
-            return svc
-        with open(env.services_path) as f:
-            d = yaml.load(f)
-            for n in sorted(d["services"]):
-                sd = d["services"][n]
-                svc += [{
-                    "name": n,
-                    "description": sd["description"],
-                    "level": sd["level"],
-                    "form": self.get_service_form(d, n),
-                    "cfg": self.get_service_config(d,n)
-                }]
+        for path in glob.glob(env.services_path):
+            if not os.path.exists(path):
+                continue
+            with open(path) as f:
+                d = yaml.load(f)
+                if not d:
+                    continue
+                if "services" not in d or not d["services"]:
+                    continue
+                print d
+                for n in sorted(d["services"]):
+                    sd = d["services"][n]
+                    svc += [{
+                        "name": n,
+                        "description": sd["description"],
+                        "level": sd["level"],
+                        "form": self.get_service_form(d, n),
+                        "cfg": self.get_service_config(d, n)
+                    }]
         return svc
 
     def get_service_config(self, cfg, service):
         r = {}
+        if "config" not in cfg or not cfg["config"]:
+            return r
         sc = cfg["config"].get(service, {}) or {}
         for k, v in sc.iteritems():
             r[k] = v.get("default", None)
@@ -165,6 +174,8 @@ class ServiceAPI(API):
             "autoheight": "true",
             "template": cfg["services"].get(service, {}).get("description", "") or ""
         }
+        if "config" not in cfg or not cfg["config"]:
+            return [help]
         sc = cfg["config"].get(service, {}) or {}
         for k, v in sc.iteritems():
             c = {
