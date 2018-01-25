@@ -67,3 +67,9 @@ class Node(Model):
             return int(self.address.split(":")[1])
         else:
             return 22
+
+    def delete_instance(self, *args, **kwargs):
+        from .service import Service
+        for service in Service.select().where(Service.node == self):
+            service.delete_instance()
+        return super(Node, self).delete_instance(*args, **kwargs)
