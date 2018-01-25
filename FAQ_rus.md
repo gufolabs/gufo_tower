@@ -87,7 +87,7 @@ Debian 9 на текущий момент не поддерживается. Mon
 # su - tower
 % cd /opt/tower/var/tower/playbooks/<NAME>/ansible/
 % export ANSIBLE_SSH_PIPELINING=1 ANSIBLE_HOST_KEY_CHECKING=1 PYTHONUNBUFFERED=1 NOC_ENV=<NAME>
-/opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --tags mercurial;
+/opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --tags get_source;
 ```
 * А так можно выполнить реконфигурацию системы. При этом рестарт системы будет плавным. Выключаться всё на время деплоя не будет. Последним шагом будет сделан плавный рестарт.
 ```
@@ -97,7 +97,7 @@ Debian 9 на текущий момент не поддерживается. Mon
 /opt/tower/bin/ansible-playbook -i /opt/tower/bin/tower-inv  site.yml -f 6  --tags config,sort_restart;
 ```
 В целом это может поломать deploy. Особенно когда происходят изменения в postgres схеме
-Ну и конечно теги можно комбинировать примерно так `--tags config,mercurial` главное - не делать между ними пробелов
+Ну и конечно теги можно комбинировать примерно так `--tags config,get_source` главное - не делать между ними пробелов
 * Бывает что в результате каких то изменений коллекции ломаются. Обычно это выглядит вот так
 ```
 TASK [migrate : Synchronize collections] ***************************************

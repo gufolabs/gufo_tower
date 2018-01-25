@@ -49,7 +49,6 @@ class DeployHandler(BaseHandler):
         self.job_log = None
         self.tags = ""
         self.ansible_verbose = ""
-        self.ansible_check = ""
 
     @tornado.web.authenticated
     @tornado.web.asynchronous
@@ -67,7 +66,7 @@ class DeployHandler(BaseHandler):
             if 1 in self.deploy_options:
                 self.deploy_options -= set(range(90))
             if 10 in self.deploy_options:
-                tags.append("mercurial")
+                tags.append("get_source")
             if 11 in self.deploy_options:
                 tags.append("config")
             if 12 in self.deploy_options:
@@ -120,6 +119,11 @@ class DeployHandler(BaseHandler):
             "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
             "ANSIBLE_HOST_KEY_CHECKING": "False",
             "ANSIBLE_STDOUT_CALLBACK": "debug",
+            "ANSIBLE_ROLES_PATH": ":".join([
+                self.env.roles_prefix,
+                os.path.join(self.env.playbook_path, "system_roles"),
+                os.path.join(self.env.playbook_path, "noc_roles")
+            ]),
             "PYTHONUNBUFFERED": "1",
             "TOWER_VERSION": self.version
         })
@@ -130,8 +134,6 @@ class DeployHandler(BaseHandler):
         ]
         if self.ansible_verbose:
             command.append(self.ansible_verbose)
-        if self.ansible_check:
-            command.append(self.ansible_check)
         if self.tags:
             command.append(self.tags)
         logger.info("Running command %s", command)
@@ -140,15 +142,54 @@ class DeployHandler(BaseHandler):
             env=env,
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
-            cwd=os.path.join(self.env.playbook_path, "ansible"),
+            cwd=os.path.join(self.env.playbook_path),
             close_fds=True
         )
+        self.write_pb()
         self.sp.stdout.set_close_callback(self.on_stream_close)
         self.read_future = self.sp.stdout.read_bytes(
             self.BUFFSIZE,
             streaming_callback=self.on_data,
             partial=True
         )
+
+    def write_pb(self):
+        from tower.models.service import Service
+        order = Service.get_execution_order(self.env)
+        pb_order = []
+        for service in order:
+            pb = self.resolv_pb(service)
+            if not pb:
+                continue
+            pb_order.append(pb)
+        tower_autogen = os.path.abspath(os.path.join(self.env.playbook_path, "tower.yml"))
+        with open(tower_autogen, "w") as f:
+            for line in pb_order:
+                f.write("- import_playbook: %s\n" % line)
+
+
+
+    def resolv_pb(self, service):
+        if os.path.exists(
+                os.path.join(self.env.roles_prefix, service, "service.yml")
+        ):
+            return os.path.join(
+                self.env.roles_prefix, service, "service.yml"
+            )
+        elif os.path.exists(
+                os.path.join(self.env.playbook_path, "system_roles", service, "service.yml")
+        ):
+            return os.path.join(
+                self.env.playbook_path, "system_roles", service, "service.yml"
+            )
+        elif os.path.exists(
+                os.path.join(self.env.playbook_path, "noc_roles", service, "service.yml")
+        ):
+            return os.path.join(
+                self.env.playbook_path, "noc_roles", service, "service.yml"
+            )
+        else:
+            return None
 
     def get_version(self):
         from os.path import realpath, join, dirname, abspath

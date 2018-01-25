@@ -2,6 +2,7 @@ var desktop_logic = {
     init: function () {
         environment_logic.init();
         datacenter_logic.init();
+        role_logic.init();
         pool_logic.init();
         node_logic.init();
         service_logic.init();

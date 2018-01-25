@@ -1,3 +1,22 @@
+## 0.3.0
+
+### Breaking changes
+To reflect changes in infrastructure **mercurial tag renamed to get_source**.
+
+Deploy tree reorganized into smaller pieces. 
+By default only essential roles added to the services tree. If you want to add some extra roles you have to add them to the roles tab.  
+
+### Release Notes
+
+* Added new menu link - Roles. Used to fetch some additional roles
+* Remove data directories created by environment on environment deletion
+* Single server installation works on Debian 8, CentOS 7, RHEL 7, Ubuntu 17.04  
+
+### Bugfixes
+
+* Fix service cleanup on node deletion
+
+
 ## 0.2.0
 
 ### Release Notes

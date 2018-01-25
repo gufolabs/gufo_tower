@@ -36,9 +36,8 @@ var node_list = {
                     id: "is_enabled",
                     header: "Enabled",
                     width: 70,
-                    format: Tower.format.lookup
+                    format: Tower.format.check
                 },
-
                 {
                     id: "node_type",
                     header: "Type",

@@ -88,6 +88,11 @@ var desktop = {
                             id: "settings",
                             value: "Settings",
                             icon: "cog"
+                        },
+                        {
+                            id: "role",
+                            value: "Additional services",
+                            icon: "archive"
                         }
                     ],
                     on: {
@@ -105,6 +110,8 @@ var desktop = {
                         environment_deploy,
                         datacenter_list,
                         datacenter_form,
+                        role_list,
+                        role_form,
                         pool_list,
                         pool_form,
                         node_list,

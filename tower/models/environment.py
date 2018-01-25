@@ -9,6 +9,7 @@
 from __future__ import absolute_import
 import base64
 import hashlib
+import errno
 import logging
 from urlparse import urlparse
 # Python
@@ -18,6 +19,7 @@ import subprocess
 import tempfile
 from collections import defaultdict
 import glob
+import shutil
 
 import yaml
 # Third-party modules
@@ -50,25 +52,10 @@ class Environment(Model):
     )
     # Installation name as shown in interface header
     installation_name = CharField(default="Unconfigured installation")
-    # NOC system user
-    sys_user = CharField(default="noc")
-    # NOC system group
-    sys_group = CharField(default="noc")
-    # Default installation prefix
-    sys_prefix = CharField(default="/opt/noc")
-    # Repo settings
-    repo = CharField(default="https://github.com/nocproject/noc.git")
-    version = CharField(default="microservices")
-    # Custom repo settings
-    custom_enabled = BooleanField(default=True)
-    custom_repo = CharField(default="")
-    custom_version = CharField(default="default")
     playbook_link = CharField(default="git+https://github.com/nocproject/ansible_deploy@microservices")
     metrics_collector = CharField(default="")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
-    cert = TextField(default="")
-    # @todo: Certificate
     # json-serialized service configuration
     # pool id -> service -> key -> value
     service_config = TextField(default="")
@@ -85,18 +72,10 @@ class Environment(Model):
             "env_type": self.env_type,
             "config_order": self.config_order,
             "installation_name": self.installation_name,
-            "sys_user": self.sys_user,
-            "sys_group": self.sys_group,
-            "sys_prefix": self.sys_prefix,
-            "repo": self.repo,
-            "version": self.version,
-            "custom_repo": self.custom_repo,
-            "custom_version": self.custom_version,
             "playbook_link": self.playbook_link,
             "install_method": self.install_method,
             "metrics_collector": self.metrics_collector,
-            "web_host": self.web_host,
-            "cert": self.cert
+            "web_host": self.web_host
         }
 
     def reference_item(self):
@@ -125,17 +104,8 @@ class Environment(Model):
                     "installation_type": self.env_type,
                     "install_method": self.install_method,
                     # System settings
-                    "noc_root": self.sys_prefix,
                     "noc_env_type": self.env_type,
-                    "noc_user": self.sys_user,
-                    "noc_group": self.sys_group,
                     # Repo settings
-                    "noc_repo": self.repo,
-                    "noc_version": self.version,
-                    # Custom Repo settings
-                    "noc_custom_enabled": self.custom_enabled and bool(self.custom_repo),
-                    "noc_custom_repo": self.custom_repo,
-                    "noc_custom_version": self.custom_version,
                     "playbook_link": self.playbook_link,
                     "noc_metrics_collector": self.metrics_collector,
                     # Web settions
@@ -206,10 +176,10 @@ class Environment(Model):
             for s in node_services[node.name]:
                 required_assets += all_services[s.service]["required_assets"]
             r["_meta"]["hostvars"][node.name]["required_assets"] = list(set(required_assets))
-            # @todo: Import node data from system inventory
+
         sconf = self.get_service_config()
         for sd in services_description:
-            if sd["name"] not in service_data:
+            if sd["name"] not in service_data or sd["name"] not in sconf[None]:
                 continue
             if sd["level"] in ('system', 'config'):
                 cfg = {
@@ -223,13 +193,20 @@ class Environment(Model):
                     (
                         cfg["vars"]["noc_ssl_key"],
                         cfg["vars"]["noc_ssl_cert"]
-                    ) = self.get_ssl_certificate()
+                    ) = self.get_ssl_certificate(sd["name"], sd.get("level", None))
                 sv_exec = {
                     "hosts": [service.node.name for service in service_data[sd["name"]]]
                 }
-                sv_read = {
-                    "hosts": [node.name for node in nodes]
-                }
+                if 'promote' in sd['environment']:
+                    if sd["environment"]["promote"] == 'system':
+                        sv_read = {
+                            "hosts": [node.name for node in nodes]
+                        }
+                else:
+                    sv_read = {
+                        "hosts": []
+                    }
+
                 r["svc-%s" % sd["name"]] = cfg
                 r["svc-%s-read" % sd["name"]] = sv_read
                 r["svc-%s-exec" % sd["name"]] = sv_exec
@@ -345,37 +322,34 @@ class Environment(Model):
         return r
 
     @property
-    def repo_hash(self):
-        return base64.b32encode(
-            hashlib.sha1(self.repo).digest()
-        )[:6]
-
-    @property
-    def custom_repo_hash(self):
-        return base64.b32encode(
-            hashlib.sha1(self.custom_repo).digest()
-        )[:6]
-
-    @property
     def playbook_path(self):
-        return os.path.join("var", "tower", "playbooks", self.name)
+        return os.path.abspath(os.path.join("var", "tower", "playbooks", self.name))
+
+    @property
+    def roles_prefix(self):
+        return os.path.abspath(
+            os.path.join("var", "tower", "playbooks", self.name, "additional_roles")
+        )
 
     @property
     def services_path(self):
-        return os.path.join("var", "tower", "playbooks", self.name,
-                            "ansible", "roles", "*", "meta", "tower.yml")
-
-    @property
-    def local_repo(self):
-        return "/hg/%s/" % self.repo_hash
-
-    @property
-    def repo_path(self):
-        return os.path.abspath(os.path.join("var", "tower", "repo", self.repo_hash))
-
-    @property
-    def custom_repo_path(self):
-        return os.path.join("var", "tower", "repo", self.custom_repo_hash)
+        r = glob.glob(
+            os.path.abspath(
+                os.path.join(
+                    "var", "tower", "playbooks",
+                    self.name,
+                    "*_roles",
+                    "*",
+                    "meta", "tower.yml"
+                )
+            )
+        )
+        r.extend(
+            glob.glob(os.path.join(
+                self.roles_prefix, "*", "meta", "tower.yml"
+            ))
+        )
+        return r
 
     @property
     def data_path(self):
@@ -407,7 +381,7 @@ class Environment(Model):
         import yaml
         r = []
         # Load services description
-        for path in glob.glob(self.services_path):
+        for path in self.services_path:
             if not os.path.exists(path):
                 continue
             with open(path) as f:
@@ -419,7 +393,7 @@ class Environment(Model):
             r += [{
                 "id": n,
                 "name": n,
-                "level": d["services"][n]["level"],
+                "level": d["services"][n].get("level", None),
                 "port": d["services"][n].get("port"),
                 "require_cert": bool(d["services"][n].get("require_cert")),
                 "required_assets": d["services"][n].get("required_assets", []),
@@ -467,21 +441,29 @@ class Environment(Model):
         re.MULTILINE | re.DOTALL
     )
 
-    def get_ssl_certificate(self):
+    def get_ssl_certificate(self, service, level):
         """
         Returns public and private keys extracted from
         web server certificate
 
         :return: (private key, public key)
         """
-        if not self.cert:
-            self.generate_certificate()
-        match = self.rx_pk.search(self.cert)
-        if not match:
-            raise ValueError("Invalid SSL certificate")
-        priv_key = self.cert[match.start():match.end()]
-        pub_key = self.cert[:match.start()] + self.cert[match.end():]
-        return priv_key, pub_key
+        config = yaml.load(self.service_config)
+        if 'system' in level:
+            pool = None
+        cert_name = "_".join([service, "cert"])
+        if cert_name not in config[pool][service] or not config[pool][service][cert_name]:
+            key, cert = self.generate_certificate()
+            config[pool][service][cert_name] = "".join([key, cert])
+            self.service_config = yaml.dump(config)
+            self.save()
+        else:
+            match = self.rx_pk.search(config[pool][service][cert_name])
+            if not match:
+                raise ValueError("Invalid SSL certificate")
+            key = config[pool][service][cert_name][match.start():match.end()]
+            cert = config[pool][service][cert_name][:match.start()] + config[pool][service][cert_name][match.end():]
+        return key, cert
 
     def generate_certificate(self):
         """
@@ -498,12 +480,7 @@ class Environment(Model):
             "-days", "3650",
             "-subj", "/CN=%s" % (self.web_host or "noc")
         ])
-        r = [
-            kf.read(),
-            cf.read()
-        ]
-        self.cert = "".join(r)
-        self.save()
+        return kf.read(), cf.read()
 
     def get_service_config(self):
         if self.service_config:
@@ -514,3 +491,34 @@ class Environment(Model):
     def set_service_config(self, config):
         self.service_config = yaml.dump(config)
         self.save()
+
+    def delete_instance(self, *args, **kwargs):
+        from .node import Node
+        from .pool import Pool
+        from .role import Role
+
+        for node in Node.select().where(Node.environment == self):
+            node.delete_instance()
+        for pool in Pool.select().where(Pool.environment == self):
+            pool.delete_instance()
+        for role in Role.select().where(Role.environment == self):
+            role.delete_instance()
+        try:
+            shutil.rmtree(self.roles_prefix)
+            shutil.rmtree(self.playbook_path)
+            shutil.rmtree(self.data_path)
+        except OSError:
+            pass
+        super(Environment, self).delete_instance(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        for path in (self.playbook_path, self.data_path):
+            try:
+                os.mkdir(path)
+            except OSError as exc:
+                if exc.errno == errno.EEXIST and os.path.isdir(path):
+                    pass
+                else:
+                    raise
+
+        super(Environment, self).save(*args, **kwargs)

@@ -49,6 +49,12 @@ Tower = {
             } else {
                 return v.value;
             }
+        },
+        check: function(v) {
+            if (v) {
+                return "<i class='fa fa-check'></i>";
+            }
+            return "<i class='fa fa-times'></i>";
         }
     },
     notification: function (v) {

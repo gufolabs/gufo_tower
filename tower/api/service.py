@@ -30,6 +30,8 @@ class ServiceAPI(API):
         def get_global_config():
             r = []
             for s in svc:
+                if not s["level"]:
+                    continue
                 if s["level"] == "pool":
                     continue
                 r += [{
@@ -39,17 +41,20 @@ class ServiceAPI(API):
                     "value": s["name"],
                     "icon": "cubes" if s["level"] != "system" else "server",
                     "description": s["description"],
+                    "sort_order": s["sort_order"],
                     "nodes": get_service_nodes(None, s["name"]),
                     "form": s["form"],
                     "config": get_service_config(None, s)
                 }]
                 r[-1]["n_instances"] = sum(n["n_instances"] for n in r[-1]["nodes"])
                 r[-1]["n_backup_instances"] = sum(n["n_backup_instances"] for n in r[-1]["nodes"])
-            return r
+            return sorted(r, key=lambda x: (x['sort_order'], x['service']))
 
         def get_pool_config(pool):
             r = []
             for s in svc:
+                if not s["level"]:
+                    continue
                 if s["level"] != "pool":
                     continue
                 r += [{
@@ -59,13 +64,14 @@ class ServiceAPI(API):
                     "value": s["name"],
                     "icon": "cubes",
                     "description": s["description"],
+                    "sort_order": s["sort_order"],
                     "nodes": get_service_nodes(pool.id, s["name"]),
                     "form": s["form"],
                     "config": get_service_config(pool, s)
                 }]
                 r[-1]["n_instances"] = sum(n["n_instances"] for n in r[-1]["nodes"])
                 r[-1]["n_backup_instances"] = sum(n["n_backup_instances"] for n in r[-1]["nodes"])
-            return r
+            return sorted(r, key=lambda x: (x['sort_order'], x['service']))
 
         def get_service_nodes(pool, service):
             r = []
@@ -133,7 +139,7 @@ class ServiceAPI(API):
 
     def get_available_services(self, env):
         svc = []
-        for path in glob.glob(env.services_path):
+        for path in env.services_path:
             if not os.path.exists(path):
                 continue
             with open(path) as f:
@@ -142,13 +148,14 @@ class ServiceAPI(API):
                     continue
                 if "services" not in d or not d["services"]:
                     continue
-                print d
                 for n in sorted(d["services"]):
                     sd = d["services"][n]
                     svc += [{
                         "name": n,
-                        "description": sd["description"],
-                        "level": sd["level"],
+                        "description": sd.get("description", None),
+                        "sort_order": sd.get("sort_order", 1000),
+                        "depends": sd.get("depends", []),
+                        "level": sd.get("level", None),
                         "form": self.get_service_form(d, n),
                         "cfg": self.get_service_config(d, n)
                     }]

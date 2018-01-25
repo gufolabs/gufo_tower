@@ -24,6 +24,7 @@ from tower.models.environment import Environment
 from tower.models.pulllog import PullLog
 # Tower modules
 from .base import API, api
+from tower.models.role import Role
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -54,7 +55,7 @@ class PullAPI(API):
             env = Environment.get(Environment.id == int(env_id))
         except Environment.DoesNotExist:
             return False
-        playbook = os.path.join(env.playbook_path, "ansible", "site.yml")
+        playbook = os.path.join(env.playbook_path, "site.yml")
         return os.path.exists(playbook)
 
     @api
@@ -114,6 +115,15 @@ class PullAPI(API):
         except Exception as e:
             logger.error("Pull error: %s", e)
             status = False
+        try:
+            for role in Role.select().where(Role.environment == env, Role.is_enabled == True):
+                unpack_url(Link(role.link), role.role_path)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error("Roles pull error: %s", e)
+            status = False
+
         with db.atomic():
             job.complete_ts = datetime.datetime.now()
             job.status = status

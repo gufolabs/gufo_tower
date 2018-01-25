@@ -111,9 +111,10 @@ class ModelAPI(API):
             except peewee.DoesNotExist:
                 raise APIError("Does not exists")
             for f in cfg:
-                if f == "id":
+                if f in ("id", "environment"):
                     continue
-                setattr(record, f, cfg[f])
+                if getattr(record, f) != cfg[f]:
+                    setattr(record, f, cfg[f])
             record.save()
         return record.list_item()
 

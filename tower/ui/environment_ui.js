@@ -174,7 +174,26 @@ var environment_form = {
                     view: "fieldset",
                     label: "Generic",
                     body: {
-                        cols: [
+                        rows: [
+                            {
+                                cols: [
+                                    {
+                                        view: "text",
+                                        name: "web_host",
+                                        label: "Host",
+                                        required: true,
+                                        placeholder: "noc.example.com",
+                                        validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/)
+                                    },
+                                    {
+                                        view: "text",
+                                        name: "installation_name",
+                                        label: "Installation Name",
+                                        value: "Unconfigured installation",
+                                        required: true
+                                    }
+                                ]
+                            },
                             {
                                 view: "combo",
                                 name: "env_type",
@@ -198,7 +217,6 @@ var environment_form = {
 
                                 required: true
                             }
-
                         ]
                     }
                 },
@@ -207,42 +225,6 @@ var environment_form = {
                     label: "Repo",
                     body: {
                         rows: [
-                            {
-                                cols: [
-                                    {
-                                        view: "text",
-                                        name: "repo",
-                                        required: true,
-                                        label: "GIT Repo URL"
-                                    },
-                                    {
-                                        view: "text",
-                                        name: "version",
-                                        label: "Version",
-                                        bottomLabel: "Changeset or branch or tag"
-                                    }
-                                ]
-                            },
-                            {
-                                cols: [
-                                    {
-                                        view: "text",
-                                        name: "custom_repo",
-                                        label: "Custom Repo URL",
-                                        required: false,
-                                        bottomLabel: "<strong>Git</strong> by default. Use 'hg+https://' for Mercurial",
-                                        value: ""
-                                    },
-                                    {
-                                        view: "text",
-                                        name: "custom_version",
-                                        label: "Custom Version",
-                                        required: false,
-                                        value: "default",
-                                        bottomLabel: "Changeset or branch or tag"
-                                    }
-                                ]
-                            },
                             {
                                 cols: [
                                     {
@@ -261,67 +243,6 @@ var environment_form = {
                                         value: "git"
                                     }
                                 ]
-                            }
-                        ]
-                    }
-                },
-                {
-                    view: "fieldset",
-                    label: "Web",
-                    body: {
-                        rows: [
-                            {
-                                cols: [
-                                    {
-                                        view: "text",
-                                        name: "web_host",
-                                        label: "Host",
-                                        required: true,
-                                        placeholder: "noc.example.com",
-                                        validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/)
-                                    },
-                                    {
-                                        view: "text",
-                                        name: "installation_name",
-                                        label: "Installation Name",
-                                        value: "Unconfigured installation",
-                                        required: true
-                                    }
-                                ]
-                            },
-                            {
-                                view: "textarea",
-                                name: "cert",
-                                label: "SSL Cert + Key",
-                                placeholder: "Copy&Paste private key, certificate and all intermediate certificates in PEM format"
-                            }]
-                    }
-                },
-                {
-                    view: "fieldset",
-                    label: "System",
-                    body: {
-                        cols: [
-                            {
-                                view: "text",
-                                name: "sys_user",
-                                label: "User",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                name: "sys_group",
-                                label: "Group",
-                                value: "noc",
-                                required: true
-                            },
-                            {
-                                view: "text",
-                                name: "sys_prefix",
-                                label: "Prefix",
-                                value: "/opt/noc",
-                                required: true
                             }
                         ]
                     }

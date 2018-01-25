@@ -27,6 +27,7 @@ from tower.api.node import NodeAPI  # noqa
 from tower.api.service import ServiceAPI  # noqa
 from tower.api.pull import PullAPI  # noqa
 from tower.api.settings import SettingsAPI  # noqa
+from tower.api.role import RoleAPI  # noqa
 from tower.api.deploy import DeployHandler
 from tower.api.jsonrpc import JSONRPCHandler
 from tower.api.repo import RepoHandler

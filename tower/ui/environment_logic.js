@@ -32,14 +32,9 @@ var environment_logic = {
         environment_logic.show_form();
         $$("environment_form").setValues({
             env_type: "eval",
-            repo: "https://github.com/nocproject/noc.git",
-            version: "microservices",
             install_method: "git",
             playbook_link: "git+https://github.com/nocproject/ansible_deploy@microservices",
             installation_name: "Unconfigured installation",
-            sys_user: "noc",
-            sys_group: "noc",
-            sys_prefix: prefix,
             config_order: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/local.yml,env:///NOC",
             name: "NOC"
         });
