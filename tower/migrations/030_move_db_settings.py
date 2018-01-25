@@ -1,3 +1,4 @@
+from __future__ import print_function
 import yaml
 
 from peewee import (Model, CharField, TextField, BooleanField)
@@ -71,7 +72,7 @@ def migrate(migrator):
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
-            print "Migrating %s" % env.name
+            print("Migrating %s" % env.name)
             config = yaml.load(env.service_config)
             if not config:
                 continue
