@@ -1,4 +1,3 @@
-import os
 import yaml
 
 from peewee import (Model, CharField, TextField, BooleanField)

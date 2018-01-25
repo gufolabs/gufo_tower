@@ -8,7 +8,7 @@
 
 # Third-party modules
 from __future__ import absolute_import
-from peewee import Model, CharField, TextField, ForeignKeyField, BooleanField
+from peewee import CharField, TextField, ForeignKeyField, BooleanField
 from playhouse.signals import Model, post_save
 import os
 import shutil
@@ -100,6 +100,7 @@ class Role(Model):
     @property
     def role_path(self):
         return os.path.abspath(os.path.join(self.environment.roles_prefix, self.name.lower()))
+
 
 @post_save(sender=Environment)
 def on_save_environment_new(sender, instance, created):

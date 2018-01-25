@@ -9,7 +9,6 @@
 # Python modules
 from __future__ import absolute_import
 import os
-import glob
 
 # Third-party modules
 import yaml
@@ -111,7 +110,7 @@ class ServiceAPI(API):
                 "loglevel": c.loglevel
             }
         nodes = []
-        for n in Node.select().where(Node.environment == env, Node.is_enabled == True):
+        for n in Node.select().where(Node.environment == env, Node.is_enabled == True):  # noqa
             nodes += [{
                 "datacenter": n.datacenter.name,
                 "node_id": n.id,

@@ -110,7 +110,7 @@ def migrate(migrator):
                 # Look for removed services and enable them as a role
                 srv = Service.select().where(
                     (Service.environment == env) & (
-                            (Service.n_instances > 0) | (Service.n_backup_instances > 0)
+                        (Service.n_instances > 0) | (Service.n_backup_instances > 0)
                     )
                 )
                 if role["name"].lower() in [s.service for s in srv]:
@@ -135,7 +135,7 @@ def migrate(migrator):
                         ).save()
                     config = yaml.load(env.service_config)
                     config[None]["telegraf"] = {
-                            "outpul_plugin": "influx"
-                        }
+                        "telegraf_output_plugin": "influx"
+                    }
                     env.service_config = yaml.dump(config)
                     env.save()

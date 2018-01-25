@@ -116,7 +116,7 @@ class PullAPI(API):
             logger.error("Pull error: %s", e)
             status = False
         try:
-            for role in Role.select().where(Role.environment == env, Role.is_enabled == True):
+            for role in Role.select().where(Role.environment == env, Role.is_enabled == True):  # noqa
                 unpack_url(Link(role.link), role.role_path)
         except KeyboardInterrupt:
             raise

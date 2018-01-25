@@ -8,7 +8,6 @@
 
 from __future__ import absolute_import
 import datetime
-import hashlib
 # Python modules
 import logging
 import os
@@ -166,8 +165,6 @@ class DeployHandler(BaseHandler):
         with open(tower_autogen, "w") as f:
             for line in pb_order:
                 f.write("- import_playbook: %s\n" % line)
-
-
 
     def resolv_pb(self, service):
         if os.path.exists(

@@ -1,6 +1,7 @@
 from peewee import Model, CharField, TextField, ForeignKeyField, BooleanField
 import os
 
+
 def migrate(migrator):
     class Environment(Model):
         class Meta:

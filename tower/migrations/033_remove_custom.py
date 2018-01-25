@@ -1,5 +1,6 @@
-from peewee import Model, CharField, TextField, ForeignKeyField, BooleanField
+from peewee import Model, CharField, TextField, BooleanField
 import yaml
+
 
 def migrate(migrator):
     class Environment(Model):
@@ -21,7 +22,6 @@ def migrate(migrator):
         sys_group = CharField(default="noc")
         # Default installation prefix
         sys_prefix = CharField(default="/opt/noc")
-
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
