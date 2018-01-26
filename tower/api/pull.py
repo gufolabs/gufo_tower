@@ -18,6 +18,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pip.download import unpack_url
 from pip.index import Link
 from pip.vcs import VersionControl
+from tower.api.utils import unpack, check_destination
 
 from tower.models.db import db
 from tower.models.environment import Environment
@@ -29,14 +30,7 @@ from tower.models.role import Role
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
 
-
-def unpack(self, location):
-    """
-    monkey patch pip library cause they always remove downloaded dir. no idea why
-    """
-    self.obtain(location)
-
-
+VersionControl.check_destination = check_destination
 VersionControl.unpack = unpack
 
 
