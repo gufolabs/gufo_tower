@@ -76,6 +76,9 @@ class Service(Model):
         for srv in ServiceAPI(None).get_available_services(env=env):
             if srv["depends"]:
                 deps[srv["name"]].extend([s for s in srv["depends"]])
+                for d in srv["depends"]:
+                    if d not in deps:
+                        deps[d] = []
             else:
                 if srv["name"] not in deps:
                     deps[srv["name"]] = []
