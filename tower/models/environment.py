@@ -311,22 +311,21 @@ class Environment(Model):
             if not os.path.exists(path):
                 continue
             with open(path) as f:
-                d = yaml.load(f)
-            if not d:
+                descr = yaml.load(f)
+            if not descr:
                 continue
-            if "services" not in d or not d["services"]:
+            if "services" not in descr or not descr["services"]:
                 continue
-            for n in sorted(d["services"]):
-                r[n] = {
-                    "id": n,
-                    "name": n,
-                    "level": d["services"][n].get("level", None),
-                    "port": d["services"][n].get("port"),
-                    "require_cert": bool(d["services"][n].get("require_cert")),
-                    "required_assets": d["services"][n].get("required_assets", []),
-                    "depends": d["services"][n].get("depends", None),
-                    "category": d["services"][n].get("category", "external"),
-                    "environment": d["services"][n]
+            for srv in sorted(descr["services"]):
+                r[srv] = {
+                    "id": srv,
+                    "name": srv,
+                    "level": descr["services"][srv].get("level", None),
+                    "require_cert": bool(descr["services"][srv].get("require_cert")),
+                    "required_assets": descr["services"][srv].get("required_assets", []),
+                    "depends": descr["services"][srv].get("depends", None),
+                    "category": descr["services"][srv].get("category", "external"),
+                    "environment": descr["services"][srv]
                 }
         return r
 

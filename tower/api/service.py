@@ -171,6 +171,7 @@ class ServiceAPI(API):
                 continue
             c = {
                 "id": k,
+                "name": "-".join([srv, k]),
                 "label": v.get("label", ""),
                 "value": v.get("default"),
                 "labelPosition": "top",
@@ -179,7 +180,13 @@ class ServiceAPI(API):
             if v["type"] == "str":
                 c["view"] = "text"
             elif v["type"] == "int":
-                c["view"] = "counter"
+                if "min" in v and "max" in v:
+                    c["view"] = "slider"
+                    c["min"] = v["min"]
+                    c["max"] = v["max"]
+                    c["title"] = "#value#"
+                else:
+                    c["view"] = "counter"
             elif v["type"] == "bool":
                 c["view"] = "checkbox"
             elif v["type"] == "password":
@@ -187,8 +194,11 @@ class ServiceAPI(API):
             elif v["type"] == "text":
                 c["view"] = "textarea"
             elif v["type"] == "list":
-                c["view"] = "list"
-                c["data"] = v["options"]
+                c["view"] = "combo"
+                c["options"] = v["options"]
+            elif v["type"] == "multiselect":
+                c["view"] = "multiselect"
+                c["options"] = v["options"]
             description = v.get("description")
             if description:
                 c["bottomLabel"] = description
@@ -319,11 +329,12 @@ class ServiceAPI(API):
             try:
                 r.append({
                     "id": str(srv.id),
-                    "present": srv.present,
+                    "checked": srv.present,
                     "node": srv.node.name,
                     "pool": srv.p,
                     "service": srv.service,
-                    "config": json.loads(srv.config)
+                    "config": json.loads(srv.config),
+                    "form": []
                 })
             except ValueError:
                 pass

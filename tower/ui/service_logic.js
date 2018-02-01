@@ -24,7 +24,7 @@ var service_logic = {
         );
         API.service.get_forms(env_id).then(
             function (result) {
-                // Load service list
+                // Load forms list
                 $$("service_form").parse(result);
             },
             function (err) {
@@ -35,7 +35,7 @@ var service_logic = {
     },
 
     on_column_group: function (obj, common) {
-        var parent = obj.$parent ? obj.$parent.split("$")[1] : "";
+        var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
         var name = this.column;
         if(obj.$group && obj[name]) {
             return common.space(obj, common) +
@@ -49,16 +49,24 @@ var service_logic = {
             return ""
         }
     },
+    node_template: function (obj, common) {
+        this.on_column_group(obj, common, "node")
+    },
+
+    service_template: function (obj, common) {
+        this.on_column_group(obj, common, "service")
+    },
     on_select_service: function () {
-        var data = $$("service_list").getSelectedId(true);
-        var form = $$("service_form");
+        var ids = $$("service_list").getSelectedId(true);
+        var data = $$("service_list").data.pull[ids[0].id];
+        var form_info = $$("service_form")._values;
+        var form = $$("service_form")
         var ci, cv, fname;
-        // Nodes list
-        // Set up form
+        data["form"] = form_info[data.service];
         webix.ui(data.form, form);
         cv = form.getChildViews();
         for (ci in cv) {
-            fname = cv[ci].config.id;
+            fname = cv[ci].id;
             cv[ci].attachEvent(
                 "onChange",
                 (function (name) {

@@ -64,8 +64,7 @@ var service_panel = {
                     },
                     columns:
                         [
-                            {
-                                id: "service",
+                            {id: "service",
                                 header: ["Service", {content: "textFilter"}],
                                 template: function (obj, common) {
                                     var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
@@ -80,11 +79,10 @@ var service_panel = {
                                         return ""
                                     }
                                 },
-                                css: "column_text",
+                                sort: "string",
                                 width: 200
                             },
-                            {
-                                id: "node",
+                            {id: "node",
                                 header: ["Node", {content: "textFilter"}],
                                 template: function (obj, common) {
                                     var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
@@ -99,17 +97,18 @@ var service_panel = {
                                         return ""
                                     }
                                 },
-                                css: "column_text",
                                 sort: "string",
-                                autowidth: true
+                                width: 200
                             },
-                            {id: "present",
+                            {id: "checked",
                                 header: "Enable",
                                 template:"{common.treecheckbox()}",
-                                editor:"checkbox",
                                 width: 80
                             },
-                            {id: "pool", header: ["Pool", {content: "selectFilter"}]}
+                            {id: "pool",
+                                header: ["Pool", {content: "selectFilter"}],
+                                sort: "string",
+                            }
                         ],
                     ready: "service_logic.on_group_table",
                     navigation: true,
@@ -125,7 +124,8 @@ var service_panel = {
                     header: "config",
                     borderless: true,
                     scroll: true,
-                    width: 442,
+                    datafetch: Tower.config.datafetch,
+                    loadahead: Tower.config.loadahead,
                     elements: []
                 }
             ]
