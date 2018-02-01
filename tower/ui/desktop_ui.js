@@ -11,6 +11,17 @@ var desktop = {
                     fillspace: true,
                     elements: [
                         {
+                            view: "button",
+                            type: "icon",
+                            icon: "bars",
+                            width: 37,
+                            align: "left",
+                            css: "app_button",
+                            click: function () {
+                                $$("sidebar").toggle()
+                            }
+                        },
+                        {
                             id: "environment_label",
                             view: "label",
                             label: "NOC Tower: Select environment"
@@ -53,11 +64,10 @@ var desktop = {
             cols: [
                 // Sidebar
                 {
-                    view: "list",
+                    view: "sidebar",
                     id: "sidebar",
                     width: 200,
                     select: true,
-                    scroll: true,
                     data: [
                         {
                             id: "environment",
@@ -85,19 +95,19 @@ var desktop = {
                             icon: "cubes"
                         },
                         {
-                            id: "settings",
-                            value: "Settings",
-                            icon: "cog"
-                        },
-                        {
                             id: "role",
                             value: "Additional services",
                             icon: "archive"
+                        },
+                        {
+                            id: "settings",
+                            value: "Settings",
+                            icon: "cog"
                         }
                     ],
                     on: {
                         onSelectChange: "desktop_logic.on_select_app",
-                        onBeforeSelecT: "desktop_logic.on_before_select_app"
+                        onBeforeSelect: "desktop_logic.on_before_select_app"
                     }
                 },
                 {

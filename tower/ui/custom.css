@@ -41,6 +41,11 @@ div[view_id="sidebar"] .webix_selected {
     font-weight: bold;
 }
 
+.app_button button{
+    padding:0;
+    text-align: center;
+}
+
 .webix_badge {
     background-color: #f1c40f !important;
 }

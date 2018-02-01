@@ -9,6 +9,10 @@
         <!-- Load selected skin -->
         <script src="{{ hashed("/ui/skin.js") }}" type="text/javascript"></script>
         <link rel="stylesheet" href="{{ hashed("/ui/custom.css") }}" type="text/css">
+
+        <link rel="stylesheet" type="text/css" href="{{ hashed("/ui/pkg/webix/sidebar.css") }}">
+        <script type="text/javascript" src="{{ hashed("/ui/pkg/webix/sidebar.js") }}"></script>
+
         <!-- Initialize RPC application -->
         <script src="/api/sdl.js" type="text/javascript"></script>
         {% raw mergecache([
