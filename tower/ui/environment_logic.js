@@ -26,9 +26,6 @@ var environment_logic = {
     },
 
     on_add: function () {
-        var prefix = "/opt/noc";
-        if (navigator.platform.indexOf("FreeBSD") != -1)
-            prefix = "/usr/local/noc";
         environment_logic.show_form();
         $$("environment_form").setValues({
             env_type: "eval",
