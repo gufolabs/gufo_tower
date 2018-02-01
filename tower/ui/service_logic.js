@@ -13,7 +13,7 @@ var service_logic = {
 
     load: function () {
         var env_id = app_logic.current_env.id;
-        API.service.get_config(env_id).then(
+        API.service.get_service_list(env_id).then(
             function (result) {
                 // Load service list
                 $$("service_list").parse(result);
@@ -22,16 +22,38 @@ var service_logic = {
                 Tower.msg.failed("Failed to get config");
             }
         );
+        API.service.get_forms(env_id).then(
+            function (result) {
+                // Load service list
+                $$("service_form").parse(result);
+            },
+            function (err) {
+                Tower.msg.failed("Failed to get forms.");
+            }
+        );
+
     },
 
-    on_select_service: function (ids) {
-        var data = $$("service_list").getItem(ids[0]),
-            nodes_list = $$("service_nodes_list"),
-            form = $$("service_form"),
-            ci, cv, fname;
+    on_column_group: function (obj, common) {
+        var parent = obj.$parent ? obj.$parent.split("$")[1] : "";
+        var name = this.column;
+        if(obj.$group && obj[name]) {
+            return common.space(obj, common) +
+                common.icon(obj, common) +
+                common.treecheckbox(obj, common) +
+                common.folder(obj, common) +
+                "<span>" + obj[name] + "</span>"
+        } else if(parent !== obj[name]) {
+            return obj[name];
+        } else {
+            return ""
+        }
+    },
+    on_select_service: function () {
+        var data = $$("service_list").getSelectedId(true);
+        var form = $$("service_form");
+        var ci, cv, fname;
         // Nodes list
-        nodes_list.clearAll();
-        nodes_list.parse(data.nodes);
         // Set up form
         webix.ui(data.form, form);
         cv = form.getChildViews();
@@ -76,5 +98,60 @@ var service_logic = {
                 Tower.msg.failed("Failed to save");
             }
         );
+    },
+    on_group_table: function (mode) {
+        if (mode == null) {
+            mode = "service"
+        }
+        var grid = $$("service_list");
+        grid.filter("");
+        grid.ungroup();
+
+        if (mode === "node") {
+            grid.moveColumn("node", 0);
+            grid.sort({
+                by: "service",
+                dir: "asc"
+            });
+            grid.group({
+                by: "node",
+                map: {
+                    node: [
+                        function (obj) {
+                            return obj.node
+                        }
+                    ]
+                }
+            });
+        } else if (mode === "service") {
+            grid.moveColumn("service", 0);
+            grid.sort({
+                by: "node",
+                dir: "desc"
+            });
+            grid.group({
+                by: "service",
+                map: {
+                    service: [
+                        function (obj) {
+                            return obj.service
+                        }
+                    ]
+                }
+            });
+        }
+        var i = 0;
+        grid.eachRow(function (id) {
+            i++;
+            if (i === 3) this.open(id);
+        });
+        grid.filterByAll();
+    },
+    on_expand_tree: function (mode) {
+        if (mode)
+            $$("service_list").openAll();
+        else
+            $$("service_list").closeAll();
     }
 };
+

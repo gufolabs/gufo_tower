@@ -115,9 +115,9 @@ var node_form = {
                     name: "name",
                     label: "Name",
                     required: true,
-                    bottomLabel: "Name of server will be replaced with that name",
+                    bottomLabel: "Hostname of server will be replaced with that name. Along with ip address will be placed to /etc/hosts",
                     invalidMessage: "Cannot be empty, have to be alphanumeric",
-                    validate: Tower.rules.regex(/^[a-zA-Z0-9\.-]*$/)
+                    validate: Tower.rules.regex(/^[a-zA-Z0-9\_\.-]*$/)
                 },
                 {
                     view: "checkbox",
@@ -154,10 +154,12 @@ var node_form = {
                             {
                                 view: "text",
                                 name: "address",
-                                label: "Address",
+                                label: "IP Address",
                                 placeholder: "Type node IP address here",
+                                bottomLabel: "Will be placed to /etc/hosts",
                                 required: true,
-                                validate: Tower.rules.regex(/[0-9]+.[0-9]+.[0-9]+.[0-9]+(:[0-9]+)?/)
+                                invalidMessage: "Node address have to be valid address.",
+                                validate: Tower.rules.regex(/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/)
                             },
                             {
                                 view: "text",

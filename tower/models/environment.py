@@ -18,6 +18,7 @@ import tempfile
 from collections import defaultdict
 import glob
 import shutil
+import json
 
 import yaml
 # Third-party modules
@@ -56,7 +57,6 @@ class Environment(Model):
     web_host = CharField(default="127.0.0.1:8000")
     # json-serialized service configuration
     # pool id -> service -> key -> value
-    service_config = TextField(default="")
     is_default = BooleanField(default=False)
     config_order = CharField(
         default="yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/local.yml,env:///NOC")
@@ -91,7 +91,7 @@ class Environment(Model):
         from .service import Service
         from .pool import Pool
 
-        services_description = self.get_services_description()
+        srv_descr = self.get_services_description()
         #
         r = {
             "all": {
@@ -127,20 +127,19 @@ class Environment(Model):
             }
         }
         #
-        active_services = set(s["id"] for s in services_description)
+        active_services = set(s for s in srv_descr)
         service_data = defaultdict(list)
         service_nodes = defaultdict(list)
         node_services = defaultdict(list)
         with db.atomic():
             nodes = list(Node.select().where(Node.environment == self).where(Node.is_enabled))
-            for s in Service.select().where(Service.environment == self):
-                if s.service in active_services and s.n_instances > 0:
+            for s in Service.select().join(Node).where(Service.environment == self, Node.is_enabled == True):  # noqa
+                if s.service in active_services and s.present:
                     service_data[s.service] += [s]
                     node_services[s.node.name] += [s]
         for s in service_data:
             service_nodes[s] = sorted(set(sd.node.name for sd in service_data[s]))
         # Hosts variables
-        all_services = dict((s["id"], s) for s in services_description)
         for node in nodes:
             r["nodes"]["hosts"] += [node.name]
             hostvars = {
@@ -172,151 +171,80 @@ class Environment(Model):
             r[dcn]["hosts"] += [node.name]
             required_assets = []
             for s in node_services[node.name]:
-                required_assets += all_services[s.service]["required_assets"]
+                required_assets += srv_descr[s.service]["required_assets"]
             r["_meta"]["hostvars"][node.name]["required_assets"] = list(set(required_assets))
 
-        sconf = self.get_service_config()
-        for sd in services_description:
-            if sd["name"] not in service_data or sd["name"] not in sconf[None]:
+        for srv in self.get_service_config():
+            if srv.service not in srv_descr:
                 continue
-            if sd["level"] in ('system', 'config'):
-                cfg = {
-                    "vars": sconf[None][sd["name"]].copy(),
+            if srv_descr[srv.service]["level"] == "pool":
+                try:
+                    srv.name = "-".join(["config", srv.service, srv.pool.name])
+                except AttributeError:
+                    continue
+                pool_name = srv.pool.name
+            elif srv_descr[srv.service]["level"] == "global":
+                srv.name = "-".join(["config", srv.service])
+                pool_name = None
+            else:
+                srv.name = "-".join(["config", srv.service])
+                pool_name = "global"
+
+            if srv.name not in r:
+                r[srv.name] = {
+                    "vars": json.loads(srv.config),
                     "children": [
-                        "svc-%s-read" % sd["name"],
-                        "svc-%s-exec" % sd["name"]
+                        "svc-%s-read" % srv.service,
+                        "svc-%s-exec" % srv.service
                     ]
                 }
-                if sd['require_cert']:
-                    (
-                        cfg["vars"]["noc_ssl_key"],
-                        cfg["vars"]["noc_ssl_cert"]
-                    ) = self.get_ssl_certificate(sd["name"], sd.get("level", None))
-                sv_exec = {
-                    "hosts": [service.node.name for service in service_data[sd["name"]]]
-                }
-                if 'promote' in sd['environment']:
-                    if sd["environment"]["promote"] == 'system':
-                        sv_read = {
-                            "hosts": [node.name for node in nodes]
-                        }
-                else:
-                    sv_read = {
-                        "hosts": []
-                    }
+                r["svc-%s-read" % srv.service] = {"hosts": []}
+                r["svc-%s-exec" % srv.service] = {"hosts": [srv.node.name]}
+            else:
+                if srv.node.name not in r["svc-%s-exec" % srv.service]["hosts"]:
+                    r["svc-%s-exec" % srv.service]["hosts"].append(srv.node.name)
 
-                r["svc-%s" % sd["name"]] = cfg
-                r["svc-%s-read" % sd["name"]] = sv_read
-                r["svc-%s-exec" % sd["name"]] = sv_exec
-                continue
-            for d in service_data[sd["name"]]:
-                pool_name = d.pool.name if d.pool else None
-                pool_id = d.pool.id if d.pool else None
-                sname = "noc-%s" % d.node.name
-                if sname not in r:
-                    r[sname] = {
+            if "depends" in srv_descr[srv.service] and srv_descr[srv.service]["depends"]:
+                for dep in srv_descr[srv.service]["depends"]:
+                    if "svc-%s-read" % dep not in r:
+                        r["svc-%s-read" % dep] = {"hosts": []}
+                    else:
+                        if srv.node.name not in r["svc-%s-read" % dep]["hosts"]:
+                            r["svc-%s-read" % dep]["hosts"].append(srv.node.name)
+
+            if "category" in srv_descr[srv.service] and srv_descr[srv.service]["category"] == "internal":
+                node_noc_config = "noc-config-%s" % srv.node.name
+                if node_noc_config not in r:
+                    r[node_noc_config] = {
+                        "hosts": [srv.node.name],
                         "vars": {
                             "noc_services": []
-                        },
-                        "hosts": []
+                        }
                     }
-                srv = {
-                    "name": d.service,
-                    "config": sconf[pool_id][d.service].copy(),
-                    "loglevel": d.loglevel,
+                line = {
+                    "name": srv.service,
+                    "config": json.loads(srv.config),
                     "pool": pool_name,
-                    "n_instances": d.n_instances,
-                    "n_backup_instances": d.n_backup_instances,
-                    "environment": sd["environment"].copy()
+                    "environment": srv_descr[srv.service]["environment"].copy()
                 }
                 # append pool configuration file to config string
-                if pool_name:
+                if srv.pool:
                     order = self.config_order.split(",")
                     for conf in order:
                         if 'yaml://' in conf:
                             path = urlparse(conf).path
                             basepath = os.path.dirname(path)
-                            pool_config_path = "yaml://" + str(os.path.join(basepath, 'pool-%s.yml' % pool_name))
+                            pool_config_path = "yaml://" + str(os.path.join(basepath, 'pool-%s.yml' % srv.pool.name))
                             order.insert(-1, pool_config_path)
                             break
                     pooled_order = ",".join(order)
-                    srv["config_order"] = pooled_order
+                    line["config_order"] = pooled_order
                 else:
-                    srv["config_order"] = self.config_order
-                if "description" in srv["environment"]:
-                    del srv["environment"]["description"]
-                r[sname]["vars"]["noc_services"].append(srv)
-                if d.node.name not in r[sname]["hosts"]:
-                    r[sname]["hosts"].append(d.node.name)
+                    line["config_order"] = self.config_order
+                if "description" in line["environment"]:
+                    del line["environment"]["description"]
+                r[node_noc_config]["vars"]["noc_services"].append(line)
 
-                # generete noc-srv-
-                gname = "noc-svc-%s" % d.service
-                if gname not in r:
-                    r[gname] = {
-                        "hosts": []
-                    }
-                if d.node.name not in r[gname]["hosts"]:
-                    r[gname]["hosts"].append(d.node.name)
-
-                # handle promote flag
-                # can be system for now. probably have to be dc and node
-                if 'promote' in sd["environment"]:
-                    pcfg = "noc-promote-%s" % d.service
-                    if pcfg not in r:
-                        r[pcfg] = {
-                            "vars": {
-                                d.service: sconf[pool_id][d.service].copy()
-                            },
-                            "hosts": []
-                        }
-                    if sd["environment"]["promote"] == 'system':
-                        r[pcfg]["hosts"] = [node.name for node in nodes]
-
-        # Calculate mongo primary and arbiters
-        if "mongod" in service_data:
-            # Elect master
-            # As node with largest n_instances
-            # and lowest address
-            pri = sorted(
-                service_data["mongod"],
-                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.get_address().split(".")]
-            )[0]
-            r["svc-mongod-master"] = {
-                "hosts": [pri.node.name]
-            }
-            r["_meta"]["hostvars"][pri.node.name]["has_svc_mongod_master"] = True
-            # Add arbiter node when necessary
-            r["svc-mongod-arbiter"] = {"hosts": []}
-            if not len(service_data["mongod"]) % 2:
-                r["svc-mongod-arbiter"]["hosts"] = [pri.node.name]
-                r["_meta"]["hostvars"][pri.node.name]["has_svc_mongod_arbiter"] = True
-        # Calculate postgres primary
-        if "postgres" in service_data:
-            # Elect master
-            # As node with largest n_instances
-            # and lowest address
-            pri = sorted(
-                service_data["postgres"],
-                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.get_address().split(".")]
-            )[0]
-            r["svc-postgres-master"] = {
-                "hosts": [pri.node.name]
-            }
-            r["_meta"]["hostvars"][pri.node.name]["has_svc_postgres_master"] = True
-        # Select consul servers
-        if "consul" in service_data:
-            # Elect master
-            # As node with largest n_instances
-            # and lowest address
-            pri = sorted(
-                service_data["consul"],
-                key=lambda ss: [-ss.n_instances] + [int(x) for x in ss.node.get_address().split(".")]
-            )[0]
-            r["svc-consul-server"] = {
-                "hosts": [pri.node.name]
-            }
-            r["_meta"]["hostvars"][pri.node.name]["has_svc_consul_server"] = True
-        #
         return r
 
     @property
@@ -377,7 +305,7 @@ class Environment(Model):
 
     def get_services_description(self):
         import yaml
-        r = []
+        r = {}
         # Load services description
         for path in self.services_path:
             if not os.path.exists(path):
@@ -388,15 +316,18 @@ class Environment(Model):
                 continue
             if "services" not in d or not d["services"]:
                 continue
-            r += [{
-                "id": n,
-                "name": n,
-                "level": d["services"][n].get("level", None),
-                "port": d["services"][n].get("port"),
-                "require_cert": bool(d["services"][n].get("require_cert")),
-                "required_assets": d["services"][n].get("required_assets", []),
-                "environment": d["services"][n]
-            } for n in sorted(d["services"])]
+            for n in sorted(d["services"]):
+                r[n] = {
+                    "id": n,
+                    "name": n,
+                    "level": d["services"][n].get("level", None),
+                    "port": d["services"][n].get("port"),
+                    "require_cert": bool(d["services"][n].get("require_cert")),
+                    "required_assets": d["services"][n].get("required_assets", []),
+                    "depends": d["services"][n].get("depends", None),
+                    "category": d["services"][n].get("category", "external"),
+                    "environment": d["services"][n]
+                }
         return r
 
     def build_ssh_keys(self):
@@ -481,10 +412,15 @@ class Environment(Model):
         return kf.read(), cf.read()
 
     def get_service_config(self):
-        if self.service_config:
-            return yaml.load(self.service_config)
-        else:
-            return {}
+        from .service import Service
+        from .node import Node
+        with db.atomic():
+            r = Service.select().join(Node).where(
+                Service.environment == self,
+                Node.is_enabled == True  # noqa
+            )
+        return r
+
 
     def set_service_config(self, config):
         self.service_config = yaml.dump(config)

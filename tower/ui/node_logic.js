@@ -29,6 +29,7 @@ var node_logic = {
         node_logic.show_form();
         $$("node_form").setValues({
             login_as: "ansible",
+            node_type: 3,
             is_enabled: true
         });
     },

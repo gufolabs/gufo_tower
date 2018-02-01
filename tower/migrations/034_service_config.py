@@ -1,7 +1,7 @@
 from __future__ import print_function
-from peewee import Model, CharField, TextField, BooleanField
+from peewee import Model, CharField, ForeignKeyField, TextField, IntegerField
 import yaml
-
+import json
 
 def migrate(migrator):
     class Environment(Model):
@@ -11,76 +11,62 @@ def migrate(migrator):
 
         name = CharField(unique=True)
         service_config = TextField(default="")
-        cert = TextField(default="")
-        repo = CharField(default="https://github.com/nocproject/noc.git")
-        version = CharField(default="microservices")
-        # Custom repo settings
-        custom_enabled = BooleanField(default=True)
-        custom_repo = CharField(default="")
-        custom_version = CharField(default="default")
-        sys_user = CharField(default="noc")
-        # NOC system group
-        sys_group = CharField(default="noc")
-        # Default installation prefix
-        sys_prefix = CharField(default="/opt/noc")
+
+    class Node(Model):
+        class Meta:
+            database = migrator.db
+            db_table = "node"
+
+        name = CharField()
+        environment = ForeignKeyField(Environment, on_delete="RESTRICT")
+
+    class Pool(Model):
+        class Meta:
+            database = migrator.db
+            db_table = "pool"
+
+        environment = ForeignKeyField(Environment, on_delete="RESTRICT")
+        name = CharField()
+
+    class Service(Model):
+        class Meta:
+            database = migrator.db
+            db_table = "service"
+
+        environment = ForeignKeyField(Environment, on_delete="RESTRICT")
+        service = CharField()
+        config = TextField()
+        pool = ForeignKeyField(Pool, null=True)
+        node = ForeignKeyField(Node)
+        n_instances = IntegerField(default=0)
+        n_backup_instances = IntegerField(default=0)
+
+    migrator.add_column(
+        "service",
+        "config",
+        TextField(default="")
+    )
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
             print("Migrating %s" % env.name)
+            # remove nodes without services
+
             config = yaml.load(env.service_config)
             if not config:
                 continue
-            if env.custom_repo:
-                config[None]["custom"] = {
-                    "link": env.custom_repo or "noc",
-                    "version": env.custom_version or "master",
-                }
-            config[None]["noc"] = {
-                "noc_root": env.sys_prefix or "/opt/noc",
-                "noc_repo": env.repo or "https://github.com/nocproject/noc.git",
-                "noc_version": env.version or "microservices",
-                "noc_user": env.sys_user or "noc",
-                "noc_group": env.sys_group or "noc"
-            }
-            config[None]["nginx"] = {
-                "nginx_cert": env.cert or "",
-            }
-            env.service_config = yaml.dump(config)
-            env.save()
+            # move settings from environment to service
+            for pool in config:
+                for srv in config[pool]:
+                    cfg = config[pool][srv]
+                    q = Service.update(config=json.dumps(cfg)).where(
+                        Service.environment == env.id,
+                        Service.service == srv,
+                        Service.pool == pool
+                    )
+                    q.execute()
 
     migrator.drop_column(
         "environment",
-        "custom_enabled"
-    )
-    migrator.drop_column(
-        "environment",
-        "custom_repo"
-    )
-    migrator.drop_column(
-        "environment",
-        "custom_version"
-    )
-    migrator.drop_column(
-        "environment",
-        "sys_prefix"
-    )
-    migrator.drop_column(
-        "environment",
-        "sys_user"
-    )
-    migrator.drop_column(
-        "environment",
-        "sys_group"
-    )
-    migrator.drop_column(
-        "environment",
-        "repo"
-    )
-    migrator.drop_column(
-        "environment",
-        "version"
-    )
-    migrator.drop_column(
-        "environment",
-        "cert"
+        "service_config"
     )

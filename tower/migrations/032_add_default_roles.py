@@ -139,3 +139,13 @@ def migrate(migrator):
                     }
                     env.service_config = yaml.dump(config)
                     env.save()
+            # for n in Node.select().where(Node.environment == env):
+            #     Service.get_or_create(
+            #         environment=env.id,
+            #         service="noc",
+            #         pool=None,
+            #         node=n.id,
+            #         n_instances=1,
+            #         n_backup_instances=0,
+            #         loglevel="info"
+            #     ).save()

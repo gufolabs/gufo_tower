@@ -12,6 +12,7 @@ import os
 
 # Third-party modules
 import yaml
+import json
 
 # Tower modules
 from .base import API, api, APIError
@@ -40,7 +41,6 @@ class ServiceAPI(API):
                     "value": s["name"],
                     "icon": "cubes" if s["level"] != "system" else "server",
                     "description": s["description"],
-                    "sort_order": s["sort_order"],
                     "nodes": get_service_nodes(None, s["name"]),
                     "form": s["form"],
                     "config": get_service_config(None, s)
@@ -63,7 +63,6 @@ class ServiceAPI(API):
                     "value": s["name"],
                     "icon": "cubes",
                     "description": s["description"],
-                    "sort_order": s["sort_order"],
                     "nodes": get_service_nodes(pool.id, s["name"]),
                     "form": s["form"],
                     "config": get_service_config(pool, s)
@@ -103,7 +102,7 @@ class ServiceAPI(API):
         svc_cfg = env.get_service_config()
         # Load nodes config
         node_cfg = {}  # pool, service, node_id -> config
-        for c in Service.select().where(Service.environment == env):
+        for c in Service.select().join(Node).where(Service.environment == env, Node.is_enabled == True):  # noqa
             node_cfg[c.pool.id if c.pool else None, c.service, c.node_id] = {
                 "n_instances": c.n_instances,
                 "n_backup_instances": c.n_backup_instances,
@@ -121,43 +120,30 @@ class ServiceAPI(API):
             }]
         nodes = sorted(nodes, key=lambda x: (x["datacenter"], x["node"]))
         # Build output list
-        r = [{
-            "id": "pool-global",
-            "value": "Global",
-            "icon": "files-o",
-            "data": get_global_config()
-        }]
+        r = get_global_config()
         for p in Pool.select().where(Pool.environment == env).order_by(Pool.name):
-            r += [{
-                "id": "pool-%d" % p.id,
-                "value": p.name,
-                "icon": "files-o",
-                "data": get_pool_config(p)
-            }]
+            r.extend(get_pool_config(p))
         return r
 
     def get_available_services(self, env):
-        svc = []
+        svc = {}
         for path in env.services_path:
             if not os.path.exists(path):
                 continue
             with open(path) as f:
-                d = yaml.load(f)
-                if not d:
+                descr = yaml.load(f)
+                if not descr:
                     continue
-                if "services" not in d or not d["services"]:
+                if "services" not in descr or not descr["services"]:
                     continue
-                for n in sorted(d["services"]):
-                    sd = d["services"][n]
-                    svc += [{
-                        "name": n,
-                        "description": sd.get("description", None),
-                        "sort_order": sd.get("sort_order", 1000),
-                        "depends": sd.get("depends", []),
-                        "level": sd.get("level", None),
-                        "form": self.get_service_form(d, n),
-                        "cfg": self.get_service_config(d, n)
-                    }]
+                if "forms" not in descr or not descr["forms"]:
+                    continue
+                for srv in sorted(descr["services"]):
+                    svc[srv] = {
+                        "name": srv,
+                        "form": descr["forms"].get(srv, []),
+                        "meta": descr["services"].get(srv, [])
+                    }
         return svc
 
     def get_service_config(self, cfg, service):
@@ -170,7 +156,7 @@ class ServiceAPI(API):
 
         return r
 
-    def get_service_form(self, cfg, service):
+    def get_service_form(self, descr, srv):
         r = []
         help = {
             "id": "help",
@@ -178,18 +164,17 @@ class ServiceAPI(API):
             "view": "template",
             "position": "bottom",
             "autoheight": "true",
-            "template": cfg["services"].get(service, {}).get("description", "") or ""
+            "template": descr.get("description", "")
         }
-        if "config" not in cfg or not cfg["config"]:
-            return [help]
-        sc = cfg["config"].get(service, {}) or {}
-        for k, v in sc.iteritems():
+        for k, v in descr.iteritems():
+            if "description" in k:
+                continue
             c = {
                 "id": k,
                 "label": v.get("label", ""),
                 "value": v.get("default"),
                 "labelPosition": "top",
-                "required": True
+                "required": v.get("required", False)
             }
             if v["type"] == "str":
                 c["view"] = "text"
@@ -201,12 +186,16 @@ class ServiceAPI(API):
                 c["view"] = "password"
             elif v["type"] == "text":
                 c["view"] = "textarea"
+            elif v["type"] == "list":
+                c["view"] = "list"
+                c["data"] = v["options"]
             description = v.get("description")
             if description:
                 c["bottomLabel"] = description
             r += [c]
         r += [help]
         return r
+
 
     @api
     def save_config(self, env_id, config):
@@ -273,3 +262,69 @@ class ServiceAPI(API):
                 loglevel=c["loglevel"]
             ).save()
         return True
+
+    @api
+    def get_forms(self, env):
+        r = {}
+        # Find environment
+        try:
+            env = Environment.get(Environment.id == env)
+        except Environment.DoesNotExist:
+            raise APIError("Environment does not exist")
+        srvs = self.get_available_services(env)
+        for srv in srvs:
+            r[srv] = (self.get_service_form(srvs[srv]["form"], srv))
+        return r
+
+    def init_srv(self, env):
+        av_srv = self.get_available_services(env)
+        nodes = []
+        for n in Node.select().where(Node.environment == env, Node.is_enabled == True):  # noqa
+            nodes += [{
+                "node": n.name,
+                "n_instances": 0,
+                "n_backup_instances": 0,
+                "loglevel": "info"
+            }]
+        nodes = sorted(nodes, key=lambda x: (x["datacenter"], x["node"]))
+        r = [{
+            "id": "pool-global",
+            "value": "Global",
+            "icon": "files-o",
+            "data": get_global_config()
+        }]
+        for p in Pool.select().where(Pool.environment == env).order_by(Pool.name):
+            r += [{
+                "id": "pool-%d" % p.id,
+                "value": p.name,
+                "icon": "files-o",
+                "data": get_pool_config(p)
+            }]
+        return r
+
+    @api
+    def get_service_list(self, env_id):
+        r = []
+        # Find environment
+        try:
+            env = Environment.get(Environment.id == env_id)
+        except Environment.DoesNotExist:
+            raise APIError("Environment does not exist")
+        srv_list = Service.select().join(Node).where(Service.environment == env, Node.is_enabled == True)  # noqa
+        for srv in srv_list:
+            if not srv.pool:
+                srv.p = "global"
+            else:
+                srv.p = srv.pool.name
+            try:
+                r.append({
+                    "id": str(srv.id),
+                    "present": srv.present,
+                    "node": srv.node.name,
+                    "pool": srv.p,
+                    "service": srv.service,
+                    "config": json.loads(srv.config)
+                })
+            except ValueError:
+                pass
+        return r
