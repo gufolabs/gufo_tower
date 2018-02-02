@@ -46,6 +46,11 @@ def migrate(migrator):
         "config",
         TextField(default="")
     )
+    migrator.add_index(
+        "service",
+        ("environment_id", "service", "pool_id", "node_id"),
+        unique=True
+    )
 
     if len(Environment.select()) != 0:
         for env in Environment.select():

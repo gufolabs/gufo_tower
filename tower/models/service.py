@@ -23,6 +23,9 @@ class Service(Model):
     class Meta:
         database = db
         db_table = "service"
+        indexes = (
+            (("environment_id", "service", "pool_id", "node_id"), True),
+        )
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     service = CharField()
