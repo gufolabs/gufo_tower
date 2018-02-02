@@ -62,6 +62,7 @@ var service_logic = {
         var form_info = $$("service_form")._values;
         var form = $$("service_form")
         var ci, cv, fname;
+        if (form_info[data.service] === undefined) return []
         data["form"] = form_info[data.service];
         webix.ui(data.form, form);
         cv = form.getChildViews();
