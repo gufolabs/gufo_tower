@@ -20,7 +20,9 @@ from tower.models.environment import Environment
 from tower.models.node import Node
 from tower.models.pool import Pool
 from tower.models.service import Service
-
+from tower.models.db import db
+import peewee
+from itertools import product
 
 class ServiceAPI(API):
     name = "service"
@@ -148,10 +150,12 @@ class ServiceAPI(API):
 
     def get_service_config(self, cfg, service):
         r = {}
-        if "config" not in cfg or not cfg["config"]:
+        if "form" not in cfg or not cfg["form"]:
             return r
-        sc = cfg["config"].get(service, {}) or {}
+        sc = cfg["form"]
         for k, v in sc.iteritems():
+            if "description" in k:
+                continue
             r[k] = v.get("default", None)
 
         return r
@@ -205,7 +209,6 @@ class ServiceAPI(API):
             r += [c]
         r += [help]
         return r
-
 
     @api
     def save_config(self, env_id, config):
@@ -286,31 +289,24 @@ class ServiceAPI(API):
             r[srv] = (self.get_service_form(srvs[srv]["form"], srv))
         return r
 
-    def init_srv(self, env):
-        av_srv = self.get_available_services(env)
-        nodes = []
-        for n in Node.select().where(Node.environment == env, Node.is_enabled == True):  # noqa
-            nodes += [{
-                "node": n.name,
-                "n_instances": 0,
-                "n_backup_instances": 0,
-                "loglevel": "info"
-            }]
-        nodes = sorted(nodes, key=lambda x: (x["datacenter"], x["node"]))
-        r = [{
-            "id": "pool-global",
-            "value": "Global",
-            "icon": "files-o",
-            "data": get_global_config()
-        }]
-        for p in Pool.select().where(Pool.environment == env).order_by(Pool.name):
-            r += [{
-                "id": "pool-%d" % p.id,
-                "value": p.name,
-                "icon": "files-o",
-                "data": get_pool_config(p)
-            }]
-        return r
+    def init_services(self, env):
+        services = self.get_available_services(env)
+        nodes = [n.id for n in Node.select().where(Node.environment == env, Node.is_enabled == True)]  # noqa
+        pools = [p.id for p in Pool.select().where(Pool.environment == env).order_by(Pool.name)]
+        with db.atomic():
+            for s, n, p in product(services, nodes, pools):
+                try:
+                    Service.get_or_create(
+                        environment=env.id,
+                        service=s,
+                        node=n,
+                        pool=p if services[s]["meta"]["level"] == "pool" else None,
+                        defaults={
+                            "config": json.dumps(self.get_service_config(services[s], s))
+                        }
+                    )
+                except peewee.IntegrityError:
+                    pass
 
     @api
     def get_service_list(self, env_id):
@@ -320,20 +316,23 @@ class ServiceAPI(API):
             env = Environment.get(Environment.id == env_id)
         except Environment.DoesNotExist:
             raise APIError("Environment does not exist")
-        srv_list = Service.select().join(Node).where(Service.environment == env, Node.is_enabled == True)  # noqa
+        #self.init_services(env)
+        nodes = {}
+        for n in Node.select().where(Node.environment == env, Node.is_enabled == True).execute():
+            nodes[n.id] = n.name
+        pools = {None: None}
+        for p in Pool.select().where(Pool.environment == env).execute():
+            pools[p.id] = p.name
+        srv_list = db.execute_sql('SELECT id,service,pool_id,node_id, config, present FROM service WHERE environment_id=?', env_id)
         for srv in srv_list:
-            if not srv.pool:
-                srv.p = "global"
-            else:
-                srv.p = srv.pool.name
             try:
                 r.append({
-                    "id": str(srv.id),
-                    "checked": srv.present,
-                    "node": srv.node.name,
-                    "pool": srv.p,
-                    "service": srv.service,
-                    "config": json.loads(srv.config),
+                    "id": str(srv[0]),
+                    "service": srv[1],
+                    "pool": pools[srv[2]],
+                    "node": nodes[srv[3]],
+                    "config": json.loads(srv[4]),
+                    "checked": srv[5],
                     "form": []
                 })
             except ValueError:
