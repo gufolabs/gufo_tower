@@ -18,7 +18,7 @@ var service_panel = {
                     autowidth: true,
                     value: "Expand All",
                     click: function () {
-                        service_logic.on_expand_tree("true")
+                        service_logic.on_expand_tree(true)
                     }
                 },
                 {
@@ -26,7 +26,7 @@ var service_panel = {
                     autowidth: true,
                     value: "Collapse All",
                     click: function () {
-                        service_logic.on_expand_tree("false")
+                        service_logic.on_expand_tree(false)
                     }
                 },
                 {},
@@ -58,7 +58,10 @@ var service_panel = {
                     select: "row",
                     multiselect: true,
                     on: {
-                        "onSelectChange": "service_logic.on_select_service"
+                        "onSelectChange": "service_logic.on_select_service",
+                        "onAfterLoad": function () {
+                            service_logic.on_group_table("service")
+                        }
                     },
                     columns:
                         [
@@ -79,19 +82,20 @@ var service_panel = {
                                 width: 200
                             },
                             {id: "checked",
-                                header: "Enable",
-                                template:"{common.treecheckbox()}",
-                                width: 80
+                                header: ["Enable", {
+                                    content:"customFilterBool",
+                                    compare: threeStateCompare
+                            }] ,
+                                template:function (obj, common) {
+                                    return service_logic.set_enabled(obj,common)
+                                },
+                                width: 120
                             },
                             {id: "pool",
                                 header: ["Pool", {content: "selectFilter"}],
-                                sort: "string",
-                                editor: "combo"
+                                sort: "string"
                             }
                         ],
-                    ready: function() {
-                        service_logic.on_group_table("service")
-                    },
                     navigation: true,
                     editable: true,
                     editaction: "click",
@@ -101,10 +105,10 @@ var service_panel = {
                 {
                     view: "form",
                     id: "service_form",
-                    collapsed: true,
                     header: "config",
                     borderless: true,
                     scroll: true,
+                    width: 430,
                     datafetch: Tower.config.datafetch,
                     loadahead: Tower.config.loadahead,
                     elements: []

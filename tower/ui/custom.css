@@ -34,20 +34,30 @@ div[view_id="sidebar"] .webix_selected {
     background-color: #3498db;
     color: #ecf0f1;
 }
-.webix_layout_toolbar.webix_toolbar{
+
+.webix_layout_toolbar.webix_toolbar {
     background: #7f8c8d;
 }
+
 .webix_hcell {
     font-weight: bold;
 }
 
-.app_button button{
-    padding:0;
+.app_button button {
+    padding: 0;
     text-align: center;
 }
 
-.webix_badge {
+.mywebix_badge {
     background-color: #f1c40f !important;
+    color: #fff;
+    border-radius: 50%;
+    height: 29px;
+    min-width: 29px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    text-align: center;
+    line-height: 21px;
 }
 
 .webix_message_area {
