@@ -420,7 +420,6 @@ class Environment(Model):
             )
         return r
 
-
     def set_service_config(self, config):
         self.service_config = yaml.dump(config)
         self.save()

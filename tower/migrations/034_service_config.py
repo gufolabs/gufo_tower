@@ -3,6 +3,7 @@ from peewee import Model, CharField, ForeignKeyField, TextField, IntegerField
 import yaml
 import json
 
+
 def migrate(migrator):
     class Environment(Model):
         class Meta:

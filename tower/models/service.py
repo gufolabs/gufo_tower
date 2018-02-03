@@ -10,7 +10,6 @@
 from __future__ import absolute_import
 from peewee import CharField, ForeignKeyField, TextField, BooleanField
 from playhouse.signals import Model
-import json
 
 # Tower modules
 from .db import db

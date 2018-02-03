@@ -177,7 +177,7 @@ class ServiceAPI(API):
 
         # speedup lookup
         nodes = {}
-        for n in Node.select().where(Node.environment == env, Node.is_enabled == True).execute():
+        for n in Node.select().where(Node.environment == env, Node.is_enabled == True).execute():  # noqa
             nodes[n.id] = n.name
         pools = {None: "global"}
         for p in Pool.select().where(Pool.environment == env).execute():
@@ -213,7 +213,7 @@ class ServiceAPI(API):
         """
         # Find environment
         try:
-            env = Environment.get(Environment.id == env_id)
+            Environment.get(Environment.id == env_id)
         except Environment.DoesNotExist:
             raise APIError("Environment does not exist")
         with db.atomic():

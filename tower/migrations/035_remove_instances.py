@@ -1,7 +1,7 @@
 from __future__ import print_function
 from peewee import Model, CharField, ForeignKeyField, TextField, IntegerField, BooleanField
-import yaml
 import json
+
 
 def migrate(migrator):
     class Environment(Model):
