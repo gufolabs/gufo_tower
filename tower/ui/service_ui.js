@@ -65,17 +65,7 @@ var service_panel = {
                             {id: "service",
                                 header: ["Service", {content: "textFilter"}],
                                 template: function (obj, common) {
-                                    var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
-                                    if (obj.$group && obj.service) {
-                                        return common.space(obj, common) +
-                                            common.icon(obj, common) +
-                                            common.folder(obj, common) +
-                                            "<span>" + obj.service + "</span>"
-                                    } else if (parent !== obj.service) {
-                                        return obj.service
-                                    } else {
-                                        return ""
-                                    }
+                                    return service_logic.on_column_group(obj,common,"service")
                                 },
                                 sort: "string",
                                 width: 200
@@ -83,17 +73,7 @@ var service_panel = {
                             {id: "node",
                                 header: ["Node", {content: "textFilter"}],
                                 template: function (obj, common) {
-                                    var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
-                                    if (obj.$group && obj.node) {
-                                        return common.space(obj, common) +
-                                            common.icon(obj, common) +
-                                            common.folder(obj, common) +
-                                            "<span>" + obj.node + "</span>"
-                                    } else if (parent !== obj.node) {
-                                        return obj.node;
-                                    } else {
-                                        return ""
-                                    }
+                                    return service_logic.on_column_group(obj,common,"node")
                                 },
                                 sort: "string",
                                 width: 200
@@ -105,7 +85,8 @@ var service_panel = {
                             },
                             {id: "pool",
                                 header: ["Pool", {content: "selectFilter"}],
-                                sort: "string"
+                                sort: "string",
+                                editor: "combo"
                             }
                         ],
                     ready: function() {

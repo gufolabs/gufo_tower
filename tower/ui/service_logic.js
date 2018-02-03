@@ -34,41 +34,66 @@ var service_logic = {
 
     },
 
-    on_column_group: function (obj, common) {
+    on_column_group: function (obj, common, name) {
         var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
-        var name = this.column;
-        if(obj.$group && obj[name]) {
+        // var name = this.column;
+        if (obj.$group && obj[name]) {
             return common.space(obj, common) +
                 common.icon(obj, common) +
-                common.treecheckbox(obj, common) +
                 common.folder(obj, common) +
                 "<span>" + obj[name] + "</span>"
-        } else if(parent !== obj[name]) {
+        } else if (parent !== obj[name]) {
             return obj[name];
         } else {
             return ""
         }
     },
-    node_template: function (obj, common) {
-        this.on_column_group(obj, common, "node")
-    },
 
-    service_template: function (obj, common) {
-        this.on_column_group(obj, common, "service")
-    },
     on_select_service: function () {
         var ids = $$("service_list").getSelectedId(true);
         var data = $$("service_list").data.pull[ids[0].id];
         var form_info = $$("service_form")._values;
-        var form = $$("service_form")
-        var ci, cv, fname;
-        if (form_info[data.service] === undefined) return []
+        var form = $$("service_form");
+        var cv, fname;
+        if (form_info[data.service] === undefined) return [];
         data["form"] = form_info[data.service];
-        webix.ui(data.form, form);
+        // add button to propagate values to lower tree
+        if (data.$level === 1) {
+            var fm = data.form.map(function (e) {
+                e.value = null;
+                return e;
+            });
+            fm.unshift({
+                view: "button",
+                id: "my_button",
+                value: "Set to all nodes",
+                type: "form",
+                inputWidth: 200,
+                click: function (nv, ov) {
+                    if (this.getFormView().validate()) {
+                        // Dynamically set tree data to leaves
+                        var lines = [];
+                        $$("service_list").data.each(function (v) {
+                            if (v.$parent === ids[0].id) {
+                                lines.push(v);
+                            }
+                        });
+                        lines.forEach(function (line) {
+                            $$("service_list").data.pull[line.id].config[name] = nv;
+                        });
+                    }
+                }
+            });
+            webix.ui(fm, form);
+        }
+        else {
+            webix.ui(data.form, form);
+        }
+
         cv = form.getChildViews();
-        for (ci in cv) {
-            fname = cv[ci]["data"].id;
-            cv[ci].attachEvent(
+        cv.forEach(function (ci) {
+            fname = ci["data"].id;
+            ci.attachEvent(
                 "onChange",
                 (function (name) {
                     return function (nv, ov) {
@@ -79,10 +104,10 @@ var service_logic = {
                     }
                 })(fname)
             );
-            if (data.config[fname]) {
-                cv[ci].setValue(data.config[fname]);
+            if (data.hasOwnProperty('config') && data.config[fname]) {
+                ci.setValue(data.config[fname]);
             }
-        }
+        });
     },
 
     on_save: function () {
