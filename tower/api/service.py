@@ -27,106 +27,6 @@ from itertools import product
 class ServiceAPI(API):
     name = "service"
 
-    @api
-    def get_config(self, env_id):
-        def get_global_config():
-            r = []
-            for s in svc:
-                if not s["level"]:
-                    continue
-                if s["level"] == "pool":
-                    continue
-                r += [{
-                    "id": "pool-global-svc-%s" % s["name"],
-                    "service": s["name"],
-                    "pool": None,
-                    "value": s["name"],
-                    "icon": "cubes" if s["level"] != "system" else "server",
-                    "description": s["description"],
-                    "nodes": get_service_nodes(None, s["name"]),
-                    "form": s["form"],
-                    "config": get_service_config(None, s)
-                }]
-                r[-1]["n_instances"] = sum(n["n_instances"] for n in r[-1]["nodes"])
-                r[-1]["n_backup_instances"] = sum(n["n_backup_instances"] for n in r[-1]["nodes"])
-            return sorted(r, key=lambda x: (x['sort_order'], x['service']))
-
-        def get_pool_config(pool):
-            r = []
-            for s in svc:
-                if not s["level"]:
-                    continue
-                if s["level"] != "pool":
-                    continue
-                r += [{
-                    "id": "pool-%s-svc-%s" % (pool.id, s["name"]),
-                    "service": s["name"],
-                    "pool": pool.id,
-                    "value": s["name"],
-                    "icon": "cubes",
-                    "description": s["description"],
-                    "nodes": get_service_nodes(pool.id, s["name"]),
-                    "form": s["form"],
-                    "config": get_service_config(pool, s)
-                }]
-                r[-1]["n_instances"] = sum(n["n_instances"] for n in r[-1]["nodes"])
-                r[-1]["n_backup_instances"] = sum(n["n_backup_instances"] for n in r[-1]["nodes"])
-            return sorted(r, key=lambda x: (x['sort_order'], x['service']))
-
-        def get_service_nodes(pool, service):
-            r = []
-            for n in nodes:
-                s = n.copy()
-                key = (pool, service, n["node_id"])
-                if key in node_cfg:
-                    s.update(node_cfg[key])
-                r += [s]
-            return r
-
-        def get_service_config(pool, service):
-            r = {}
-            p = pool.id if pool else None
-            if 'cfg' in service:
-                r = service['cfg']
-            if p in svc_cfg:
-                if service['name'] in svc_cfg[p]:
-                    r.update(svc_cfg[p][service['name']])
-            return r
-
-        # Find environment
-        try:
-            env = Environment.get(Environment.id == env_id)
-        except Environment.DoesNotExist:
-            raise APIError("Environment does not exist")
-        # Load available services and descriptions
-        svc = self.get_available_services(env)
-        # Load existing configuration
-        svc_cfg = env.get_service_config()
-        # Load nodes config
-        node_cfg = {}  # pool, service, node_id -> config
-        for c in Service.select().join(Node).where(Service.environment == env, Node.is_enabled == True):  # noqa
-            node_cfg[c.pool.id if c.pool else None, c.service, c.node_id] = {
-                "n_instances": c.n_instances,
-                "n_backup_instances": c.n_backup_instances,
-                "loglevel": c.loglevel
-            }
-        nodes = []
-        for n in Node.select().where(Node.environment == env, Node.is_enabled == True):  # noqa
-            nodes += [{
-                "datacenter": n.datacenter.name,
-                "node_id": n.id,
-                "node": n.name,
-                "n_instances": 0,
-                "n_backup_instances": 0,
-                "loglevel": "info"
-            }]
-        nodes = sorted(nodes, key=lambda x: (x["datacenter"], x["node"]))
-        # Build output list
-        r = get_global_config()
-        for p in Pool.select().where(Pool.environment == env).order_by(Pool.name):
-            r.extend(get_pool_config(p))
-        return r
-
     def get_available_services(self, env):
         svc = {}
         for path in env.services_path:
@@ -144,15 +44,16 @@ class ServiceAPI(API):
                     svc[srv] = {
                         "name": srv,
                         "form": descr["forms"].get(srv, []),
-                        "meta": descr["services"].get(srv, [])
+                        "meta": descr["services"].get(srv, []),
+                        "config": self.get_service_config(descr, srv)
                     }
         return svc
 
     def get_service_config(self, cfg, service):
         r = {}
-        if "form" not in cfg or not cfg["form"]:
+        if "forms" not in cfg or not cfg["forms"]:
             return r
-        sc = cfg["form"]
+        sc = cfg["forms"][service]
         for k, v in sc.iteritems():
             if "description" in k:
                 continue
@@ -208,6 +109,95 @@ class ServiceAPI(API):
                 c["bottomLabel"] = description
             r += [c]
         r += [help]
+        return r
+
+    @api
+    def get_forms(self, env):
+        r = {}
+        # Find environment
+        try:
+            env = Environment.get(Environment.id == env)
+        except Environment.DoesNotExist:
+            raise APIError("Environment does not exist")
+        srvs = self.get_available_services(env)
+        for srv in srvs:
+            r[srv] = (self.get_service_form(srvs[srv]["form"], srv))
+        return r
+
+    def init_services(self, env):
+        """
+        Probably sholud be optimized for much greater lists.
+        Current max at about 10k services.
+        10k services should be enought for all. (c)
+        :param env: environment id
+        :return: filled db
+        """
+        env_id = env.id
+        services = self.get_available_services(env)
+        nodes = [n.id for n in Node.select().where(Node.environment == env, Node.is_enabled == True)]  # noqa
+        pools = [p.id for p in Pool.select().where(Pool.environment == env).order_by(Pool.name)]
+        current_list = db.execute_sql(
+            'SELECT service,node_id,pool_id FROM service WHERE environment_id=?', str(env_id))
+        lines = set()
+        for s, n in product(services, nodes):
+            if services[s]["meta"]["level"] == "pool":
+                for p in pools:
+                    lines.add((s, n, p))
+            else:
+                lines.add((s, n, None))
+
+        for srv in current_list:
+            try:
+                lines.remove((srv[0], srv[1], srv[2]))
+            except ValueError:
+                pass
+        to_insert = []
+        for line in lines:
+            to_insert.append({
+                "environment": env_id,
+                "service": line[0],
+                "node": line[1],
+                "pool": line[2],
+                "config": json.dumps(services[line[0]]["config"])
+            })
+        with db.atomic():
+            for idx in range(0, len(lines), 1000):
+                Service.insert_many(to_insert[idx:idx+1000]).execute()
+
+
+    @api
+    def get_service_list(self, env_id):
+        r = []
+        # Find environment
+        try:
+            env = Environment.get(Environment.id == env_id)
+        except Environment.DoesNotExist:
+            raise APIError("Environment does not exist")
+        self.init_services(env)
+
+        # speedup lookup
+        nodes = {}
+        for n in Node.select().where(Node.environment == env, Node.is_enabled == True).execute():
+            nodes[n.id] = n.name
+        pools = {None: "global"}
+        for p in Pool.select().where(Pool.environment == env).execute():
+            pools[p.id] = p.name
+
+        # speedup orm
+        srv_list = db.execute_sql('SELECT id,service,pool_id,node_id, config, present FROM service WHERE environment_id=?', env_id)
+        for srv in srv_list:
+            try:
+                r.append({
+                    "id": str(srv[0]),
+                    "service": srv[1],
+                    "pool": pools[srv[2]],
+                    "node": nodes[srv[3]],
+                    "config": json.loads(srv[4]),
+                    "checked": srv[5],
+                    "form": []
+                })
+            except ValueError:
+                pass
         return r
 
     @api
@@ -275,66 +265,3 @@ class ServiceAPI(API):
                 loglevel=c["loglevel"]
             ).save()
         return True
-
-    @api
-    def get_forms(self, env):
-        r = {}
-        # Find environment
-        try:
-            env = Environment.get(Environment.id == env)
-        except Environment.DoesNotExist:
-            raise APIError("Environment does not exist")
-        srvs = self.get_available_services(env)
-        for srv in srvs:
-            r[srv] = (self.get_service_form(srvs[srv]["form"], srv))
-        return r
-
-    def init_services(self, env):
-        services = self.get_available_services(env)
-        nodes = [n.id for n in Node.select().where(Node.environment == env, Node.is_enabled == True)]  # noqa
-        pools = [p.id for p in Pool.select().where(Pool.environment == env).order_by(Pool.name)]
-        with db.atomic():
-            for s, n, p in product(services, nodes, pools):
-                try:
-                    Service.get_or_create(
-                        environment=env.id,
-                        service=s,
-                        node=n,
-                        pool=p if services[s]["meta"]["level"] == "pool" else None,
-                        defaults={
-                            "config": json.dumps(self.get_service_config(services[s], s))
-                        }
-                    )
-                except peewee.IntegrityError:
-                    pass
-
-    @api
-    def get_service_list(self, env_id):
-        r = []
-        # Find environment
-        try:
-            env = Environment.get(Environment.id == env_id)
-        except Environment.DoesNotExist:
-            raise APIError("Environment does not exist")
-        #self.init_services(env)
-        nodes = {}
-        for n in Node.select().where(Node.environment == env, Node.is_enabled == True).execute():
-            nodes[n.id] = n.name
-        pools = {None: None}
-        for p in Pool.select().where(Pool.environment == env).execute():
-            pools[p.id] = p.name
-        srv_list = db.execute_sql('SELECT id,service,pool_id,node_id, config, present FROM service WHERE environment_id=?', env_id)
-        for srv in srv_list:
-            try:
-                r.append({
-                    "id": str(srv[0]),
-                    "service": srv[1],
-                    "pool": pools[srv[2]],
-                    "node": nodes[srv[3]],
-                    "config": json.loads(srv[4]),
-                    "checked": srv[5],
-                    "form": []
-                })
-            except ValueError:
-                pass
-        return r
