@@ -21,8 +21,8 @@ from tower.models.node import Node
 from tower.models.pool import Pool
 from tower.models.service import Service
 from tower.models.db import db
-import peewee
 from itertools import product
+from tower.lib.yaml_ordered_dict import OrderedDictYAMLLoader
 
 class ServiceAPI(API):
     name = "service"
@@ -33,7 +33,7 @@ class ServiceAPI(API):
             if not os.path.exists(path):
                 continue
             with open(path) as f:
-                descr = yaml.load(f)
+                descr = yaml.load(f, OrderedDictYAMLLoader)
                 if not descr:
                     continue
                 if "services" not in descr or not descr["services"]:
