@@ -18,7 +18,7 @@ var service_panel = {
                     autowidth: true,
                     value: "Expand All",
                     click: function () {
-                        service_logic.on_expand_tree("true")
+                        service_logic.on_expand_tree(true)
                     }
                 },
                 {
@@ -26,7 +26,7 @@ var service_panel = {
                     autowidth: true,
                     value: "Collapse All",
                     click: function () {
-                        service_logic.on_expand_tree("false")
+                        service_logic.on_expand_tree(false)
                     }
                 },
                 {},
@@ -58,24 +58,17 @@ var service_panel = {
                     select: "row",
                     multiselect: true,
                     on: {
-                        "onSelectChange": "service_logic.on_select_service"
+                        "onSelectChange": "service_logic.on_select_service",
+                        "onAfterLoad": function () {
+                            service_logic.on_group_table("service")
+                        }
                     },
                     columns:
                         [
                             {id: "service",
                                 header: ["Service", {content: "textFilter"}],
                                 template: function (obj, common) {
-                                    var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
-                                    if (obj.$group && obj.service) {
-                                        return common.space(obj, common) +
-                                            common.icon(obj, common) +
-                                            common.folder(obj, common) +
-                                            "<span>" + obj.service + "</span>"
-                                    } else if (parent !== obj.service) {
-                                        return obj.service
-                                    } else {
-                                        return ""
-                                    }
+                                    return service_logic.on_column_group(obj,common,"service")
                                 },
                                 sort: "string",
                                 width: 200
@@ -83,34 +76,26 @@ var service_panel = {
                             {id: "node",
                                 header: ["Node", {content: "textFilter"}],
                                 template: function (obj, common) {
-                                    var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
-                                    if (obj.$group && obj.node) {
-                                        return common.space(obj, common) +
-                                            common.icon(obj, common) +
-                                            common.folder(obj, common) +
-                                            "<span>" + obj.node + "</span>"
-                                    } else if (parent !== obj.node) {
-                                        return obj.node;
-                                    } else {
-                                        return ""
-                                    }
+                                    return service_logic.on_column_group(obj,common,"node")
                                 },
                                 sort: "string",
                                 width: 200
                             },
                             {id: "checked",
-                                header: "Enable",
-                                template:"{common.treecheckbox()}",
-                                width: 80
+                                header: ["Enable", {
+                                    content:"customFilterBool",
+                                    compare: threeStateCompare
+                            }] ,
+                                template:function (obj, common) {
+                                    return service_logic.set_enabled(obj,common)
+                                },
+                                width: 120
                             },
                             {id: "pool",
                                 header: ["Pool", {content: "selectFilter"}],
                                 sort: "string"
                             }
                         ],
-                    ready: function() {
-                        service_logic.on_group_table("service")
-                    },
                     navigation: true,
                     editable: true,
                     editaction: "click",
@@ -120,10 +105,10 @@ var service_panel = {
                 {
                     view: "form",
                     id: "service_form",
-                    collapsed: true,
                     header: "config",
                     borderless: true,
                     scroll: true,
+                    width: 430,
                     datafetch: Tower.config.datafetch,
                     loadahead: Tower.config.loadahead,
                     elements: []

@@ -13,6 +13,7 @@ var service_logic = {
 
     load: function () {
         var env_id = app_logic.current_env.id;
+        $$("service_list").clearAll();
         API.service.get_service_list(env_id).then(
             function (result) {
                 // Load service list
@@ -33,38 +34,96 @@ var service_logic = {
         );
 
     },
+    set_enabled: function (obj, common) {
+        if (obj.hasOwnProperty('config') && obj['config'].hasOwnProperty('backup_power')) {
+            return common.treecheckbox(obj, common) +
+                common.space(obj, common) +
+                '<span class="mywebix_badge">' +
+                obj.config.power +
+                "</span>" +
+                '<span class="mywebix_badge" style="background-color: green !important;">' +
+                obj.config.backup_power +
+                "</span>"
+        }
+        else if (obj.hasOwnProperty('config') && obj['config'].hasOwnProperty('power')) {
+            return common.treecheckbox(obj, common) +
+                common.space(obj, common) +
+                '<span class="mywebix_badge">' +
+                obj.config.power +
+                "</span>"
+        }
+        else {
+            return common.treecheckbox(obj, common)
+        }
+    },
 
-    on_column_group: function (obj, common) {
+    on_column_group: function (obj, common, name) {
         var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
-        var name = this.column;
-        if(obj.$group && obj[name]) {
+        // var name = this.column;
+        if (obj.$group && obj[name]) {
             return common.space(obj, common) +
                 common.icon(obj, common) +
-                common.treecheckbox(obj, common) +
                 common.folder(obj, common) +
                 "<span>" + obj[name] + "</span>"
-        } else if(parent !== obj[name]) {
+        } else if (parent !== obj[name]) {
             return obj[name];
         } else {
             return ""
         }
     },
-    node_template: function (obj, common) {
-        this.on_column_group(obj, common, "node")
-    },
 
-    service_template: function (obj, common) {
-        this.on_column_group(obj, common, "service")
-    },
     on_select_service: function () {
         var ids = $$("service_list").getSelectedId(true);
+        if (ids.length === 0) {
+            return []
+        }
         var data = $$("service_list").data.pull[ids[0].id];
         var form_info = $$("service_form")._values;
-        var form = $$("service_form")
+        var form = $$("service_form");
         var ci, cv, fname;
-        if (form_info[data.service] === undefined) return []
+        if (form_info[data.service] === undefined) return [];
         data["form"] = form_info[data.service];
-        webix.ui(data.form, form);
+        // add button to propagate values to lower tree
+        if (data.$level === 1) {
+            var fm = data.form.map(function (e) {
+                e.value = null;
+                return e;
+            });
+            fm.unshift({
+                view: "button",
+                id: "my_button",
+                value: "Set to all nodes",
+                type: "form",
+                inputWidth: 200,
+                click: function (nv, ov) {
+                    if (this.getFormView().getDirtyValues()) {
+                        // Dynamically set tree data to leaves
+                        var lines = [],
+                            values = this.getFormView().getDirtyValues();
+                        $$("service_list").data.each(function (v) {
+                            if (v.$parent === ids[0].id) {
+                                lines.push(v);
+                            }
+                        });
+                        lines.forEach(function (line) {
+                            // sorry for that.
+                            for (var key in values) {
+                                nm = key.split("-")[1];
+                                val = values[key];
+                                $$("service_list").data.pull[line.id].config[nm] = val;
+                            }
+                            ;
+                        });
+                        $$("service_list").refresh();
+                    }
+                }
+            });
+            webix.ui(fm, form);
+        }
+        else {
+            webix.ui(data.form, form);
+        }
+
         cv = form.getChildViews();
         for (ci in cv) {
             fname = cv[ci]["data"].id;
@@ -74,12 +133,15 @@ var service_logic = {
                     return function (nv, ov) {
                         if (this.validate()) {
                             // Dynamically set tree data
-                            data.config[name] = nv;
+                            if (data.hasOwnProperty('config')) {
+                                data.config[name] = nv;
+                                $$("service_list").refresh();
+                            }
                         }
                     }
                 })(fname)
             );
-            if (data.config[fname]) {
+            if (data.hasOwnProperty('config') && data.config[fname]) {
                 cv[ci].setValue(data.config[fname]);
             }
         }
@@ -156,5 +218,6 @@ var service_logic = {
         else
             $$("service_list").closeAll();
     }
-};
+}
+;
 

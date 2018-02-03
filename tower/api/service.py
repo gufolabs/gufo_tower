@@ -100,7 +100,10 @@ class ServiceAPI(API):
             elif v["type"] == "text":
                 c["view"] = "textarea"
             elif v["type"] == "list":
-                c["view"] = "combo"
+                if len(v["options"]) < 5:
+                    c["view"] = "segmented"
+                else:
+                    c["view"] = "combo"
                 c["options"] = v["options"]
             elif v["type"] == "multiselect":
                 c["view"] = "multiselect"
