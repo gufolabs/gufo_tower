@@ -67,7 +67,7 @@ var service_logic = {
         webix.ui(data.form, form);
         cv = form.getChildViews();
         for (ci in cv) {
-            fname = cv[ci].id;
+            fname = cv[ci]["data"].id;
             cv[ci].attachEvent(
                 "onChange",
                 (function (name) {
@@ -89,14 +89,13 @@ var service_logic = {
         var r = [],
             env_id = app_logic.current_env.id;
         $$("service_list").data.each(function (v) {
-            if (!v.nodes) {
+            if (!v.config) {
                 return;
             }
             r.push({
-                service: v.service,
-                pool: v.pool,
-                nodes: v.nodes,
-                config: v.config
+                config: v.config,
+                present: v.checked,
+                id: v.id
             });
         });
         API.service.save_config(env_id, r).then(
@@ -119,7 +118,7 @@ var service_logic = {
         if (mode === "node") {
             grid.moveColumn("node", 0);
             grid.sort({
-                by: "service",
+                by: "node",
                 dir: "asc"
             });
             grid.group({
@@ -135,8 +134,8 @@ var service_logic = {
         } else if (mode === "service") {
             grid.moveColumn("service", 0);
             grid.sort({
-                by: "node",
-                dir: "desc"
+                by: "service",
+                dir: "asc"
             });
             grid.group({
                 by: "service",
@@ -149,11 +148,6 @@ var service_logic = {
                 }
             });
         }
-        var i = 0;
-        grid.eachRow(function (id) {
-            i++;
-            if (i === 3) this.open(id);
-        });
         grid.filterByAll();
     },
     on_expand_tree: function (mode) {

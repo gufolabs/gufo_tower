@@ -24,6 +24,7 @@ from tower.models.db import db
 from itertools import product
 from tower.lib.yaml_ordered_dict import OrderedDictYAMLLoader
 
+
 class ServiceAPI(API):
     name = "service"
 
@@ -149,7 +150,7 @@ class ServiceAPI(API):
         for srv in current_list:
             try:
                 lines.remove((srv[0], srv[1], srv[2]))
-            except ValueError:
+            except (ValueError, KeyError):
                 pass
         to_insert = []
         for line in lines:
@@ -162,8 +163,7 @@ class ServiceAPI(API):
             })
         with db.atomic():
             for idx in range(0, len(lines), 1000):
-                Service.insert_many(to_insert[idx:idx+1000]).execute()
-
+                Service.insert_many(to_insert[idx:idx + 1000]).execute()
 
     @api
     def get_service_list(self, env_id):
@@ -184,7 +184,9 @@ class ServiceAPI(API):
             pools[p.id] = p.name
 
         # speedup orm
-        srv_list = db.execute_sql('SELECT id,service,pool_id,node_id, config, present FROM service WHERE environment_id=?', env_id)
+        srv_list = db.execute_sql(
+            'SELECT id,service,pool_id,node_id, config, present FROM service WHERE environment_id=? ORDER BY service',
+            env_id)
         for srv in srv_list:
             try:
                 r.append({
@@ -193,7 +195,7 @@ class ServiceAPI(API):
                     "pool": pools[srv[2]],
                     "node": nodes[srv[3]],
                     "config": json.loads(srv[4]),
-                    "checked": srv[5],
+                    "checked": bool(srv[5]),
                     "form": []
                 })
             except ValueError:
@@ -214,54 +216,12 @@ class ServiceAPI(API):
             env = Environment.get(Environment.id == env_id)
         except Environment.DoesNotExist:
             raise APIError("Environment does not exist")
-        # Build environment config
-        ecfg = {}  # pool id -> service -> key -> value
-        ncfg = {}  # pool id, service, node id  -> data
-        for cfg in config:
-            # Create pool level
-            if cfg["pool"] not in ecfg:
-                ecfg[cfg["pool"]] = {}
-            # Create service level
-            if cfg["service"] not in ecfg[cfg["pool"]]:
-                ecfg[cfg["pool"]][cfg["service"]] = {}
-            # Write key
-            for k, v in cfg["config"].iteritems():
-                ecfg[cfg["pool"]][cfg["service"]][k] = v
-            # Process nodes
-            for n in cfg["nodes"]:
-                nn = {
-                    "service": cfg["service"],
-                    "pool": cfg["pool"]
-                }
-                nn.update(n)
-                ncfg[cfg["pool"], cfg["service"], n["node_id"]] = nn
-        env.set_service_config(ecfg)
-        # Apply nodes config
-        for s in Service.select().where(Service.environment == env):
-            pool = s.pool.id if s.pool else None
-            c = ncfg.get((pool, s.service, s.node.id))
-            if c:
-                if c["n_instances"] != s.n_instances \
-                        or c["loglevel"] != s.loglevel \
-                        or c["n_backup_instances"] != s.n_backup_instances:
-                    # Changed
-                    s.n_instances = c["n_instances"]
-                    s.n_backup_instances = c["n_backup_instances"]
-                    s.loglevel = c["loglevel"]
-                    s.save()
-                del ncfg[pool, s.service, s.node.id]
-            else:
-                # Deleted
-                s.delete()
-        # Create new records
-        for c in ncfg.itervalues():
-            Service(
-                environment=env,
-                pool=c["pool"],
-                service=c["service"],
-                node=c["node_id"],
-                n_instances=c["n_instances"],
-                n_backup_instances=c["n_backup_instances"],
-                loglevel=c["loglevel"]
-            ).save()
+        with db.atomic():
+            for cfg in config:
+                q = Service.update(
+                    config=json.dumps(cfg["config"]),
+                    present=bool(cfg["present"])
+                ).where(Service.id == cfg["id"])
+                q.execute()
+
         return True

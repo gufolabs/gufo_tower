@@ -49,8 +49,6 @@ var service_panel = {
             ]
         },
         {
-            view: "accordion",
-            multi: true,
             cols: [
                 {
                     view: "treetable",
@@ -107,10 +105,12 @@ var service_panel = {
                             },
                             {id: "pool",
                                 header: ["Pool", {content: "selectFilter"}],
-                                sort: "string",
+                                sort: "string"
                             }
                         ],
-                    ready: "service_logic.on_group_table",
+                    ready: function() {
+                        service_logic.on_group_table("service")
+                    },
                     navigation: true,
                     editable: true,
                     editaction: "click",
