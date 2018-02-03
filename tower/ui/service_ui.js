@@ -11,119 +11,121 @@ var service_panel = {
                     label: "Save",
                     autowidth: true,
                     click: "service_logic.on_save"
+                },
+                {},
+                {
+                    view: "button",
+                    autowidth: true,
+                    value: "Expand All",
+                    click: function () {
+                        service_logic.on_expand_tree("true")
+                    }
+                },
+                {
+                    view: "button",
+                    autowidth: true,
+                    value: "Collapse All",
+                    click: function () {
+                        service_logic.on_expand_tree("false")
+                    }
+                },
+                {},
+                {
+                    view: "button",
+                    autowidth: true,
+                    value: "Group by Node",
+                    click: function () {
+                        service_logic.on_group_table("node")
+                    }
+                },
+                {
+                    view: "button",
+                    autowidth: true,
+                    value: "Group by Service",
+                    click: function () {
+                        service_logic.on_group_table("service")
+                    }
                 }
             ]
         },
         {
             cols: [
                 {
-                    view: "grouplist",
+                    view: "treetable",
+                    collapsed: false,
                     id: "service_list",
-                    width: 180,
-                    scroll: true,
-                    select: true,
-                    navigation: true,
-                    templateItem: "<i class='fa fa-#icon#'></i> #value# <span class='webix_badge' style='background-color: green !important;'>#n_backup_instances#</span><span class='webix_badge'>#n_instances#</span>",
+                    threeState: true,
+                    select: "row",
+                    multiselect: true,
                     on: {
                         "onSelectChange": "service_logic.on_select_service"
-                    }
-                },
-                {
-                    view: "datatable",
-                    id: "service_nodes_list",
-                    select: "row",
+                    },
+                    columns:
+                        [
+                            {id: "service",
+                                header: ["Service", {content: "textFilter"}],
+                                template: function (obj, common) {
+                                    var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
+                                    if (obj.$group && obj.service) {
+                                        return common.space(obj, common) +
+                                            common.icon(obj, common) +
+                                            common.folder(obj, common) +
+                                            "<span>" + obj.service + "</span>"
+                                    } else if (parent !== obj.service) {
+                                        return obj.service
+                                    } else {
+                                        return ""
+                                    }
+                                },
+                                sort: "string",
+                                width: 200
+                            },
+                            {id: "node",
+                                header: ["Node", {content: "textFilter"}],
+                                template: function (obj, common) {
+                                    var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
+                                    if (obj.$group && obj.node) {
+                                        return common.space(obj, common) +
+                                            common.icon(obj, common) +
+                                            common.folder(obj, common) +
+                                            "<span>" + obj.node + "</span>"
+                                    } else if (parent !== obj.node) {
+                                        return obj.node;
+                                    } else {
+                                        return ""
+                                    }
+                                },
+                                sort: "string",
+                                width: 200
+                            },
+                            {id: "checked",
+                                header: "Enable",
+                                template:"{common.treecheckbox()}",
+                                width: 80
+                            },
+                            {id: "pool",
+                                header: ["Pool", {content: "selectFilter"}],
+                                sort: "string"
+                            }
+                        ],
+                    ready: function() {
+                        service_logic.on_group_table("service")
+                    },
+                    navigation: true,
                     editable: true,
-                    fillspace: true,
-                    scroll: true,
-                    width: 400,
-                    columns: [
-                        {
-                            id: "datacenter",
-                            header: "Datacenter",
-                            width: 100
-                        },
-                        {
-                            id: "node",
-                            header: "Node",
-                            width: 100
-                        },
-                        {
-                            id: "n_instances",
-                            header: "Instances",
-                            editor: "text",
-                            format: function (value) {
-                                if (typeof value === "string") {
-                                    value = parseInt(value);
-                                }
-                                switch (value) {
-                                    case 0:
-                                        return "<i class='fa fa-times'></i>";
-                                    case 1:
-                                        return "<i class='fa fa-check'></i>";
-                                    default:
-                                        return value;
-                                }
-                            },
-                            width: 100
-                        },
-                        {
-                            id: "n_backup_instances",
-                            header: "Backup",
-                            editor: "text",
-                            format: function (value) {
-                                if (typeof value === "string") {
-                                    value = parseInt(value);
-                                }
-                                switch (value) {
-                                    case 0:
-                                        return "<i class='fa fa-times'></i>";
-                                    case 1:
-                                        return "<i class='fa fa-check'></i>";
-                                    default:
-                                        return value;
-                                }
-                            },
-                            width: 100
-                        },
-                        {
-                            id: "loglevel",
-                            header: "Loglevel",
-                            width: 100,
-                            editor: "select",
-                            options: [
-                                {
-                                    id: "none",
-                                    value: "Disabled"
-                                },
-                                {
-                                    id: "debug",
-                                    value: "Debug"
-                                },
-                                {
-                                    id: "info",
-                                    value: "Info"
-                                },
-                                {
-                                    id: "warning",
-                                    value: "Warning"
-                                },
-                                {
-                                    id: "error",
-                                    value: "Error"
-                                },
-                                {
-                                    id: "critical",
-                                    value: "Critical"
-                                }
-                            ]
-                        }
-                    ]
+                    editaction: "click",
+                    datafetch: Tower.config.datafetch,
+                    loadahead: Tower.config.loadahead
                 },
                 {
                     view: "form",
                     id: "service_form",
+                    collapsed: true,
+                    header: "config",
                     borderless: true,
                     scroll: true,
+                    datafetch: Tower.config.datafetch,
+                    loadahead: Tower.config.loadahead,
                     elements: []
                 }
             ]

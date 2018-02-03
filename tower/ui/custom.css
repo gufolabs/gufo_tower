@@ -34,6 +34,17 @@ div[view_id="sidebar"] .webix_selected {
     background-color: #3498db;
     color: #ecf0f1;
 }
+.webix_layout_toolbar.webix_toolbar{
+    background: #7f8c8d;
+}
+.webix_hcell {
+    font-weight: bold;
+}
+
+.app_button button{
+    padding:0;
+    text-align: center;
+}
 
 .webix_badge {
     background-color: #f1c40f !important;

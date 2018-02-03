@@ -162,6 +162,7 @@ var environment_form = {
                     label: "Name",
                     required: true,
                     invalidMessage: "Cannot be empty",
+                    validate: Tower.rules.regex(/^[a-zA-Z0-9_]*$/),
                     value: "NOC"
                 },
                 {
@@ -183,6 +184,7 @@ var environment_form = {
                                         label: "Host",
                                         required: true,
                                         placeholder: "noc.example.com",
+                                        bottomLabel: "Noc Url. IP or DNS name",
                                         validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/)
                                     },
                                     {

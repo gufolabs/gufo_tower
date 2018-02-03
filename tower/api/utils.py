@@ -54,10 +54,9 @@ def check_destination(self, dest, url, rev_options, rev_display):
             checkout = True
     return checkout
 
+
 def unpack(self, location):
     """
     monkey patch pip library cause they always remove downloaded dir. no idea why
     """
     self.obtain(location)
-
-

@@ -90,7 +90,10 @@ def migrate(migrator):
 
         # remove current playbook path
         if os.path.exists(env.playbook_path):
-            shutil.rmtree(env.playbook_path)
+            try:
+                shutil.rmtree(env.playbook_path)
+            except OSError:
+                pass
 
     migrator.rename_column(
         "environment",

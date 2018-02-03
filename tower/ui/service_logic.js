@@ -13,7 +13,7 @@ var service_logic = {
 
     load: function () {
         var env_id = app_logic.current_env.id;
-        API.service.get_config(env_id).then(
+        API.service.get_service_list(env_id).then(
             function (result) {
                 // Load service list
                 $$("service_list").parse(result);
@@ -22,21 +22,52 @@ var service_logic = {
                 Tower.msg.failed("Failed to get config");
             }
         );
+        API.service.get_forms(env_id).then(
+            function (result) {
+                // Load forms list
+                $$("service_form").parse(result);
+            },
+            function (err) {
+                Tower.msg.failed("Failed to get forms.");
+            }
+        );
+
     },
 
-    on_select_service: function (ids) {
-        var data = $$("service_list").getItem(ids[0]),
-            nodes_list = $$("service_nodes_list"),
-            form = $$("service_form"),
-            ci, cv, fname;
-        // Nodes list
-        nodes_list.clearAll();
-        nodes_list.parse(data.nodes);
-        // Set up form
+    on_column_group: function (obj, common) {
+        var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
+        var name = this.column;
+        if(obj.$group && obj[name]) {
+            return common.space(obj, common) +
+                common.icon(obj, common) +
+                common.treecheckbox(obj, common) +
+                common.folder(obj, common) +
+                "<span>" + obj[name] + "</span>"
+        } else if(parent !== obj[name]) {
+            return obj[name];
+        } else {
+            return ""
+        }
+    },
+    node_template: function (obj, common) {
+        this.on_column_group(obj, common, "node")
+    },
+
+    service_template: function (obj, common) {
+        this.on_column_group(obj, common, "service")
+    },
+    on_select_service: function () {
+        var ids = $$("service_list").getSelectedId(true);
+        var data = $$("service_list").data.pull[ids[0].id];
+        var form_info = $$("service_form")._values;
+        var form = $$("service_form")
+        var ci, cv, fname;
+        if (form_info[data.service] === undefined) return []
+        data["form"] = form_info[data.service];
         webix.ui(data.form, form);
         cv = form.getChildViews();
         for (ci in cv) {
-            fname = cv[ci].config.id;
+            fname = cv[ci]["data"].id;
             cv[ci].attachEvent(
                 "onChange",
                 (function (name) {
@@ -58,14 +89,13 @@ var service_logic = {
         var r = [],
             env_id = app_logic.current_env.id;
         $$("service_list").data.each(function (v) {
-            if (!v.nodes) {
+            if (!v.config) {
                 return;
             }
             r.push({
-                service: v.service,
-                pool: v.pool,
-                nodes: v.nodes,
-                config: v.config
+                config: v.config,
+                present: v.checked,
+                id: v.id
             });
         });
         API.service.save_config(env_id, r).then(
@@ -76,5 +106,55 @@ var service_logic = {
                 Tower.msg.failed("Failed to save");
             }
         );
+    },
+    on_group_table: function (mode) {
+        if (mode == null) {
+            mode = "service"
+        }
+        var grid = $$("service_list");
+        grid.filter("");
+        grid.ungroup();
+
+        if (mode === "node") {
+            grid.moveColumn("node", 0);
+            grid.sort({
+                by: "node",
+                dir: "asc"
+            });
+            grid.group({
+                by: "node",
+                map: {
+                    node: [
+                        function (obj) {
+                            return obj.node
+                        }
+                    ]
+                }
+            });
+        } else if (mode === "service") {
+            grid.moveColumn("service", 0);
+            grid.sort({
+                by: "service",
+                dir: "asc"
+            });
+            grid.group({
+                by: "service",
+                map: {
+                    service: [
+                        function (obj) {
+                            return obj.service
+                        }
+                    ]
+                }
+            });
+        }
+        grid.filterByAll();
+    },
+    on_expand_tree: function (mode) {
+        if (mode)
+            $$("service_list").openAll();
+        else
+            $$("service_list").closeAll();
     }
 };
+

@@ -8,7 +8,7 @@
 
 # Third-party modules
 from __future__ import absolute_import
-from peewee import CharField, IntegerField, ForeignKeyField
+from peewee import CharField, ForeignKeyField, TextField, BooleanField
 from playhouse.signals import Model
 
 # Tower modules
@@ -22,21 +22,16 @@ class Service(Model):
     class Meta:
         database = db
         db_table = "service"
+        indexes = (
+            (("environment_id", "service", "pool_id", "node_id"), True),
+        )
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     service = CharField()
     pool = ForeignKeyField(Pool, null=True)
     node = ForeignKeyField(Node)
-    n_instances = IntegerField(default=0)
-    n_backup_instances = IntegerField(default=0)
-    loglevel = CharField(default="info", choices=[
-        "notset",
-        "debug",
-        "info",
-        "warning",
-        "error",
-        "critical"
-    ])
+    present = BooleanField(default=False)  # present/absent
+    config = TextField(default="")
 
     @classmethod
     def get_execution_order(cls, env):
