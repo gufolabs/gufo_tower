@@ -29,8 +29,8 @@ class Settings(Model):
 
     DEFAULTS = {
         "url": "http://example.com/",
-        "repo_url": "http://example.com/hg",
-        "installation_name": "Unconfigured installation"
+        "installation_name": "Unconfigured installation",
+        "group_by": "node"
     }
 
     @classmethod
@@ -86,17 +86,6 @@ class Settings(Model):
             return Settings.get_item("url")
         except KeyError:
             return cls.DEFAULTS["url"]
-
-    @classmethod
-    def get_repo_url(cls):
-        """
-        Return tower's URL
-        :return:
-        """
-        try:
-            return Settings.get_item("repo_url")
-        except KeyError:
-            return cls.DEFAULTS["repo_url"]
 
     @classmethod
     def get_installation_name(cls):

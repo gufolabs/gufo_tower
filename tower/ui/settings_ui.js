@@ -20,27 +20,31 @@ var settings_form = {
             elements: [
                 {
                     view: "text",
+                    labelWidth: 150,
                     name: "installation_name",
                     label: "Tower Name",
-                    labelWidth: 110,
+
                     required: true,
                     invalidMessage: "Tower name cannot be empty"
                 },
                 {
                     view: "text",
                     name: "url",
+                    labelWidth: 150,
                     label: "Tower URL",
-                    labelWidth: 110,
                     required: true,
                     invalidMessage: "Tower URL cannot be empty"
                 },
                 {
-                    view: "text",
-                    name: "repo_url",
-                    label: "Repo URL",
-                    labelWidth: 110,
-                    required: true,
-                    invalidMessage: "Repo URL cannot be empty"
+                    view: "segmented",
+                    name: "group_by",
+                    labelWidth: 150,
+                    label: "Group services by",
+                    value: "node",
+                    options: [
+                        {value: "service"},
+                        {value: "node"}
+                    ]
                 },
                 {}
             ]

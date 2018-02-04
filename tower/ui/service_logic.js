@@ -74,6 +74,7 @@ var service_logic = {
 
     on_select_service: function () {
         var ids = $$("service_list").getSelectedId(true);
+        // we are filtering. staying on groupped service
         if (ids.length === 0) {
             return []
         }
@@ -81,7 +82,11 @@ var service_logic = {
         var form_info = $$("service_form")._values;
         var form = $$("service_form");
         var ci, cv, fname;
-        if (form_info[data.service] === undefined) return [];
+
+        // possibly old service
+        if (form_info[data.service] === undefined) {
+            form = []
+        }
         data["form"] = form_info[data.service];
         // add button to propagate values to lower tree
         if (data.$level === 1) {

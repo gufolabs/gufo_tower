@@ -18,7 +18,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pip.download import unpack_url
 from pip.index import Link
 from pip.vcs import VersionControl
-from tower.api.utils import unpack, check_destination
+from tower.contrib.utils import unpack, check_destination
 
 from tower.models.db import db
 from tower.models.environment import Environment
