@@ -68,15 +68,16 @@ class Service(Model):
 
         deps = defaultdict(list)
 
-        for srv in ServiceAPI(None).get_available_services(env=env):
-            if srv["depends"]:
-                deps[srv["name"]].extend([s for s in srv["depends"]])
-                for d in srv["depends"]:
+        srv_descr = ServiceAPI(None).get_available_services(env=env)
+        for srv in srv_descr:
+            if "depends" in srv_descr[srv]["meta"]:
+                deps[srv].extend([s for s in srv_descr[srv]["meta"]["depends"]])
+                for d in srv_descr[srv]["meta"]["depends"]:
                     if d not in deps:
                         deps[d] = []
             else:
-                if srv["name"] not in deps:
-                    deps[srv["name"]] = []
+                if srv not in deps:
+                    deps[srv] = []
 
         order = dfs_topsort(deps)
         return order
