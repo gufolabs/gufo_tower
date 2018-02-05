@@ -79,7 +79,7 @@ var service_logic = {
             return []
         }
         var data = $$("service_list").data.pull[ids[0].id];
-        var form_info = $$("service_form")._values;
+        var form_info = $$("service_form").getValues();
         var form = $$("service_form");
         var ci, cv, fname;
 
