@@ -30,7 +30,6 @@ from tower.api.settings import SettingsAPI  # noqa
 from tower.api.role import RoleAPI  # noqa
 from tower.api.deploy import DeployHandler
 from tower.api.jsonrpc import JSONRPCHandler
-from tower.api.repo import RepoHandler
 from tower.api.ui import UIHandler
 from tower.models.migration import Migration
 from tower.models.settings import Settings
@@ -75,7 +74,6 @@ def run():
         (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {
             "path": ui_root
         }),
-        (r"^/hg.*$", RepoHandler),
         (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
         (r"^/$", UIHandler, {
             "path": ui_root

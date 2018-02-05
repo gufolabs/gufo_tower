@@ -23,7 +23,6 @@ class SettingsAPI(API):
         """
         r = Settings.DEFAULTS.copy()
         r["url"] = "http://%s/" % self.handler.request.headers["Host"]
-        r["repo_url"] = "%shg" % r["url"]
         r.update(Settings.get_items(list(Settings.DEFAULTS)))
         return r
 

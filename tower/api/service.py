@@ -22,7 +22,7 @@ from tower.models.pool import Pool
 from tower.models.service import Service
 from tower.models.db import db
 from itertools import product
-from tower.lib.yaml_ordered_dict import OrderedDictYAMLLoader
+from tower.contrib.yaml_ordered_dict import OrderedDictYAMLLoader
 
 
 class ServiceAPI(API):
@@ -201,7 +201,9 @@ class ServiceAPI(API):
                     "checked": bool(srv[5]),
                     "form": []
                 })
-            except ValueError:
+            except (ValueError, KeyError):
+                # disabled nodes
+                # bad formed json
                 pass
         return r
 

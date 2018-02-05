@@ -74,6 +74,7 @@ var service_logic = {
 
     on_select_service: function () {
         var ids = $$("service_list").getSelectedId(true);
+        // we are filtering. staying on groupped service
         if (ids.length === 0) {
             return []
         }
@@ -81,7 +82,11 @@ var service_logic = {
         var form_info = $$("service_form")._values;
         var form = $$("service_form");
         var ci, cv, fname;
-        if (form_info[data.service] === undefined) return [];
+
+        // possibly old service
+        if (form_info[data.service] === undefined) {
+            form = []
+        }
         data["form"] = form_info[data.service];
         // add button to propagate values to lower tree
         if (data.$level === 1) {
@@ -92,9 +97,10 @@ var service_logic = {
             fm.unshift({
                 view: "button",
                 id: "my_button",
-                value: "Set to all nodes",
+                value: "Set that values to all nodes",
                 type: "form",
-                inputWidth: 200,
+                css: "greenbutton",
+                width: 471,
                 click: function (nv, ov) {
                     if (this.getFormView().getDirtyValues()) {
                         // Dynamically set tree data to leaves
@@ -170,7 +176,10 @@ var service_logic = {
         );
     },
     on_group_table: function (mode) {
-        if (mode == null) {
+        if (mode === "init") {
+            mode = $$("settings_form").getValues()["group_by"]
+        }
+        else {
             mode = "service"
         }
         var grid = $$("service_list");
@@ -210,6 +219,11 @@ var service_logic = {
                 }
             });
         }
+        var i = 0;
+        grid.eachRow(function(id) {
+            i++;
+            if(i === 1) this.open(id);
+        });
         grid.filterByAll();
     },
     on_expand_tree: function (mode) {

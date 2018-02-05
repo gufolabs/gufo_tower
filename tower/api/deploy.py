@@ -25,7 +25,6 @@ from .base import BaseHandler
 from tower.models.db import db
 from tower.models.environment import Environment
 from tower.models.joblog import JobLog
-from tower.models.settings import Settings
 
 logger = logging.getLogger(__name__)
 
@@ -96,10 +95,6 @@ class DeployHandler(BaseHandler):
         # Stream output
         self.write("Starting job #%d\n\n" % self.job_log.id)
         self.get_version()
-        # Check settings
-        if not Settings.get_repo_url():
-            self.write("ERROR: Repo URL is not set. Setup Repo URL in the Settings tab\n")
-            # @todo: Terminate
         # Generate ssh keys
         self.env.build_ssh_keys()
         # Run playbook

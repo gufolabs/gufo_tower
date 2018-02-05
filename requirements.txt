@@ -11,7 +11,6 @@ singledispatch>=3.4.0.0
 six>=1.8.0
 tornado==4.4.2
 ansible
-mercurial
 setuptools>=11.3
 packaging
 appdirs

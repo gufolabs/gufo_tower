@@ -60,7 +60,8 @@ def migrate(migrator):
                 if srv.n_backup_instances > 0 or srv.n_instances > 0:
                     srv.present = True
                     conf["power"] = srv.n_instances
-                    conf["n_backup_instances"] = srv.n_backup_instances
+                    if srv.n_backup_instances > 0:
+                        conf["backup_power"] = srv.n_backup_instances
                 conf["loglevel"] = srv.loglevel
                 srv.config = json.dumps(conf)
                 srv.save()
