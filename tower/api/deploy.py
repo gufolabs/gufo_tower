@@ -25,7 +25,6 @@ from .base import BaseHandler
 from tower.models.db import db
 from tower.models.environment import Environment
 from tower.models.joblog import JobLog
-from tower.models.settings import Settings
 
 logger = logging.getLogger(__name__)
 
