@@ -46,6 +46,12 @@ div[view_id="sidebar"] .webix_selected {
 .app_button button {
     padding: 0;
     text-align: center;
+
+}
+
+.greenbutton button {
+    background-color: green !important;
+    color: #ecf0f1 !important;
 }
 
 .mywebix_badge {

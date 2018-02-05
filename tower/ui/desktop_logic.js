@@ -5,8 +5,8 @@ var desktop_logic = {
         role_logic.init();
         pool_logic.init();
         node_logic.init();
-        service_logic.init();
         settings_logic.init();
+        service_logic.init();
     },
 
     show: function () {

@@ -56,44 +56,54 @@ var service_panel = {
                     id: "service_list",
                     threeState: true,
                     select: "row",
+                    gravity: 2,
+                    fillspace:true,
                     multiselect: true,
                     on: {
                         "onSelectChange": "service_logic.on_select_service",
                         "onAfterLoad": function () {
-                            service_logic.on_group_table("service")
+                            service_logic.on_group_table("init")
                         }
                     },
                     columns:
                         [
-                            {id: "service",
+                            {
+                                id: "service",
                                 header: ["Service", {content: "textFilter"}],
                                 template: function (obj, common) {
-                                    return service_logic.on_column_group(obj,common,"service")
+                                    return service_logic.on_column_group(obj, common, "service")
                                 },
                                 sort: "string",
-                                width: 200
+                                width: 200,
+                                fillspace: 2
                             },
-                            {id: "node",
+                            {
+                                id: "node",
                                 header: ["Node", {content: "textFilter"}],
                                 template: function (obj, common) {
-                                    return service_logic.on_column_group(obj,common,"node")
+                                    return service_logic.on_column_group(obj, common, "node")
                                 },
                                 sort: "string",
-                                width: 200
+                                width: 200,
+                                fillspace: 2
                             },
-                            {id: "checked",
+                            {
+                                id: "checked",
                                 header: ["Enable", {
-                                    content:"customFilterBool",
+                                    content: "customFilterBool",
                                     compare: threeStateCompare
-                            }] ,
-                                template:function (obj, common) {
-                                    return service_logic.set_enabled(obj,common)
+                                }],
+                                template: function (obj, common) {
+                                    return service_logic.set_enabled(obj, common)
                                 },
-                                width: 120
+                                width: 120,
+                                fillspace: 1
                             },
-                            {id: "pool",
+                            {
+                                id: "pool",
                                 header: ["Pool", {content: "selectFilter"}],
-                                sort: "string"
+                                sort: "string",
+                                fillspace: 1
                             }
                         ],
                     navigation: true,
@@ -102,16 +112,34 @@ var service_panel = {
                     datafetch: Tower.config.datafetch,
                     loadahead: Tower.config.loadahead
                 },
+                { view:"resizer" },
                 {
                     view: "form",
                     id: "service_form",
-                    header: "config",
                     borderless: true,
                     scroll: true,
-                    width: 430,
+                    gravity:1,
+                    minWidth:430,
                     datafetch: Tower.config.datafetch,
                     loadahead: Tower.config.loadahead,
-                    elements: []
+                    elements: [
+                        // {
+                        //     view: "scrollview",
+                        //     id: "scrollview",
+                        //     scroll: "y",
+                        //     height: 160,
+                        //     width: 150,
+                        //     body: {
+                        //         rows: [
+                        //             {
+                        //                 template: "Select row on the left panel and enable it on selected node. \n" +
+                        //                 "You can sort thet list with buttons on the tollbar.\n" +
+                        //                 "All services have dafault instance count. "
+                        //             }
+                        //         ]
+                        //     }
+                        // }
+                    ]
                 }
             ]
         }

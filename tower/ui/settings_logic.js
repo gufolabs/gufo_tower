@@ -1,5 +1,10 @@
 var settings_logic = {
     init: function () {
+        API.settings.get_settings().then(function (result) {
+            $$("settings_form").setValues(result);
+        }).fail(function (err) {
+            Tower.msg.failed("Failed to get settings")
+        });
     },
 
     show: function () {

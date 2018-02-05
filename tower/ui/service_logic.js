@@ -97,9 +97,10 @@ var service_logic = {
             fm.unshift({
                 view: "button",
                 id: "my_button",
-                value: "Set to all nodes",
+                value: "Set that values to all nodes",
                 type: "form",
-                inputWidth: 200,
+                css: "greenbutton",
+                width: 471,
                 click: function (nv, ov) {
                     if (this.getFormView().getDirtyValues()) {
                         // Dynamically set tree data to leaves
@@ -175,7 +176,10 @@ var service_logic = {
         );
     },
     on_group_table: function (mode) {
-        if (mode == null) {
+        if (mode === "init") {
+            mode = $$("settings_form").getValues()["group_by"]
+        }
+        else {
             mode = "service"
         }
         var grid = $$("service_list");
@@ -215,6 +219,11 @@ var service_logic = {
                 }
             });
         }
+        var i = 0;
+        grid.eachRow(function(id) {
+            i++;
+            if(i === 1) this.open(id);
+        });
         grid.filterByAll();
     },
     on_expand_tree: function (mode) {
