@@ -162,7 +162,7 @@ var environment_form = {
                     label: "Name",
                     required: true,
                     invalidMessage: "Cannot be empty",
-                    validate: Tower.rules.regex(/^[a-zA-Z0-9_]*$/),
+                    validate: Tower.rules.regex(/^[a-zA-Z0-9_]+$/),
                     value: "NOC"
                 },
                 {
@@ -181,11 +181,11 @@ var environment_form = {
                                     {
                                         view: "text",
                                         name: "web_host",
-                                        label: "Host",
+                                        label: "Url",
                                         required: true,
                                         placeholder: "noc.example.com",
-                                        bottomLabel: "Noc Url. IP or DNS name",
-                                        validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]*$/)
+                                        bottomLabel: "Noc Url. IP or DNS name. No http/https",
+                                        validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]+$/)
                                     },
                                     {
                                         view: "text",
@@ -249,23 +249,6 @@ var environment_form = {
                         ]
                     }
                 },
-                {
-                    view: "fieldset",
-                    label: "Additional Infrastructure",
-                    body: {
-                        cols: [
-                            {
-                                view: "text",
-                                name: "metrics_collector",
-                                label: "Metrics collector",
-                                value: "",
-                                required: false,
-                                bottomLabel: "If you have external influxdb to collect metrics from NOC set it there"
-                            }
-                        ]
-                    }
-                },
-
                 {}
             ]
         }
