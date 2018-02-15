@@ -1,3 +1,13 @@
+## 0.4.0
+
+### Breaking changes
+Settings moved from per environment to per node configuration.
+
+### Release Notes
+* Services menu moved to treetable widget
+* Ansinle version bumped to 2.4.3.0 
+* Major inventory reinvent
+
 ## 0.3.0
 
 ### Breaking changes
