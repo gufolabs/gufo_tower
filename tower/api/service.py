@@ -99,6 +99,7 @@ class ServiceAPI(API):
                 c["view"] = "password"
             elif v["type"] == "text":
                 c["view"] = "textarea"
+                c["height"] = 150
             elif v["type"] == "list":
                 if len(v["options"]) < 5:
                     c["view"] = "segmented"
@@ -111,6 +112,7 @@ class ServiceAPI(API):
             description = v.get("description")
             if description:
                 c["bottomLabel"] = description
+                c["bottomPadding"] = 35
             r += [c]
         r += [help]
         return r
