@@ -68,7 +68,6 @@ class Role(Model):
     is_enabled = BooleanField(default=False)
 
     def list_item(self):
-
         return {
             "id": str(self.id),
             "name": self.name,
