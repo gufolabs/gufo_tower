@@ -118,7 +118,6 @@ var service_logic = {
                                 val = values[key];
                                 $$("service_list").data.pull[line.id].config[nm] = val;
                             }
-                            ;
                         });
                         $$("service_list").refresh();
                     }
@@ -175,12 +174,18 @@ var service_logic = {
             }
         );
     },
+	sortGroupTitle:	function (){
+        grid.markSorting("service", "asc");
+        grid.sort(function(a,b){
+        if (a.service === b.service)
+            return (a.node>b.node)?1:-1;
+        else
+            return (a.service>b.service)?1:-1;
+        });
+    },
     on_group_table: function (mode) {
         if (mode === "init") {
             mode = $$("settings_form").getValues()["group_by"]
-        }
-        else {
-            mode = "service"
         }
         var grid = $$("service_list");
         grid.filter("");
@@ -188,10 +193,7 @@ var service_logic = {
 
         if (mode === "node") {
             grid.moveColumn("node", 0);
-            grid.sort({
-                by: "node",
-                dir: "asc"
-            });
+            grid.markSorting("service", "asc");
             grid.group({
                 by: "node",
                 map: {
@@ -202,12 +204,15 @@ var service_logic = {
                     ]
                 }
             });
+            grid.sort(function(a,b){
+				if (a.node === b.node)
+					return (a.service>b.service)?1:-1;
+				else
+					return (a.node>b.node)?1:-1;
+			});
         } else if (mode === "service") {
             grid.moveColumn("service", 0);
-            grid.sort({
-                by: "service",
-                dir: "asc"
-            });
+            grid.markSorting("node", "asc");
             grid.group({
                 by: "service",
                 map: {
@@ -218,6 +223,12 @@ var service_logic = {
                     ]
                 }
             });
+            grid.sort(function(a,b){
+				if (a.service === b.service)
+					return (a.node>b.node)?1:-1;
+				else
+					return (a.service>b.service)?1:-1;
+			});
         }
         var i = 0;
         grid.eachRow(function(id) {

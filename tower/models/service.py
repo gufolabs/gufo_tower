@@ -5,9 +5,11 @@
 # Copyright (C) 2007-2015 The NOC Project
 # See LICENSE for details
 # ----------------------------------------------------------------------
+from __future__ import absolute_import
+import os
+import yaml
 
 # Third-party modules
-from __future__ import absolute_import
 from peewee import CharField, ForeignKeyField, TextField, BooleanField
 from playhouse.signals import Model
 
@@ -36,7 +38,22 @@ class Service(Model):
     @classmethod
     def get_execution_order(cls, env):
         from collections import defaultdict
-        from tower.api.service import ServiceAPI
+
+        def get_available_services():
+            svc = {}
+            for path in env.services_path:
+                if not os.path.exists(path):
+                    continue
+                with open(path) as f:
+                    descr = yaml.load(f)
+                    if not descr:
+                        continue
+                    for srv in sorted(descr["services"]):
+                        svc[srv] = {
+                            "name": srv,
+                            "meta": descr["services"].get(srv, []),
+                        }
+            return svc
 
         def dfs_topsort(graph):  # recursive dfs with
             L = []  # additional list for order of nodes
@@ -68,7 +85,7 @@ class Service(Model):
 
         deps = defaultdict(list)
 
-        srv_descr = ServiceAPI(None).get_available_services(env=env)
+        srv_descr = get_available_services()
         for srv in srv_descr:
             if "depends" in srv_descr[srv]["meta"]:
                 deps[srv].extend([s for s in srv_descr[srv]["meta"]["depends"]])
