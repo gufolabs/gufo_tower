@@ -12,15 +12,14 @@ import logging
 from urlparse import urlparse
 # Python
 import os
-import re
 import subprocess
 import tempfile
 from collections import defaultdict
 import glob
 import shutil
 import json
+import copy
 
-import yaml
 # Third-party modules
 from peewee import CharField, TextField, BooleanField
 from playhouse.signals import Model
@@ -52,7 +51,6 @@ class Environment(Model):
     # Installation name as shown in interface header
     installation_name = CharField(default="Unconfigured installation")
     playbook_link = CharField(default="git+https://github.com/nocproject/ansible_deploy@microservices")
-    metrics_collector = CharField(default="")
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
     # json-serialized service configuration
@@ -72,7 +70,6 @@ class Environment(Model):
             "installation_name": self.installation_name,
             "playbook_link": self.playbook_link,
             "install_method": self.install_method,
-            "metrics_collector": self.metrics_collector,
             "web_host": self.web_host
         }
 
@@ -82,6 +79,7 @@ class Environment(Model):
             "value": self.name
         }
 
+    @property
     def ansible_inventory(self):
         """
         Generate ansible-compatible dynamic inventory
@@ -105,7 +103,6 @@ class Environment(Model):
                     "noc_env_type": self.env_type,
                     # Repo settings
                     "playbook_link": self.playbook_link,
-                    "noc_metrics_collector": self.metrics_collector,
                     # Web settions
                     "noc_web_host": self.web_host,
                     # Tower local settings
@@ -173,68 +170,115 @@ class Environment(Model):
             for s in node_services[node.name]:
                 required_assets += srv_descr[s.service]["required_assets"]
             r["_meta"]["hostvars"][node.name]["required_assets"] = list(set(required_assets))
+        need_cert = []
+        has_cert = False
+        certificate = {}
+        for s in srv_descr:
+            if "require_cert" in srv_descr[s] and srv_descr[s]["require_cert"]:
+                srs = Service.select().where(Service.service == s)
+                for line in srs:
+                    ln = json.loads(line.config)
+                    if not ln["cert"]:
+                        if line.present:
+                            need_cert.append(line)
+                    else:
+                        has_cert = True
+                        certificate[s] = {
+                            "key": ln["cert"],
+                            "cert": ln["cert_key"]
+                        }
+                if not has_cert and need_cert:
+                    key, cert = self.generate_certificate()
+                    certificate[s] = {
+                        "key": key,
+                        "cert": cert
+                    }
+
+                for n in need_cert:
+                    conf = json.loads(n.config)
+                    conf["cert"] = certificate[s]["key"]
+                    conf["cert_key"] = certificate[s]["cert"]
+                    n.config = json.dumps(conf)
+                    n.save()
 
         for srv in self.get_service_config():
-            if srv.service not in srv_descr:
+            # do not work with stale or old services
+            if srv['service'] not in srv_descr:
                 continue
-            if srv_descr[srv.service]["level"] == "pool":
+
+            # name service
+            if srv_descr[srv['service']]["level"] == "pool":
                 try:
-                    srv.name = "-".join(["config", srv.service, srv.pool.name])
+                    srv_name = "-".join(["cfg", srv['service'], srv['pool'], srv['node']])
                 except AttributeError:
                     continue
-                pool_name = srv.pool.name
-            elif srv_descr[srv.service]["level"] == "global":
-                srv.name = "-".join(["config", srv.service])
+                pool_name = srv['pool']
+            elif srv_descr[srv['service']]["level"] == "global":
+                srv_name = "-".join(["cfg", srv['service'], srv['node']])
                 pool_name = None
             else:
-                srv.name = "-".join(["config", srv.service])
+                srv_name = "-".join(["cfg", srv['service'], srv['node']])
                 pool_name = "global"
 
-            if srv.name not in r:
-                r[srv.name] = {
-                    "vars": json.loads(srv.config),
+            if "svc-%s" % srv['service'] not in r:
+                r["svc-%s" % srv['service']] = {
+                    "vars": self.name_config(srv['config'], srv['service']),
                     "children": [
-                        "svc-%s-read" % srv.service,
-                        "svc-%s-exec" % srv.service
+                        srv_name,
+                        "svc-%s-read" % srv['service']
                     ]
                 }
-                r["svc-%s-read" % srv.service] = {"hosts": []}
-                r["svc-%s-exec" % srv.service] = {"hosts": [srv.node.name]}
             else:
-                if srv.node.name not in r["svc-%s-exec" % srv.service]["hosts"]:
-                    r["svc-%s-exec" % srv.service]["hosts"].append(srv.node.name)
+                r["svc-%s" % srv['service']]["children"].append(srv_name)
 
-            if "depends" in srv_descr[srv.service] and srv_descr[srv.service]["depends"]:
-                for dep in srv_descr[srv.service]["depends"]:
+            # make service group
+            if srv_name not in r:
+                r[srv_name] = {
+                    "vars": self.name_config(srv['config'], srv['service']),
+                    "hosts": [srv['node']]
+                }
+                if "svc-%s-read" % srv['service'] not in r:
+                    r["svc-%s-read" % srv['service']] = {"hosts": []}
+
+            # make execution group
+            if "svc-%s-exec" % srv['service'] not in r:
+                r["svc-%s-exec" % srv['service']] = {"hosts": [srv['node']]}
+            else:
+                r["svc-%s-exec" % srv['service']]["hosts"].append(srv['node'])
+
+            # resolve depends
+            if "depends" in srv_descr[srv['service']] and srv_descr[srv['service']]["depends"]:
+                for dep in srv_descr[srv['service']]["depends"]:
                     if "svc-%s-read" % dep not in r:
-                        r["svc-%s-read" % dep] = {"hosts": []}
+                        r["svc-%s-read" % dep] = {"hosts": [srv['node']]}
                     else:
-                        if srv.node.name not in r["svc-%s-read" % dep]["hosts"]:
-                            r["svc-%s-read" % dep]["hosts"].append(srv.node.name)
+                        if srv['node'] not in r["svc-%s-read" % dep]["hosts"]:
+                            r["svc-%s-read" % dep]["hosts"].append(srv['node'])
 
-            if "category" in srv_descr[srv.service] and srv_descr[srv.service]["category"] == "internal":
-                node_noc_config = "noc-config-%s" % srv.node.name
+            # Generate tower.yml
+            if "category" in srv_descr[srv['service']] and srv_descr[srv['service']]["category"] == "internal":
+                node_noc_config = "noc-config-%s" % srv['node']
                 if node_noc_config not in r:
                     r[node_noc_config] = {
-                        "hosts": [srv.node.name],
+                        "hosts": [srv['node']],
                         "vars": {
                             "noc_services": []
                         }
                     }
                 line = {
-                    "name": srv.service,
-                    "config": json.loads(srv.config),
+                    "name": srv['service'],
+                    "config": srv['config'],
                     "pool": pool_name,
-                    "environment": srv_descr[srv.service]["environment"].copy()
+                    "environment": srv_descr[srv['service']]["environment"].copy()
                 }
                 # append pool configuration file to config string
-                if srv.pool:
+                if srv_descr[srv['service']]["level"] == "pool":
                     order = self.config_order.split(",")
                     for conf in order:
                         if 'yaml://' in conf:
                             path = urlparse(conf).path
                             basepath = os.path.dirname(path)
-                            pool_config_path = "yaml://" + str(os.path.join(basepath, 'pool-%s.yml' % srv.pool.name))
+                            pool_config_path = "yaml://" + str(os.path.join(basepath, 'pool-%s.yml' % srv['pool']))
                             order.insert(-1, pool_config_path)
                             break
                     pooled_order = ",".join(order)
@@ -245,6 +289,43 @@ class Environment(Model):
                     del line["environment"]["description"]
                 r[node_noc_config]["vars"]["noc_services"].append(line)
 
+        return r
+
+    @staticmethod
+    def name_config(config, service):
+        cfg = copy.deepcopy(config)
+        for k in cfg.keys():
+            cfg["_".join([service, k])] = cfg.pop(k)
+        return cfg
+
+    def get_service_config(self):
+        from .node import Node
+        from .pool import Pool
+        r = []
+        nodes = {}
+        for n in Node.select().where(Node.environment == self, Node.is_enabled == True).execute():  # noqa
+            nodes[n.id] = n.name
+        pools = {None: "global"}
+        for p in Pool.select().where(Pool.environment == self).execute():
+            pools[p.id] = p.name
+
+        srv_list = db.execute_sql(
+            'SELECT id,service,pool_id,node_id, config '
+            'FROM service '
+            'WHERE environment_id=? AND present=1 '
+            'ORDER BY service ', str(self.id))
+        for srv in srv_list:
+            try:
+                r.append({
+                    "id": str(srv[0]),
+                    "service": srv[1],
+                    "pool": pools[srv[2]],
+                    "node": nodes[srv[3]],
+                    "config": json.loads(srv[4]),
+                    "form": []
+                })
+            except (ValueError, KeyError):
+                pass
         return r
 
     @property
@@ -362,37 +443,6 @@ class Environment(Model):
                             "-N", "", "-C", "%s@noc" % pool.name
                         ])
 
-    rx_pk = re.compile(
-        r"-----BEGIN (?P<type>\S*\s*)PRIVATE KEY-----"
-        r".+"
-        r"-----END (?P=type)PRIVATE KEY-----\n?",
-        re.MULTILINE | re.DOTALL
-    )
-
-    def get_ssl_certificate(self, service, level):
-        """
-        Returns public and private keys extracted from
-        web server certificate
-
-        :return: (private key, public key)
-        """
-        config = yaml.load(self.service_config)
-        if 'system' in level:
-            pool = None
-        cert_name = "_".join([service, "cert"])
-        if cert_name not in config[pool][service] or not config[pool][service][cert_name]:
-            key, cert = self.generate_certificate()
-            config[pool][service][cert_name] = "".join([key, cert])
-            self.service_config = yaml.dump(config)
-            self.save()
-        else:
-            match = self.rx_pk.search(config[pool][service][cert_name])
-            if not match:
-                raise ValueError("Invalid SSL certificate")
-            key = config[pool][service][cert_name][match.start():match.end()]
-            cert = config[pool][service][cert_name][:match.start()] + config[pool][service][cert_name][match.end():]
-        return key, cert
-
     def generate_certificate(self):
         """
         Generate self-signed certificate
@@ -409,20 +459,6 @@ class Environment(Model):
             "-subj", "/CN=%s" % (self.web_host or "noc")
         ])
         return kf.read(), cf.read()
-
-    def get_service_config(self):
-        from .service import Service
-        from .node import Node
-        with db.atomic():
-            r = Service.select().join(Node).where(
-                Service.environment == self,
-                Node.is_enabled == True  # noqa
-            )
-        return r
-
-    def set_service_config(self, config):
-        self.service_config = yaml.dump(config)
-        self.save()
 
     def delete_instance(self, *args, **kwargs):
         from .node import Node
