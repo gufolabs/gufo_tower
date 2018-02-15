@@ -1,9 +1,17 @@
 from __future__ import print_function
 from peewee import Model, CharField, TextField, BooleanField
 import yaml
+import re
 
 
 def migrate(migrator):
+    rx_pk = re.compile(
+        r"-----BEGIN (?P<type>\S*\s*)PRIVATE KEY-----"
+        r".+"
+        r"-----END (?P=type)PRIVATE KEY-----\n?",
+        re.MULTILINE | re.DOTALL
+    )
+
     class Environment(Model):
         class Meta:
             database = migrator.db
@@ -42,8 +50,14 @@ def migrate(migrator):
                 "noc_user": env.sys_user or "noc",
                 "noc_group": env.sys_group or "noc"
             }
+
+            match = rx_pk.search(env.cert)
+            priv_key = env.cert[match.start():match.end()]
+            pub_key = env.cert[:match.start()] + env.cert[match.end():]
+
             config[None]["nginx"] = {
-                "nginx_cert": env.cert or "",
+                "cert": pub_key,
+                "cert_key": priv_key
             }
             env.service_config = yaml.dump(config)
             env.save()
