@@ -147,11 +147,11 @@ class ServiceAPI(API):
                 ck = set(current_config.keys())
                 nk = set(service_config.keys())
                 #
-                if ck-(ck-nk) < nk:
+                if ck - (ck - nk) < nk:
                     updated_config = dict(service_config)
                     updated_config.update(current_config)
-                    Service.update(config=json.dumps(updated_config, sort_keys=True)).where(Service.id == srv[0]).execute()
-
+                    Service.update(config=json.dumps(updated_config, sort_keys=True)).where(
+                        Service.id == srv[0]).execute()
 
     def init_services(self, env):
         """
