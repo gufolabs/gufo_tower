@@ -120,7 +120,7 @@ def migrate(migrator):
                     srv.present = True
 
                 conf["loglevel"] = srv.loglevel
-                srv.config = json.dumps(conf)
+                srv.config = json.dumps(conf, sort_keys=True)
                 srv.save()
 
     migrator.drop_column(
