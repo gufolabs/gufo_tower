@@ -154,7 +154,7 @@ class Environment(Model):
                 hostvars.update(hv)
             # Set up has_svc_XXXX variables
             for s in node_services[node.name]:
-                hostvars["has_svc_%s" % s.service] = True
+                hostvars["has_svc_%s" % s.service.replace("-", "_")] = True
             #
             r["_meta"]["hostvars"][node.name] = hostvars
             dcn = "dc-%s" % node.datacenter.name
