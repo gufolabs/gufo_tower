@@ -198,7 +198,7 @@ class Environment(Model):
                     conf = json.loads(n.config)
                     conf["cert"] = certificate[s]["key"]
                     conf["cert_key"] = certificate[s]["cert"]
-                    n.config = json.dumps(conf)
+                    n.config = json.dumps(conf, sort_keys=True)
                     n.save()
 
         for srv in self.get_service_config():

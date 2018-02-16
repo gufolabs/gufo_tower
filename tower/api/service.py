@@ -130,6 +130,29 @@ class ServiceAPI(API):
             r[srv] = (self.get_service_form(srvs[srv]["form"], srv))
         return r
 
+    def migrate_settings(self, env):
+        env_id = env.id
+        services = self.get_available_services(env)
+        with db.atomic():
+            current_list = db.execute_sql(
+                'SELECT id,service,config FROM service WHERE environment_id=?', str(env_id))
+            for srv in current_list:
+                if srv[1] not in services:
+                    continue
+                service_config = services[srv[1]]["config"]
+                current_config = json.loads(srv[2])
+                # find differencies
+                # Current config can contain much more keys than new one
+                # some old keys may not exist in new.
+                ck = set(current_config.keys())
+                nk = set(service_config.keys())
+                #
+                if ck-(ck-nk) < nk:
+                    updated_config = dict(service_config)
+                    updated_config.update(current_config)
+                    Service.update(config=json.dumps(updated_config, sort_keys=True)).where(Service.id == srv[0]).execute()
+
+
     def init_services(self, env):
         """
         Probably sholud be optimized for much greater lists.
@@ -179,6 +202,7 @@ class ServiceAPI(API):
         except Environment.DoesNotExist:
             raise APIError("Environment does not exist")
         self.init_services(env)
+        self.migrate_settings(env)
 
         # speedup lookup
         nodes = {}
@@ -226,7 +250,7 @@ class ServiceAPI(API):
         with db.atomic():
             for cfg in config:
                 q = Service.update(
-                    config=json.dumps(cfg["config"]),
+                    config=json.dumps(cfg["config"], sort_keys=True),
                     present=bool(cfg["present"])
                 ).where(Service.id == cfg["id"])
                 q.execute()
