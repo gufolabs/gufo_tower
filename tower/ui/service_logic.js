@@ -13,26 +13,35 @@ var service_logic = {
 
     load: function () {
         var env_id = app_logic.current_env.id;
-        $$("service_list").clearAll();
-        API.service.get_service_list(env_id).then(
+        API.pull.is_pulled(env_id).then(
             function (result) {
-                // Load service list
-                $$("service_list").parse(result);
-            },
-            function (err) {
-                Tower.msg.failed("Failed to get config");
+                if (result) {
+                    $$("service_list").clearAll();
+                    API.service.get_service_list(env_id).then(
+                        function (result) {
+                            // Load service list
+                            $$("service_list").parse(result);
+                        },
+                        function (err) {
+                            Tower.msg.failed("Failed to get config");
+                        }
+                    );
+                    API.service.get_forms(env_id).then(
+                        function (result) {
+                            // Load forms list
+                            $$("service_form").parse(result);
+                        },
+                        function (err) {
+                            Tower.msg.failed("Failed to get forms.");
+                        }
+                    );
+                } else {
+                    Tower.msg.failed("Repo is not pulled. Pull repo first");
+                }
+            }, function (err) {
+                Tower.msg.failed("Cannot connect to server");
             }
         );
-        API.service.get_forms(env_id).then(
-            function (result) {
-                // Load forms list
-                $$("service_form").parse(result);
-            },
-            function (err) {
-                Tower.msg.failed("Failed to get forms.");
-            }
-        );
-
     },
     set_enabled: function (obj, common) {
         if (obj.hasOwnProperty('config') && obj['config'].hasOwnProperty('backup_power')) {
