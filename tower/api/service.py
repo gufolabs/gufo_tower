@@ -63,7 +63,13 @@ class ServiceAPI(API):
         return r
 
     def get_service_form(self, descr, srv):
-        r = []
+        r = [{
+            "id": "-".join(["header", srv]),
+            "view": "label",
+            "label": srv.capitalize(),
+            "css": "form_header",
+            "borderless": False
+        }]
         help = {
             "id": "help",
             "label": "Service info",
