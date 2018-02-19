@@ -106,7 +106,7 @@ var datacenter_form = {
                 {
                     view: "text",
                     name: "proxy",
-                    label: "Proxy",
+                    label: "Internet Proxy",
                     placeholder: "Proxy address:port"
                 },
                 {}
