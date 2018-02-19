@@ -218,7 +218,7 @@ var environment_logic = {
             output_panel.setHTML("");  // Clean output
             xhr.open(
                 "GET",
-                "/deploy/" + env_name + "/?deployment_options=" + $$("deployment_options").getValue(),
+                "/deploy/" + env_id + "/?deployment_options=" + $$("deployment_options").getValue(),
                 true
             );
             xhr.onprogress = function () {
