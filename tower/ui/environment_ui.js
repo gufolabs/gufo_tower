@@ -161,7 +161,7 @@ var environment_form = {
                     name: "name",
                     label: "Name",
                     required: true,
-                    invalidMessage: "Cannot be empty",
+                    invalidMessage: "Cannot be empty. You can use following symbols 'a-z,A-Z,0-9,_'",
                     validate: Tower.rules.regex(/^[a-zA-Z0-9_]+$/),
                     value: "NOC"
                 },

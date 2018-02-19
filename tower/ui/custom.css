@@ -49,6 +49,10 @@ div[view_id="sidebar"] .webix_selected {
 
 }
 
+.form_header {
+    font-size: 20px;
+}
+
 .greenbutton button {
     background-color: green !important;
     color: #ecf0f1 !important;

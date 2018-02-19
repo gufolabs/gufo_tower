@@ -21,7 +21,7 @@ NOC (http://nocproject.org/) installations.
 
 ### Rhel based Linux
 ```
-# yum install python-virtualenv libffi libffi-devel python-devel gcc openssl-devel
+# yum install python-virtualenv libffi libffi-devel python-devel gcc openssl-devel git libselinux-python
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 
