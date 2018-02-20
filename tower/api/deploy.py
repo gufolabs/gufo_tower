@@ -59,6 +59,7 @@ class DeployHandler(BaseHandler):
             self.deploy_options = set([int(i) for i in self.get_argument("deployment_options").split(",")])
         except:  # noqa
             raise tornado.web.HTTPError(404)
+        env = os.environ.copy()
         if self.get_argument("deployment_options"):
             tags = []
             if 1 in self.deploy_options:
@@ -79,6 +80,10 @@ class DeployHandler(BaseHandler):
                 self.ansible_verbose = "-v"
             if 91 in self.deploy_options:
                 self.ansible_verbose = "-vvvvvvvv"
+            if 92 in self.deploy_options:
+                env.update({
+                    "TOWER_SHOW_SECRETS": "1"
+                })
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
         logger.info("Running deploy on %s %s", self.env.name, self.deploy_options)
@@ -105,7 +110,6 @@ class DeployHandler(BaseHandler):
             ansible_ssh_cp = os.path.join(
                 "/tmp/tower-%%r-%%h-%%r"
             )
-        env = os.environ.copy()
         env.update({
             "NOC_ENV": str(self.env.name),
             "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
