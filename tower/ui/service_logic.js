@@ -12,6 +12,7 @@ var service_logic = {
     },
 
     load: function () {
+        settings_logic.init();
         var env_id = app_logic.current_env.id;
         API.pull.is_pulled(env_id).then(
             function (result) {
