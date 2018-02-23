@@ -30,9 +30,13 @@ var role_list = {
             columns: [
                 {
                     id: "name",
-                    header: "Role",
-                    width: 100,
-                    sort: "server"
+                    header: "Name",
+                    width: 150
+                },
+                {
+                    id: "role_name",
+                    header: "Role Name",
+                    width: 150
                 },
                 {
                     id: "is_enabled",
@@ -47,7 +51,7 @@ var role_list = {
                 {
                     id: "link",
                     header: "Link",
-                    width: 250,
+                    width: 250
                 }
             ],
             on: {
@@ -104,8 +108,17 @@ var role_form = {
                     name: "name",
                     label: "Name",
                     required: true,
-                    placeholder: "Role name",
+                    placeholder: "Name",
                     invalidMessage: "Cannot be empty"
+                },
+                {
+                    view: "text",
+                    name: "role_name",
+                    label: "Role name",
+                    required: true,
+                    placeholder: "Role name",
+                    invalidMessage: "Cannot be empty",
+                    bottomLabel: "Role name that will be known to Ansible"
                 },
                 {
                     view: "checkbox",

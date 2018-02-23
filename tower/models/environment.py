@@ -310,10 +310,16 @@ class Environment(Model):
             pools[p.id] = p.name
 
         srv_list = db.execute_sql(
-            'SELECT id,service,pool_id,node_id, config '
-            'FROM service '
-            'WHERE environment_id=? AND present=1 '
-            'ORDER BY service ', str(self.id))
+            'SELECT\n'
+            '    s.id,service,pool_id,node_id, config, present\n'
+            'FROM\n'
+            '    service s\n'
+            '    left JOIN role r on s.service==r.role_name\n'
+            'WHERE\n'
+            '    s.environment_id=?\n'
+            '    and (r.is_enabled=1 or r.is_enabled is null)\n'
+            'ORDER BY s.service\n',
+            str(self.id))
         for srv in srv_list:
             try:
                 r.append({
@@ -340,22 +346,35 @@ class Environment(Model):
 
     @property
     def services_path(self):
+        from .role import Role
         r = glob.glob(
             os.path.abspath(
                 os.path.join(
                     "var", "tower", "playbooks",
                     self.name,
-                    "*_roles",
+                    "noc_roles",
                     "*",
                     "meta", "tower.yml"
                 )
             )
         )
-        r.extend(
-            glob.glob(os.path.join(
-                self.roles_prefix, "*", "meta", "tower.yml"
-            ))
-        )
+        r.extend(glob.glob(
+            os.path.abspath(
+                os.path.join(
+                    "var", "tower", "playbooks",
+                    self.name,
+                    "system_roles",
+                    "*",
+                    "meta", "tower.yml"
+                )
+            )
+        ))
+        for role in Role.select().where(Role.environment == self, Role.is_enabled == True):  # noqa
+            r.append(
+                os.path.join(
+                    self.roles_prefix, role.role_name, "meta", "tower.yml"
+                )
+            )
         return r
 
     @property

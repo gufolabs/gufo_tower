@@ -220,7 +220,15 @@ class ServiceAPI(API):
 
         # speedup orm
         srv_list = db.execute_sql(
-            'SELECT id,service,pool_id,node_id, config, present FROM service WHERE environment_id=? ORDER BY service',
+            'SELECT\n'
+            '    s.id,service,pool_id,node_id, config, present\n'
+            'FROM\n'
+            '    service s\n'
+            '    left JOIN role r on s.service==r.role_name\n'
+            'WHERE\n'
+            '    s.environment_id=?\n'
+            '    and (r.is_enabled=1 or r.is_enabled is null)\n'
+            'ORDER BY s.service\n',
             env_id)
         for srv in srv_list:
             try:

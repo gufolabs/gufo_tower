@@ -31,7 +31,8 @@ DEFAULT_ROLES = [
         "name": "Alerta notifications",
         "description": "Notifies about deploy to deploy system",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-alerta-notifications.git",
-        "is_enabled": False
+        "is_enabled": False,
+        "role_name": "deploy_notifications"
     },
     {
         "name": "Telegraf",
@@ -67,6 +68,7 @@ def migrate(migrator):
         link = CharField()
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
         is_enabled = BooleanField(default=False)
+        role_name = CharField()
 
     class Node(Model):
         class Meta:
@@ -120,7 +122,8 @@ def migrate(migrator):
                     description=role["description"],
                     link=role["link"],
                     environment=env,
-                    is_enabled=role["is_enabled"]
+                    is_enabled=role["is_enabled"],
+                    role_name=role.get("role_name", role["name"].lower())
                 ).save()
                 if "telegraf" in role["name"].lower():
                     for n in Node.select().where(Node.environment == env):
@@ -139,13 +142,3 @@ def migrate(migrator):
                     }
                     env.service_config = yaml.dump(config)
                     env.save()
-            # for n in Node.select().where(Node.environment == env):
-            #     Service.get_or_create(
-            #         environment=env.id,
-            #         service="noc",
-            #         pool=None,
-            #         node=n.id,
-            #         n_instances=1,
-            #         n_backup_instances=0,
-            #         loglevel="info"
-            #     ).save()

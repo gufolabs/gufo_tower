@@ -42,6 +42,7 @@ DEFAULT_ROLES = [
         "name": "Alerta notifications",
         "description": "Notifies about deploy to deploy system",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-alerta-notifications.git",
+        "role_name": "deploy_notification"
     },
     {
         "name": "Telegraf",
@@ -66,6 +67,7 @@ class Role(Model):
     link = CharField()
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     is_enabled = BooleanField(default=False)
+    role_name = CharField()
 
     def list_item(self):
         return {
@@ -73,7 +75,8 @@ class Role(Model):
             "name": self.name,
             "description": self.description,
             "link": self.link,
-            "is_enabled": self.is_enabled
+            "is_enabled": self.is_enabled,
+            "role_name": self.role_name
         }
 
     def reference_item(self):
@@ -87,18 +90,29 @@ class Role(Model):
             shutil.rmtree(self.role_path)
 
     def save(self, *args, **kwargs):
+        from tower.api.pull import PullAPI
         for attr in self.dirty_fields:
             if attr.name == 'link':
                 self.remove_role_dir()
+                if self.is_enabled:
+                    PullAPI.pull(self.link, self.role_path)
+            elif attr.name == 'is_enabled' and not self.is_enabled:
+                self.remove_role_dir()
+            elif attr.name == 'is_enabled' and self.is_enabled:
+                PullAPI.pull(self.link, self.role_path)
         return super(Role, self).save(*args, **kwargs)
 
     def delete_instance(self, *args, **kwargs):
+        from tower.models.service import Service
+        for srv in Service.select().where(Service.environment == self.environment, Service.service == self.name):
+            srv.delete_instance()
         self.remove_role_dir()
+
         return super(Role, self).delete_instance(*args, **kwargs)
 
     @property
     def role_path(self):
-        return os.path.abspath(os.path.join(self.environment.roles_prefix, self.name.lower()))
+        return os.path.abspath(os.path.join(self.environment.roles_prefix, self.role_name))
 
 
 @post_save(sender=Environment)
@@ -110,5 +124,6 @@ def on_save_environment_new(sender, instance, created):
                 name=role["name"],
                 description=role["description"],
                 link=role["link"],
-                environment=instance
+                environment=instance,
+                role_name=role.get("role_name", role["name"].lower()),
             ).save()

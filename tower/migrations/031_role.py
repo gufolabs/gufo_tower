@@ -27,5 +27,6 @@ def migrate(migrator):
         link = CharField()
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
         is_enabled = BooleanField(default=False)
+        role_name = CharField()
 
     migrator.create_table(Role)
