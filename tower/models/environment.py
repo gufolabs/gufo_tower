@@ -317,6 +317,7 @@ class Environment(Model):
             '    left JOIN role r on s.service==r.role_name\n'
             'WHERE\n'
             '    s.environment_id=?\n'
+            '    AND s.present=1\n'
             '    and (r.is_enabled=1 or r.is_enabled is null)\n'
             'ORDER BY s.service\n',
             str(self.id))
