@@ -26,6 +26,9 @@ NOC (http://nocproject.org/) installations.
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 
 You have to check if 'SELINUX=disabled' in /etc/sysconfig/selinux and reboot system after changes
+
+# firewall-cmd --add-port 8888/tcp --permanent
+# firewall-cmd --reload 
 ```
 
 
