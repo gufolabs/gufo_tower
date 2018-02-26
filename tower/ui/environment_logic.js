@@ -52,7 +52,7 @@ var environment_logic = {
                         Tower.msg.complete("Created");
                     },
                     function (err) {
-                        Tower.msg.failed("Failed to create");
+                        Tower.msg.failed("Failed to create " + err);
                     }
                 );
             } else {
@@ -64,7 +64,7 @@ var environment_logic = {
                         Tower.msg.complete("Changed");
                     },
                     function (err) {
-                        Tower.msg.failed("Failed to change");
+                        Tower.msg.failed("Failed to change" + err);
                     }
                 );
             }

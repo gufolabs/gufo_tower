@@ -61,8 +61,11 @@ class Role(Model):
     class Meta:
         database = db
         db_table = "role"
+        indexes = (
+            (("environment", "name"), True),
+        )
 
-    name = CharField(unique=True)
+    name = CharField()
     description = TextField()
     link = CharField()
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")

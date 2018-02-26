@@ -10,7 +10,7 @@
 from __future__ import absolute_import
 import json
 import logging
-
+import peewee
 # Third-party modules
 import tornado.gen
 from tornado.web import HTTPError
@@ -74,6 +74,8 @@ class JSONRPCHandler(BaseHandler):
                 result = yield result
             response["result"] = result
         except APIError as why:
+            response["error"] = str(why)
+        except peewee.IntegrityError as why:
             response["error"] = str(why)
         # Return response
         self.set_header("Content-Type", self.MIME_TYPE)
