@@ -92,6 +92,10 @@ class Service(Model):
                 for d in srv_descr[srv]["meta"]["depends"]:
                     if d not in deps:
                         deps[d] = []
+            elif "before" in srv_descr[srv]["meta"]:
+                deps[srv_descr[srv]["meta"]["before"]] = [srv]
+                if srv not in deps:
+                    deps[srv] = []
             else:
                 if srv not in deps:
                     deps[srv] = []
