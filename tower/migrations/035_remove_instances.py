@@ -72,14 +72,67 @@ def migrate(migrator):
         'discovery',
         'ping'
     )
+    moved_to_pooled = (
+        'correlator'
+    )
+    noc_services = (
+        'activator',
+        'bi',
+        'card',
+        'ch_datasource',
+        'chwriter',
+        'classifier',
+        'correlator',
+        'discovery',
+        'escalator',
+        'grafanads',
+        'login',
+        'mailsender',
+        'mrt',
+        'omap',
+        'ping',
+        'sae',
+        'scheduler',
+        'syslogcollector',
+        'tgsender',
+        'trapcollector',
+        'web'
+    )
+
+    useless_sevices = (
+        'redis',
+        'patroni',
+        'influxdb',
+        'zz_alerta',
+        'dev',
+        'haproxy',
+        'keepalived',
+        'notebook',
+        'redis',
+        'pmwriter',
+        'memcached',
+        'pgbouncer',
+        'nsqadmin'
+    )
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
             print("Migrating %s" % env.name)
             # remove nodes without services
+            promote_nodes = set()
             for srv in Service.select().where(Service.environment == env):
-                if not srv.config:
+                # remove correlator without pool
+                if srv.service in moved_to_pooled and not srv.pool_id:
+                    srv.delete_instance()
                     continue
+                # remove unused ha services
+                if srv.service in useless_sevices and srv.n_instances == 0:
+                    srv.delete_instance()
+                    continue
+                # some services has no config
+                if not srv.config:
+                    srv.config = '{}'
+                # rename
                 if srv.service == "consultemplate":
                     srv.service = "consul-template"
                 if srv.service == "zz_alerta":
@@ -89,6 +142,8 @@ def migrate(migrator):
                     srv.present = True
                     if env.metrics_collector:
                         conf["metrics_collector"] = env.metrics_collector
+
+                # enable service if they were
                 if srv.n_backup_instances > 0 or srv.n_instances > 0:
                     srv.present = True
                     if srv.service not in not_powered_services:
@@ -119,9 +174,17 @@ def migrate(migrator):
                     conf["power"] = "agent"
                     srv.present = True
 
+                if srv.service in noc_services:
+                    promote_nodes.add(srv.node)
+
                 conf["loglevel"] = srv.loglevel
                 srv.config = json.dumps(conf, sort_keys=True)
                 srv.save()
+            # noc service should be enabled if any noc services was enabled
+            for n in promote_nodes:
+                s = Service.select().where(Service.environment == env.id, Service.node == n, Service.service == "noc")
+                s[0].present = True
+                s[0].save()
 
     migrator.drop_column(
         "service",
