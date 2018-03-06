@@ -114,12 +114,18 @@ def migrate(migrator):
         'pgbouncer',
         'nsqadmin'
     )
+    consul_template_depend_srv = (
+        'clickhouse',
+        'nsqd',
+        'nginx'
+    )
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
             print("Migrating %s" % env.name)
             # remove nodes without services
-            promote_nodes = set()
+            noc_promote_nodes = set()
+            ct_promote_nodes = set()
             for srv in Service.select().where(Service.environment == env):
                 # remove correlator without pool
                 if srv.service in moved_to_pooled and not srv.pool_id:
@@ -132,9 +138,12 @@ def migrate(migrator):
                 # some services has no config
                 if not srv.config:
                     srv.config = '{}'
+                if srv.service == "consul-template":
+                    srv.present = True
                 # rename
                 if srv.service == "consultemplate":
                     srv.service = "consul-template"
+                    srv.present = True
                 if srv.service == "zz_alerta":
                     srv.service = "alerta"
                 conf = json.loads(srv.config)
@@ -174,17 +183,35 @@ def migrate(migrator):
                     conf["power"] = "agent"
                     srv.present = True
 
+                # look for nodes without noc service
                 if srv.service in noc_services:
-                    promote_nodes.add(srv.node)
+                    noc_promote_nodes.add(srv.node)
+
+                # look for ct dependent srv without ct on node
+                if srv.service in consul_template_depend_srv:
+                    ct_promote_nodes.add(srv.node)
+
 
                 conf["loglevel"] = srv.loglevel
                 srv.config = json.dumps(conf, sort_keys=True)
                 srv.save()
             # noc service should be enabled if any noc services was enabled
-            for n in promote_nodes:
+            for n in noc_promote_nodes:
                 s = Service.select().where(Service.environment == env.id, Service.node == n, Service.service == "noc")
                 s[0].present = True
                 s[0].save()
+            # add ct to nodes required
+            for n in ct_promote_nodes:
+                Service(
+                    environment=env.id,
+                    service="consul-template",
+                    pool=None,
+                    node=n.id,
+                    present=True,
+                    loglevel="info",
+                    config=json.dumps({}, sort_keys=True)
+                ).save()
+
 
     migrator.drop_column(
         "service",
