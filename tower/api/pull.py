@@ -102,11 +102,9 @@ class PullAPI(API):
         env = job.environment
         status = True
         log = []
-        to_pull = [(env.playbook_link, env.playbook_path)]
+        self.pull(env.playbook_link, env.playbook_path)
         for role in Role.select().where(Role.environment == env, Role.is_enabled == True):  # noqa
-            to_pull.append((role.link, role.role_path))
-        for line in reversed(to_pull):
-            self.pull(line[0], line[1])
+            self.pull(role.link, role.role_path)
 
         with db.atomic():
             job.complete_ts = datetime.datetime.now()
