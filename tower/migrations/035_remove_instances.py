@@ -66,7 +66,8 @@ def migrate(migrator):
         'nsqadmin',
         'influxdb',
         'clickhouse',
-        'consultemplate'
+        'consultemplate',
+        'monitoring'
     )
     backaped_services = (
         'discovery',

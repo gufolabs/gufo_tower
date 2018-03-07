@@ -45,6 +45,12 @@ DEFAULT_ROLES = [
         "description": "Web interface for NSQd",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-nsqadmin.git",
         "is_enabled": False
+    },
+    {
+        "name": "Monitoring",
+        "description": "Self-monitroing",
+        "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-monitoring.git",
+        "is_enabled": False
     }
 ]
 
@@ -130,6 +136,15 @@ def migrate(migrator):
                         Service(
                             environment=env.id,
                             service="telegraf",
+                            pool=None,
+                            node=n.id,
+                            n_instances=1,
+                            n_backup_instances=0,
+                            loglevel="info"
+                        ).save()
+                        Service(
+                            environment=env.id,
+                            service="monitoring",
                             pool=None,
                             node=n.id,
                             n_instances=1,
