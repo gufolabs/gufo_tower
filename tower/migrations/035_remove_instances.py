@@ -205,8 +205,9 @@ def migrate(migrator):
                     ct_promote_nodes.add(srv.node)
 
                 if srv.service == 'grafana':
-                    conf['pg_password'] = conf['password']
-                    del conf['password']
+                    conf['pg_password'] = conf.get('password', 'grafana')
+                    if "password" in conf:
+                        del conf['password']
                 if srv.service == 'mongod':
                     conf['db'] = conf['mongod_db']
                     del conf['mongod_db']
