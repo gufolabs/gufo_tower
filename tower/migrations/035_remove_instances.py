@@ -115,6 +115,13 @@ def migrate(migrator):
         'pgbouncer',
         'nsqadmin'
     )
+    obsolete_services = (
+        'notebook',
+        'redis',
+        'pmwriter',
+        'dev'
+
+    )
     consul_template_depend_srv = (
         'clickhouse',
         'nsqd',
@@ -134,6 +141,10 @@ def migrate(migrator):
                     continue
                 # remove unused ha services
                 if srv.service in useless_sevices and srv.n_instances == 0:
+                    srv.delete_instance()
+                    continue
+                # dead service
+                if srv.service in obsolete_services:
                     srv.delete_instance()
                     continue
                 # some services has no config
@@ -198,20 +209,27 @@ def migrate(migrator):
                 srv.save()
             # noc service should be enabled if any noc services was enabled
             for n in noc_promote_nodes:
-                s = Service.select().where(Service.environment == env.id, Service.node == n, Service.service == "noc")
-                s[0].present = True
-                s[0].save()
+                s = Service.select().where(Service.environment == env.id,
+                                           Service.node == n,
+                                           Service.service == "noc")
+                if s:
+                    s[0].present = True
+                    s[0].save()
             # add ct to nodes required
             for n in ct_promote_nodes:
-                Service(
-                    environment=env.id,
-                    service="consul-template",
-                    pool=None,
-                    node=n.id,
-                    present=True,
-                    loglevel="info",
-                    config=json.dumps({}, sort_keys=True)
-                ).save()
+                s = Service.select().where(Service.environment == env.id,
+                                           Service.node == n,
+                                           Service.service == "consul-template")
+                if not s:
+                    Service(
+                        environment=env.id,
+                        service="consul-template",
+                        pool=None,
+                        node=n.id,
+                        present=True,
+                        loglevel="info",
+                        config=json.dumps({}, sort_keys=True)
+                    ).save()
 
 
     migrator.drop_column(
