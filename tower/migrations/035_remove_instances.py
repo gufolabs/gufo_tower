@@ -67,7 +67,8 @@ def migrate(migrator):
         'influxdb',
         'clickhouse',
         'consultemplate',
-        'monitoring'
+        'monitoring',
+        'consul-template'
     )
     backaped_services = (
         'discovery',
@@ -203,7 +204,27 @@ def migrate(migrator):
                 if srv.service in consul_template_depend_srv:
                     ct_promote_nodes.add(srv.node)
 
-
+                if srv.service == 'grafana':
+                    conf['pg_password'] = conf['password']
+                    del conf['password']
+                if srv.service == 'mongod':
+                    conf['db'] = conf['mongod_db']
+                    del conf['mongod_db']
+                    conf['engine'] = conf['mongod_engine']
+                    del conf['mongod_engine']
+                    conf['password'] = conf['mongod_password']
+                    del conf['mongod_password']
+                    conf['rs'] = conf['mongod_rs']
+                    del conf['mongod_rs']
+                    conf['user'] = conf['mongod_user']
+                    del conf['mongod_user']
+                if srv.service == 'postgres':
+                    conf['noc_db'] = conf['postgres_db']
+                    del conf['postgres_db']
+                    conf['noc_password'] = conf['postgres_password']
+                    del conf['postgres_password']
+                    conf['noc_user'] = conf['postgres_user']
+                    del conf['postgres_user']
                 conf["loglevel"] = srv.loglevel
                 srv.config = json.dumps(conf, sort_keys=True)
                 srv.save()
@@ -230,7 +251,6 @@ def migrate(migrator):
                         loglevel="info",
                         config=json.dumps({}, sort_keys=True)
                     ).save()
-
 
     migrator.drop_column(
         "service",
