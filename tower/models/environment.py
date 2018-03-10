@@ -294,8 +294,9 @@ class Environment(Model):
     @staticmethod
     def name_config(config, service):
         cfg = copy.deepcopy(config)
+        sv = service.replace("-", "_")
         for k in cfg.keys():
-            cfg["_".join([service, k])] = cfg.pop(k)
+            cfg["_".join([sv, k])] = cfg.pop(k)
         return cfg
 
     def get_service_config(self):
