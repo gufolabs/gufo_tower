@@ -124,7 +124,7 @@ var service_logic = {
                         lines.forEach(function (line) {
                             // sorry for that.
                             for (var key in values) {
-                                nm = key.split("-")[1];
+                                nm = key.split("-").pop(-1);
                                 val = values[key];
                                 $$("service_list").data.pull[line.id].config[nm] = val;
                             }
