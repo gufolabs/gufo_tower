@@ -44,11 +44,11 @@ def migrate(migrator):
                     "version": env.custom_version or "master",
                 }
             config[None]["noc"] = {
-                "noc_root": env.sys_prefix or "/opt/noc",
-                "noc_repo": env.repo or "https://github.com/nocproject/noc.git",
-                "noc_version": env.version or "microservices",
-                "noc_user": env.sys_user or "noc",
-                "noc_group": env.sys_group or "noc"
+                "root": env.sys_prefix or "/opt/noc",
+                "repo": env.repo or "https://github.com/nocproject/noc.git",
+                "version": env.version or "microservices",
+                "user": env.sys_user or "noc",
+                "group": env.sys_group or "noc"
             }
 
             match = rx_pk.search(env.cert)
