@@ -52,7 +52,6 @@ That it.
 
 <details>
 <summary>Also you can choose the long way of manual installation </summary>
-These details will remain hidden until expanded.
 
 <ul dir="auto">
 <li><a href="docs/Debian.md">Debian</a></li>
