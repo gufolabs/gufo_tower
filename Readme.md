@@ -9,10 +9,7 @@ NOC (http://nocproject.org/) installations.
 The easiest method of installation and update is to use docker and docker-compose.yml 
 
 ### Docker install
-```
-curl https://get.docker.com | sudo sh 
 
-```
 #### Install python-pip for Centos/RHEL
 
 ```
@@ -25,6 +22,11 @@ easy_install pip
 apt install --no-install-recommends python-pip curl
 ```
 
+Install docker daemon
+```
+curl https://get.docker.com | sudo sh 
+systemctl start docker 
+```
 
 Install docker compose 
 ```
@@ -37,7 +39,6 @@ Place `docker-compose.yml` from project root to `/etc/docker-compose/tower`
 ```
 cd /etc/docker-compose/tower
 curl https://code.getnoc.com/noc/tower/raw/master/docker-compose.yml > /etc/docker-compose/tower/docker-compose.yml
-systemctl start docker 
 docker-compose up -d 
 ```
 That it. 
