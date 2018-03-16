@@ -51,7 +51,7 @@ docker-compose up -d
 That it. 
 
 <details>
-<summary>Also you can choose the long way of manual installation </summary>
+<summary>Also you can choose the long way of manual installation without docker.</summary>
 
 <ul dir="auto">
 <li><a href="docs/Debian.md">Debian</a></li>
