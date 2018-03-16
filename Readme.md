@@ -22,7 +22,7 @@ easy_install pip
 
 #### How to install python-pip for Debian/Ubuntu
 ```
-apt install --no-install-recommends python-pip
+apt install --no-install-recommends python-pip curl
 ```
 
 
@@ -36,6 +36,7 @@ mkdir /etc/docker-compose/tower -p
 Place `docker-compose.yml` from project root to `/etc/docker-compose/tower`
 ```
 cd /etc/docker-compose/tower
+curl https://code.getnoc.com/noc/tower/raw/master/docker-compose.yml > /etc/docker-compose/tower/docker-compose.yml
 systemctl start docker 
 docker-compose up -d 
 ```
