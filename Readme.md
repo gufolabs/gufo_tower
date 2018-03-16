@@ -55,11 +55,11 @@ That it.
 These details will remain hidden until expanded.
 
 <ul dir="auto">
-<li><a href="/noc/tower/blob/master/docs/Debian.md">Debian</a></li>
-<li><a href="/noc/tower/blob/master/docs/CentOS.md">Centos</a></li>
-<li><a href="/noc/tower/blob/master/docs/Ubuntu.md">Ubuntu</a></li>
-<li><a href="/noc/tower/blob/master/docs/RHEL.md">Red Hat</a></li>
-<li><a href="/noc/tower/blob/master/docs/FreeBSD.md">FreeBSD</a></li>
+<li><a href="docs/Debian.md">Debian</a></li>
+<li><a href="docs/CentOS.md">Centos</a></li>
+<li><a href="docs/Ubuntu.md">Ubuntu</a></li>
+<li><a href="docs/RHEL.md">Red Hat</a></li>
+<li><a href="docs/FreeBSD.md">FreeBSD</a></li>
 </ul>
 </details>
 
