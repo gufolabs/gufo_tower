@@ -11,6 +11,23 @@ The easiest method of installation and update is to use docker and docker-compos
 ### Docker install
 ```
 curl https://get.docker.com | sudo sh 
+
+```
+#### Install python-pip for Centos/RHEL
+
+```
+yum install python-setuptools
+easy_install pip
+```
+
+#### How to install python-pip for Debian/Ubuntu
+```
+apt install --no-install-recommends python-pip
+```
+
+
+Install docker compose 
+```
 pip install docker-compose
 mkdir /etc/docker-compose/tower -p
 ```
@@ -19,6 +36,7 @@ mkdir /etc/docker-compose/tower -p
 Place `docker-compose.yml` from project root to `/etc/docker-compose/tower`
 ```
 cd /etc/docker-compose/tower
+systemctl start docker 
 docker-compose up -d 
 ```
 That it. 
