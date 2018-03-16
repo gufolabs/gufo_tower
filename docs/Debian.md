@@ -4,8 +4,8 @@
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
 
-# /opt/tower# apt-get install dbus git
-# /opt/tower# apt install --no-install-recommends git
+/opt/tower# apt-get install dbus git
+/opt/tower# apt install --no-install-recommends git
 ```
 
 ## Installation

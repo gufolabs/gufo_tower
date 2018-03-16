@@ -1,13 +1,9 @@
 ## Preparation
-### Debian based Linux
+### Ubuntu
 ```
 # apt-get install python-virtualenv libffi6 libffi-dev python-dev gcc libssl-dev
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
-```
-
-## Debian only
-```
 
 /opt/tower# apt-get install dbus git
 /opt/tower# apt install --no-install-recommends git
