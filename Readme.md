@@ -19,7 +19,7 @@ easy_install pip
 
 #### How to install python-pip for Debian/Ubuntu
 ```
-apt install --no-install-recommends python-pip curl
+apt update; apt install --no-install-recommends python-pip curl
 ```
 
 Install docker daemon
