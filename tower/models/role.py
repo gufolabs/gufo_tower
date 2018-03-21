@@ -25,7 +25,7 @@ DEFAULT_ROLES = [
     },
     {
         "name": "Sentry",
-        "description": "Provides configuretion settings for Sentry",
+        "description": "Provides configuration settings for Sentry",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-sentry.git",
     },
     {
