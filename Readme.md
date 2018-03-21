@@ -70,7 +70,7 @@ On each node
 * grant it passwordless `sudo` privileges and copy Tower's public ssh key (*/opt/tower/var/tower/data/deploy_keys/id_rsa.pub*) to *ansible's*
 
 ```
-/opt/tower# docker-compose exec tower ssh-copy-id -i /opt/tower/var/tower/data/deploy_keys/id_rsa.pub ansible@192.168.1.88
+/opt/tower# docker-compose exec tower ssh-copy-id  -f -i /opt/tower/var/tower/data/deploy_keys/id_rsa.pub ansible@192.168.1.88
 ```
 
 ## Deploying
