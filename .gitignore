@@ -12,4 +12,5 @@ bin/*
 share/
 *.pyc
 .idea/
-config.db
+config*.db
+tower/ui/pkg/webix/webix_debug.js
