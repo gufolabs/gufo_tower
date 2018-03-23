@@ -1,5 +1,7 @@
+## Preparation
 ### Rhel based Linux
-```
+
+```shell
 # yum install python-virtualenv libffi libffi-devel python-devel gcc openssl-devel git libselinux-python
 # groupadd tower
 # useradd -d /home/tower -g tower -s /bin/bash -m tower
@@ -17,27 +19,27 @@ Replace /opt/tower/ to directory of your choice
 
  - Create Tower directory
 
-```
+```shell
 # mkdir /opt/tower
 # cd /opt/tower
 ```
 
  - Create virtualenv
 
-```
+```shell
 /opt/tower# virtualenv .
 ```
 
  - Install Tower
 
-```
+```shell
 /opt/tower# ./bin/pip install --upgrade pip
 /opt/tower# ./bin/pip install https://cdn.getnoc.com/tower/noc-tower-latest.zip
 /opt/tower# chown -R tower var/
 ```
  - Generate Tower ssh keys
 
-```
+```shell
 /opt/tower# su - tower -c "ssh-keygen -t rsa -b 4096"
 ```
 
@@ -57,6 +59,6 @@ On each node
 * check if system is already registered and has valid license
 * grant it passwordless `sudo` privileges and copy Tower's public ssh key (*/home/tower/.ssh/id_rsa.pub*) to *ansible's*
  
-```
+```shell
 /opt/tower# su - tower -c "ssh-copy-id -i /home/tower/.ssh/id_rsa.pub ansible@192.168.1.88"
 ```
