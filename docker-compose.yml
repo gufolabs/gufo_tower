@@ -11,13 +11,15 @@ services:
       #see for details https://groups.google.com/forum/#!topic/ansible-project/y8ohlv_dRi4
       - "$PWD/root:/root"
       # use it for development purpose
-#      - "$PWD/tower:/opt/tower/lib/python2.7/site-packages/tower/"
-#      - "$PWD/entrypoint-alpine.sh:/entrypoint.sh"
-#      - "$PWD/requirements.txt:/opt/tower/requirements.txt"
-#      - "$PWD/var/db:/opt/tower/var/tower//db"
+      #- "$PWD/var:/opt/tower/var/"
+      #- "$PWD/tower:/opt/tower/lib/python2.7/site-packages/tower/"
+      #- "$PWD/config.db:/opt/tower/var/tower/db/config.db"
     environment:
-#      PROMETHEUS_ENABLED: "True"
-#      INFLUXDB_ENABLED: "False"
       HISTCONTROL: "ignoreboth:erasedups"
-#      MONGO_VERSION: 3.4
-#      POSTGRES_VERSION: 9.6
+      NOC_ENV: NOC
+      # development only settings
+      #ANSIBLE_LOAD_CALLBACK_PLUGINS: 1
+      #ANSIBLE_STDOUT_CALLBACK: debug
+      #ANSIBLE_CALLBACK_WHITELIST: timer,profile_tasks
+      # replace NOC with your environment name
+      ANSIBLE_ROLES_PATH: /opt/tower/var/tower/playbooks/NOC/additional_roles:/opt/tower/var/tower/playbooks/NOC/system_roles:/opt/tower/var/tower/playbooks/NOC/noc_roles
