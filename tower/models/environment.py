@@ -184,8 +184,8 @@ class Environment(Model):
                     else:
                         has_cert = True
                         certificate[s] = {
-                            "key": ln["cert"],
-                            "cert": ln["cert_key"]
+                            "key": ln["cert_key"],
+                            "cert": ln["cert"]
                         }
                 if not has_cert and need_cert:
                     key, cert = self.generate_certificate()
@@ -196,8 +196,8 @@ class Environment(Model):
 
                 for n in need_cert:
                     conf = json.loads(n.config)
-                    conf["cert"] = certificate[s]["key"]
-                    conf["cert_key"] = certificate[s]["cert"]
+                    conf["cert"] = certificate[s]["cert"]
+                    conf["cert_key"] = certificate[s]["key"]
                     n.config = json.dumps(conf, sort_keys=True)
                     n.save()
 
