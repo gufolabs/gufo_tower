@@ -40,6 +40,7 @@ var desktop = {
                         {
                             id: "user_menu",
                             icon: "menu_user",
+                            css: "app_button",
                             submenu: [
                                 {
                                     id: "change_password",
@@ -50,6 +51,11 @@ var desktop = {
                                     id: "logout",
                                     value: "Logout",
                                     icon: "sign-out"
+                                },
+                                {
+                                    id: "version",
+                                    icon: "info",
+                                    value: "Version: 0.4.0-rc2"
                                 }
                             ]
                         }
