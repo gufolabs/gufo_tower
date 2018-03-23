@@ -11,7 +11,8 @@ import os
 
 from setuptools import setup, find_packages, findall
 from setuptools.command.install import install
-
+import pkg_resources
+pkg_resources.extern.packaging.version.Version = pkg_resources.SetuptoolsLegacyVersion
 
 class TowerInstall(install):
     """
