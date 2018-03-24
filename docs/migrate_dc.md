@@ -70,3 +70,12 @@ Also if you are planning to run ansible from console add this lines to `environm
       ANSIBLE_ROLES_PATH: /opt/tower/var/tower/playbooks/NOC/additional_roles:/opt/tower/var/tower/playbooks/NOC/system_roles:/opt/tower/var/tower/playbooks/NOC/noc_roles
 ```
 Of cause changing `NOC` to your name in `NOC_ENV` and in every `ANSIBLE_ROLES_PATH` location
+
+## Ssh keys
+
+Also if you want to continue using current ssh keys you have to copy them to new location. 
+```shell
+mkdir /opt/tower/var/tower/data/deploy_keys
+cp /home/tower/.ssh/* /opt/tower/var/tower/data/deploy_keys
+```
+thats it. 
