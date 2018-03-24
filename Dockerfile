@@ -14,7 +14,6 @@ ENV ANSIBLE_HOST_KEY_CHECKING=False \
     ANSIBLE_SSH_PIPELINING=1 \
     ANSIBLE_STDOUT_CALLBACK=debug \
     PYTHONUNBUFFERED=1 \
-    VERSION=${VERSION} \
     PATH=/opt/tower/bin:${PATH} \
     PYTHONPATH=/opt/tower/lib/python2.7:/usr/lib/python2.7
 

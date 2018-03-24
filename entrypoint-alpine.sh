@@ -17,4 +17,6 @@ if [ ! -f /opt/tower/var/tower/data/deploy_keys/id_rsa ]; then
     mkdir -p /opt/tower/var/tower/data/src_dist/
 fi
 
+export TOWER_VERSION=$(cat VERSION)
+
 exec "$@"
