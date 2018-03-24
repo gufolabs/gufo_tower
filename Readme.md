@@ -86,3 +86,4 @@ On each node
 * [Quick docker-compose notes](docs/docker-compose.md)
 * [Environment variables](docs/env.md)
 * [Writing own roles](docs/roles.md)
+* [Migrating tower to docker](docs/migrate_dc.md)
