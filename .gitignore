@@ -15,3 +15,4 @@ share/
 config*.db
 tower/ui/pkg/webix/webix_debug.js
 .pytest_cache/
+.tox
