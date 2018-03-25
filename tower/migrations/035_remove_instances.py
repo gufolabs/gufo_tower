@@ -208,6 +208,10 @@ def migrate(migrator):
                     conf['pg_password'] = conf.get('password', 'grafana')
                     if "password" in conf:
                         del conf['password']
+                if srv.service == 'pgbouncer':
+                    conf['max_clients'] = conf.get('pgbouncer_max_clients', '3000')
+                    if "pgbouncer_max_clients" in conf:
+                        del conf['pgbouncer_max_clients']
                 if srv.service == 'mongod':
                     conf['db'] = conf['mongod_db']
                     del conf['mongod_db']
