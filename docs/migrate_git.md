@@ -24,3 +24,5 @@ NOC for years was developed with mercurial. Now we are moved to git. Probably yo
 During migration process old noc directory will be partitionally droppped and replaced with new one from github. Old directory will be compressed to `noc_before_git_migrations.tbz`.
 
 Your local modification will be placed to `/tmp/noc_diff.diff` that file will be used as patch after migration finished. Only not commited modifications will be transferred. 
+
+That role should be used only one time. So remove it after job done. 
