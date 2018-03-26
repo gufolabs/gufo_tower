@@ -57,7 +57,7 @@ class Environment(Model):
     # pool id -> service -> key -> value
     is_default = BooleanField(default=False)
     config_order = CharField(
-        default="yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/local.yml,env:///NOC")
+        default="yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC")
     install_method = CharField(default="git")
 
     def list_item(self):

@@ -32,7 +32,7 @@ var environment_logic = {
             install_method: "git",
             playbook_link: "git+https://github.com/nocproject/ansible_deploy@microservices",
             installation_name: "Unconfigured installation",
-            config_order: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/local.yml,env:///NOC",
+            config_order: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
             name: "NOC"
         });
     },

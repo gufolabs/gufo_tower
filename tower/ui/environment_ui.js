@@ -211,7 +211,7 @@ var environment_form = {
                                 value: "eval"
                             },
                             {
-                                placeholder: "legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC",
+                                placeholder: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
                                 view: "text",
                                 name: "config_order",
                                 bottomLabel: "Read about that field <a href='https://kb.nocproject.org/x/8oKYAQ'> here</a>",
