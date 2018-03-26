@@ -55,7 +55,7 @@ var desktop = {
                                 {
                                     id: "version",
                                     icon: "info",
-                                    value: "Version: 0.4.0rc7"
+                                    value: "Version: 0.4.0rc8"
                                 }
                             ]
                         }
