@@ -62,16 +62,15 @@ var environment_list = {
                             value: "Install Everything",
                             tooltip: "Ignore other options except verbose. Normal install"
                         },
-                        {id: 10, value: "Update sources", tooltip: "Only update sources"},
-                        {id: 11, value: "Update configs", tooltip: "Rebuild configs, and restart services"},
-                        {id: 12, value: "Install requirements"},
+                        {id: 93, value: "Run pre deploy checks"},
+                        {id: 94, value: "Run post deploy tests"},
                         {id: 50, value: "Restart quick", tooltip: "Stop all, start all"},
                         {id: 51, value: "Restart gentle", tooltip: "Restart one by one"},
                         {id: 90, value: "Be verbose", tooltip: "Debug output -v"},
                         {id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv"},
                         {id: 92, value: "Show secrets in deploy log", tooltip: "Disable no_log"}
                     ],
-                    value: "1"
+                    value: "1,93,94"
                 }
 
             ]

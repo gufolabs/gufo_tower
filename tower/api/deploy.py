@@ -66,10 +66,6 @@ class DeployHandler(BaseHandler):
                 self.deploy_options -= set(range(90))
             if 10 in self.deploy_options:
                 tags.append("get_source")
-            if 11 in self.deploy_options:
-                tags.append("config")
-            if 12 in self.deploy_options:
-                tags.append("requirements")
             if 50 in self.deploy_options and 51 not in self.deploy_options:
                 tags.append("restart")
             if 51 in self.deploy_options:
@@ -81,6 +77,14 @@ class DeployHandler(BaseHandler):
             if 92 in self.deploy_options:
                 env.update({
                     "TOWER_SHOW_SECRETS": "1"
+                })
+            if 93 in self.deploy_options:
+                env.update({
+                    "TOWER_RUN_CHECKS": "1"
+                })
+            if 94 in self.deploy_options:
+                env.update({
+                    "TOWER_RUN_TESTS": "1"
                 })
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
