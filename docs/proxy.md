@@ -55,3 +55,7 @@ services:
 ```
 
 And `docker-compose up -d`
+
+## For nodes
+
+For nodes you also have to add proxy. Configuration can be found on Datacenter tab. There should be proxy config in format `http://192.168.1.1:3128`
