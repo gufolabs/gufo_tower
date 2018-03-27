@@ -15,6 +15,7 @@ if [ ! -f /opt/tower/var/tower/data/deploy_keys/id_rsa ]; then
     mkdir -p /opt/tower/var/tower/log/jobs /opt/tower/var/tower/log/crashinfo/collect
     mkdir -p /opt/tower/var/tower/ansible/cp /opt/tower/var/tower/crashinfo
     mkdir -p /opt/tower/var/tower/data/src_dist/
+    mkdir -p /opt/tower/var/tower/playbooks
 fi
 
 export TOWER_VERSION=$(cat VERSION)
