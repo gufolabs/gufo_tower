@@ -47,7 +47,7 @@ By default that file looks like
 version: '2.1'
 services:
   tower:
-    image: registry.getnoc.com/noc/tower:master_alpine
+    image: registry.getnoc.com/noc/tower:alpine
     restart: always
     hostname: TEST-TOWER
     ports:
