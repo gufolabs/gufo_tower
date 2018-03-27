@@ -10,7 +10,7 @@ The easiest method of installation and update is to use docker and docker-compos
 
 ### Docker install
 
-If tower and node does not have direct access to the internet. [Setup proxy](docs/proxy.md)
+If tower and node does not have direct access to the internet [setup proxy](docs/proxy.md)
 
 
 #### Install python-pip 
