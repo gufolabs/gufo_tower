@@ -120,7 +120,8 @@ def migrate(migrator):
         'notebook',
         'redis',
         'pmwriter',
-        'dev'
+        'dev',
+        'influxdb'
 
     )
     consul_template_depend_srv = (
@@ -223,6 +224,8 @@ def migrate(migrator):
                     del conf['mongod_rs']
                     conf['user'] = conf['mongod_user']
                     del conf['mongod_user']
+                    conf['logging_destination'] = conf['mongod_logging_destination']
+                    del conf['mongod_logging_destination']
                 if srv.service == 'postgres':
                     conf['noc_db'] = conf['postgres_db']
                     del conf['postgres_db']
@@ -230,6 +233,14 @@ def migrate(migrator):
                     del conf['postgres_password']
                     conf['noc_user'] = conf['postgres_user']
                     del conf['postgres_user']
+                if srv.service == 'consul':
+                    conf['master_token'] = conf['token']
+                    del conf['token']
+                if srv.service == 'nginx':
+                    conf['self_signed_cerificate'] = conf['certificate']
+                    del conf['certificate']
+                    conf['json_logging'] = conf['logging']
+                    del conf['logging']
                 conf["loglevel"] = srv.loglevel
                 srv.config = json.dumps(conf, sort_keys=True)
                 srv.save()

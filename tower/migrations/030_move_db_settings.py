@@ -84,14 +84,17 @@ def migrate(migrator):
             config[None]["postgres"] = {
                 "postgres_db": env.pg_db or "noc",
                 "postgres_user": env.pg_user or "noc",
-                "postgres_password": env.pg_password or "noc"
+                "postgres_password": env.pg_password or "noc",
+                "superuser_password": config[None]["postgres"].get("superuser_password", "noc"),
+                "replicator_password": config[None]["postgres"].get("replicator_password", "noc")
             }
             config[None]["mongod"] = {
                 "mongod_db": env.mongo_db or "noc",
                 "mongod_user": env.mongo_user or "noc",
                 "mongod_password": env.mongo_password or "noc",
                 "mongod_rs": env.mongo_rs or "noc",
-                "mongod_engine": env.mongo_engine or "wiredTiger"
+                "mongod_engine": env.mongo_engine or "wiredTiger",
+                "mongod_logging_destination": config[None]["mongod"].get("mongod_logging_destination", "file")
             }
             env.service_config = yaml.dump(config)
             env.save()

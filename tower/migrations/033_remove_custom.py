@@ -52,13 +52,14 @@ def migrate(migrator):
             }
 
             match = rx_pk.search(env.cert)
-            priv_key = env.cert[match.start():match.end()]
-            pub_key = env.cert[:match.start()] + env.cert[match.end():]
+            if match:
+                priv_key = env.cert[match.start():match.end()]
+                pub_key = env.cert[:match.start()] + env.cert[match.end():]
 
-            config[None]["nginx"] = {
-                "cert": pub_key,
-                "cert_key": priv_key
-            }
+                config[None]["nginx"] = {
+                    "cert": pub_key,
+                    "cert_key": priv_key
+                }
             env.service_config = yaml.dump(config)
             env.save()
 

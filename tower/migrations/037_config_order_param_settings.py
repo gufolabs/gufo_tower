@@ -12,5 +12,6 @@ def migrate(migrator):
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
-            env.config_order = "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC"
-            env.save()
+            if env.config_order == 'legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC':
+                env.config_order = "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC"
+                env.save()
