@@ -1,3 +1,9 @@
+## 0.4.1
+
+### Release Notes
+* Fix migration process
+
+
 ## 0.4.0
 
 ### Breaking changes
