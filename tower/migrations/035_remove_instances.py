@@ -235,12 +235,15 @@ def migrate(migrator):
                     del conf['postgres_user']
                 if srv.service == 'consul':
                     conf['master_token'] = conf.get('token', '')
-                    del conf['token']
+                    if 'token' in conf:
+                        del conf['token']
                 if srv.service == 'nginx':
                     conf['self_signed_cerificate'] = conf.get('certificate', True)
-                    del conf['certificate']
+                    if 'certificate' in conf:
+                        del conf['certificate']
                     conf['json_logging'] = conf.get('logging', False)
-                    del conf['logging']
+                    if 'logging' in conf:
+                        del conf['logging']
                 conf["loglevel"] = srv.loglevel
                 srv.config = json.dumps(conf, sort_keys=True)
                 srv.save()
