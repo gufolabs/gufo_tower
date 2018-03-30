@@ -1,3 +1,8 @@
+## 0.4.2 (Unreleased)
+
+### Release Notes
+* Fix deploy scroll stops scrolling
+
 ## 0.4.1
 
 ### Release Notes
@@ -11,7 +16,7 @@ Settings moved from per environment to per node configuration.
 
 ### Release Notes
 * Services menu moved to treetable widget
-* Ansinle version bumped to 2.4.3.0 
+* Ansinle version bumped to 2.4.3.0
 * Major inventory reinvent
 
 ## 0.3.0
@@ -19,14 +24,14 @@ Settings moved from per environment to per node configuration.
 ### Breaking changes
 To reflect changes in infrastructure **mercurial tag renamed to get_source**.
 
-Deploy tree reorganized into smaller pieces. 
-By default only essential roles added to the services tree. If you want to add some extra roles you have to add them to the roles tab.  
+Deploy tree reorganized into smaller pieces.
+By default only essential roles added to the services tree. If you want to add some extra roles you have to add them to the roles tab.
 
 ### Release Notes
 
 * Added new menu link - Roles. Used to fetch some additional roles
 * Remove data directories created by environment on environment deletion
-* Single server installation works on Debian 8, CentOS 7, RHEL 7, Ubuntu 17.04  
+* Single server installation works on Debian 8, CentOS 7, RHEL 7, Ubuntu 17.04
 
 ### Bugfixes
 
@@ -50,5 +55,5 @@ Noc Tower moved from mercurial to git.
 
 ### Bugfixes
 
-* Add missed checks for environmnet name. 
+* Add missed checks for environmnet name.
 * Fix Negative error counter
