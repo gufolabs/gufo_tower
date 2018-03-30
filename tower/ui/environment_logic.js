@@ -264,7 +264,7 @@ var environment_logic = {
                 });
                 output += ct;
                 output_panel.setHTML(output);
-                output_panel.scrollTo(0, 100000);
+                output_panel.scrollTo(0, 10000000);
                 // Update badges
                 badges_panel.setValues(status);
             };
