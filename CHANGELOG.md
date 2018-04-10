@@ -1,7 +1,8 @@
-## 0.4.2 (Unreleased)
+## 0.4.2 (2018-04-10)
 
 ### Release Notes
 * Fix deploy scroll stops scrolling
+* fix pgbouncer migration
 
 ## 0.4.1
 
