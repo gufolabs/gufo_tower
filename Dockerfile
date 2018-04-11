@@ -30,6 +30,7 @@ RUN apt-get update \
         ca-certificates \
         openssh-client \
         openssl \
+        git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
     # Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=783738
