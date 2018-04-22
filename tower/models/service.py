@@ -6,7 +6,6 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 from __future__ import absolute_import
-from builtins import object
 import os
 import yaml
 
@@ -22,7 +21,7 @@ from .pool import Pool
 
 
 class Service(Model):
-    class Meta(object):
+    class Meta:
         database = db
         db_table = "service"
         indexes = (

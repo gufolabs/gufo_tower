@@ -8,7 +8,6 @@
 
 # Python modules
 from __future__ import absolute_import
-from builtins import object
 import datetime
 import logging
 import os
@@ -24,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class Migration(Model):
-    class Meta(object):
+    class Meta:
         database = db
         db_table = "migration"
 

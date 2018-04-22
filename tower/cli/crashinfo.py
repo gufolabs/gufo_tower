@@ -7,10 +7,7 @@
 # -----------------------------------------------------------------------
 
 from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from builtins import range
-import queue
+import Queue
 import argparse
 # Python modules
 import os
@@ -63,7 +60,7 @@ def collect_crashinfo(options, args):
         env = Environment.get(Environment.name == options.env)
     except Environment.DoesNotExist:
         die("Invalid environment: '%s'" % options.env)
-    q = queue.Queue()
+    q = Queue.Queue()
     # Start workers
     workers = []
     for i in range(options.jobs):

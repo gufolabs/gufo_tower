@@ -1,9 +1,8 @@
-from builtins import object
 from peewee import Model, CharField, TextField
 
 
 class Datacenter(Model):
-    class Meta(object):
+    class Meta:
         db_table = "datacenter"
 
     name = CharField(unique=True)

@@ -1,10 +1,9 @@
-from builtins import object
 from peewee import (Model, CharField, ForeignKeyField,
                     BooleanField)
 
 
 class NodeType(Model):
-    class Meta(object):
+    class Meta:
         db_table = "node_type"
 
     name = CharField(max_length=64, unique=True)

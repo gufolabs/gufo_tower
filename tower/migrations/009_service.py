@@ -1,24 +1,23 @@
-from builtins import object
 from peewee import Model, CharField, IntegerField, ForeignKeyField
 
 
 class Environment(Model):
-    class Meta(object):
+    class Meta:
         db_table = "environment"
 
 
 class Pool(Model):
-    class Meta(object):
+    class Meta:
         db_table = "pool"
 
 
 class Node(Model):
-    class Meta(object):
+    class Meta:
         db_table = "node"
 
 
 class Service(Model):
-    class Meta(object):
+    class Meta:
         db_table = "service"
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")

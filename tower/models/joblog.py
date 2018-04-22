@@ -8,7 +8,6 @@
 
 # Python modules
 from __future__ import absolute_import
-from builtins import object
 import os
 # Third-party modules
 from peewee import (Model, CharField, TextField, ForeignKeyField,
@@ -19,7 +18,7 @@ from .environment import Environment
 
 
 class JobLog(Model):
-    class Meta(object):
+    class Meta:
         database = db
         db_table = "joblog"
 

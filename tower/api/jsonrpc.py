@@ -8,7 +8,6 @@
 
 # Python modules
 from __future__ import absolute_import
-from builtins import str
 import json
 import logging
 import peewee
@@ -45,7 +44,7 @@ class JSONRPCHandler(BaseHandler):
             raise HTTPError(404, "Invalid API: %s" % api_name)
         # Parse request
         try:
-            req = json.loads(self.request.body.decode('utf-8'))
+            req = json.loads(self.request.body)
         except ValueError as why:
             raise HTTPError(400, "Bad request: %s" % why)
         # Parse request

@@ -8,8 +8,6 @@
 
 # Python modules
 from __future__ import absolute_import
-from builtins import str
-from builtins import range
 import os
 
 # Third-party modules
@@ -57,7 +55,7 @@ class ServiceAPI(API):
         if "forms" not in cfg or not cfg["forms"]:
             return r
         sc = cfg["forms"][service]
-        for k, v in sc.items():
+        for k, v in sc.iteritems():
             if "description" in k:
                 continue
             r[k] = v.get("default", None)
@@ -80,7 +78,7 @@ class ServiceAPI(API):
             "autoheight": "true",
             "template": descr.get("description", "")
         }
-        for k, v in descr.items():
+        for k, v in descr.iteritems():
             if "description" in k:
                 continue
             c = {

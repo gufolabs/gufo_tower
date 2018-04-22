@@ -8,7 +8,6 @@
 
 # Python modules
 from __future__ import absolute_import
-from builtins import object
 import base64
 import json
 import os
@@ -21,7 +20,7 @@ from .db import db
 
 
 class Settings(Model):
-    class Meta(object):
+    class Meta:
         database = db
         db_table = "settings"
 

@@ -1,10 +1,9 @@
-from builtins import object
 from peewee import CharField, Model
 
 
 def migrate(migrator):
     class Environment(Model):
-        class Meta(object):
+        class Meta:
             database = migrator.db
             db_table = "environment"
 

@@ -1,5 +1,4 @@
 from __future__ import print_function
-from builtins import object
 from peewee import Model, CharField, TextField, BooleanField
 import yaml
 import re
@@ -14,7 +13,7 @@ def migrate(migrator):
     )
 
     class Environment(Model):
-        class Meta(object):
+        class Meta:
             database = migrator.db
             db_table = "environment"
 

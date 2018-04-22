@@ -1,12 +1,11 @@
 from __future__ import print_function
-from builtins import object
 from peewee import Model, CharField, ForeignKeyField, TextField, IntegerField, BooleanField
 import json
 
 
 def migrate(migrator):
     class Environment(Model):
-        class Meta(object):
+        class Meta:
             database = migrator.db
             db_table = "environment"
 
@@ -14,7 +13,7 @@ def migrate(migrator):
         metrics_collector = CharField(default="")
 
     class Node(Model):
-        class Meta(object):
+        class Meta:
             database = migrator.db
             db_table = "node"
 
@@ -22,7 +21,7 @@ def migrate(migrator):
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
 
     class Pool(Model):
-        class Meta(object):
+        class Meta:
             database = migrator.db
             db_table = "pool"
 
@@ -30,7 +29,7 @@ def migrate(migrator):
         name = CharField()
 
     class Service(Model):
-        class Meta(object):
+        class Meta:
             database = migrator.db
             db_table = "service"
 

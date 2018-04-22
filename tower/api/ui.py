@@ -54,7 +54,7 @@ class UIHandler(tornado.web.RequestHandler):
                 ssize = len(js)
                 js = jsmin.jsmin(js)
                 logger.info("Minifying JS: %s -> %s", ssize, len(js))
-            self.hash = hashlib.sha256(js.encode(encoding='utf-8')).hexdigest()[:8]
+            self.hash = hashlib.sha256(js).hexdigest()[:8]
             cache_path = os.path.join(self.CACHE_ROOT, "%s.js" % self.hash)
             if not os.path.isfile(cache_path):
                 logger.info("Writing cached JS to %s", cache_path)
@@ -72,6 +72,6 @@ class UIHandler(tornado.web.RequestHandler):
         if fp.startswith("/ui/"):
             fp = fp[4:]
         fp = os.path.join(self.root, fp)
-        with open(fp, 'r') as f:
-            hash = hashlib.sha256(f.read().encode(encoding='utf-8')).hexdigest()[:8]
+        with open(fp) as f:
+            hash = hashlib.sha256(f.read()).hexdigest()[:8]
         return "%s?%s" % (path, hash)

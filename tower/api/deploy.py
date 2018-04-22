@@ -7,9 +7,6 @@
 # ----------------------------------------------------------------------
 
 from __future__ import absolute_import
-from builtins import str
-from builtins import zip
-from builtins import range
 import datetime
 # Python modules
 import logging
@@ -213,7 +210,7 @@ class DeployHandler(BaseHandler):
 
     def on_data(self, data):
         def qlog(x):
-            if x.decode('utf-8').endswith("\n"):
+            if x.endswith("\n"):
                 return x[:-1]
             else:
                 return x
@@ -235,7 +232,7 @@ class DeployHandler(BaseHandler):
         except tornado.iostream.StreamClosedError:
             pass
         recap = [0, 0, 0, 0]
-        for v in self.recap.values():
+        for v in self.recap.itervalues():
             recap = [(x + y) for x, y in zip(recap, v)]
         with db.atomic():
             self.job_log.complete_ts = datetime.datetime.now()

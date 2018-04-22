@@ -8,8 +8,6 @@
 
 # Third-party modules
 from __future__ import absolute_import
-from builtins import str
-from builtins import object
 from peewee import CharField, TextField, ForeignKeyField
 from playhouse.signals import Model, post_save
 
@@ -21,7 +19,7 @@ DEFAULT_POOL = "default"
 
 
 class Pool(Model):
-    class Meta(object):
+    class Meta:
         database = db
         db_table = "pool"
         indexes = (

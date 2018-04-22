@@ -1,9 +1,8 @@
-from builtins import object
 from peewee import Model, CharField, TextField
 
 
 class Settings(Model):
-    class Meta(object):
+    class Meta:
         db_table = "settings"
 
     key = CharField(primary_key=True)
