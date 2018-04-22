@@ -1,14 +1,15 @@
+from builtins import object
 from peewee import (Model, CharField, TextField, ForeignKeyField,
                     DateTimeField, BooleanField)
 
 
 class Environment(Model):
-    class Meta:
+    class Meta(object):
         db_table = "environment"
 
 
 class PullLog(Model):
-    class Meta:
+    class Meta(object):
         db_table = "pulllog"
 
     start_ts = DateTimeField()

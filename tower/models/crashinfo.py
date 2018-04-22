@@ -8,6 +8,8 @@
 
 # Python modules
 from __future__ import absolute_import
+from builtins import str
+from builtins import object
 import logging
 import os
 
@@ -22,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class Crashinfo(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "crashinfo"
         indexes = (

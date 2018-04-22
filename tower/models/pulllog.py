@@ -8,6 +8,7 @@
 
 # Third-party modules
 from __future__ import absolute_import
+from builtins import object
 from peewee import (Model, CharField, TextField, ForeignKeyField,
                     DateTimeField, BooleanField)
 
@@ -17,7 +18,7 @@ from .environment import Environment
 
 
 class PullLog(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "pulllog"
 

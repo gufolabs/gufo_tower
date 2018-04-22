@@ -1,8 +1,9 @@
+from builtins import object
 from peewee import Model, CharField, BooleanField
 
 
 class User(Model):
-    class Meta:
+    class Meta(object):
         db_table = "user"
 
     name = CharField(unique=True)

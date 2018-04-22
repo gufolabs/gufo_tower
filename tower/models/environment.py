@@ -7,9 +7,13 @@
 # ----------------------------------------------------------------------
 
 from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import errno
 import logging
-from urlparse import urlparse
+from urllib.parse import urlparse
 # Python
 import os
 import subprocess
@@ -31,7 +35,7 @@ logging.getLogger(__name__)
 
 
 class Environment(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "environment"
 
@@ -295,7 +299,7 @@ class Environment(Model):
     def name_config(config, service):
         cfg = copy.deepcopy(config)
         sv = service.replace("-", "_")
-        for k in cfg.keys():
+        for k in list(cfg.keys()):
             cfg["_".join([sv, k])] = cfg.pop(k)
         return cfg
 

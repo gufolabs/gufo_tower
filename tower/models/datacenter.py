@@ -8,6 +8,8 @@
 
 # Third-party modules
 from __future__ import absolute_import
+from builtins import str
+from builtins import object
 from peewee import Model, CharField, TextField
 
 # Tower modules
@@ -15,7 +17,7 @@ from .db import db
 
 
 class Datacenter(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "datacenter"
 

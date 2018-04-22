@@ -1,10 +1,11 @@
+from builtins import object
 from peewee import Model, CharField, TextField, ForeignKeyField, BooleanField
 import os
 
 
 def migrate(migrator):
     class Environment(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "environment"
 
@@ -18,7 +19,7 @@ def migrate(migrator):
             )
 
     class Role(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "role"
 
