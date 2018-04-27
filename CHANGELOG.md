@@ -1,3 +1,7 @@
+## 0.4.3 (2018-04-27)
+### Release Notes
+* Bump ansible version to 2.5.2
+
 ## 0.4.2 (2018-04-10)
 
 ### Release Notes
