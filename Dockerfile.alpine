@@ -2,12 +2,14 @@ FROM alpine:3.6 as builder
 
 RUN mkdir /mnt/tower
 WORKDIR /mnt/tower/
-RUN apk add --update  py2-cffi  py-virtualenv gcc python-dev musl-dev  libffi-dev openssl-dev ca-certificates
+RUN apk add --update  py2-cffi  py-virtualenv gcc python-dev musl-dev  libffi-dev openssl-dev ca-certificates make
 COPY . /mnt/tower/
 RUN python setup.py sdist --format=zip
 
 WORKDIR /opt/tower
-RUN virtualenv /opt/tower && ./bin/pip install /mnt/tower/dist/*.zip
+RUN virtualenv /opt/tower \
+    && ./bin/pip install ansible==2.6.3 \
+    && ./bin/pip install /mnt/tower/dist/*.zip
 
 FROM python:2.7-alpine3.6
 

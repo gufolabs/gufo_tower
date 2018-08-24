@@ -1,3 +1,9 @@
+## 0.4.4 (2018-08-25)
+### Release Notes
+* Bump ansible version to 2.6.3
+* Bump bcrypt version to 3.1.4
+
+
 ## 0.4.3 (2018-04-27)
 ### Release Notes
 * Bump ansible version to 2.5.2
