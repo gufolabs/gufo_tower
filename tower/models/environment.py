@@ -392,7 +392,9 @@ class Environment(Model):
 
     @property
     def deploy_keys(self):
-        if os.path.exists("/.dockerenv"):
+        if os.getenv("TOWER_SSH_KEY_PATH") and os.getenv("TOWER_SSH_KEY_PATH"):
+            return os.getenv("TOWER_SSH_KEY_PATH")
+        elif os.path.exists("/.dockerenv"):
             return os.path.abspath(
                 os.path.join("var", "tower", "data", "deploy_keys", "id_rsa")
             )

@@ -9,3 +9,4 @@ Several settings can be read from environment variables.
 * `TOWER_SERIAL_RESTART_NOC=` --  After install NOC will be restarted with `./noc ctl serialrestart all`. Valid modes False(default), True.
 * `TOWER_VERSION=` -- Internal var. Used to check if tower generates inventory well.
 * `TOWER_DB_PATH=` -- Internal var. Used to specify `config.db` path
+* `TOWER_SSH_KEY_PATH` -- Internal var. Used to specify path to ssh key and its name. Unlikely to be changed. Defaults is unset. 
