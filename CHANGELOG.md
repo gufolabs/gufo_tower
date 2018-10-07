@@ -1,3 +1,9 @@
+## Future
+### Release Notes
+
+* Add TOWER_SSH_KEY_PATH var. Should be used to specify ssh key in case of ed25519 and other types.
+* Ansible version bumped to 2.7 
+
 ## 0.4.4 (2018-08-25)
 ### Release Notes
 * Bump ansible version to 2.6.3
