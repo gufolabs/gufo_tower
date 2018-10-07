@@ -90,3 +90,4 @@ On each node
 * [Environment variables](docs/env.md)
 * [Writing own roles](docs/roles.md)
 * [Migrating tower to docker](docs/migrate_dc.md)
+* [Release policy](docs/versioning.md)
