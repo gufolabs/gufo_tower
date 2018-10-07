@@ -241,3 +241,17 @@ Entrypoint скрипт если не обнаружит директорию с
 
 Плейбук, как предполагается, что будет запускаться однократно, при начальной настройке системы. 
 Запуск его на регулярной основе не предусмотрен, хотя его многократный прогон и не приводит к форматированию файловых систем или изменению размеров томов.   
+
+**В**: Что делать с ошибкой 
+```
+Collecting patroni==1.4.6
+  Using cached https://files.pythonhosted.org/packages/27/f2/c63e3565c78cbdc877b013e27355faf5c1f7b7dff880a3a64259e24bffc4/patroni-1.4.6.tar.gz
+    Complete output from command python setup.py egg_info:
+    error in patroni setup command: 'extras_require' must be a dictionary whose values are strings or lists of strings containing valid project/version requirement specifiers.
+    
+    ----------------------------------------Command "python setup.py egg_info" failed with error code 1 in /tmp/pip-install-SKf8sj/patroni/non-zero return code
+```
+**О**: Обновить `setuptools`
+```
+cd /opt/patroni && ./bin/pip install --upgrade setuptools &&  ./bin/pip2 install patroni==1.4.6
+```
