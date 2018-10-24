@@ -131,29 +131,30 @@ def migrate(migrator):
                     is_enabled=role["is_enabled"],
                     role_name=role.get("role_name", role["name"].lower())
                 ).save()
-                if "telegraf" in role["name"].lower():
-                    for n in Node.select().where(Node.environment == env):
-                        Service(
-                            environment=env.id,
-                            service="telegraf",
-                            pool=None,
-                            node=n.id,
-                            n_instances=1,
-                            n_backup_instances=0,
-                            loglevel="info"
-                        ).save()
-                        Service(
-                            environment=env.id,
-                            service="monitoring",
-                            pool=None,
-                            node=n.id,
-                            n_instances=1,
-                            n_backup_instances=0,
-                            loglevel="info"
-                        ).save()
-                    config = yaml.load(env.service_config)
-                    config[None]["telegraf"] = {
-                        "telegraf_output_plugin": "influx"
-                    }
-                    env.service_config = yaml.dump(config)
-                    env.save()
+            # Add telegraf role to all nodes
+            for n in Node.select().where(Node.environment == env):
+                Service(
+                    environment=env.id,
+                    service="telegraf",
+                    pool=None,
+                    node=n.id,
+                    n_instances=1,
+                    n_backup_instances=0,
+                    loglevel="info"
+                ).save()
+                Service(
+                    environment=env.id,
+                    service="monitoring",
+                    pool=None,
+                    node=n.id,
+                    n_instances=1,
+                    n_backup_instances=0,
+                    loglevel="info"
+                ).save()
+            # Adjust service config
+            config = yaml.load(env.service_config) or {None: {}}
+            config[None]["telegraf"] = {
+                "telegraf_output_plugin": "influx"
+            }
+            env.service_config = yaml.dump(config)
+            env.save()

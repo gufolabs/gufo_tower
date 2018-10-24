@@ -205,7 +205,7 @@ def migrate(migrator):
                 if srv.service in consul_template_depend_srv:
                     ct_promote_nodes.add(srv.node)
 
-                if srv.service == 'grafana':
+                if srv.service == 'grafana' and 'grafana' in conf:
                     conf['pg_password'] = conf.get('password', 'grafana')
                     if "password" in conf:
                         del conf['password']
@@ -213,7 +213,7 @@ def migrate(migrator):
                     conf['max_clients'] = conf.get('pgbouncer_max_clients', 3000)
                     if "pgbouncer_max_clients" in conf:
                         del conf['pgbouncer_max_clients']
-                if srv.service == 'mongod':
+                if srv.service == 'mongod' and 'mongod' in conf:
                     conf['db'] = conf['mongod_db']
                     del conf['mongod_db']
                     conf['engine'] = conf['mongod_engine']
@@ -226,18 +226,18 @@ def migrate(migrator):
                     del conf['mongod_user']
                     conf['logging_destination'] = conf['mongod_logging_destination']
                     del conf['mongod_logging_destination']
-                if srv.service == 'postgres':
+                if srv.service == 'postgres' and 'postgres' in conf:
                     conf['noc_db'] = conf['postgres_db']
                     del conf['postgres_db']
                     conf['noc_password'] = conf['postgres_password']
                     del conf['postgres_password']
                     conf['noc_user'] = conf['postgres_user']
                     del conf['postgres_user']
-                if srv.service == 'consul':
+                if srv.service == 'consul' and 'consul' in conf:
                     conf['master_token'] = conf.get('token', '')
                     if 'token' in conf:
                         del conf['token']
-                if srv.service == 'nginx':
+                if srv.service == 'nginx' and 'nginx' in conf:
                     conf['self_signed_cerificate'] = conf.get('certificate', True)
                     if 'certificate' in conf:
                         del conf['certificate']
