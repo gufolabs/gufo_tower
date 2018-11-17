@@ -35,7 +35,8 @@ apt install --no-install-recommends python-pip curl
 #### Install docker daemon
 ```
 curl https://get.docker.com | sudo sh 
-systemctl start docker 
+systemctl start docker
+systemctl enable docker
 ```
 
 #### Install docker compose 
