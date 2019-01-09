@@ -73,6 +73,8 @@ var node_logic = {
 
     on_edit: function () {
         var data = $$("node_list").getSelectedItem();
+        data.datacenter = data.datacenter.id;
+        data.node_type = data.node_type.id;
         $$("node_form").setValues(data);
         node_logic.show_form();
     },
