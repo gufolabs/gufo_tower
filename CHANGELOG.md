@@ -3,6 +3,7 @@
 
 * Add TOWER_SSH_KEY_PATH var. Should be used to specify ssh key in case of ed25519 and other types.
 * Ansible version bumped to 2.7 
+* Fix combo controls bug in node create/edit page, combo controls become selects
 
 ## 0.4.4 (2018-08-25)
 ### Release Notes
