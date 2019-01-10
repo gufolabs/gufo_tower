@@ -75,10 +75,10 @@ var service_logic = {
                 common.icon(obj, common) +
                 common.folder(obj, common) +
                 "<span>" + obj[name] + "</span>"
-        } else if (parent !== obj[name]) {
+        } else if (( (parent !== obj[name]) || (name == 'service') ) && obj[name] !== undefined  ) {
             return obj[name];
         } else {
-            return ""
+            return "";
         }
     },
 
@@ -200,7 +200,6 @@ var service_logic = {
         var grid = $$("service_list");
         grid.filter("");
         grid.ungroup();
-
         if (mode === "node") {
             grid.moveColumn("node", 0);
             grid.markSorting("service", "asc");
