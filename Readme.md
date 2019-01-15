@@ -42,6 +42,7 @@ systemctl enable docker
 #### Install docker compose 
 ```
 pip install docker-compose
+# If u have an error about setuptools: pip install --upgrade setuptools
 mkdir /etc/docker-compose/tower -p
 ```
 
