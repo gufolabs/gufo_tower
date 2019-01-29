@@ -28,7 +28,7 @@ easy_install pip
 
 <pre><code>
 apt update
-apt install --no-install-recommends python-pip curl
+apt install --no-install-recommends python-pip curl python-setuptools
 </code></pre>
 </details>
 
