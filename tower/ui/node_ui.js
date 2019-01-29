@@ -127,7 +127,7 @@ var node_form = {
                     required: true,
                 },
                 {
-                    view: "combo",
+                    view: "select",
                     name: "datacenter",
                     label: "Datacenter",
                     options: "rpc->datacenter:lookup",
@@ -145,7 +145,7 @@ var node_form = {
                     body: {
                         cols: [
                             {
-                                view: "combo",
+                                view: "select",
                                 name: "node_type",
                                 label: "Node Type",
                                 options: "rpc->nodetype:lookup",
