@@ -78,7 +78,7 @@ var service_logic = {
         } else if ( obj[name] !== undefined && ( (parent !== obj[name]) || (name == 'service') ) ) {
             return obj[name];
         } else {
-            return ""
+            return "";
         }
     },
 
@@ -200,7 +200,6 @@ var service_logic = {
         var grid = $$("service_list");
         grid.filter("");
         grid.ungroup();
-
         if (mode === "node") {
             grid.moveColumn("node", 0);
             grid.markSorting("service", "asc");
