@@ -75,7 +75,7 @@ var service_logic = {
                 common.icon(obj, common) +
                 common.folder(obj, common) +
                 "<span>" + obj[name] + "</span>"
-        } else if (parent !== obj[name]) {
+        } else if ( obj[name] !== undefined && ( (parent !== obj[name]) || (name == 'service') ) ) {
             return obj[name];
         } else {
             return ""
