@@ -28,7 +28,7 @@ easy_install pip
 
 <pre><code>
 apt update
-apt install --no-install-recommends python-pip curl
+apt install --no-install-recommends python-pip curl python-setuptools
 </code></pre>
 </details>
 
@@ -42,6 +42,7 @@ systemctl enable docker
 #### Install docker compose 
 ```
 pip install docker-compose
+# If u have an error about setuptools: pip install --upgrade setuptools
 mkdir /etc/docker-compose/tower -p
 ```
 
