@@ -72,11 +72,14 @@ That it.
 On each node 
 * double check that python2.7 is installed on nodes
 * create ansible user (*ansible* by default),
-* grant it passwordless `sudo` privileges and copy Tower's public ssh key (*/opt/tower/var/tower/data/deploy_keys/id_rsa.pub*) to *ansible's*
+`useradd -d /home/ansible -s /bin/bash -m ansible`
+`passwd ansible` -- define ansible user's password, you'll need it later.
+* grant it passwordless `sudo` privileges(`ansible  ALL=(ALL) NOPASSWD:ALL` in /etc/sudoers) and copy Tower's public ssh key (*/opt/tower/var/tower/data/deploy_keys/id_rsa.pub*) to *ansible's*
 
 ```
 /opt/tower# docker-compose exec tower ssh-copy-id  -f -i /opt/tower/var/tower/data/deploy_keys/id_rsa.pub ansible@192.168.1.88
 ```
+where `192.168.1.88` is the node's IP address. Enter ansible's password, that you already defined somewhere above.
 
 ## Deploying
 
