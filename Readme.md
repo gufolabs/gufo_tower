@@ -71,9 +71,11 @@ That it.
 ## Prepare nodes
 On each node 
 * double check that python2.7 is installed on nodes
-* create ansible user (*ansible* by default),
-`useradd -d /home/ansible -s /bin/bash -m ansible`
-`passwd ansible` -- define ansible user's password, you'll need it later.
+* create ansible user (*ansible* by default) and define ansible user's password, you'll need it later.
+```
+useradd -d /home/ansible -s /bin/bash -m ansible`
+passwd ansible
+``` 
 * grant it passwordless `sudo` privileges(`ansible  ALL=(ALL) NOPASSWD:ALL` in /etc/sudoers) and copy Tower's public ssh key (*/opt/tower/var/tower/data/deploy_keys/id_rsa.pub*) to *ansible's*
 
 ```
