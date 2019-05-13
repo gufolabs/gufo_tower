@@ -41,7 +41,8 @@ systemctl enable docker
 
 #### Install docker compose 
 ```
-pip install docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 # If u have an error about setuptools: pip install --upgrade setuptools
 mkdir /etc/docker-compose/tower -p
 ```
