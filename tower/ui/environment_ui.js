@@ -183,7 +183,7 @@ var environment_form = {
                                         label: "Url",
                                         required: true,
                                         placeholder: "noc.example.com",
-                                        bottomLabel: "Noc Url. IP or DNS name. No http/https",
+                                        bottomLabel: "NOC URL. Prefer DNS than IP",
                                         validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]+$/)
                                     },
                                     {
