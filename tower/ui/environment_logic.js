@@ -298,7 +298,7 @@ var environment_logic = {
                 if (result) {
                     deploy();
                 } else {
-                    Tower.msg.failed("Repo is not pulled. Pull repo first");
+                    Tower.msg.failed("Repo is not pulled. Press Pull button on Environments tab");
                 }
             }, function (err) {
                 Tower.msg.failed("Cannot connect to server");
