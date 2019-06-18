@@ -9,7 +9,7 @@ WORKDIR /opt/tower
 RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential
 RUN virtualenv /opt/tower \
-    && ./bin/pip install ansible==2.7 \
+    && ./bin/pip install ansible==2.7.11 \
     && ./bin/pip install /mnt/tower/dist/*.zip
 
 FROM debian:latest as app
@@ -42,7 +42,7 @@ RUN apt-get update \
 
 WORKDIR /opt/tower
 
-COPY entrypoint.sh /
+COPY contrib/docker/entrypoint.sh /
 
 STOPSIGNAL SIGINT
 
