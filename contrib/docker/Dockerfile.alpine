@@ -1,17 +1,26 @@
-FROM alpine:3.6 as builder
+FROM alpine:3.9 as builder
 
 RUN mkdir /mnt/tower
 WORKDIR /mnt/tower/
-RUN apk add --update  py2-cffi  py-virtualenv gcc python-dev musl-dev  libffi-dev openssl-dev ca-certificates make
+RUN apk add --no-cache --update \
+    py2-cffi \
+    py-virtualenv \
+    gcc \
+    python-dev \
+    musl-dev \
+    libffi-dev \
+    openssl-dev \
+    ca-certificates \
+    make
 COPY . /mnt/tower/
 RUN python setup.py sdist --format=zip
 
 WORKDIR /opt/tower
 RUN virtualenv /opt/tower \
-    && ./bin/pip install ansible==2.6.3 \
+    && ./bin/pip install ansible==2.7.11 \
     && ./bin/pip install /mnt/tower/dist/*.zip
 
-FROM python:2.7-alpine3.6
+FROM python:2.7-alpine3.9
 
 ENV ANSIBLE_HOST_KEY_CHECKING=False \
     ANSIBLE_SSH_PIPELINING=1 \
@@ -24,11 +33,19 @@ ENV ANSIBLE_HOST_KEY_CHECKING=False \
 COPY --from=builder /opt/tower /opt/tower
 
 # install systemv packages
-RUN  apk add --update ca-certificates openssh-client vim sqlite curl git libffi openssl
+RUN  apk add --no-cache --update \
+    ca-certificates \
+    openssh-client \
+    vim \
+    sqlite \
+    curl \
+    git \
+    libffi \
+    openssl
 
 WORKDIR /opt/tower
 
-COPY entrypoint-alpine.sh /entrypoint.sh
+COPY contrib/docker/entrypoint-alpine.sh /entrypoint.sh
 
 STOPSIGNAL SIGINT
 

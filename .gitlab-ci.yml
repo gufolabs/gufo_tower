@@ -4,6 +4,7 @@ variables:
 
 stages:
   - lint
+  - test
   - build
   - upload
   - build_image
@@ -50,6 +51,24 @@ upload:
     - master@noc/tower
     - tags@noc/tower
 
+check_docker_buildable_debian:
+  stage: test
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build -t ${CI_COMMIT_REF_SLUG}-${CI_JOB_ID} -f contrib/docker/Dockerfile .
+    #- timeout --preserve-status -s 9 30 docker run ${CI_COMMIT_REF_SLUG}-${CI_JOB_ID}
+  tags:
+    - shell
+
+check_docker_buildable_alpine:
+  stage: test
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build -t ${CI_COMMIT_REF_SLUG}-${CI_JOB_ID} -f contrib/docker/Dockerfile.alpine .
+    #- timeout --preserve-status -s 9 30 docker run ${CI_COMMIT_REF_SLUG}-${CI_JOB_ID}
+  tags:
+    - shell
+
 build_image_debian:
   stage: build
   before_script:
@@ -57,7 +76,7 @@ build_image_debian:
     - export CONTAINER_NAME=${CI_REGISTRY_IMAGE}:${CI_BUILD_REF_NAME}
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker build -t $CONTAINER_NAME .
+    - docker build -t $CONTAINER_NAME -f contrib/docker/Dockerfile .
     - docker push $CONTAINER_NAME
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME ${CI_REGISTRY_IMAGE}:${CI_BUILD_TAG}; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}; fi
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME ${CI_REGISTRY_IMAGE}:latest; docker push ${CI_REGISTRY_IMAGE}:latest; fi
@@ -74,7 +93,7 @@ build_image_alpine:
     - export CONTAINER_NAME=${CI_REGISTRY_IMAGE}:${CI_BUILD_REF_NAME}_alpine
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker build -t $CONTAINER_NAME  -f Dockerfile.alpine .
+    - docker build -t $CONTAINER_NAME  -f contrib/docker/Dockerfile.alpine .
     - docker push $CONTAINER_NAME
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME ${CI_REGISTRY_IMAGE}:${CI_BUILD_TAG}_alpine; docker push $CI_REGISTRY_IMAGE:${CI_BUILD_TAG}_alpine; fi
     - if [ -n "${CI_BUILD_TAG}" ]; then docker tag $CONTAINER_NAME ${CI_REGISTRY_IMAGE}:alpine; docker push ${CI_REGISTRY_IMAGE}:alpine; fi
