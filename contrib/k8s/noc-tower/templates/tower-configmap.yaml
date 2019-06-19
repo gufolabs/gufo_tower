@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tower-configmap
+  namespace: {{ .Release.Namespace }}
+data:
+  ANSIBLE_ROLES_PATH: /opt/tower/var/tower/playbooks/NOC/additional_roles:/opt/tower/var/tower/playbooks/NOC/system_roles:/opt/tower/var/tower/playbooks/NOC/noc_roles
+  NOC_ENV: NOC

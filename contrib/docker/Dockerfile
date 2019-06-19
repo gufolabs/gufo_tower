@@ -38,7 +38,12 @@ RUN apt-get update \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
     # Fix for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=783738
-    && ln -s /usr/lib/python2.7/plat-*/_sysconfigdata_nd.py /usr/lib/python2.7/
+    && ln -s /usr/lib/python2.7/plat-*/_sysconfigdata_nd.py /usr/lib/python2.7/ \
+    && adduser --system \
+        --shell /bin/bash \
+        --no-create-home \
+        --disabled-password \
+        --uid 1201  tower
 
 WORKDIR /opt/tower
 

@@ -41,7 +41,8 @@ RUN  apk add --no-cache --update \
     curl \
     git \
     libffi \
-    openssl
+    openssl \
+    && adduser  -S -s /bin/sh -D -H -u 1201 tower
 
 WORKDIR /opt/tower
 

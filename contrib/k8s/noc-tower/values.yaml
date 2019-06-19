@@ -1,0 +1,21 @@
+---
+image:
+  repository: registry.getnoc.com/noc/tower
+  tag: alpine
+  pullPolicy: IfNotPresent
+
+## Assign a PriorityClassName to pods if set
+# priorityClassName:
+
+rbac:
+  create: true
+
+securityContext: {}
+#  runAsUser: 1201
+nodeSelector: {}
+
+ingress:
+  enable: true
+  enable_https: false
+  host: tower.getnoc.com
+  tls_secret_name: tower-tls-secret
