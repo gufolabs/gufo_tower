@@ -1,0 +1,23 @@
+---
+{{- if .Values.ingress.enable }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: tower-ingress
+  namespace: {{ .Release.Namespace }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - backend:
+              serviceName: tower-svc
+              servicePort: 8888
+            path: /
+{{- end }}
+{{- if .Values.ingress.enable_https }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls_secret_name }}
+{{- end }}

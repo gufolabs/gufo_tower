@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: tower
+  name: tower-svc
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+    - name: web
+      port: 8888
+      targetPort: 8888
+  selector:
+    service: tower
+

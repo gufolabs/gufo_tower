@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: tower
+  name: tower
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      service: tower
+  template:
+    metadata:
+      labels:
+        service: tower
+    spec:
+      {{- if .Values.serviceAccountName }}
+      serviceAccountName: {{ template "promtail.serviceAccountName" . }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: tower-configmap
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: tower
+          ports:
+            - containerPort: 8888
+          resources:
+            limits:
+              cpu: 250m
+              memory: 150Mi
+            requests:
+              cpu: 50m
+              memory: 150Mi
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          volumeMounts:
+            - mountPath: /opt/tower/var/
+              name: tower-pvc
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      hostname: tower
+      restartPolicy: Always
+      volumes:
+        - name: tower-pvc
+          persistentVolumeClaim:
+            claimName: tower-pvc
+

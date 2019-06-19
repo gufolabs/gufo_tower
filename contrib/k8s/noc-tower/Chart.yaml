@@ -1,0 +1,9 @@
+name: noc-tower
+description: NocTower
+version: 0.0.1
+appVersion: 0.4.4
+keywords:
+  - NocProject
+sources:
+  - https://code.getnoc.com/noc/tower/
+home: https://code.getnoc.com/noc/tower/blob/master/Readme.md
