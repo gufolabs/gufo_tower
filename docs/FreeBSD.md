@@ -1,7 +1,7 @@
 ## Preparation
 ### FreeBSD
 ```shell
-# pkg install -y python2 libffi py27-pip py27-virtualenv py27-sqlite3 ca_root_nss git
+# pkg install -y ca_root_nss python27 libffi py27-setuptools py27-pip py27-virtualenv py27-sqlite3 git
 # pw groupadd -n tower
 # pw useradd -g tower -s /bin/csh -d /home/tower -n tower -m
 ```
@@ -21,7 +21,7 @@ Replace /opt/tower/ to directory of your choice
  - Create virtualenv
 
 ```shell
-/opt/tower# virtualenv .
+/opt/tower# virtualenv-2.7 .
 ```
 
  - Install Tower
