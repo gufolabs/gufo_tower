@@ -14,7 +14,7 @@ Replace /opt/tower/ to directory of your choice
  - Create Tower directory
 
 ```shell
-# mkdir /opt/tower
+# mkdir -p /opt/tower
 # cd /opt/tower
 ```
 
