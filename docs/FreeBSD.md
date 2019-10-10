@@ -20,6 +20,11 @@ Replace /opt/tower/ to directory of your choice
 
  - Create virtualenv
 
+If you're in csh, rehash first
+
+```shell
+/opt/tower# rehash
+```
 ```shell
 /opt/tower# virtualenv-2.7 .
 ```
