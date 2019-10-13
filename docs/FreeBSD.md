@@ -20,6 +20,11 @@ root@tower:~ # cd /opt/tower
 
  - Create virtualenv
 
+If you're in csh, rehash first
+
+```shell
+/opt/tower# rehash
+```
 ```shell
 root@tower:/opt/tower # virtualenv-2.7 .
 ```
