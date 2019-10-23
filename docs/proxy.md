@@ -16,11 +16,11 @@ export http_proxy=http://user:password@192.168.1:3128 https_proxy=http://user:pa
 ```
 
 
-After all command will get access to the net. 
+After setting enviroment vsriable all commands will get access to the net via proxy. 
 
 ## Docker
 
-After docker installation docker daemon itself have to get access to internet
+After docker installation docker daemon itself needs proxy for internet connection
 ```
 mkdir /etc/systemd/system/docker.service.d/
 ```
@@ -41,7 +41,7 @@ systemctl restart docker
 
 ## Tower
 
-Container acts as separate network node so it has to get access to internet separately. Append to  `docker-compose.yml` in `environment` section that vars
+Container acts as a separate network host so it has to get access to internet separately. Append to  `docker-compose.yml` in `environment` section that vars
 
 ```
 version: '2.1'
