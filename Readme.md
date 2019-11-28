@@ -4,6 +4,18 @@ NOC (http://nocproject.org/) installations.
 
 [![build status](https://code.getnoc.com/noc/tower/badges/master/build.svg)](https://code.getnoc.com/noc/tower/commits/master)
 
+## 100% Supported OSes for NOC
+- Debian 9
+- Debian 10
+- Ubuntu 16 LTS
+- Ubuntu 18 LTS
+- Centos 7
+
+## 90% Supported OSes for NOC
+- FreeBSD 10
+- RHEL 7
+- Oracle Linux 7
+
 ## Install 
 
 The easiest method of installation and update is to use docker and docker-compose.yml 
