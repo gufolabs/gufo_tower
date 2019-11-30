@@ -26,6 +26,16 @@ var node_logic = {
     },
 
     on_add: function () {
+        var i = $$("datacenter_list").data.pull;
+        var d = $$("node_form").elements.datacenter;
+        var my_keys = Object.keys(i);
+        for (j = 0; j < my_keys.length; j++) {
+            if (my_keys[j] != 'id') {
+                var obj = i[my_keys[j]];
+                d.data.options.add({id: obj.id, value: obj.name});
+            }
+        }
+
         node_logic.show_form();
         $$("node_form").setValues({
             login_as: "ansible",
