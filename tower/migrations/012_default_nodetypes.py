@@ -33,7 +33,7 @@ def migrate(migrator):
     NodeType(
         name="FreeBSD",
         shell_type="csh",
-        python_interpreter="/usr/local/bin/python2",
+        python_interpreter="/usr/local/bin/python2.7",
         ssh_pipelining=True,
         ansible_connection="ssh"
     ).save()
