@@ -1,7 +1,12 @@
 ## Future
 ### Release Notes
 
-## 0.4.6 (2018-08-25)
+## 0.4.7 (2019-12-03)
+### Release Notes
+* Fix2 node name == service name bug
+* Fix FreeBSD python2.7
+
+## 0.4.6/5 (2019-11-29)
 ### Release Notes
 * Bump ansible version to 2.7.15
 
