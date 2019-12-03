@@ -70,14 +70,19 @@ var service_logic = {
     on_column_group: function (obj, common, name) {
         var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
         // var name = this.column;
-        if (obj.$group && obj[name]) {
-            return common.space(obj, common) +
+		if (obj.$group && obj[name]) {
+            // folder
+			return common.space(obj, common) +
                 common.icon(obj, common) +
                 common.folder(obj, common) +
                 "<span>" + obj[name] + "</span>"
-        } else if ( obj[name] !== undefined && ( (parent !== obj[name]) || (name == 'service') ) ) {
+		} else if (parent !== obj[name]) {
             return obj[name];
         } else {
+			if (obj.hasOwnProperty("node") && obj.hasOwnProperty("service") && ( obj.node == obj.service ) ) { 
+				if (name == $$("service_list").Nk)
+					return obj[name];
+			}
             return "";
         }
     },
