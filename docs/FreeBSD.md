@@ -32,7 +32,6 @@ root@tower:/usr/local/tower # virtualenv-2.7 .
 ```shell
 root@tower:/usr/local/tower # ./bin/pip install --upgrade pip
 root@tower:/usr/local/tower # ./bin/pip install https://cdn.getnoc.com/tower/noc-tower-latest.zip
-root@tower:/usr/local/tower # ./bin/pip install ansible==2.7.11
 root@tower:/usr/local/tower # chown -R tower var/
 ```
  - Generate Tower ssh keys
