@@ -26,22 +26,26 @@ var node_logic = {
     },
 
     on_add: function () {
-        var i = $$("datacenter_list").data.pull;
-        var d = $$("node_form").elements.datacenter;
-        var my_keys = Object.keys(i);
-        for (j = 0; j < my_keys.length; j++) {
-            if (my_keys[j] != 'id') {
-                var obj = i[my_keys[j]];
-                d.data.options.add({id: obj.id, value: obj.name});
-            }
-        }
+		var dc = $$("node_form").elements.datacenter;
+		var nt = $$("node_form").elements.node_type;
 
-        node_logic.show_form();
-        $$("node_form").setValues({
-            login_as: "ansible",
-            node_type: 3,
-            is_enabled: true
-        });
+		API.datacenter.get_items().then(result => {
+			if (dc.data.options.count() == 0) 
+				result.data.forEach(el => dc.data.options.add({id: el.id, value: el.name}))
+		}).then(
+			API.nodetype.get_items().then(result => { 
+				if (nt.data.options.count() == 0) 
+					result.data.forEach(el => nt.data.options.add({id: el.id, value: el.name}))
+			})
+		).then(function () {
+			node_logic.show_form();
+			$$("node_form").setValues({
+				login_as: "ansible",
+				node_type: 1,
+				is_enabled: true
+			});
+		});
+
     },
 
     on_save: function () {
