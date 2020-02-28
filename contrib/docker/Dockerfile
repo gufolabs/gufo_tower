@@ -1,8 +1,8 @@
-FROM python:2.7 as builder
+FROM python:2.7.16 as builder
 
 RUN mkdir /mnt/tower
 WORKDIR /mnt/tower/
-COPY . /mnt/tower/
+COPY ../.. /mnt/tower/
 RUN python setup.py sdist --format=zip
 
 WORKDIR /opt/tower
