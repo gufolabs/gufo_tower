@@ -50,6 +50,7 @@ var pool_logic = {
                     }
                 );
             } else {
+                data.environment_id = app_logic.current_env.id;
                 API.pool.update_item(data).then(
                     function (result) {
                         form.setValues(result);
