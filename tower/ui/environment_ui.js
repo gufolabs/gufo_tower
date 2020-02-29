@@ -226,6 +226,14 @@ var environment_form = {
                     label: "Repo",
                     body: {
                         rows: [
+                            {   cols: [
+                                    {
+                                        view: "label",
+                                        label: "",
+                                        id: "pulled_label",
+                                    }
+                                ]   
+                            },
                             {
                                 cols: [
                                     {
