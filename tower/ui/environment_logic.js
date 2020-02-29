@@ -35,6 +35,7 @@ var environment_logic = {
             config_order: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
             name: "NOC"
         });
+        $$("pulled_label").setHTML("");
     },
 
     on_save: function () {
@@ -85,6 +86,17 @@ var environment_logic = {
     on_edit: function () {
         var data = $$("environment_list").getSelectedItem();
         $$("environment_form").setValues(data);
+        API.pull.is_pulled(data.id).then(
+            function (result) {
+                if (result) {
+                    $$("pulled_label").setHTML("<span style='color: red; font-weight: bold;'>Playbook Repo is pulled, now you can only change branch, not URL. To change URL you have to manually remove playbook dir from %TOWER%/var/tower/playbooks/%Env name%</span>");
+                } else {
+                    $$("pulled_label").setHTML("");
+                }
+            }, function (err) {
+                Tower.msg.failed("Cannot connect to server");
+            }
+        );
         environment_logic.show_form();
     },
 
