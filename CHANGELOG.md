@@ -1,5 +1,7 @@
 ## Future
 ### Release Notes
+* Fix pool edit
+
 
 ## 0.4.7 (2019-12-03)
 ### Release Notes
