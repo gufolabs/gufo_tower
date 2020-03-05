@@ -53,7 +53,7 @@ systemctl enable docker
 
 #### Install docker compose 
 ```
-sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 # If u have an error about setuptools: pip install --upgrade setuptools
 mkdir /etc/docker-compose/tower -p
@@ -86,7 +86,7 @@ On each node
 * double check that python2.7 is installed on nodes
 * create ansible user (*ansible* by default) and define ansible user's password, you'll need it later.
 ```
-useradd -d /home/ansible -s /bin/bash -m ansible`
+useradd -d /home/ansible -s /bin/bash -m ansible
 passwd ansible
 ``` 
 * grant it passwordless `sudo` privileges(`ansible  ALL=(ALL) NOPASSWD:ALL` in /etc/sudoers) and copy Tower's public ssh key (*/opt/tower/var/tower/data/deploy_keys/id_rsa.pub*) to *ansible's*
