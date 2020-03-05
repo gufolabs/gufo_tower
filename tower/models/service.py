@@ -45,7 +45,7 @@ class Service(Model):
                 if not os.path.exists(path):
                     continue
                 with open(path) as f:
-                    descr = yaml.load(f)
+                    descr = yaml.full_load(f)
                     if not descr:
                         continue
                     for srv in sorted(descr["services"]):

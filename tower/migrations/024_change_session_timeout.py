@@ -71,7 +71,7 @@ def migrate(migrator):
         is_default = BooleanField(default=False)
 
     for env in Environment.select():
-        config = yaml.load(env.service_config)
+        config = yaml.full_load(env.service_config)
         if "session_ttl" in config[None]["login"]:
             if "d" not in str(config[None]["login"]["session_ttl"]):
                 config[None]["login"]["session_ttl"] = str(config[None]["login"]["session_ttl"]) + "d"

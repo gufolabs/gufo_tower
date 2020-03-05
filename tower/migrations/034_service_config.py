@@ -58,7 +58,7 @@ def migrate(migrator):
             print("Migrating %s" % env.name)
             # remove nodes without services
 
-            config = yaml.load(env.service_config)
+            config = yaml.full_load(env.service_config)
             if not config:
                 continue
             # move settings from environment to service
