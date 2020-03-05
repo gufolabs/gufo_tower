@@ -34,7 +34,7 @@ class ServiceAPI(API):
             if not os.path.exists(path):
                 continue
             with open(path) as f:
-                descr = yaml.load(f, OrderedDictYAMLLoader)
+                descr = yaml.full_load(f, OrderedDictYAMLLoader)
                 if not descr:
                     continue
                 if "services" not in descr or not descr["services"]:

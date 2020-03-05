@@ -415,7 +415,7 @@ class Environment(Model):
             if not os.path.exists(path):
                 continue
             with open(path) as f:
-                descr = yaml.load(f)
+                descr = yaml.full_load(f)
             if not descr:
                 continue
             if "services" not in descr or not descr["services"]:

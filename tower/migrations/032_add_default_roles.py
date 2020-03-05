@@ -152,7 +152,7 @@ def migrate(migrator):
                     loglevel="info"
                 ).save()
             # Adjust service config
-            config = yaml.load(env.service_config) or {None: {}}
+            config = yaml.full_load(env.service_config) or {None: {}}
             config[None]["telegraf"] = {
                 "telegraf_output_plugin": "influx"
             }

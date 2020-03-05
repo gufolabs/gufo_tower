@@ -35,7 +35,7 @@ def migrate(migrator):
     if len(Environment.select()) != 0:
         for env in Environment.select():
             print("Migrating %s" % env.name)
-            config = yaml.load(env.service_config)
+            config = yaml.full_load(env.service_config)
             if not config:
                 continue
             if env.custom_repo:
