@@ -10,10 +10,10 @@ NOC (http://nocproject.org/) installations.
 - Ubuntu 16 LTS
 - Ubuntu 18 LTS
 - Centos 7
+- RHEL 7
 
 ## 90% Supported OSes for NOC
-- FreeBSD 10
-- RHEL 7
+- FreeBSD 12
 - Oracle Linux 7
 
 ## Install 
