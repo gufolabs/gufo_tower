@@ -1,7 +1,9 @@
-## Future
+## 0.4.8 (2020-03-XX)
 ### Release Notes
 * Fix pool edit
-
+* Fix Default node type
+* Fix YAML warning
+* Bump ansible to 2.9.6
 
 ## 0.4.7 (2019-12-03)
 ### Release Notes
