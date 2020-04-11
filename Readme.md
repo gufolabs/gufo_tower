@@ -24,26 +24,6 @@ The easiest method of installation and update is to use docker and docker-compos
 
 If tower and node does not have direct access to the internet [setup proxy](docs/proxy.md)
 
-
-#### Install python-pip 
-<details>
-<summary>CentOS/RHEL </summary>
-
-<pre><code>
-yum install python-setuptools
-easy_install pip
-</code></pre>
-</details>
-
-<details>
-<summary>Debian/Ubuntu</summary>
-
-<pre><code>
-apt update
-apt install --no-install-recommends python-pip curl python-setuptools
-</code></pre>
-</details>
-
 #### Install docker daemon
 ```
 curl https://get.docker.com | sudo sh 
@@ -53,9 +33,9 @@ systemctl enable docker
 
 #### Install docker compose 
 ```
-sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-# If u have an error about setuptools: pip install --upgrade setuptools
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 mkdir /etc/docker-compose/tower -p
 ```
 
