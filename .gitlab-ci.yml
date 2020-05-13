@@ -56,7 +56,6 @@ check_docker_buildable_debian:
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build -t ${CI_COMMIT_REF_SLUG}-${CI_JOB_ID} -f contrib/docker/Dockerfile .
-    #- timeout --preserve-status -s 9 30 docker run ${CI_COMMIT_REF_SLUG}-${CI_JOB_ID}
   tags:
     - shell
 
@@ -65,7 +64,6 @@ check_docker_buildable_alpine:
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build -t ${CI_COMMIT_REF_SLUG}-${CI_JOB_ID} -f contrib/docker/Dockerfile.alpine .
-    #- timeout --preserve-status -s 9 30 docker run ${CI_COMMIT_REF_SLUG}-${CI_JOB_ID}
   tags:
     - shell
 

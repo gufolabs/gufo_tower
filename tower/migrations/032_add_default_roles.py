@@ -1,3 +1,4 @@
+from builtins import object
 from peewee import CharField, IntegerField, ForeignKeyField
 from peewee import Model, TextField, BooleanField
 import yaml
@@ -57,7 +58,7 @@ DEFAULT_ROLES = [
 
 def migrate(migrator):
     class Environment(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "environment"
 
@@ -65,7 +66,7 @@ def migrate(migrator):
         service_config = TextField(default="")
 
     class Role(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "role"
 
@@ -77,7 +78,7 @@ def migrate(migrator):
         role_name = CharField()
 
     class Node(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "node"
 
@@ -85,7 +86,7 @@ def migrate(migrator):
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
 
     class Pool(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "pool"
 
@@ -93,7 +94,7 @@ def migrate(migrator):
         name = CharField()
 
     class Service(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "service"
 
@@ -156,5 +157,5 @@ def migrate(migrator):
             config[None]["telegraf"] = {
                 "telegraf_output_plugin": "influx"
             }
-            env.service_config = yaml.dump(config)
+            env.service_config = yaml.dump(config.decode("utf-8"))
             env.save()

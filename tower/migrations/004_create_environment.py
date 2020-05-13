@@ -1,8 +1,9 @@
+from builtins import object
 from peewee import Model, CharField, TextField
 
 
 class Environment(Model):
-    class Meta:
+    class Meta(object):
         db_table = "environment"
 
     name = CharField(unique=True)

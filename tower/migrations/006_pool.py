@@ -1,13 +1,14 @@
+from builtins import object
 from peewee import Model, CharField, TextField, ForeignKeyField
 
 
 class Environment(Model):
-    class Meta:
+    class Meta(object):
         db_table = "environment"
 
 
 class Pool(Model):
-    class Meta:
+    class Meta(object):
         db_table = "pool"
         indexes = (
             (("environment_id", "name"), True),

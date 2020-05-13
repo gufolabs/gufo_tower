@@ -78,4 +78,4 @@ class DirectRequestHandler(BaseHandler):
                 response += [{}]
         if is_scalar:
             response = response[0]
-        self.write(json.dumps(response))
+        self.write(json.dumps(response.decode("utf-8")))

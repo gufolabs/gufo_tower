@@ -8,6 +8,8 @@
 
 # Third-party modules
 from __future__ import absolute_import
+from builtins import str
+from builtins import object
 from peewee import Model, CharField, TextField, ForeignKeyField, BooleanField
 # Tower modules
 from .db import db
@@ -17,7 +19,7 @@ from .nodetype import NodeType
 
 
 class Node(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "node"
         indexes = (

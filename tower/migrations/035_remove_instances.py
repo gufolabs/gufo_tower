@@ -1,11 +1,12 @@
 from __future__ import print_function
+from builtins import object
 from peewee import Model, CharField, ForeignKeyField, TextField, IntegerField, BooleanField
 import json
 
 
 def migrate(migrator):
     class Environment(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "environment"
 
@@ -13,7 +14,7 @@ def migrate(migrator):
         metrics_collector = CharField(default="")
 
     class Node(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "node"
 
@@ -21,7 +22,7 @@ def migrate(migrator):
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
 
     class Pool(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "pool"
 
@@ -29,7 +30,7 @@ def migrate(migrator):
         name = CharField()
 
     class Service(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "service"
 
@@ -245,7 +246,7 @@ def migrate(migrator):
                     if 'logging' in conf:
                         del conf['logging']
                 conf["loglevel"] = srv.loglevel
-                srv.config = json.dumps(conf, sort_keys=True)
+                srv.config = json.dumps(conf.decode("utf-8"), sort_keys=True)
                 srv.save()
             # noc service should be enabled if any noc services was enabled
             for n in noc_promote_nodes:

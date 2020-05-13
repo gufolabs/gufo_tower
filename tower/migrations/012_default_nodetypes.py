@@ -1,10 +1,11 @@
+from builtins import object
 from peewee import (Model, CharField, ForeignKeyField,
                     BooleanField)
 
 
 def migrate(migrator):
     class NodeType(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "node_type"
 
@@ -17,7 +18,7 @@ def migrate(migrator):
         ansible_connection = CharField(max_length=255, default="smart")
 
     class Node(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "node"
 

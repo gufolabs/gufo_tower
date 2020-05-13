@@ -1,9 +1,10 @@
+from builtins import object
 from peewee import Model, CharField, BooleanField
 
 
 def migrate(migrator):
     class User(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "user"
 

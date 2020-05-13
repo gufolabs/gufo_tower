@@ -6,6 +6,7 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 from __future__ import absolute_import
+from builtins import object
 import os
 import yaml
 
@@ -21,7 +22,7 @@ from .pool import Pool
 
 
 class Service(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "service"
         indexes = (
@@ -56,21 +57,21 @@ class Service(Model):
             return svc
 
         def dfs_topsort(graph):  # recursive dfs with
-            L = []  # additional list for order of nodes
+            node_list = []  # additional list for order of nodes
             color = {u: "white" for u in graph}
             found_cycle = [False]
             for u in graph:
                 if color[u] == "white":
-                    dfs_visit(graph, u, color, L, found_cycle)
+                    dfs_visit(graph, u, color, node_list, found_cycle)
                 if found_cycle[0]:
                     break
 
             if found_cycle[0]:  # if there is a cycle,
-                L = []  # then return an empty list
+                node_list = []  # then return an empty list
 
-            return L  # L contains the topological sort
+            return node_list  # node_list contains the topological sort
 
-        def dfs_visit(graph, u, color, L, found_cycle):
+        def dfs_visit(graph, u, color, node_list, found_cycle):
             if found_cycle[0]:
                 return
             color[u] = "gray"
@@ -79,9 +80,9 @@ class Service(Model):
                     found_cycle[0] = True
                     return
                 if color[v] == "white":
-                    dfs_visit(graph, v, color, L, found_cycle)
+                    dfs_visit(graph, v, color, node_list, found_cycle)
             color[u] = "black"  # when we're done with u,
-            L.append(u)  # add u to list (reverse it later!)
+            node_list.append(u)  # add u to list (reverse it later!)
 
         deps = defaultdict(list)
 

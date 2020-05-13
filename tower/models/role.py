@@ -8,6 +8,8 @@
 
 # Third-party modules
 from __future__ import absolute_import
+from builtins import str
+from builtins import object
 from peewee import CharField, TextField, ForeignKeyField, BooleanField
 from playhouse.signals import Model, post_save
 import os
@@ -58,7 +60,7 @@ DEFAULT_ROLES = [
 
 
 class Role(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "role"
         indexes = (

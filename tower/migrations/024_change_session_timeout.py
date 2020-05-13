@@ -1,4 +1,6 @@
 # Third-party modules
+from builtins import str
+from builtins import object
 import yaml
 
 from peewee import (Model, CharField, TextField, BooleanField)
@@ -6,7 +8,7 @@ from peewee import (Model, CharField, TextField, BooleanField)
 
 def migrate(migrator):
     class Environment(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "environment"
 
@@ -75,5 +77,5 @@ def migrate(migrator):
         if "session_ttl" in config[None]["login"]:
             if "d" not in str(config[None]["login"]["session_ttl"]):
                 config[None]["login"]["session_ttl"] = str(config[None]["login"]["session_ttl"]) + "d"
-                env.service_config = yaml.dump(config)
+                env.service_config = yaml.dump(config.decode("utf-8"))
                 env.save()
