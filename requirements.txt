@@ -15,5 +15,5 @@ setuptools>=11.3
 packaging
 appdirs
 netaddr
-#gittornado
 jmespath==0.9.3
+future==0.18.2

@@ -18,3 +18,5 @@ var/
 .gitlab-ci.yml
 .bumpversion.cfg
 .flake8
+venv*/
+.mypy_cache/

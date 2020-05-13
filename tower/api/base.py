@@ -7,6 +7,7 @@
 # ----------------------------------------------------------------------
 
 # Python modules
+from builtins import object
 import base64
 
 # Third-party modules
@@ -14,6 +15,7 @@ import tornado.web
 
 # Tower modules
 from tower.models.user import User
+from future.utils import with_metaclass
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -71,8 +73,7 @@ def open_api(method):
     return method
 
 
-class API(object):
-    __metaclass__ = APIBase
+class API(with_metaclass(APIBase, object)):
     name = None
 
     def __init__(self, handler):

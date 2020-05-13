@@ -7,6 +7,9 @@
 # ----------------------------------------------------------------------
 
 from __future__ import absolute_import
+from builtins import str
+from builtins import zip
+from builtins import range
 import datetime
 # Python modules
 import logging
@@ -232,7 +235,7 @@ class DeployHandler(BaseHandler):
         except tornado.iostream.StreamClosedError:
             pass
         recap = [0, 0, 0, 0]
-        for v in self.recap.itervalues():
+        for v in list(self.recap.values()):
             recap = [(x + y) for x, y in zip(recap, v)]
         with db.atomic():
             self.job_log.complete_ts = datetime.datetime.now()

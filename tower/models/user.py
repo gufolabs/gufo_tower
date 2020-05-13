@@ -7,6 +7,7 @@
 # ----------------------------------------------------------------------
 
 from __future__ import absolute_import
+from builtins import object
 import bcrypt
 # Third-party modules
 from peewee import Model, CharField, BooleanField, DoesNotExist
@@ -16,7 +17,7 @@ from .db import db
 
 
 class User(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "user"
 
@@ -32,7 +33,7 @@ class User(Model):
         :param password:
         :return:
         """
-        if isinstance(password, unicode):
+        if isinstance(password, str):
             password = password.encode("utf-8")
         return bcrypt.hashpw(password, bcrypt.gensalt(10))
 
@@ -44,9 +45,9 @@ class User(Model):
         :param hashed:
         :return:
         """
-        if isinstance(password, unicode):
+        if isinstance(password, str):
             password = password.encode("utf-8")
-        if isinstance(hashed, unicode):
+        if isinstance(hashed, str):
             hashed = hashed.encode("utf-8")
         return bcrypt.hashpw(password, hashed) == hashed
 

@@ -8,6 +8,7 @@
 
 # Python modules
 from __future__ import absolute_import
+from builtins import object
 import base64
 import json
 import os
@@ -20,7 +21,7 @@ from .db import db
 
 
 class Settings(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "settings"
 
@@ -53,7 +54,7 @@ class Settings(Model):
 
     @classmethod
     def set_item(cls, name, value):
-        value = json.dumps(value)
+        value = json.dumps(value.decode("utf-8"))
         with db.atomic():
             r = list(Settings.select().where(Settings.key == name))
             if len(r) == 0:

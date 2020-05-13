@@ -7,9 +7,11 @@
 # ----------------------------------------------------------------------
 
 from __future__ import absolute_import
+from builtins import str
+from builtins import object
 import errno
 import logging
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 # Python
 import os
 import subprocess
@@ -31,7 +33,7 @@ logging.getLogger(__name__)
 
 
 class Environment(Model):
-    class Meta:
+    class Meta(object):
         database = db
         db_table = "environment"
 
@@ -169,37 +171,12 @@ class Environment(Model):
             required_assets = []
             for s in node_services[node.name]:
                 required_assets += srv_descr[s.service]["required_assets"]
-            r["_meta"]["hostvars"][node.name]["required_assets"] = list(set(required_assets))
+            r["_meta"]["hostvars"][node.name]["required_assets"] = sorted(list(set(required_assets)))
         need_cert = []
         has_cert = False
         certificate = {}
         for s in srv_descr:
-            if "require_cert" in srv_descr[s] and srv_descr[s]["require_cert"]:
-                srs = Service.select().where(Service.service == s)
-                for line in srs:
-                    ln = json.loads(line.config)
-                    if not ln["cert"]:
-                        if line.present:
-                            need_cert.append(line)
-                    else:
-                        has_cert = True
-                        certificate[s] = {
-                            "key": ln["cert_key"],
-                            "cert": ln["cert"]
-                        }
-                if not has_cert and need_cert:
-                    key, cert = self.generate_certificate()
-                    certificate[s] = {
-                        "key": key,
-                        "cert": cert
-                    }
-
-                for n in need_cert:
-                    conf = json.loads(n.config)
-                    conf["cert"] = certificate[s]["cert"]
-                    conf["cert_key"] = certificate[s]["key"]
-                    n.config = json.dumps(conf, sort_keys=True)
-                    n.save()
+            self.update_certs(certificate, has_cert, need_cert, s, srv_descr)
 
         for srv in self.get_service_config():
             # do not work with stale or old services
@@ -256,46 +233,79 @@ class Environment(Model):
                             r["svc-%s-read" % dep]["hosts"].append(srv['node'])
 
             # Generate tower.yml
-            if "category" in srv_descr[srv['service']] and srv_descr[srv['service']]["category"] == "internal":
-                node_noc_config = "noc-config-%s" % srv['node']
-                if node_noc_config not in r:
-                    r[node_noc_config] = {
-                        "hosts": [srv['node']],
-                        "vars": {
-                            "noc_services": []
-                        }
-                    }
-                line = {
-                    "name": srv['service'],
-                    "config": srv['config'],
-                    "pool": pool_name,
-                    "environment": srv_descr[srv['service']]["environment"].copy()
-                }
-                # append pool configuration file to config string
-                if srv_descr[srv['service']]["level"] == "pool":
-                    order = self.config_order.split(",")
-                    for conf in order:
-                        if 'yaml://' in conf:
-                            path = urlparse(conf).path
-                            basepath = os.path.dirname(path)
-                            pool_config_path = "yaml://" + str(os.path.join(basepath, 'pool-%s.yml' % srv['pool']))
-                            order.insert(-1, pool_config_path)
-                            break
-                    pooled_order = ",".join(order)
-                    line["config_order"] = pooled_order
-                else:
-                    line["config_order"] = self.config_order
-                if "description" in line["environment"]:
-                    del line["environment"]["description"]
-                r[node_noc_config]["vars"]["noc_services"].append(line)
+            self.generate_tower_inventory(pool_name, r, srv, srv_descr)
 
         return r
+
+    def generate_tower_inventory(self, pool_name, r, srv, srv_descr):
+        if "category" in srv_descr[srv['service']] and srv_descr[srv['service']]["category"] == "internal":
+            node_noc_config = "noc-config-%s" % srv['node']
+            if node_noc_config not in r:
+                r[node_noc_config] = {
+                    "hosts": [srv['node']],
+                    "vars": {
+                        "noc_services": []
+                    }
+                }
+            line = {
+                "name": srv['service'],
+                "config": srv['config'],
+                "pool": pool_name,
+                "environment": srv_descr[srv['service']]["environment"].copy()
+            }
+            # append pool configuration file to config string
+            if srv_descr[srv['service']]["level"] == "pool":
+                order = self.config_order.split(",")
+                for conf in order:
+                    if 'yaml://' in conf:
+                        path = urlparse(conf).path
+                        basepath = os.path.dirname(path)
+                        pool_config_path = "yaml://" + str(os.path.join(basepath, 'pool-%s.yml' % srv['pool']))
+                        order.insert(-1, pool_config_path)
+                        break
+                pooled_order = ",".join(order)
+                line["config_order"] = pooled_order
+            else:
+                line["config_order"] = self.config_order
+            if "description" in line["environment"]:
+                del line["environment"]["description"]
+            r[node_noc_config]["vars"]["noc_services"].append(line)
+
+    def update_certs(self, certificate, has_cert, need_cert, s, srv_descr):
+        from .service import Service
+
+        if "require_cert" in srv_descr[s] and srv_descr[s]["require_cert"]:
+            srs = Service.select().where(Service.service == s)
+            for line in srs:
+                ln = json.loads(line.config)
+                if not ln["cert"]:
+                    if line.present:
+                        need_cert.append(line)
+                else:
+                    has_cert = True
+                    certificate[s] = {
+                        "key": ln["cert_key"],
+                        "cert": ln["cert"]
+                    }
+            if not has_cert and need_cert:
+                key, cert = self.generate_certificate()
+                certificate[s] = {
+                    "key": key,
+                    "cert": cert
+                }
+
+            for n in need_cert:
+                conf = json.loads(n.config)
+                conf["cert"] = certificate[s]["cert"]
+                conf["cert_key"] = certificate[s]["key"]
+                n.config = json.dumps(conf.decode("utf-8"), sort_keys=True)
+                n.save()
 
     @staticmethod
     def name_config(config, service):
         cfg = copy.deepcopy(config)
         sv = service.replace("-", "_")
-        for k in cfg.keys():
+        for k in list(cfg.keys()):
             cfg["_".join([sv, k])] = cfg.pop(k)
         return cfg
 

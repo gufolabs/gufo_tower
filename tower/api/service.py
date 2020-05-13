@@ -8,6 +8,8 @@
 
 # Python modules
 from __future__ import absolute_import
+from builtins import str
+from builtins import range
 import os
 
 # Third-party modules
@@ -55,7 +57,7 @@ class ServiceAPI(API):
         if "forms" not in cfg or not cfg["forms"]:
             return r
         sc = cfg["forms"][service]
-        for k, v in sc.iteritems():
+        for k, v in list(sc.items()):
             if "description" in k:
                 continue
             r[k] = v.get("default", None)
@@ -78,7 +80,7 @@ class ServiceAPI(API):
             "autoheight": "true",
             "template": descr.get("description", "")
         }
-        for k, v in descr.iteritems():
+        for k, v in list(descr.items()):
             if "description" in k:
                 continue
             c = {
@@ -156,7 +158,7 @@ class ServiceAPI(API):
                 if ck - (ck - nk) < nk:
                     updated_config = dict(service_config)
                     updated_config.update(current_config)
-                    Service.update(config=json.dumps(updated_config, sort_keys=True)).where(
+                    Service.update(config=json.dumps(updated_config.decode("utf-8"), sort_keys=True)).where(
                         Service.id == srv[0]).execute()
 
     def init_services(self, env):

@@ -1,4 +1,5 @@
 from __future__ import print_function
+from builtins import object
 from peewee import Model, CharField, TextField, BooleanField
 import yaml
 import re
@@ -13,7 +14,7 @@ def migrate(migrator):
     )
 
     class Environment(Model):
-        class Meta:
+        class Meta(object):
             database = migrator.db
             db_table = "environment"
 
@@ -60,7 +61,7 @@ def migrate(migrator):
                     "cert": pub_key,
                     "cert_key": priv_key
                 }
-            env.service_config = yaml.dump(config)
+            env.service_config = yaml.dump(config.decode("utf-8"))
             env.save()
 
     migrator.drop_column(
