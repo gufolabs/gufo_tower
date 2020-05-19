@@ -1,7 +1,7 @@
 ## Preparation
 ### Install tower prerequisites on FreeBSD
 ```shell
-root@tower:~ # pkg install -y ca_root_nss python27 libffi py27-setuptools py27-pip py27-virtualenv py27-sqlite3 git
+root@tower:~ # pkg install -y ca_root_nss python libffi py37-setuptools py37-pip py37-virtualenv py37-sqlite3 git
 root@tower:~ # pw groupadd -n tower
 root@tower:~ # pw useradd -g tower -s /bin/csh -d /home/tower -n tower -m
 ```
@@ -24,7 +24,7 @@ If you're in csh, rehash first
 /usr/local/tower# rehash
 ```
 ```shell
-root@tower:/usr/local/tower # virtualenv-2.7 .
+root@tower:/usr/local/tower # virtualenv .
 ```
 
  - Install Tower
@@ -62,18 +62,9 @@ root@noc:~ # sysrc syslogd_flags="-s -p /var/run/log -p /var/run/syslog"
 root@noc:~ # service syslogd restart
 
 ```
-* If node will run postgresql, you'll need to do the trick: add postgresql server as a package first, then build databases/py-psycopg2 from ports with python 2.7:
-```shell
-root@noc:~ # pkg install -y postgresql95-server
-root@noc:~ # sysrc postgresql_enable="YES"
-root@noc:~ # cd /usr/ports/databases/py-psycopg2
-root@noc:~ # sed -i.bak 's/^\(USES.*python\)/\1:2.7/' Makefile
-root@noc:~ # make install clean
-```
-
 * Add python for ansible, ansible user and sudo: 
 ```shell
-root@noc:~ # pkg install -y python2 sudo
+root@noc:~ # pkg install -y python sudo
 root@noc:~ # pw groupadd -n ansible 
 root@noc:~ # pw useradd -g ansible -s /bin/csh -d /home/ansible -n ansible -m
 root@noc:~ # echo "ansible ALL=(ALL) NOPASSWD: ALL" > /usr/local/etc/sudoers.d/ansible
@@ -120,10 +111,3 @@ exec.poststart    = "cp /var/run/dmesg.boot /usr/j/noc/s/var/run/";
 
 Do not forget to change tower's admin password 
 (Upper right menu > Change Password) 
-
-# After deployment
- * Change `noc/etc/noc_services.conf`, FreeBSD doesn't have `taskset` and `nproc` utilities, so command for `activator-default` should be: 
-```shell
-[program:activator-default]
-command = /bin/sh -c 'exec cpuset -l $((%(process_num)d %% $(/sbin/sysctl -n hw.ncpu))) ./services/activator/service.py'
-```
