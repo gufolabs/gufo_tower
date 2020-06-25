@@ -213,7 +213,7 @@ class DeployHandler(BaseHandler):
 
     def on_data(self, data):
         def qlog(x):
-            if x.endswith("\n"):
+            if x.endswith(b"\n"):
                 return x[:-1]
             else:
                 return x
@@ -222,7 +222,7 @@ class DeployHandler(BaseHandler):
         self.write(data)
         self.flush()
         self.job_log.append_log(data)
-        for match in self.rx_recap.finditer(data):
+        for match in self.rx_recap.finditer(str(data)):
             g = match.groups()
             self.recap[g[0]] = [int(x) for x in g[1:]]
         self.play_log += [data]
@@ -240,7 +240,7 @@ class DeployHandler(BaseHandler):
         with db.atomic():
             self.job_log.complete_ts = datetime.datetime.now()
             self.job_log.is_complete = True
-            self.job_log.log = "".join(self.play_log)
+            self.job_log.log = "".join(str(self.play_log))
             (self.job_log.n_ok, self.job_log.n_changed,
              self.job_log.n_unreachable, self.job_log.n_failed) = recap
             self.job_log.save()

@@ -41,7 +41,7 @@ class JobLog(Model):
 
     def append_log(self, data):
         with open(self.log_path, "a") as f:
-            f.write(data)
+            f.write(str(data))
 
     def get_log(self):
         path = self.log_path
