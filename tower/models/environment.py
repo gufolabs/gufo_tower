@@ -296,9 +296,9 @@ class Environment(Model):
 
             for n in need_cert:
                 conf = json.loads(n.config)
-                conf["cert"] = certificate[s]["cert"]
-                conf["cert_key"] = certificate[s]["key"]
-                n.config = json.dumps(conf.decode("utf-8"), sort_keys=True)
+                conf["cert"] = str(certificate[s]["cert"])
+                conf["cert_key"] = str(certificate[s]["key"])
+                n.config = json.dumps(conf, sort_keys=True)
                 n.save()
 
     @staticmethod
