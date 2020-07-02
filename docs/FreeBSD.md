@@ -49,7 +49,7 @@ If you want to restrict address that tower listen to, run `./bin/tower-web --lis
 
 ## Prepare nodes
 
-If you had installed PostgreSQL and MongoDB previously, you have to deinstall them and clean their db paths (`/var/db/mongodb` and `/usr/local/pgsql`). On each FreeBSD node do the following: 
+If you had installed PostgreSQL and MongoDB previously, you have to deinstall them and clean their db paths (`/var/db/mongodb` and `/var/db/postgres`). On each FreeBSD node do the following: 
 
 * Enable SSH:
 ```shell
