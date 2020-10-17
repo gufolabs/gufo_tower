@@ -6,11 +6,10 @@
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
-from __future__ import print_function
-import json
 # Python modules
 import os
 import sys
+import json
 from optparse import OptionParser
 
 # Tower modules

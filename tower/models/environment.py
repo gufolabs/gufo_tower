@@ -6,17 +6,15 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-from __future__ import absolute_import
-from builtins import str
-from builtins import object
-import errno
-import logging
-from six.moves.urllib.parse import urlparse
-# Python
+# Python modules
 import os
+import hashlib
+import base64
+import logging
 import subprocess
 import tempfile
 from collections import defaultdict
+from urllib.parse import urlparse
 import glob
 import shutil
 import json
@@ -390,6 +388,16 @@ class Environment(Model):
         return r
 
     @property
+    def repo_hash(self):
+        return base64.b32encode(
+            hashlib.sha1(self.playbook_link.encode("utf-8")).digest()
+        ).decode("utf-8")[:6]
+
+    @property
+    def repo_path(self):
+        return os.path.join("var", "tower", "repo", self.repo_hash)
+
+    @property
     def data_path(self):
         return os.path.abspath(
             os.path.join("var", "tower", "data", self.name)
@@ -516,10 +524,12 @@ class Environment(Model):
         for path in (self.playbook_path, self.data_path):
             try:
                 os.mkdir(path)
-            except OSError as exc:
-                if exc.errno == errno.EEXIST and os.path.isdir(path):
+            except FileExistsError:  # noqa
+                if os.path.isdir(path):
                     pass
                 else:
                     raise
+            except OSError:
+                raise
 
         super(Environment, self).save(*args, **kwargs)

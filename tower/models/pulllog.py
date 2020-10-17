@@ -7,10 +7,9 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
-from __future__ import absolute_import
-from builtins import object
-from peewee import (Model, CharField, TextField, ForeignKeyField,
-                    DateTimeField, BooleanField)
+from peewee import (
+    Model, CharField, TextField, ForeignKeyField, DateTimeField, BooleanField
+)
 
 # Tower modules
 from .db import db

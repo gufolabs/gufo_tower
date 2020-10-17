@@ -6,21 +6,17 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-from __future__ import absolute_import
-from builtins import str
-from builtins import zip
-from builtins import range
-import datetime
 # Python modules
+import datetime
 import logging
 import os
 import re
 import subprocess
 
+# Third-party modules
 import tornado.ioloop
 import tornado.iostream
 import tornado.process
-# Third-party modules
 import tornado.web
 
 # Tower modules

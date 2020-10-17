@@ -7,8 +7,6 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
-from __future__ import absolute_import
-from builtins import str
 import peewee
 
 from .base import API, api, APIError

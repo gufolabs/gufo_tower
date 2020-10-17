@@ -1,4 +1,5 @@
-from builtins import object
+
+# Third-party modules
 from peewee import Model, CharField, IntegerField, ForeignKeyField
 
 

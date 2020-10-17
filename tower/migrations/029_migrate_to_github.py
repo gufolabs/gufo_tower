@@ -1,4 +1,5 @@
-from builtins import object
+
+# Third-party modules
 import os
 import shutil
 

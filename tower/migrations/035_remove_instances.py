@@ -1,5 +1,5 @@
-from __future__ import print_function
-from builtins import object
+
+# Third-party modules
 from peewee import Model, CharField, ForeignKeyField, TextField, IntegerField, BooleanField
 import json
 
@@ -246,7 +246,7 @@ def migrate(migrator):
                     if 'logging' in conf:
                         del conf['logging']
                 conf["loglevel"] = srv.loglevel
-                srv.config = json.dumps(conf.decode("utf-8"), sort_keys=True)
+                srv.config = json.dumps(conf, sort_keys=True)
                 srv.save()
             # noc service should be enabled if any noc services was enabled
             for n in noc_promote_nodes:

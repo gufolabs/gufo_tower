@@ -1,7 +1,6 @@
-from __future__ import print_function
-from builtins import object
-import yaml
 
+# Third-party modules
+import yaml
 from peewee import (Model, CharField, TextField, BooleanField)
 
 
@@ -97,7 +96,7 @@ def migrate(migrator):
                 "mongod_engine": env.mongo_engine or "wiredTiger",
                 "mongod_logging_destination": config[None]["mongod"].get("mongod_logging_destination", "file")
             }
-            env.service_config = yaml.dump(config.decode("utf-8"))
+            env.service_config = yaml.dump(config)
             env.save()
 
     migrator.drop_column(

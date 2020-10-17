@@ -7,9 +7,8 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-from __future__ import absolute_import
-from builtins import object
 import os
+
 # Third-party modules
 from peewee import (Model, CharField, TextField, ForeignKeyField,
                     DateTimeField, IntegerField, BooleanField)

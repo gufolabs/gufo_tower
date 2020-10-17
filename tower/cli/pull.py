@@ -6,9 +6,8 @@
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
-from __future__ import print_function
-import datetime
 # Python modules
+import datetime
 import logging
 import os
 import sys

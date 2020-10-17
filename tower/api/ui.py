@@ -6,9 +6,9 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
+# Python modules
 import hashlib
 import logging
-# Python modules
 import os
 
 # Third-party modules

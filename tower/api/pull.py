@@ -6,26 +6,27 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-from __future__ import absolute_import
-
-import datetime
 # Python modules
-import logging
 import os
+import logging
+import datetime
+import shutil
 
 # Third-party modules
 from concurrent.futures import ThreadPoolExecutor
-from pip.download import unpack_url
-from pip.index import Link
-from pip.vcs import VersionControl
-from tower.contrib.utils import unpack, check_destination
+from pip._internal.network.session import PipSession
+from pip._internal.network.download import Downloader
+from pip._internal.operations.prepare import unpack_url
+from pip._internal.index.collector import Link
+from pip._internal.vcs.versioncontrol import VersionControl
 
-from tower.models.db import db
-from tower.models.environment import Environment
-from tower.models.pulllog import PullLog
 # Tower modules
 from .base import API, api
-from tower.models.role import Role
+from ..contrib.utils import unpack, check_destination
+from ..models.db import db
+from ..models.environment import Environment
+from ..models.pulllog import PullLog
+from ..models.role import Role
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -102,7 +103,13 @@ class PullAPI(API):
         env = job.environment
         status = True
         log = []
-        self.pull(env.playbook_link, env.playbook_path)
+        self.pull(env.playbook_link, env.repo_path)
+        repo_playbooks_path = os.path.join(env.repo_path, "ansible_deploy")
+        if not os.path.isdir(repo_playbooks_path):
+            # Playbooks on repo root
+            repo_playbooks_path = env.repo_path
+        shutil.rmtree(env.playbook_path, ignore_errors=True)
+        shutil.move(repo_playbooks_path, env.playbook_path)
         for role in Role.select().where(Role.environment == env, Role.is_enabled == True):  # noqa
             self.pull(role.link, role.role_path)
 
@@ -114,8 +121,9 @@ class PullAPI(API):
 
     @staticmethod
     def pull(link, path):
+        logger.debug("Pull link: %s, path: %s", link, path)
         try:
-            unpack_url(Link(link), path)
+            unpack_url(Link(link), path, Downloader(PipSession(), ""))
         except KeyboardInterrupt:
             raise
         except Exception as e:
