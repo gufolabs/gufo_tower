@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------
 
 # Tower modules
-from __future__ import absolute_import
 from .base import API, api
 from tower.models.settings import Settings
 

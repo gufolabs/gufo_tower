@@ -1,8 +1,8 @@
-from __future__ import print_function
-from builtins import object
-from peewee import Model, CharField, ForeignKeyField, TextField, IntegerField
+
+# Third-party modules
 import yaml
 import json
+from peewee import Model, CharField, ForeignKeyField, TextField, IntegerField
 
 
 def migrate(migrator):
@@ -66,7 +66,7 @@ def migrate(migrator):
             for pool in config:
                 for srv in config[pool]:
                     cfg = config[pool][srv]
-                    q = Service.update(config=json.dumps(cfg.decode("utf-8"), sort_keys=True)).where(
+                    q = Service.update(config=json.dumps(cfg, sort_keys=True)).where(
                         Service.environment == env.id,
                         Service.service == srv,
                         Service.pool == pool

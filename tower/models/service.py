@@ -5,12 +5,12 @@
 # Copyright (C) 2007-2015 The NOC Project
 # See LICENSE for details
 # ----------------------------------------------------------------------
-from __future__ import absolute_import
-from builtins import object
+
+# Python modules
 import os
-import yaml
 
 # Third-party modules
+import yaml
 from peewee import CharField, ForeignKeyField, TextField, BooleanField
 from playhouse.signals import Model
 

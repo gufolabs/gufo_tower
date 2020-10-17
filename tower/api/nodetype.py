@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------
 
 # Tower modules
-from __future__ import absolute_import
 from .model import ModelAPI
 from tower.models.nodetype import NodeType
 

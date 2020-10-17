@@ -1,3 +1,5 @@
+
+# Python modules
 import logging
 import os
 import shutil
@@ -55,8 +57,8 @@ def check_destination(self, dest, url, rev_options, rev_display):
     return checkout
 
 
-def unpack(self, location):
+def unpack(self, location, url):
     """
     monkey patch pip library cause they always remove downloaded dir. no idea why
     """
-    self.obtain(location)
+    self.obtain(location, url=url)

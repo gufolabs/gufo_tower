@@ -1,4 +1,5 @@
-from builtins import object
+
+# Third-party modules
 from peewee import CharField, IntegerField, ForeignKeyField
 from peewee import Model, TextField, BooleanField
 import yaml
@@ -157,5 +158,5 @@ def migrate(migrator):
             config[None]["telegraf"] = {
                 "telegraf_output_plugin": "influx"
             }
-            env.service_config = yaml.dump(config.decode("utf-8"))
+            env.service_config = yaml.dump(config)
             env.save()

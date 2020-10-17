@@ -2,15 +2,13 @@
 # ----------------------------------------------------------------------
 # Node model
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2007-2020 The NOC Project
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Third-party modules
-from __future__ import absolute_import
-from builtins import str
-from builtins import object
 from peewee import Model, CharField, TextField, ForeignKeyField, BooleanField
+
 # Tower modules
 from .db import db
 from .environment import Environment

@@ -6,10 +6,8 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-from __future__ import absolute_import
-from builtins import object
-import bcrypt
 # Third-party modules
+import bcrypt
 from peewee import Model, CharField, BooleanField, DoesNotExist
 
 # Tower modules

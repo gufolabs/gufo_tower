@@ -6,11 +6,11 @@
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
+# Python modules
+import subprocess
 import argparse
 import os
 import shutil
-# Python modules
-import subprocess
 
 
 def sqlite_path():

@@ -7,9 +7,6 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
-from __future__ import absolute_import
-from builtins import str
-from builtins import object
 from peewee import CharField, TextField, ForeignKeyField
 from playhouse.signals import Model, post_save
 

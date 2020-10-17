@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-from __future__ import absolute_import
 import json
 
 # Third-party modules
@@ -78,4 +77,4 @@ class DirectRequestHandler(BaseHandler):
                 response += [{}]
         if is_scalar:
             response = response[0]
-        self.write(json.dumps(response.decode("utf-8")))
+        self.write(json.dumps(response))

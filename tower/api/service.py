@@ -7,13 +7,9 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-from __future__ import absolute_import
-from builtins import str
-from builtins import range
 import os
 
 # Third-party modules
-import yaml
 import json
 
 # Tower modules
@@ -24,7 +20,7 @@ from tower.models.pool import Pool
 from tower.models.service import Service
 from tower.models.db import db
 from itertools import product
-from tower.contrib.yaml_ordered_dict import OrderedDictYAMLLoader
+from tower.contrib.yaml_ordered_dict import ordered_load
 
 
 class ServiceAPI(API):
@@ -36,7 +32,7 @@ class ServiceAPI(API):
             if not os.path.exists(path):
                 continue
             with open(path) as f:
-                descr = yaml.load(f, OrderedDictYAMLLoader)
+                descr = ordered_load(f)
                 if not descr:
                     continue
                 if "services" not in descr or not descr["services"]:
@@ -158,7 +154,7 @@ class ServiceAPI(API):
                 if ck - (ck - nk) < nk:
                     updated_config = dict(service_config)
                     updated_config.update(current_config)
-                    Service.update(config=json.dumps(updated_config.decode("utf-8"), sort_keys=True)).where(
+                    Service.update(config=json.dumps(updated_config, sort_keys=True)).where(
                         Service.id == srv[0]).execute()
 
     def init_services(self, env):

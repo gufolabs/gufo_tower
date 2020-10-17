@@ -7,11 +7,10 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-from __future__ import absolute_import
-from builtins import str
 import json
 import logging
 import peewee
+
 # Third-party modules
 import tornado.gen
 from tornado.web import HTTPError
@@ -46,8 +45,8 @@ class JSONRPCHandler(BaseHandler):
         # Parse request
         try:
             req = json.loads(self.request.body)
-        except ValueError as why:
-            raise HTTPError(400, "Bad request: %s" % why)
+        except ValueError as e:
+            raise HTTPError(400, "Bad request: %s" % e)
         # Parse request
         id = req.get("id", None)
         params = req.get("params", [])
@@ -74,10 +73,10 @@ class JSONRPCHandler(BaseHandler):
             if (tornado.gen.is_future(result)):
                 result = yield result
             response["result"] = result
-        except APIError as why:
-            response["error"] = str(why)
-        except peewee.IntegrityError as why:
-            response["error"] = str(why)
+        except APIError as e:
+            response["error"] = str(e)
+        except peewee.IntegrityError as e:
+            response["error"] = str(e)
         # Return response
         self.set_header("Content-Type", self.MIME_TYPE)
         self.write(json.dumps(response))

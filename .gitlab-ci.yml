@@ -48,7 +48,6 @@ upload:
   tags:
     - docker
   only:
-    - master@noc/tower
     - tags@noc/tower
 
 check_docker_buildable_debian:
@@ -81,7 +80,6 @@ build_image_debian:
   tags:
     - shell
   only:
-    - master@noc/tower
     - tags@noc/tower
 
 build_image_alpine:
@@ -98,5 +96,4 @@ build_image_alpine:
   tags:
     - shell
   only:
-    - master@noc/tower
     - tags@noc/tower

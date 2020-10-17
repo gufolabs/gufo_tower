@@ -7,7 +7,6 @@
 # ----------------------------------------------------------------------
 
 # Third-party models
-from __future__ import absolute_import
 import yaml
 
 # Tower models
@@ -22,5 +21,4 @@ class EnvironmentAPI(ModelAPI):
     @api
     def ansible_inventory(self, env_id):
         e = Environment.get(Environment.id == int(env_id))
-        return yaml.safe_dump(e.ansible_inventory.decode("utf-8"),
-                              default_flow_style=False)
+        return yaml.safe_dump(e.ansible_inventory, default_flow_style=False)
