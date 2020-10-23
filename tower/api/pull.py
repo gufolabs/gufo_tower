@@ -104,7 +104,7 @@ class PullAPI(API):
         status = True
         log = []
         self.pull(env.playbook_link, env.repo_path)
-        repo_playbooks_path = os.path.join(env.repo_path, "ansible_deploy")
+        repo_playbooks_path = os.path.join(env.repo_path, "ansible")
         if not os.path.isdir(repo_playbooks_path):
             # Playbooks on repo root
             repo_playbooks_path = env.repo_path
