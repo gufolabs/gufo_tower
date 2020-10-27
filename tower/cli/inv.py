@@ -10,32 +10,29 @@
 import os
 import sys
 import json
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 # Tower modules
-os.chdir(
-    os.path.join(os.path.dirname(sys.argv[0]), "..")
-)
+os.chdir(os.path.join(os.path.dirname(sys.argv[0]), ".."))
 from tower.models.environment import Environment  # noqa
 
 
 def main():
-    parser = OptionParser()
-    parser.add_option(
+    parser = ArgumentParser()
+    parser.add_argument(
         "--env",
-        action="store", dest="env",
+        action="store",
+        dest="env",
         help="Use environment [%default]",
-        default=get_default_env()
+        default=get_default_env(),
     )
     # Ansible dynamic inventory interface
-    parser.add_option(
-        "--list",
-        action="store_const", dest="cmd", const="list",
-        help="Ansible inventory"
+    parser.add_argument(
+        "--list", action="store_const", dest="cmd", const="list", help="Ansible inventory"
     )
-    options, args = parser.parse_args()
-    if options.cmd == "list":
-        ansible_list(options, args)
+    args = parser.parse_args()
+    if args.cmd == "list":
+        ansible_list(args)
 
 
 def get_default_env():
@@ -51,13 +48,13 @@ def die(msg):
     sys.exit(1)
 
 
-def ansible_list(options, args):
+def ansible_list(args):
     """
     Ansible dynamic inventory
     :return:
     """
     try:
-        env = Environment.get(Environment.name == options.env)
+        env = Environment.get(Environment.name == args.env)
         print(json.dumps(env.ansible_inventory, sort_keys=True, indent=2))
     except Environment.DoesNotExist:
-        die("Invalid environment: '%s'" % options.env)
+        die("Invalid environment: '%s'" % args.env)
