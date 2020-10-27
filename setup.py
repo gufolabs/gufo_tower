@@ -68,7 +68,8 @@ def main():
                 "tower-pull = tower.cli.pull:main",
                 "tower-web = tower.daemons.web:run",
                 "tower-dump = tower.cli.backup:dump",
-                "tower-restore = tower.cli.backup:restore"
+                "tower-restore = tower.cli.backup:restore",
+                "tower-joblog = tower.cli.joblog:main",
             ]
         },
         package_data={
