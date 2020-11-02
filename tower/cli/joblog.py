@@ -108,14 +108,14 @@ def joblog_view(args):
 
 
 def joblog_clean(args):
-    joblog_count = JobLog.filter(is_complete=True).count()
+    joblog_count = JobLog.count()
     if args.before:
         before = datetime.datetime.strptime(args.before, "%Y-%m-%d %H:%M")
-        cleaned_job = JobLog.filter(start_ts__gte=before, is_complete=True)
+        cleaned_job = JobLog.filter(start_ts__gte=before)
         print(" %d JobLog before %s will be cleaned" % (cleaned_job.count(), args.before))
     elif args.save_last and joblog_count > args.save_last:
         cleaned_job = (
-            JobLog.filter(is_complete=True)
+            JobLog
             .order_by(JobLog.start_ts)
             .limit(joblog_count - args.save_last)
         )
