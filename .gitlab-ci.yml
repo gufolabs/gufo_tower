@@ -49,6 +49,7 @@ upload:
     - docker
   only:
     - tags@noc/tower
+    - master@noc/tower
 
 check_docker_buildable_debian:
   stage: test
@@ -81,6 +82,7 @@ build_image_debian:
     - shell
   only:
     - tags@noc/tower
+    - master@noc/tower
 
 build_image_alpine:
   stage: build
@@ -97,3 +99,4 @@ build_image_alpine:
     - shell
   only:
     - tags@noc/tower
+    - master@noc/tower
