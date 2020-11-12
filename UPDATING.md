@@ -6,6 +6,7 @@ Updating tower as simple as
 ```
 cd /etc/docker-compose/tower
 docker-compose pull
+docker-compose down
 docker-compose up -d
 ```
 
