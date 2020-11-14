@@ -9,7 +9,7 @@ pycparser>=2.10
 singledispatch>=3.4.0.0
 six>=1.8.0
 tornado==5.1.1
-ansible==2.9.6
+ansible==2.9.14
 setuptools>=11.3
 packaging
 appdirs
