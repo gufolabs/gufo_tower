@@ -1,3 +1,7 @@
+## 1.0.4 (2020-11-18)
+### Release Notes
+* Fix nginx cert handling
+
 ## 1.0.3 (2020-11-18)
 ### Release Notes
 * Fix tower default playbook repository url.

@@ -30,7 +30,7 @@ var environment_logic = {
         $$("environment_form").setValues({
             env_type: "eval",
             install_method: "git",
-            playbook_link: "git+https://github.com/nocproject/ansible_deploy@microservices",
+            playbook_link: "git+https://github.com/nocproject/noc@stable",
             installation_name: "Unconfigured installation",
             config_order: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
             name: "NOC"
