@@ -1,3 +1,22 @@
+## 1.0.3 (2020-11-18)
+### Release Notes
+* Fix tower default playbook repository url.
+
+## 1.0.2 (2020-11-14)
+### Release Notes
+* Fix tower version and tag.
+
+## 1.0.1 (2020-11-13)
+### Release Notes
+* Fix ansible version to 2.9.14
+
+## 1.0.0 (2020-11-13)
+### Release Notes
+* Python3 full support
+* Login default session_ttl migration
+* Ansible repository default migration
+* Clean old joblogs, ./bin/tower-joblog clean command
+
 ## 0.4.8 (2020-03-XX)
 ### Release Notes
 * Fix pool edit
