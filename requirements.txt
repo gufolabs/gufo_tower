@@ -16,3 +16,4 @@ appdirs
 netaddr
 jmespath==0.9.3
 future==0.18.2
+cryptography>=3,<3.4
