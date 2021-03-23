@@ -1,3 +1,8 @@
+
+## 1.0.5 (2021-03-23)
+### Release Notes
+* Add tower-deploy command for generate tower.yml file
+
 ## 1.0.4 (2020-11-18)
 ### Release Notes
 * Fix nginx cert handling
