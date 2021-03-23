@@ -70,6 +70,7 @@ def main():
                 "tower-dump = tower.cli.backup:dump",
                 "tower-restore = tower.cli.backup:restore",
                 "tower-joblog = tower.cli.joblog:main",
+                "tower-deploy = tower.cli.deploy:main",
             ]
         },
         package_data={
