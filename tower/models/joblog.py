@@ -40,7 +40,7 @@ class JobLog(Model):
 
     def append_log(self, data):
         with open(self.log_path, "a") as f:
-            f.write(str(data))
+            f.write(data.decode("utf-8"))
 
     def get_log(self):
         path = self.log_path
