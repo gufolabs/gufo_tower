@@ -1,19 +1,21 @@
 # NOC Tower
 NOC Tower is the tool for deployment and maintaining multiple
-NOC (http://nocproject.org/) installations.
+NOC (https://getnoc.com/) installations.
 
 [![build status](https://code.getnoc.com/noc/tower/badges/master/build.svg)](https://code.getnoc.com/noc/tower/commits/master)
 
 ## 100% Supported OSes for NOC
 - Debian 9
 - Debian 10
+- Debian 11
 - Ubuntu 16 LTS
 - Ubuntu 18 LTS
+- Ubuntu 20 LTS
 - Centos 7
 - RHEL 7
 
 ## 90% Supported OSes for NOC
-- FreeBSD 12
+- FreeBSD
 - Oracle Linux 7
 
 ## Install 
@@ -48,22 +50,8 @@ docker-compose up -d
 ```
 That it. 
 
-<details>
-<summary>Also you can choose the long way of manual installation without docker.</summary>
-
-<ul dir="auto">
-<li><a href="docs/Debian.md">Debian</a></li>
-<li><a href="docs/CentOS.md">Centos</a></li>
-<li><a href="docs/Ubuntu.md">Ubuntu</a></li>
-<li><a href="docs/RHEL.md">Red Hat</a></li>
-<li><a href="docs/FreeBSD.md">FreeBSD</a></li>
-</ul>
-</details>
-
-
 ## Prepare nodes
 On each node 
-* double check that python2.7 is installed on nodes
 * create ansible user (*ansible* by default) and define ansible user's password, you'll need it later.
 ```
 useradd -d /home/ansible -s /bin/bash -m ansible
