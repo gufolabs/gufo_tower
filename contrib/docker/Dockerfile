@@ -1,4 +1,4 @@
-FROM debian:buster as builder
+FROM debian:11 as builder
 
 RUN mkdir /mnt/tower
 WORKDIR /mnt/tower/
@@ -13,23 +13,22 @@ WORKDIR /opt/tower
 RUN python3 -m venv /opt/tower \
     && ./bin/pip install /mnt/tower/dist/*.zip
 
-FROM debian:buster as app
+FROM debian:11 as app
 
 ENV ANSIBLE_HOST_KEY_CHECKING=False \
     ANSIBLE_SSH_PIPELINING=1 \
     ANSIBLE_STDOUT_CALLBACK=debug \
     PYTHONUNBUFFERED=1 \
     PATH=/opt/tower/bin:${PATH} \
-    PYTHONPATH=/opt/tower/lib/python3.7:/usr/lib/python3.7
+    PYTHONPATH=/opt/tower/lib/python3.9:/usr/lib/python3.9
 
 COPY --from=builder /opt/tower /opt/tower
 
 # install systemv packages
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-        libpython3.7 \
-        libpython3.7-stdlib \
-        libpython-stdlib \
+        libpython3.9 \
+        libpython3-stdlib \
         python3 \
         ca-certificates \
         openssh-client \
@@ -37,7 +36,7 @@ RUN apt-get update \
         git \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.7 3 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.9 3 \
     && adduser --system \
         --shell /bin/bash \
         --no-create-home \
