@@ -5,7 +5,11 @@ WORKDIR /mnt/tower/
 RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential \
       python3-venv \
-      python3-setuptools
+      python3-setuptools \
+      python3-distutils \
+      python3-requests \
+      python3-wheel
+
 COPY ../.. /mnt/tower/
 RUN python3 setup.py sdist --format=zip
 
@@ -34,9 +38,11 @@ RUN apt-get update \
         openssh-client \
         openssl \
         git \
+        python3-distutils \
+        python3-wheel \
+        python3-pip \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.9 3 \
     && adduser --system \
         --shell /bin/bash \
         --no-create-home \

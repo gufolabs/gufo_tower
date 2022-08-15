@@ -1,4 +1,4 @@
-FROM alpine:3.11 as builder
+FROM alpine:3.14 as builder
 
 RUN mkdir /mnt/tower
 WORKDIR /mnt/tower/
@@ -19,7 +19,7 @@ WORKDIR /opt/tower
 RUN virtualenv /opt/tower \
     && ./bin/pip3 install /mnt/tower/dist/*.zip
 
-FROM python:3.8-alpine3.11
+FROM python:3.9-alpine3.16
 
 ENV ANSIBLE_HOST_KEY_CHECKING=False \
     ANSIBLE_SSH_PIPELINING=1 \
