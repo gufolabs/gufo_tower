@@ -27,7 +27,7 @@ class NodeType(Model):
     shell_type = CharField(max_length=256, default="sh")
     # Python interpreter path
     python_interpreter = CharField(max_length=255,
-                                   default="/usr/bin/python")
+                                   default="/usr/bin/python3")
     #
     ssh_extra_args = CharField(max_length=255, null=True)
     # Enable ssh pipelining
