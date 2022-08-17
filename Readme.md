@@ -5,14 +5,15 @@ NOC (https://getnoc.com/) installations.
 [![build status](https://code.getnoc.com/noc/tower/badges/master/build.svg)](https://code.getnoc.com/noc/tower/commits/master)
 
 ## 100% Supported OSes for NOC
-- Debian 9
+- Debian 9 (going eol)
 - Debian 10
 - Debian 11
-- Ubuntu 16 LTS
+- Ubuntu 16 LTS (going eol)
 - Ubuntu 18 LTS
 - Ubuntu 20 LTS
-- Centos 7
-- RHEL 7
+- Ubuntu 22 LTS
+- Centos 7 (going eol)
+- RHEL 7 (going eol)
 
 ## 90% Supported OSes for NOC
 - FreeBSD
@@ -63,6 +64,8 @@ passwd ansible
 /opt/tower# docker-compose exec tower ssh-copy-id  -f -i /opt/tower/var/tower/data/deploy_keys/id_rsa.pub ansible@192.168.1.88
 ```
 where `192.168.1.88` is the node's IP address. Enter ansible's password, that you already defined somewhere above.
+
+* Ensure if there is a Python3 at `/usr/bin/python3` on node, otherwise use `Linux_py2` NodeType in `Tower/Nodes` on old OSes like Centos 7 or Debian 9.
 
 ## Deploying
 
