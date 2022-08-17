@@ -123,7 +123,7 @@ class PullAPI(API):
     def pull(link, path):
         logger.debug("Pull link: %s, path: %s", link, path)
         try:
-            unpack_url(Link(link), path, Downloader(PipSession(), ""))
+            unpack_url(Link(link), path, Downloader(PipSession(), ""), 0)
         except KeyboardInterrupt:
             raise
         except Exception as e:

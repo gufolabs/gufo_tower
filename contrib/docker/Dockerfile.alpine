@@ -1,10 +1,13 @@
-FROM alpine:3.11 as builder
+FROM python:3.9-alpine3.16 as builder
 
 RUN mkdir /mnt/tower
 WORKDIR /mnt/tower/
 RUN apk add --no-cache --update \
     py3-cffi \
     py3-virtualenv \
+    py3-setuptools \
+    py3-pip \
+    py3-wheel \
     gcc \
     python3-dev \
     musl-dev \
@@ -16,10 +19,11 @@ COPY . /mnt/tower/
 RUN python3 setup.py sdist --format=zip
 
 WORKDIR /opt/tower
-RUN virtualenv /opt/tower \
+RUN python3 -m venv /opt/tower \
+    && ./bin/pip3 install --upgrade pip \
     && ./bin/pip3 install /mnt/tower/dist/*.zip
 
-FROM python:3.8-alpine3.11
+FROM python:3.9-alpine3.16
 
 ENV ANSIBLE_HOST_KEY_CHECKING=False \
     ANSIBLE_SSH_PIPELINING=1 \
@@ -27,7 +31,7 @@ ENV ANSIBLE_HOST_KEY_CHECKING=False \
     PYTHONUNBUFFERED=1 \
     PS1="\$(date +%H:%M:%S) \h \w \\$ " \
     PATH=/opt/tower/bin:${PATH} \
-    PYTHONPATH=/opt/tower/lib/python3.8/site-packages/:/usr/local/lib/python3.8:/usr/local/lib/python3.8/site-packages
+    PYTHONPATH=/opt/tower/lib/python3.9/site-packages/:/usr/local/lib/python3.9:/usr/local/lib/python3.9/site-packages
 
 COPY --from=builder /opt/tower /opt/tower
 

@@ -6,16 +6,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential \
       python3-venv \
       python3-setuptools \
-      python3-distutils \
-      python3-requests \
-      python3-wheel
-
+      python3-pip
 COPY ../.. /mnt/tower/
 RUN python3 setup.py sdist --format=zip
 
 WORKDIR /opt/tower
 RUN python3 -m venv /opt/tower \
-    && ./bin/pip install /mnt/tower/dist/*.zip
+    && ./bin/pip3 install --upgrade pip \
+    && ./bin/pip3 install /mnt/tower/dist/*.zip
 
 FROM debian:11 as app
 
@@ -39,8 +37,6 @@ RUN apt-get update \
         openssl \
         git \
         python3-distutils \
-        python3-wheel \
-        python3-pip \
     && rm -rf /var/cache/apk/* \
     && rm -rf /var/lib/apt/lists/* \
     && adduser --system \

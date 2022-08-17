@@ -78,7 +78,7 @@ def main():
         },
         data_files=["VERSION"],
         install_requires=requirements,
-        setup_requires = ['wheel'],
+        setup_requires=['wheel'],
         zip_safe=False,
         classifiers=[
             "Operating System :: Unix",
