@@ -1,5 +1,5 @@
 # Third-party modules
-from peewee import (Model, CharField, ForeignKeyField,
+from peewee import (Model, CharField,
                     BooleanField)
 
 
