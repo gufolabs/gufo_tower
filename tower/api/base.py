@@ -29,7 +29,7 @@ class BaseHandler(tornado.web.RequestHandler):
             # Fallback to basic
             auth_header = self.request.headers.get("Authorization")
             if auth_header and auth_header.startswith("Basic "):
-                auth = codecs.decode(auth_header[6:].encode("utf-8"), "base64").decode("utf-8")
+                auth = codecs.decode(auth_header[6:].encode("utf-8"), "base64")
                 u, p = auth.split(":", 2)
                 au = User.authenticate(u, p)
                 if au.is_active:
