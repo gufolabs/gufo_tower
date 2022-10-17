@@ -16,3 +16,4 @@ netaddr
 jmespath==0.9.3
 future==0.18.2
 cryptography>=3,<3.4
+ruamel.yaml==0.17.21
