@@ -499,7 +499,7 @@ class Environment(Model):
             "-days", "3650",
             "-subj", "/CN=%s" % (self.web_host or "noc")
         ])
-        return kf.read(), cf.read()
+        return kf.read().decode(), cf.read().decode()
 
     def delete_instance(self, *args, **kwargs):
         from .node import Node
