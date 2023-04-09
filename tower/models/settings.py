@@ -52,7 +52,7 @@ class Settings(Model):
 
     @classmethod
     def set_item(cls, name, value):
-        value = json.dumps(value.decode("utf-8"))
+        value = json.dumps(value)
         with db.atomic():
             r = list(Settings.select().where(Settings.key == name))
             if len(r) == 0:
