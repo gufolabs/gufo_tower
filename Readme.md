@@ -47,6 +47,7 @@ Place `docker-compose.yml` from project root to `/etc/docker-compose/tower`
 ```
 curl https://code.getnoc.com/noc/tower/raw/master/docker-compose.yml > /etc/docker-compose/tower/docker-compose.yml
 cd /etc/docker-compose/tower
+mkdir root/.ssh/mktemp -p
 docker-compose up -d 
 ```
 That it. 
