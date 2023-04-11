@@ -72,7 +72,7 @@ class Settings(Model):
             return Settings.get_item("cookie_secret")
         except KeyError:
             secret = base64.b64encode(os.urandom(64))
-            Settings.set_item("cookie_secret", secret)
+            Settings.set_item("cookie_secret", secret.decode())
             return secret
 
     @classmethod
