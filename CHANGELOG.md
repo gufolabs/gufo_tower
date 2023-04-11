@@ -1,3 +1,14 @@
+## 1.1.1 (2023-04-11)
+* Fix settings save 2
+* Fix nginx cert handling
+* Fix tower startup 
+
+## 1.0.9 (2022-10-18)
+* Add ruamel.yaml requirement
+
+## 1.0.7 (2022-08-18)
+* Move default ansible_interpreter to python3
+* Fix settings save
 
 ## 1.0.5 (2021-03-23)
 ### Release Notes
