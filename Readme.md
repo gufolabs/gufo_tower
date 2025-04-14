@@ -29,40 +29,48 @@ If tower and node does not have direct access to the internet [setup proxy](docs
 
 #### Install docker daemon
 ```
-curl https://get.docker.com | sudo sh 
-systemctl start docker
-systemctl enable docker
+curl https://get.docker.com | sudo sh
+sudo systemctl start docker
+sudo systemctl enable docker
 ```
 
-#### Install docker compose 
+#### Install docker compose
+
 ```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.28.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-mkdir /etc/docker-compose/tower -p
+sudo mkdir /etc/docker-compose/tower -p
 ```
 
 ### Setup tower 
-Place `docker-compose.yml` from project root to `/etc/docker-compose/tower`
+Place `docker-compose.yml` from tower repo to `/etc/docker-compose/tower`:
 ```
-curl https://code.getnoc.com/noc/tower/raw/master/docker-compose.yml > /etc/docker-compose/tower/docker-compose.yml
+sudo curl https://code.getnoc.com/noc/tower/raw/master/docker-compose.yml -o /etc/docker-compose/tower/docker-compose.yml
 cd /etc/docker-compose/tower
-mkdir root/.ssh/mktemp -p
-docker-compose up -d 
+sudo mkdir root/.ssh/mktemp -p
+sudo docker-compose up -d
 ```
-That it. 
+That it.
 
 ## Prepare nodes
-On each node 
-* create ansible user (*ansible* by default) and define ansible user's password, you'll need it later.
+On each node
+* create ansible user (*ansible* by default) and define ansible user's password, you'll need it later:
 ```
-useradd -d /home/ansible -s /bin/bash -m ansible
-passwd ansible
+sudo useradd -d /home/ansible -s /bin/bash -m ansible
+sudo passwd ansible
 ``` 
-* grant it passwordless `sudo` privileges(`ansible  ALL=(ALL) NOPASSWD:ALL` in /etc/sudoers) and copy Tower's public ssh key (*/opt/tower/var/tower/data/deploy_keys/id_rsa.pub*) to *ansible's*
 
+* grant it passwordless `sudo` privileges(`ansible  ALL=(ALL) NOPASSWD:ALL` in /etc/sudoers):
 ```
-/opt/tower# docker-compose exec tower ssh-copy-id  -f -i /opt/tower/var/tower/data/deploy_keys/id_rsa.pub ansible@192.168.1.88
+echo 'ansible  ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/ansible
+```
+
+On Tower
+* copy Tower's public ssh key (*/opt/tower/var/tower/data/deploy_keys/id_rsa.pub*) to *ansible's*:
+```
+cd /etc/docker-compose/tower
+sudo docker-compose exec tower ssh-copy-id  -f -i /opt/tower/var/tower/data/deploy_keys/id_rsa.pub ansible@192.168.1.88
 ```
 where `192.168.1.88` is the node's IP address. Enter ansible's password, that you already defined somewhere above.
 
