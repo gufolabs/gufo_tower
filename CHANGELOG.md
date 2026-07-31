@@ -12,11 +12,16 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 ## [Unreleased]
 
+## Added
+
+* Devcontainer
+
 ### Changed
 
 * Updated license
 * Source codes moved from `tower` to `src/gufo/tower`
 * All code formatted with `ruff format`
+* Dependencies moved from `requirements.txt` to `pyproject.toml`
 
 ## Removed
 
