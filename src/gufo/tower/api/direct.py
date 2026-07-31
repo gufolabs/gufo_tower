@@ -16,9 +16,7 @@ from .base import BaseHandler
 
 
 class DirectRequestHandler(BaseHandler):
-    """
-    Ext.Direct backend
-    """
+    """Ext.Direct backend"""
 
     SUPPORTED_METHODS = ("GET", "POST")
 

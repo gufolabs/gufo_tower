@@ -50,17 +50,11 @@ class Node(Model):
         return self.node_type.get_vars()
 
     def get_address(self):
-        """
-        Returns node addess
-        :return:
-        """
+        """Returns node addess"""
         return str(self.address.split(":")[0])
 
     def get_ssh_port(self):
-        """
-        Returns node ssh port
-        :return:
-        """
+        """Returns node ssh port"""
         if ":" in self.address:
             return int(self.address.split(":")[1])
         return 22

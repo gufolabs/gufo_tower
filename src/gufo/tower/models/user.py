@@ -25,10 +25,10 @@ class User(Model):
 
     @classmethod
     def hash_password(cls, password):
-        """
-        Return hashed password data
-        :param password:
-        :return:
+        """Return hashed password data
+
+        Args:
+            password
         """
         if isinstance(password, str):
             password = password.encode("utf-8")
@@ -36,11 +36,11 @@ class User(Model):
 
     @classmethod
     def check_password(cls, password, hashed):
-        """
-        Check plain-text password matched hashed implementation
-        :param password:
-        :param hashed:
-        :return:
+        """Check plain-text password matched hashed implementation
+
+        Args:
+            password
+            hashed
         """
         if isinstance(password, str):
             password = password.encode("utf-8")
@@ -61,11 +61,14 @@ class User(Model):
 
     @classmethod
     def authenticate(cls, user, password):
-        """
-        Perform user authentication
-        :param user:
-        :param password:
-        :return: User or None
+        """Perform user authentication
+
+        Args:
+            user
+            password
+
+        Returns:
+            User or None
         """
         u = cls.get_user(user)
         if not u or not u.is_active:

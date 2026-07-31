@@ -53,18 +53,14 @@ class APIBase(type):
 
 
 def api(method):
-    """
-    Authenticated API method decorator
-    """
+    """Authenticated API method decorator"""
     method.api = True
     method.open_api = False
     return method
 
 
 def open_api(method):
-    """
-    Open API method decorator
-    """
+    """Open API method decorator"""
     method.api = True
     method.open_api = True
     return method

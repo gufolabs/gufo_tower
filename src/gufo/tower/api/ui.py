@@ -65,10 +65,10 @@ class UIHandler(tornado.web.RequestHandler):
         )
 
     def hashed(self, path):
-        """
-        Convert path to path?hash version
-        :param path:
-        :return:
+        """Convert path to path?hash version
+
+        Args:
+            path
         """
         fp = path
         if fp.startswith("/ui/"):

@@ -32,10 +32,7 @@ class Migration(Model):
 
     @classmethod
     def migrate(cls):
-        """
-        Apply pending migrations
-        :return:
-        """
+        """Apply pending migrations"""
         import tower.migrations
 
         # Ensure table is exists

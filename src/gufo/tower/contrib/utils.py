@@ -7,8 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def check_destination(self, dest, url, rev_options, rev_display):
-    """
-    Prepare a location to receive a checkout/clone.
+    """Prepare a location to receive a checkout/clone.
 
     Return True if the location is ready for (and requires) a
     checkout/clone, False otherwise.
@@ -56,7 +55,5 @@ def check_destination(self, dest, url, rev_options, rev_display):
 
 
 def unpack(self, location, url, verbosity):
-    """
-    Monkey patch pip library cause they always remove downloaded dir. no idea why
-    """
+    """Monkey patch pip library cause they always remove downloaded dir. no idea why"""
     self.obtain(location, url=url, verbosity=verbosity)

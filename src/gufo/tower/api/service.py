@@ -161,12 +161,15 @@ class ServiceAPI(API):
                     ).where(Service.id == srv[0]).execute()
 
     def init_services(self, env):
-        """
-        Probably sholud be optimized for much greater lists.
+        """Probably sholud be optimized for much greater lists.
         Current max at about 10k services.
         10k services should be enought for all. (c)
-        :param env: environment id
-        :return: filled db
+
+        Args:
+            env: environment id
+
+        Returns:
+            filled db
         """
         env_id = env.id
         services = self.get_available_services(env)
@@ -271,12 +274,12 @@ class ServiceAPI(API):
 
     @api
     def save_config(self, env_id, config):
-        """
-        Config is a list of dicts with keys
+        """Config is a list of dicts with keys
         service, pool, nodes, config
-        :param env_id:
-        :param config:
-        :return:
+
+        Args:
+            env_id
+            config
         """
         # Find environment
         try:

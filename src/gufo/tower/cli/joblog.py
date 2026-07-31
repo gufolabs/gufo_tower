@@ -93,10 +93,7 @@ def print_stat(joblog):
 
 
 def joblog_list(args):
-    """
-    Ansible dynamic inventory
-    :return:
-    """
+    """Ansible dynamic inventory"""
     try:
         env = Environment.get(Environment.name == args.env)
         # print(json.dumps(env.ansible_inventory, sort_keys=True, indent=2))

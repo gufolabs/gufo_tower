@@ -5,9 +5,7 @@ import yaml.constructor
 
 
 class OrderedDictYAMLLoader(yaml.Loader):
-    """
-    A YAML loader that loads mappings into ordered dictionaries.
-    """
+    """A YAML loader that loads mappings into ordered dictionaries."""
 
     def __init__(self, *args, **kwargs):
         yaml.Loader.__init__(self, *args, **kwargs)
@@ -54,9 +52,7 @@ class OrderedDictYAMLLoader(yaml.Loader):
 
 
 def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
-    """
-    For Python 3.7+ only
-    """
+    """For Python 3.7+ only"""
 
     class OrderedLoader(Loader):
         pass

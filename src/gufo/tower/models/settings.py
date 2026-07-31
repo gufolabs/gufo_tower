@@ -71,10 +71,7 @@ class Settings(Model):
 
     @classmethod
     def get_url(cls):
-        """
-        Return tower's URL
-        :return:
-        """
+        """Return tower's URL"""
         try:
             return Settings.get_item("url")
         except KeyError:
@@ -82,10 +79,7 @@ class Settings(Model):
 
     @classmethod
     def get_installation_name(cls):
-        """
-        Return tower's installation name
-        :return:
-        """
+        """Return tower's installation name"""
         try:
             return Settings.get_item("installation_name")
         except KeyError:
