@@ -105,7 +105,7 @@ class PullAPI(API):
         shutil.move(repo_playbooks_path, env.playbook_path)
         for role in Role.select().where(
             Role.environment == env, Role.is_enabled == True
-        ):  # noqa
+        ):
             self.pull(role.link, role.role_path)
 
         with db.atomic():

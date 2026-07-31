@@ -15,6 +15,7 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 ## Added
 
 * Devcontainer
+* GitHub CI Workflows
 
 ### Changed
 

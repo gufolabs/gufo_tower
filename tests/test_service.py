@@ -149,4 +149,5 @@ def my_call(test_input):
     ],
 )
 def test_me(test_input, expected):
-    assert my_call(test_input) == expected
+    r = sorted(my_call(test_input))
+    assert r == expected
