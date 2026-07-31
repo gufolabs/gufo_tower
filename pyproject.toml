@@ -43,18 +43,14 @@ ignore = [
   "ANN202", # 7 - Missing return type annotation for private function `dfs_visit`
   "ANN204", # 3 - Missing return type annotation for special method `__init__`
   "ANN205", # 2 - Missing return type annotation for staticmethod `name_config`
-  "PT006", # 1 - Wrong type passed to first argument of `pytest.mark.parametrize`; expected `tuple`
-  "RET504", # 2 - Unnecessary assignment to `order` before `return` statement
-  "C416", # 2 -  Unnecessary list comprehension (rewrite using `list()`)
   "D415", # 30 - First line should end with a period, question mark, or exclamation point
-  "D205", # 1 blank line required between summary line and description
   "D102", # 93 - Missing docstring in public method
   "D106", # 30 - Missing docstring in public nested class
   "D100", # 77 - Missing docstring in public module
   "D101", # 43 - Missing docstring in public class
   "D103", # 63 - Missing docstring in public function
   "D200", # 7 - One-line docstring should fit on one line
-  "B904", # 11 - Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+  "D417", # 9 - Missing argument descriptions in the docstring for `authenticate`: `password`, `user`
   "RUF012", # 1 - Mutable default value for class attribute
   "PLC0415", # 20 - `import` should be at the top-level of a file
   "C901", # 6 - C901 `get_execution_order` is too complex (22 > 10)
@@ -64,27 +60,18 @@ ignore = [
   "S603", # 5 - `subprocess` call: check for execution of untrusted input
   "S607", # 3 - Starting a process with a partial executable path
   "SIM115", # 2 - Use a context manager for opening files
-  "RET503", # 1 - Missing explicit `return` at the end of function able to return non-`None` value
-  "E712", # 6 - Avoid equality comparisons to `True`; use `Role.is_enabled:` for truth checks
-  "SIM105", # 5 - Use `contextlib.suppress(ValueError, KeyError)` instead of `try`-`except`-`pass`
-  "C414", # 1 - Unnecessary `list()` call within `sorted()`
-  "C401", # 2 - Unnecessary generator (rewrite as a set comprehension)
+  "E712", # Peewee feature. 6 - Avoid equality comparisons to `True`; use `Role.is_enabled:` for truth checks
   "PLR0915", #3 -  Too many statements (68 > 50)
-  "SIM102", # Use a single `if` statement instead of nested `if` statements
   "PLR0912", # 5 - Too many branches (26 > 12)
   "PLR2004", # 13 - Magic value used in comparison, consider replacing `2` with a constant variable
   "PIE794", # 1 - Class field `config` is defined multiple times  
   "S506", # 1 - Probable use of unsafe loader `OrderedLoader` with `yaml.load`. Allows instantiation of arbitrary objects. Consider `yaml.safe_load`.
   "PLW1508", # 1 - Invalid type for environment variable default; expected `str` or `None`
   "A001", # 3 - Variable `hash` is shadowing a Python builtin
-  "EM101", # 7 - Exception must not use a string literal, assign to variable first
   "PLW2901", # 1 - `for` loop variable `f` overwritten by `with` statement target
   "BLE001", # 1 - Do not catch blind exception: `Exception`
-  "E721", # 2 - Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
   "A002", # Function argument `format` is shadowing a Python builtin
-  "PLW0602", # 4 - Using global for `SERVICES` but no assignment is done
   "S108", # 2 - Probable insecure usage of temporary file or directory: "/tmp/${USER}/ansible"
-  "C403", # 1 - Unnecessary list comprehension (rewrite as a set comprehension)
 ]
 # Enable
 select = [

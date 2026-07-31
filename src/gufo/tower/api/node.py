@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Node API
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -20,8 +20,9 @@ class NodeAPI(ModelAPI):
         # Get NODE
         try:
             node = Node.get(Node.id == int(node_id))  # noqa
-        except Node.DoesNotExist:
-            raise APIError("Node not found")
+        except Node.DoesNotExist as e:
+            msg = "Node not found"
+            raise APIError(msg) from e
         # Check node is reachable
         # Check ssh connection
         # Check sudo settings

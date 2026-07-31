@@ -1,4 +1,4 @@
-Copyright (C) 2007-2025, Gufo Labs (http://getnoc.com)
+Copyright (C) 2015-2025, Gufo Labs (http://getnoc.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

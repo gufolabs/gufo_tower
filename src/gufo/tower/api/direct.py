@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Service API handler
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -21,8 +21,6 @@ class DirectRequestHandler(BaseHandler):
     SUPPORTED_METHODS = ("GET", "POST")
 
     def get(self, *args, **kwargs):
-        global SDL
-
         r = "_TowerAPI = %s;" % (
             json.dumps(
                 {
@@ -36,10 +34,8 @@ class DirectRequestHandler(BaseHandler):
         self.write(r)
 
     def post(self, *args, **kwargs):
-        global SERVICES
-
         req = json.loads(self.request.body)
-        is_scalar = type(req) != list
+        is_scalar = not isinstance(req, list)
         if is_scalar:
             req = [req]
         response = []

@@ -1,4 +1,5 @@
 # Third-party modules
+import contextlib
 import os
 import shutil
 
@@ -89,10 +90,8 @@ def migrate(migrator):
 
         # remove current playbook path
         if os.path.exists(env.playbook_path):
-            try:
+            with contextlib.suppress(OSError):
                 shutil.rmtree(env.playbook_path)
-            except OSError:
-                pass
 
     migrator.rename_column("environment", "branch", "version")
 

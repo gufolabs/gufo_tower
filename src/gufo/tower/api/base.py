@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Service API handler
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -42,7 +42,6 @@ APIClasses = {}  # api -> API class
 
 class APIBase(type):
     def __new__(mcs, name, bases, attrs):
-        global SDL, APIClasses
         m = type.__new__(mcs, name, bases, attrs)
         if m.name:
             SDL[m.name] = [

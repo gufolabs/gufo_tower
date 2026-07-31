@@ -1,11 +1,12 @@
 # ----------------------------------------------------------------------
 # Run ansible playbook
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Python modules
+import contextlib
 import datetime
 import logging
 import os
@@ -52,17 +53,15 @@ class DeployHandler(BaseHandler):
     def get(self, env_id, *args, **kwargs):
         try:
             self.env = Environment.get(Environment.id == env_id)
-        except Environment.DoesNotExist:
-            raise tornado.web.HTTPError(404)
+        except Environment.DoesNotExist as e:
+            raise tornado.web.HTTPError(404) from e
         try:
-            self.deploy_options = set(
-                [
-                    int(i)
-                    for i in self.get_argument("deployment_options").split(",")
-                ]
-            )
-        except:  # noqa
-            raise tornado.web.HTTPError(404)
+            self.deploy_options = {
+                int(i)
+                for i in self.get_argument("deployment_options").split(",")
+            }
+        except BaseException as e:
+            raise tornado.web.HTTPError(404) from e
         env = os.environ.copy()
         if self.get_argument("deployment_options"):
             tags = []
@@ -238,10 +237,8 @@ class DeployHandler(BaseHandler):
     def on_stream_close(self):
         logger.info("Deploy complete")
         self.finish()
-        try:
+        with contextlib.suppress(tornado.iostream.StreamClosedError):
             self.read_future.result()
-        except tornado.iostream.StreamClosedError:
-            pass
         recap = [0, 0, 0, 0]
         for v in list(self.recap.values()):
             recap = [(x + y) for x, y in zip(recap, v)]

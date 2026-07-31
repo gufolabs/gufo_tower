@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Service API handler
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -20,7 +20,9 @@ class ModelAPI(API):
     DYNAMIC_FIRST_BATCH_SIZE = 30
 
     def render_items(self, cfg, format):
-        """Returns list of items
+        """Render items.
+
+        Returns list of items
         cfg may contain:
             start
             count
@@ -41,7 +43,7 @@ class ModelAPI(API):
         if dynamic and not count:
             count = self.DYNAMIC_FIRST_BATCH_SIZE
         # Process sorters
-        if type(sort) == dict:
+        if isinstance(sort, dict):
             sort = [sort]
         for s in sort:
             name = str(s.get("id"))
@@ -102,8 +104,9 @@ class ModelAPI(API):
         with db.atomic():
             try:
                 record = self.model.get(self.model.id == int(cfg["id"]))
-            except peewee.DoesNotExist:
-                raise APIError("Does not exists")
+            except peewee.DoesNotExist as e:
+                msg = "Does not exists"
+                raise APIError(msg) from e
             for f in cfg:
                 if f in ("id", "environment"):
                     continue
@@ -117,7 +120,8 @@ class ModelAPI(API):
         with db.atomic():
             try:
                 record = self.model.get(self.model.id == int(cfg["id"]))
-            except peewee.DoesNotExist:
-                raise APIError("Does not exists")
+            except peewee.DoesNotExist as e:
+                msg = "Does not exists"
+                raise APIError(msg) from e
             record.delete_instance()
         return True
