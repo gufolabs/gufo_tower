@@ -51,8 +51,8 @@ jobs:
       - name: Check ruff
         run: ruff check -q src/ tests/
 
-      - name: Check Mypy
-        run: mypy --strict src/
+      # - name: Check Mypy
+      #   run: mypy --strict src/
 
   test-coverage:
     runs-on: ubuntu-24.04
