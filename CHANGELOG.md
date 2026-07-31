@@ -16,6 +16,7 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 * Updated license
 * Source codes moved from `tower` to `src/gufo/tower`
+* Dependencies moved from `requirements.txt` to `pyproject.toml`
 
 ## Removed
 
