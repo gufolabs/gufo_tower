@@ -130,7 +130,6 @@ dependencies = [
   "peewee==2.10.2",
   "pycparser>=2.10",
   "singledispatch>=3.4.0.0",
-  "six>=1.8.0",
   "tornado==5.1.1",
   "ansible==2.9.26",
   "setuptools>=11.3",
