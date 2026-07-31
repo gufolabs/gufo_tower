@@ -1,7 +1,7 @@
 [build-system]
 build-backend = "setuptools.build_meta"
 requires = [
-  "setuptools>=83",
+  "setuptools>=82",
   "wheel",
 ]
 
@@ -20,12 +20,13 @@ omit = ["*tests*", "*examples*"]
 
 [tool.coverage.html]
 directory = "dist/coverage"
+
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [".git", "build", "dist"]
 line-length = 79
-# Assume Python 3.10
-target-version = "py310"
+# Assume Python 3.9
+target-version = "py39"
 # Always autofix, but never try to fix `F401` (unused imports).
 fix = true
 
@@ -123,7 +124,7 @@ classifiers = [
 dependencies = [
   "pyparsing==2.2.0",
   "bcrypt==3.1.4",
-  "certifi==2016.9.26",
+  "certifi>=2016.9.26",
   "paramiko==2.1.2",
   "cffi>=0.8.5",
   "peewee==2.10.2",
@@ -154,7 +155,7 @@ keywords = [
 ]
 license = {file = "LICENSE.md"}
 name = "gufo_tower"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 
 [project.optional-dependencies]
 docs = [
@@ -165,10 +166,10 @@ docs = [
   "mkdocstrings[python]==0.29.1",
 ]
 ipython = [
-  "ipython==9.6.0",
+  "ipython==8.18",
 ]
 lint = [
-  "mypy==2.1.0",
+  "mypy==1.19",
   "ruff==0.15.20",
   "types-PyYAML==6.0.12.3",
 ]
@@ -176,7 +177,7 @@ test = [
   "PyYAML>=6.0",
   "pytest-benchmark==5.1.0",
   "pytest-cov==7.0.0",
-  "pytest==9.1.1",
+  "pytest==8.4.2",
 ]
 
 [project.readme]
