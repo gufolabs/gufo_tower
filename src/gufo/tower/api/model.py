@@ -20,15 +20,15 @@ class ModelAPI(API):
     DYNAMIC_FIRST_BATCH_SIZE = 30
 
     def render_items(self, cfg, format):
-        """
-        Returns list of items
+        """Returns list of items
         cfg may contain:
             start
             count
             filter
             sort - list of {name: ..., dir: <asc|desc>}
-        :param cfg:
-        :return:
+
+        Args:
+            cfg
         """
         dynamic = "dynamic" in cfg
         start = int(cfg.get("start", 0))

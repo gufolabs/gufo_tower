@@ -79,10 +79,7 @@ class Environment(Model):
 
     @property
     def ansible_inventory(self):
-        """
-        Generate ansible-compatible dynamic inventory
-        :return:
-        """
+        """Generate ansible-compatible dynamic inventory"""
         from .node import Node
         from .pool import Pool
         from .service import Service
@@ -481,9 +478,7 @@ class Environment(Model):
         return r
 
     def build_ssh_keys(self):
-        """
-        Generate all necessary ssh keys
-        """
+        """Generate all necessary ssh keys"""
         from .pool import Pool
 
         key_types = [("rsa", 4096)]
@@ -536,10 +531,7 @@ class Environment(Model):
                         )
 
     def generate_certificate(self):
-        """
-        Generate self-signed certificate
-        :return:
-        """
+        """Generate self-signed certificate"""
         kf = tempfile.NamedTemporaryFile(delete=True)
         cf = tempfile.NamedTemporaryFile(delete=True)
         subprocess.check_call(

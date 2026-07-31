@@ -42,10 +42,10 @@ class PullAPI(API):
 
     @api
     def is_pulled(self, env_id):
-        """
-        Check repo is pulled and ready to deploy
-        :param env_id:
-        :return:
+        """Check repo is pulled and ready to deploy
+
+        Args:
+            env_id
         """
         try:
             env = Environment.get(Environment.id == int(env_id))

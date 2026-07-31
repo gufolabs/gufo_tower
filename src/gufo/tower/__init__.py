@@ -3,8 +3,7 @@
 # ---------------------------------------------------------------------
 # Copyright (C) 2015-26, Gufo Labs
 # ---------------------------------------------------------------------
-"""
-A web-based NOC cluster management.
+"""A web-based NOC cluster management.
 
 Attributes:
     __version__: Gufo Tower version

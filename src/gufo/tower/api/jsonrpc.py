@@ -25,10 +25,7 @@ class JSONRPCHandler(BaseHandler):
     MIME_TYPE = "text/json"
 
     def get(self, *args, **kwargs):
-        """
-        Returns SDL structure
-        :return:
-        """
+        """Returns SDL structure"""
         self.set_header("Content-Type", "text/javascript")
         self.write("var SDL = %s" % json.dumps(SDL))
 
