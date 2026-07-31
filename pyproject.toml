@@ -120,16 +120,37 @@ classifiers = [
   "Operating System :: OS Independent",
   "Typing :: Typed",
 ]
+dependencies = [
+  "pyparsing==2.2.0",
+  "bcrypt==3.1.4",
+  "certifi==2016.9.26",
+  "paramiko==2.1.2",
+  "cffi>=0.8.5",
+  "peewee==2.10.2",
+  "pycparser>=2.10",
+  "singledispatch>=3.4.0.0",
+  "six>=1.8.0",
+  "tornado==5.1.1",
+  "ansible==2.9.26",
+  "setuptools>=11.3",
+  "packaging",
+  "appdirs",
+  "netaddr",
+  "jmespath==0.9.3",
+  "future==0.18.2",
+  "cryptography>=3,<3.4",
+  "ruamel.yaml==0.17.21",
+]
 description = "A web-based control plane for managing NOC cluster topology, node assignments, and service configuration."
 dynamic = ["version"]
 keywords = [
-    "noc",
-    "network-management",
-    "control-plane",
-    "cluster-management",
-    "service-orchestration",
-    "infrastructure",
-    "deployment",
+  "noc",
+  "network-management",
+  "control-plane",
+  "cluster-management",
+  "service-orchestration",
+  "infrastructure",
+  "deployment",
 ]
 license = {file = "LICENSE.md"}
 name = "gufo_tower"
@@ -163,13 +184,13 @@ content-type = "text/markdown"
 file = "README.md"
 
 [project.scripts]
-tower-inv = "gufo.tower.cli.inv:main"
-tower-pull = "gufo.tower.cli.pull:main"
-tower-web = "gufo.tower.daemons.web:run"
-tower-dump = "gufo.tower.cli.backup:dump"
-tower-restore = "gufo.tower.cli.backup:restore"
-tower-joblog = "gufo.tower.cli.joblog:main"
 tower-deploy = "gufo.tower.cli.deploy:main"
+tower-dump = "gufo.tower.cli.backup:dump"
+tower-inv = "gufo.tower.cli.inv:main"
+tower-joblog = "gufo.tower.cli.joblog:main"
+tower-pull = "gufo.tower.cli.pull:main"
+tower-restore = "gufo.tower.cli.backup:restore"
+tower-web = "gufo.tower.daemons.web:run"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/gufolabs/gufo_tower/issues"
