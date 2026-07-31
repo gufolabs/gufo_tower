@@ -45,9 +45,15 @@ def main():
         # action="store_const", dest="cmd", const="list",
         help="Clean logs before start",
     )
-    clean.add_argument("--before", help="DateTime before log will be deleted", required=False)
     clean.add_argument(
-        "--save-last", type=int, help="Cleanup joblog to last N record", required=False, default=10
+        "--before", help="DateTime before log will be deleted", required=False
+    )
+    clean.add_argument(
+        "--save-last",
+        type=int,
+        help="Cleanup joblog to last N record",
+        required=False,
+        default=10,
     )
 
     args = parser.parse_args()
@@ -76,7 +82,12 @@ def print_stat(joblog):
     print("Start: %s ; Completed: %s" % (joblog.start_ts, joblog.complete_ts))
     print(
         "OK: %d; Changed: %d; Unreachable: %d; Failed: %d"
-        % (joblog.n_ok, joblog.n_changed, joblog.n_unreachable, joblog.n_failed)
+        % (
+            joblog.n_ok,
+            joblog.n_changed,
+            joblog.n_unreachable,
+            joblog.n_failed,
+        )
     )
     print("\n")
 
@@ -111,12 +122,13 @@ def joblog_clean(args):
     if args.before:
         before = datetime.datetime.strptime(args.before, "%Y-%m-%d %H:%M")
         cleaned_job = JobLog.filter(start_ts__gte=before)
-        print(" %d JobLog before %s will be cleaned" % (cleaned_job.count(), args.before))
+        print(
+            " %d JobLog before %s will be cleaned"
+            % (cleaned_job.count(), args.before)
+        )
     elif args.save_last and joblog_count > args.save_last:
-        cleaned_job = (
-            JobLog
-            .order_by(JobLog.start_ts)
-            .limit(joblog_count - args.save_last)
+        cleaned_job = JobLog.order_by(JobLog.start_ts).limit(
+            joblog_count - args.save_last
         )
         print(
             " %d/%d JobLog more %s will be cleaned"

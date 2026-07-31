@@ -39,7 +39,10 @@ def main():
         die("Invalid environment: '%s'" % args.env)
     with db.atomic():
         job = PullLog(
-            start_ts=datetime.datetime.now(), environment=env, user="cli", repo=env.playbook_link
+            start_ts=datetime.datetime.now(),
+            environment=env,
+            user="cli",
+            repo=env.playbook_link,
         )
         job.save()
     api = PullAPI(None)

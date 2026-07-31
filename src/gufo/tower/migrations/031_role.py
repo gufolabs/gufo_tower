@@ -1,4 +1,3 @@
-
 # Third-party modules
 import os
 
@@ -17,7 +16,9 @@ def migrate(migrator):
         @property
         def roles_path(self):
             return os.path.abspath(
-                os.path.join("var", "tower", "playbooks", self.name, "additional_roles")
+                os.path.join(
+                    "var", "tower", "playbooks", self.name, "additional_roles"
+                )
             )
 
     class Role(Model):

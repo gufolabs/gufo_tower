@@ -1,4 +1,3 @@
-
 # Third-party modules
 import yaml
 from peewee import (
@@ -15,51 +14,51 @@ DEFAULT_ROLES = [
         "name": "Custom",
         "description": "Custom NOC role",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-custom.git",
-        "is_enabled": False
+        "is_enabled": False,
     },
     {
         "name": "Sentry",
         "description": "Provides configuration settings for Sentry",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-sentry.git",
-        "is_enabled": False
+        "is_enabled": False,
     },
     {
         "name": "Pgbouncer",
         "description": "Helps to handle thousand of devices. From 1k devices",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-pgbouncer.git",
-        "is_enabled": False
+        "is_enabled": False,
     },
     {
         "name": "Memcached",
         "description": "Caching level. Helps to handle lots of devices. From 20k devices.",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-memcached.git",
-        "is_enabled": False
+        "is_enabled": False,
     },
     {
         "name": "Alerta notifications",
         "description": "Notifies about deploy to deploy system",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-alerta-notifications.git",
         "is_enabled": False,
-        "role_name": "deploy_notifications"
+        "role_name": "deploy_notifications",
     },
     {
         "name": "Telegraf",
         "description": "Helps to monitor node's health",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-telegraf.git",
-        "is_enabled": True
+        "is_enabled": True,
     },
     {
         "name": "Nsqadmin",
         "description": "Web interface for NSQd",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-nsqadmin.git",
-        "is_enabled": False
+        "is_enabled": False,
     },
     {
         "name": "Monitoring",
         "description": "Self-monitroing",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-monitoring.git",
-        "is_enabled": False
-    }
+        "is_enabled": False,
+    },
 ]
 
 
@@ -111,22 +110,27 @@ def migrate(migrator):
         node = ForeignKeyField(Node)
         n_instances = IntegerField(default=0)
         n_backup_instances = IntegerField(default=0)
-        loglevel = CharField(default="info", choices=[
-            "notset",
-            "debug",
-            "info",
-            "warning",
-            "error",
-            "critical"
-        ])
+        loglevel = CharField(
+            default="info",
+            choices=[
+                "notset",
+                "debug",
+                "info",
+                "warning",
+                "error",
+                "critical",
+            ],
+        )
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
             for role in DEFAULT_ROLES:
                 # Look for removed services and enable them as a role
                 srv = Service.select().where(
-                    (Service.environment == env) & (
-                        (Service.n_instances > 0) | (Service.n_backup_instances > 0)
+                    (Service.environment == env)
+                    & (
+                        (Service.n_instances > 0)
+                        | (Service.n_backup_instances > 0)
                     )
                 )
                 if role["name"].lower() in [s.service for s in srv]:
@@ -137,7 +141,7 @@ def migrate(migrator):
                     link=role["link"],
                     environment=env,
                     is_enabled=role["is_enabled"],
-                    role_name=role.get("role_name", role["name"].lower())
+                    role_name=role.get("role_name", role["name"].lower()),
                 ).save()
             # Add telegraf role to all nodes
             for n in Node.select().where(Node.environment == env):
@@ -148,7 +152,7 @@ def migrate(migrator):
                     node=n.id,
                     n_instances=1,
                     n_backup_instances=0,
-                    loglevel="info"
+                    loglevel="info",
                 ).save()
                 Service(
                     environment=env.id,
@@ -157,12 +161,10 @@ def migrate(migrator):
                     node=n.id,
                     n_instances=1,
                     n_backup_instances=0,
-                    loglevel="info"
+                    loglevel="info",
                 ).save()
             # Adjust service config
             config = yaml.full_load(env.service_config) or {None: {}}
-            config[None]["telegraf"] = {
-                "telegraf_output_plugin": "influx"
-            }
+            config[None]["telegraf"] = {"telegraf_output_plugin": "influx"}
             env.service_config = yaml.dump(config)
             env.save()

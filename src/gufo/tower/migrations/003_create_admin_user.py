@@ -1,4 +1,3 @@
-
 # Third-party modules
 from peewee import BooleanField, CharField, Model
 
@@ -21,6 +20,6 @@ def migrate(migrator):
         name="admin",
         is_active=True,
         full_name="Temporary Admin",
-        password=pwhash
+        password=pwhash,
     )
     user.save()

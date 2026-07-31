@@ -20,9 +20,7 @@ class Pool(Model):
     class Meta:
         database = db
         db_table = "pool"
-        indexes = (
-            (("environment", "name"), True),
-        )
+        indexes = ((("environment", "name"), True),)
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     name = CharField()
@@ -33,7 +31,7 @@ class Pool(Model):
             "id": str(self.id),
             "environment_id": self.environment.reference_item(),
             "name": self.name,
-            "description": self.description
+            "description": self.description,
         }
 
 
@@ -44,5 +42,5 @@ def on_save_environment(sender, instance, created):
         Pool(
             environment=instance,
             name=DEFAULT_POOL,
-            description="Default pool for %s" % instance.name
+            description="Default pool for %s" % instance.name,
         ).save()

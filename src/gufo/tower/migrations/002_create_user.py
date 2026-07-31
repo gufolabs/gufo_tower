@@ -1,4 +1,3 @@
-
 # Third-party modules
 from peewee import BooleanField, CharField, Model
 

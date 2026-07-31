@@ -60,17 +60,14 @@ class JSONRPCHandler(BaseHandler):
         if self.current_user is None and not handler.open_api:
             raise HTTPError(403, "Permission denied")
         # Prepare response
-        response = {
-            "error": None,
-            "result": None
-        }
+        response = {"error": None, "result": None}
         if id is not None:
             response["id"] = id
         # Call handler
         logger.info("CALL %s.%s", api_name, method)
         try:
             result = handler(*params)
-            if (tornado.gen.is_future(result)):
+            if tornado.gen.is_future(result):
                 result = yield result
             response["result"] = result
         except APIError as e:

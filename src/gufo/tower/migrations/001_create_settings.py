@@ -1,4 +1,3 @@
-
 # Third-party modules
 from peewee import CharField, Model, TextField
 

@@ -41,7 +41,7 @@ DEFAULT_ROLES = [
         "name": "Alerta notifications",
         "description": "Notifies about deploy to deploy system",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-alerta-notifications.git",
-        "role_name": "deploy_notification"
+        "role_name": "deploy_notification",
     },
     {
         "name": "Telegraf",
@@ -52,7 +52,7 @@ DEFAULT_ROLES = [
         "name": "Nsqadmin",
         "description": "Web interface for NSQd",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-nsqadmin.git",
-    }
+    },
 ]
 
 
@@ -60,9 +60,7 @@ class Role(Model):
     class Meta:
         database = db
         db_table = "role"
-        indexes = (
-            (("environment", "name"), True),
-        )
+        indexes = ((("environment", "name"), True),)
 
     name = CharField()
     description = TextField()
@@ -78,14 +76,11 @@ class Role(Model):
             "description": self.description,
             "link": self.link,
             "is_enabled": self.is_enabled,
-            "role_name": self.role_name
+            "role_name": self.role_name,
         }
 
     def reference_item(self):
-        return {
-            "id": str(self.id),
-            "value": self.name
-        }
+        return {"id": str(self.id), "value": self.name}
 
     def remove_role_dir(self):
         if os.path.exists(self.role_path):
@@ -93,20 +88,25 @@ class Role(Model):
 
     def save(self, *args, **kwargs):
         from tower.api.pull import PullAPI
+
         for attr in self.dirty_fields:
-            if attr.name == 'link':
+            if attr.name == "link":
                 self.remove_role_dir()
                 if self.is_enabled:
                     PullAPI.pull(self.link, self.role_path)
-            elif attr.name == 'is_enabled' and not self.is_enabled:
+            elif attr.name == "is_enabled" and not self.is_enabled:
                 self.remove_role_dir()
-            elif attr.name == 'is_enabled' and self.is_enabled:
+            elif attr.name == "is_enabled" and self.is_enabled:
                 PullAPI.pull(self.link, self.role_path)
         return super().save(*args, **kwargs)
 
     def delete_instance(self, *args, **kwargs):
         from tower.models.service import Service
-        for srv in Service.select().where(Service.environment == self.environment, Service.service == self.name):
+
+        for srv in Service.select().where(
+            Service.environment == self.environment,
+            Service.service == self.name,
+        ):
             srv.delete_instance()
         self.remove_role_dir()
 
@@ -114,7 +114,9 @@ class Role(Model):
 
     @property
     def role_path(self):
-        return os.path.abspath(os.path.join(self.environment.roles_prefix, self.role_name))
+        return os.path.abspath(
+            os.path.join(self.environment.roles_prefix, self.role_name)
+        )
 
 
 @post_save(sender=Environment)

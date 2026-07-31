@@ -26,11 +26,8 @@ class Datacenter(Model):
             "id": str(self.id),
             "name": self.name,
             "description": self.description,
-            "proxy": self.proxy
+            "proxy": self.proxy,
         }
 
     def reference_item(self):
-        return {
-            "id": str(self.id),
-            "value": self.name
-        }
+        return {"id": str(self.id), "value": self.name}

@@ -47,8 +47,9 @@ class Migration(Model):
         # Get all migrations
         prefix = tower.migrations.__path__[0]
         for fn in sorted(
-                f for f in os.listdir(prefix)
-                if f != "__init__.py" and f.endswith(".py")
+            f
+            for f in os.listdir(prefix)
+            if f != "__init__.py" and f.endswith(".py")
         ):
             n = fn[:-3]
             if n in applied:
@@ -63,10 +64,7 @@ class Migration(Model):
         with db.atomic():
             m.migrate(migrator)
             # Set mark
-            Migration(
-                name=name,
-                ts=datetime.datetime.now()
-            ).save()
+            Migration(name=name, ts=datetime.datetime.now()).save()
 
 
 class Migrator:

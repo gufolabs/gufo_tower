@@ -88,7 +88,9 @@ class Service(Model):
         srv_descr = get_available_services()
         for srv in srv_descr:
             if "depends" in srv_descr[srv]["meta"]:
-                deps[srv].extend([s for s in srv_descr[srv]["meta"]["depends"]])
+                deps[srv].extend(
+                    [s for s in srv_descr[srv]["meta"]["depends"]]
+                )
                 for d in srv_descr[srv]["meta"]["depends"]:
                     if d not in deps:
                         deps[d] = []
