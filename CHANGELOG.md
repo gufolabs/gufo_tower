@@ -12,6 +12,10 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 ## [Unreleased]
 
+## Added
+
+* Devcontainer
+
 ### Changed
 
 * Updated license
