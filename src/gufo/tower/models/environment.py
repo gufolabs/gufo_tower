@@ -131,7 +131,7 @@ class Environment(Model):
                 Service.select()
                 .join(Node)
                 .where(Service.environment == self, Node.is_enabled == True)
-            ):  # noqa
+            ):
                 if s.service in active_services and s.present:
                     service_data[s.service] += [s]
                     node_services[s.node.name] += [s]
@@ -319,7 +319,7 @@ class Environment(Model):
             Node.select()
             .where(Node.environment == self, Node.is_enabled == True)
             .execute()
-        ):  # noqa
+        ):
             nodes[n.id] = n.name
         pools = {None: "global"}
         for p in Pool.select().where(Pool.environment == self).execute():
@@ -404,7 +404,7 @@ class Environment(Model):
         )
         for role in Role.select().where(
             Role.environment == self, Role.is_enabled == True
-        ):  # noqa
+        ):
             r.append(
                 os.path.join(
                     self.roles_prefix, role.role_name, "meta", "tower.yml"

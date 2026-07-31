@@ -175,7 +175,7 @@ class ServiceAPI(API):
             for n in Node.select().where(
                 Node.environment == env, Node.is_enabled == True
             )
-        ]  # noqa
+        ]
         pools = [
             p.id
             for p in Pool.select()
@@ -231,7 +231,7 @@ class ServiceAPI(API):
             Node.select()
             .where(Node.environment == env, Node.is_enabled == True)
             .execute()
-        ):  # noqa
+        ):
             nodes[n.id] = n.name
         pools = {None: "global"}
         for p in Pool.select().where(Pool.environment == env).execute():
