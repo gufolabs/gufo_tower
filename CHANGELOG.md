@@ -15,6 +15,11 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 ### Changed
 
 * Updated license
+* Source codes moved from `tower` to `src/gufo/tower`
+
+## Removed
+
+* `VERSION` file, moved to `src/gufo/tower/__init__.py`
 
 ## 1.1.1 (2023-04-11)
 * Fix settings save 2

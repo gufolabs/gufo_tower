@@ -1,9 +1,11 @@
 from collections import defaultdict
+
 import pytest
+
 
 def dfs_topsort(graph):  # recursive dfs with
     L = []  # additional list for order of nodes
-    color = {u: "white" for u in graph}
+    color = dict.fromkeys(graph, "white")
     found_cycle = [False]
     for u in graph:
         if color[u] == "white":
