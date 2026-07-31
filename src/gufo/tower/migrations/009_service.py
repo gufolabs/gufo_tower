@@ -1,4 +1,3 @@
-
 # Third-party modules
 from peewee import CharField, ForeignKeyField, IntegerField, Model
 
@@ -27,14 +26,10 @@ class Service(Model):
     pool = ForeignKeyField(Pool, null=True)
     node = ForeignKeyField(Node)
     n_instances = IntegerField(default=0)
-    loglevel = CharField(default="info", choices=[
-        "notset",
-        "debug",
-        "info",
-        "warning",
-        "error",
-        "critical"
-    ])
+    loglevel = CharField(
+        default="info",
+        choices=["notset", "debug", "info", "warning", "error", "critical"],
+    )
 
 
 def migrate(migrator):

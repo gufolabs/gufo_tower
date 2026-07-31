@@ -38,20 +38,19 @@ logger = logging.getLogger(__name__)
 
 def run():
     logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s [%(name)s] %(message)s"
+        level=logging.DEBUG, format="%(asctime)s [%(name)s] %(message)s"
     )
     tornado.options.define(
         "listen",
         default=os.environ.get("TOWER_LISTEN", "0.0.0.0:8888"),
         help="Listen on specified address",
-        type=str
+        type=str,
     )
     tornado.options.define(
         "children",
         default=os.environ.get("TOWER_CHILDREN", 1),
         help="Run several processes",
-        type=int
+        type=int,
     )
     tornado.options.parse_command_line()
 
@@ -62,22 +61,25 @@ def run():
     ui_root = os.path.join(tower.__path__[0], "ui")
     logger.info("Serving UI files from %s", ui_root)
     settings = {
-        "template_path": os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "templates")),
-        "cookie_secret": Settings.get_cookie_secret()
+        "template_path": os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "templates")
+        ),
+        "cookie_secret": Settings.get_cookie_secret(),
     }
-    app = tornado.web.Application([
-        (r"^/api/(sdl.js|.+/)$", JSONRPCHandler),
-        (r"^/ui/cache/([0-9a-f]{8}.js)$", tornado.web.StaticFileHandler, {
-            "path": UIHandler.CACHE_ROOT
-        }),
-        (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {
-            "path": ui_root
-        }),
-        (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
-        (r"^/$", UIHandler, {
-            "path": ui_root
-        })
-    ], **settings)
+    app = tornado.web.Application(
+        [
+            (r"^/api/(sdl.js|.+/)$", JSONRPCHandler),
+            (
+                r"^/ui/cache/([0-9a-f]{8}.js)$",
+                tornado.web.StaticFileHandler,
+                {"path": UIHandler.CACHE_ROOT},
+            ),
+            (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {"path": ui_root}),
+            (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
+            (r"^/$", UIHandler, {"path": ui_root}),
+        ],
+        **settings,
+    )
     if ":" in tornado.options.options.listen:
         addr, port = tornado.options.options.listen.split(":")
         port = int(port)

@@ -1,4 +1,3 @@
-
 # Third-party modules
 from peewee import CharField, Model, TextField
 
@@ -16,8 +15,8 @@ class Environment(Model):
             ("test", "Test"),
             ("dev", "Develop"),
             ("eval", "Evaluation"),
-            ("other", "Other")
-        ]
+            ("other", "Other"),
+        ],
     )
     # Installation name as shown in interface header
     installation_name = CharField(default="Unconfigured installation")
@@ -44,10 +43,7 @@ class Environment(Model):
     mongo_rs = CharField(default="noc")
     mongo_engine = CharField(
         default="wiredTiger",
-        choices=[
-            ("wiredTiger", "WiredTiger"),
-            ("mmapv1", "MMAPv1")
-        ]
+        choices=[("wiredTiger", "WiredTiger"), ("mmapv1", "MMAPv1")],
     )
 
 

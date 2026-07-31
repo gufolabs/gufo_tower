@@ -43,7 +43,7 @@ class ServiceAPI(API):
                         "name": srv,
                         "form": descr["forms"].get(srv, []),
                         "meta": descr["services"].get(srv, []),
-                        "config": self.get_service_config(descr, srv)
+                        "config": self.get_service_config(descr, srv),
                     }
         return svc
 
@@ -60,20 +60,22 @@ class ServiceAPI(API):
         return r
 
     def get_service_form(self, descr, srv):
-        r = [{
-            "id": "-".join(["header", srv]),
-            "view": "label",
-            "label": srv.capitalize(),
-            "css": "form_header",
-            "borderless": False
-        }]
+        r = [
+            {
+                "id": "-".join(["header", srv]),
+                "view": "label",
+                "label": srv.capitalize(),
+                "css": "form_header",
+                "borderless": False,
+            }
+        ]
         help = {
             "id": "help",
             "label": "Service info",
             "view": "template",
             "position": "bottom",
             "autoheight": "true",
-            "template": descr.get("description", "")
+            "template": descr.get("description", ""),
         }
         for k, v in list(descr.items()):
             if "description" in k:
@@ -84,7 +86,7 @@ class ServiceAPI(API):
                 "label": v.get("label", ""),
                 "value": v.get("default"),
                 "labelPosition": "top",
-                "required": v.get("required", False)
+                "required": v.get("required", False),
             }
             if v["type"] == "str":
                 c["view"] = "text"
@@ -130,7 +132,7 @@ class ServiceAPI(API):
             raise APIError("Environment does not exist")
         srvs = self.get_available_services(env)
         for srv in srvs:
-            r[srv] = (self.get_service_form(srvs[srv]["form"], srv))
+            r[srv] = self.get_service_form(srvs[srv]["form"], srv)
         return r
 
     def migrate_settings(self, env):
@@ -138,7 +140,9 @@ class ServiceAPI(API):
         services = self.get_available_services(env)
         with db.atomic():
             current_list = db.execute_sql(
-                'SELECT id,service,config FROM service WHERE environment_id=?', str(env_id))
+                "SELECT id,service,config FROM service WHERE environment_id=?",
+                str(env_id),
+            )
             for srv in current_list:
                 if srv[1] not in services:
                     continue
@@ -152,8 +156,9 @@ class ServiceAPI(API):
                 if ck - (ck - nk) < nk:
                     updated_config = dict(service_config)
                     updated_config.update(current_config)
-                    Service.update(config=json.dumps(updated_config, sort_keys=True)).where(
-                        Service.id == srv[0]).execute()
+                    Service.update(
+                        config=json.dumps(updated_config, sort_keys=True)
+                    ).where(Service.id == srv[0]).execute()
 
     def init_services(self, env):
         """
@@ -165,10 +170,22 @@ class ServiceAPI(API):
         """
         env_id = env.id
         services = self.get_available_services(env)
-        nodes = [n.id for n in Node.select().where(Node.environment == env, Node.is_enabled == True)]  # noqa
-        pools = [p.id for p in Pool.select().where(Pool.environment == env).order_by(Pool.name)]
+        nodes = [
+            n.id
+            for n in Node.select().where(
+                Node.environment == env, Node.is_enabled == True
+            )
+        ]  # noqa
+        pools = [
+            p.id
+            for p in Pool.select()
+            .where(Pool.environment == env)
+            .order_by(Pool.name)
+        ]
         current_list = db.execute_sql(
-            'SELECT service,node_id,pool_id FROM service WHERE environment_id=?', str(env_id))
+            "SELECT service,node_id,pool_id FROM service WHERE environment_id=?",
+            str(env_id),
+        )
         lines = set()
         for s, n in product(services, nodes):
             if services[s]["meta"]["level"] == "pool":
@@ -184,16 +201,18 @@ class ServiceAPI(API):
                 pass
         to_insert = []
         for line in lines:
-            to_insert.append({
-                "environment": env_id,
-                "service": line[0],
-                "node": line[1],
-                "pool": line[2],
-                "config": json.dumps(services[line[0]]["config"])
-            })
+            to_insert.append(
+                {
+                    "environment": env_id,
+                    "service": line[0],
+                    "node": line[1],
+                    "pool": line[2],
+                    "config": json.dumps(services[line[0]]["config"]),
+                }
+            )
         with db.atomic():
             for idx in range(0, len(lines), 1000):
-                Service.insert_many(to_insert[idx:idx + 1000]).execute()
+                Service.insert_many(to_insert[idx : idx + 1000]).execute()
 
     @api
     def get_service_list(self, env_id):
@@ -208,7 +227,11 @@ class ServiceAPI(API):
 
         # speedup lookup
         nodes = {}
-        for n in Node.select().where(Node.environment == env, Node.is_enabled == True).execute():  # noqa
+        for n in (
+            Node.select()
+            .where(Node.environment == env, Node.is_enabled == True)
+            .execute()
+        ):  # noqa
             nodes[n.id] = n.name
         pools = {None: "global"}
         for p in Pool.select().where(Pool.environment == env).execute():
@@ -216,27 +239,30 @@ class ServiceAPI(API):
 
         # speedup orm
         srv_list = db.execute_sql(
-            'SELECT\n'
-            '    s.id,service,pool_id,node_id, config, present\n'
-            'FROM\n'
-            '    service s\n'
-            '    left JOIN role r on s.service==r.role_name\n'
-            'WHERE\n'
-            '    s.environment_id=?\n'
-            '    and (r.is_enabled=1 or r.is_enabled is null)\n'
-            'ORDER BY s.service\n',
-            env_id)
+            "SELECT\n"
+            "    s.id,service,pool_id,node_id, config, present\n"
+            "FROM\n"
+            "    service s\n"
+            "    left JOIN role r on s.service==r.role_name\n"
+            "WHERE\n"
+            "    s.environment_id=?\n"
+            "    and (r.is_enabled=1 or r.is_enabled is null)\n"
+            "ORDER BY s.service\n",
+            env_id,
+        )
         for srv in srv_list:
             try:
-                r.append({
-                    "id": str(srv[0]),
-                    "service": srv[1],
-                    "pool": pools[srv[2]],
-                    "node": nodes[srv[3]],
-                    "config": json.loads(srv[4]),
-                    "checked": bool(srv[5]),
-                    "form": []
-                })
+                r.append(
+                    {
+                        "id": str(srv[0]),
+                        "service": srv[1],
+                        "pool": pools[srv[2]],
+                        "node": nodes[srv[3]],
+                        "config": json.loads(srv[4]),
+                        "checked": bool(srv[5]),
+                        "form": [],
+                    }
+                )
             except (ValueError, KeyError):
                 # disabled nodes
                 # bad formed json
@@ -261,7 +287,7 @@ class ServiceAPI(API):
             for cfg in config:
                 q = Service.update(
                     config=json.dumps(cfg["config"], sort_keys=True),
-                    present=bool(cfg["present"])
+                    present=bool(cfg["present"]),
                 ).where(Service.id == cfg["id"])
                 q.execute()
 

@@ -1,4 +1,3 @@
-
 # Third-party modules
 import json
 
@@ -44,15 +43,11 @@ def migrate(migrator):
         n_instances = IntegerField(default=0)
         n_backup_instances = IntegerField(default=0)
 
-    migrator.add_column(
-        "service",
-        "config",
-        TextField(default="")
-    )
+    migrator.add_column("service", "config", TextField(default=""))
     migrator.add_index(
         "service",
         ("environment_id", "service", "pool_id", "node_id"),
-        unique=True
+        unique=True,
     )
 
     if len(Environment.select()) != 0:
@@ -67,14 +62,13 @@ def migrate(migrator):
             for pool in config:
                 for srv in config[pool]:
                     cfg = config[pool][srv]
-                    q = Service.update(config=json.dumps(cfg, sort_keys=True)).where(
+                    q = Service.update(
+                        config=json.dumps(cfg, sort_keys=True)
+                    ).where(
                         Service.environment == env.id,
                         Service.service == srv,
-                        Service.pool == pool
+                        Service.pool == pool,
                     )
                     q.execute()
 
-    migrator.drop_column(
-        "environment",
-        "service_config"
-    )
+    migrator.drop_column("environment", "service_config")

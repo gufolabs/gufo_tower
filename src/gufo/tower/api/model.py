@@ -59,9 +59,7 @@ class ModelAPI(API):
             field = getattr(self.model, prop, None)
             if not field:
                 continue
-            filters += [
-                field == value
-            ]
+            filters += [field == value]
         with db.atomic():
             q = self.model.select()
             if filters:
@@ -75,10 +73,7 @@ class ModelAPI(API):
             if sorters:
                 q = q.order_by(*sorters)
             data = [format(o) for o in q]
-        r = {
-            "pos": start,
-            "data": data
-        }
+        r = {"pos": start, "data": data}
         if dynamic and not start:
             r["total_count"] = total_count
         return r

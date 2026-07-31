@@ -27,7 +27,11 @@ def main():
     )
     # Ansible dynamic inventory interface
     parser.add_argument(
-        "--list", action="store_const", dest="cmd", const="list", help="Ansible inventory"
+        "--list",
+        action="store_const",
+        dest="cmd",
+        const="list",
+        help="Ansible inventory",
     )
     args = parser.parse_args()
     if args.cmd == "list":

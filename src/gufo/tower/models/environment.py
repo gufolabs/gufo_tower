@@ -43,19 +43,22 @@ class Environment(Model):
             ("test", "Test"),
             ("dev", "Develop"),
             ("eval", "Evaluation"),
-            ("other", "Other")
-        ]
+            ("other", "Other"),
+        ],
     )
     # Installation name as shown in interface header
     installation_name = CharField(default="Unconfigured installation")
-    playbook_link = CharField(default="git+https://github.com/nocproject/noc@stable")
+    playbook_link = CharField(
+        default="git+https://github.com/nocproject/noc@stable"
+    )
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
     # json-serialized service configuration
     # pool id -> service -> key -> value
     is_default = BooleanField(default=False)
     config_order = CharField(
-        default="yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC")
+        default="yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC"
+    )
     install_method = CharField(default="git")
 
     def list_item(self):
@@ -68,14 +71,11 @@ class Environment(Model):
             "installation_name": self.installation_name,
             "playbook_link": self.playbook_link,
             "install_method": self.install_method,
-            "web_host": self.web_host
+            "web_host": self.web_host,
         }
 
     def reference_item(self):
-        return {
-            "id": str(self.id),
-            "value": self.name
-        }
+        return {"id": str(self.id), "value": self.name}
 
     @property
     def ansible_inventory(self):
@@ -106,32 +106,39 @@ class Environment(Model):
                     "tower_data": self.data_path,
                     "tower_ssh_keys": self.ssh_keys_path,
                     # All pools
-                    "noc_all_pools": [{
-                        "name": p.name,
-                        "description": p.description
-                    } for p in Pool.select().where(Pool.environment == self).order_by(Pool.name)]
+                    "noc_all_pools": [
+                        {"name": p.name, "description": p.description}
+                        for p in Pool.select()
+                        .where(Pool.environment == self)
+                        .order_by(Pool.name)
+                    ],
                 }
             },
-            "_meta": {
-                "hostvars": {}
-            },
-            "nodes": {
-                "vars": {},
-                "hosts": []
-            }
+            "_meta": {"hostvars": {}},
+            "nodes": {"vars": {}, "hosts": []},
         }
         active_services = set(s for s in srv_descr)
         service_data = defaultdict(list)
         service_nodes = defaultdict(list)
         node_services = defaultdict(list)
         with db.atomic():
-            nodes = list(Node.select().where(Node.environment == self).where(Node.is_enabled))
-            for s in Service.select().join(Node).where(Service.environment == self, Node.is_enabled == True):  # noqa
+            nodes = list(
+                Node.select()
+                .where(Node.environment == self)
+                .where(Node.is_enabled)
+            )
+            for s in (
+                Service.select()
+                .join(Node)
+                .where(Service.environment == self, Node.is_enabled == True)
+            ):  # noqa
                 if s.service in active_services and s.present:
                     service_data[s.service] += [s]
                     node_services[s.node.name] += [s]
         for s in service_data:
-            service_nodes[s] = sorted(set(sd.node.name for sd in service_data[s]))
+            service_nodes[s] = sorted(
+                set(sd.node.name for sd in service_data[s])
+            )
         # Hosts variables
         for node in nodes:
             r["nodes"]["hosts"] += [node.name]
@@ -142,7 +149,7 @@ class Environment(Model):
                 "ansible_python_interpreter": node.node_type.python_interpreter,
                 "ansible_ssh_private_key_file": self.deploy_keys,
                 "node_id": node.id,
-                "noc_dc": node.datacenter.name
+                "noc_dc": node.datacenter.name,
             }
             # Update with node settings
             hv = node.get_vars()
@@ -154,17 +161,16 @@ class Environment(Model):
             r["_meta"]["hostvars"][node.name] = hostvars
             dcn = "dc-%s" % node.datacenter.name
             if dcn not in r:
-                r[dcn] = {
-                    "hosts": [],
-                    "vars": {}
-                }
+                r[dcn] = {"hosts": [], "vars": {}}
                 if node.datacenter.proxy:
                     r[dcn]["vars"]["http_proxy"] = node.datacenter.proxy
             r[dcn]["hosts"] += [node.name]
             required_assets = []
             for s in node_services[node.name]:
                 required_assets += srv_descr[s.service]["required_assets"]
-            r["_meta"]["hostvars"][node.name]["required_assets"] = sorted(list(set(required_assets)))
+            r["_meta"]["hostvars"][node.name]["required_assets"] = sorted(
+                list(set(required_assets))
+            )
         need_cert = []
         has_cert = False
         certificate = {}
@@ -173,56 +179,58 @@ class Environment(Model):
 
         for srv in self.get_service_config():
             # do not work with stale or old services
-            if srv['service'] not in srv_descr:
+            if srv["service"] not in srv_descr:
                 continue
 
             # name service
-            if srv_descr[srv['service']]["level"] == "pool":
+            if srv_descr[srv["service"]]["level"] == "pool":
                 try:
-                    srv_name = "-".join(["cfg", srv['service'], srv['pool'], srv['node']])
+                    srv_name = "-".join(
+                        ["cfg", srv["service"], srv["pool"], srv["node"]]
+                    )
                 except AttributeError:
                     continue
-                pool_name = srv['pool']
-            elif srv_descr[srv['service']]["level"] == "global":
-                srv_name = "-".join(["cfg", srv['service'], srv['node']])
+                pool_name = srv["pool"]
+            elif srv_descr[srv["service"]]["level"] == "global":
+                srv_name = "-".join(["cfg", srv["service"], srv["node"]])
                 pool_name = None
             else:
-                srv_name = "-".join(["cfg", srv['service'], srv['node']])
+                srv_name = "-".join(["cfg", srv["service"], srv["node"]])
                 pool_name = "global"
 
-            if "svc-%s" % srv['service'] not in r:
-                r["svc-%s" % srv['service']] = {
-                    "vars": self.name_config(srv['config'], srv['service']),
-                    "children": [
-                        srv_name,
-                        "svc-%s-read" % srv['service']
-                    ]
+            if "svc-%s" % srv["service"] not in r:
+                r["svc-%s" % srv["service"]] = {
+                    "vars": self.name_config(srv["config"], srv["service"]),
+                    "children": [srv_name, "svc-%s-read" % srv["service"]],
                 }
             else:
-                r["svc-%s" % srv['service']]["children"].append(srv_name)
+                r["svc-%s" % srv["service"]]["children"].append(srv_name)
 
             # make service group
             if srv_name not in r:
                 r[srv_name] = {
-                    "vars": self.name_config(srv['config'], srv['service']),
-                    "hosts": [srv['node']]
+                    "vars": self.name_config(srv["config"], srv["service"]),
+                    "hosts": [srv["node"]],
                 }
-                if "svc-%s-read" % srv['service'] not in r:
-                    r["svc-%s-read" % srv['service']] = {"hosts": []}
+                if "svc-%s-read" % srv["service"] not in r:
+                    r["svc-%s-read" % srv["service"]] = {"hosts": []}
 
             # make execution group
-            if "svc-%s-exec" % srv['service'] not in r:
-                r["svc-%s-exec" % srv['service']] = {"hosts": [srv['node']]}
+            if "svc-%s-exec" % srv["service"] not in r:
+                r["svc-%s-exec" % srv["service"]] = {"hosts": [srv["node"]]}
             else:
-                r["svc-%s-exec" % srv['service']]["hosts"].append(srv['node'])
+                r["svc-%s-exec" % srv["service"]]["hosts"].append(srv["node"])
 
             # resolve depends
-            if "depends" in srv_descr[srv['service']] and srv_descr[srv['service']]["depends"]:
-                for dep in srv_descr[srv['service']]["depends"]:
+            if (
+                "depends" in srv_descr[srv["service"]]
+                and srv_descr[srv["service"]]["depends"]
+            ):
+                for dep in srv_descr[srv["service"]]["depends"]:
                     if "svc-%s-read" % dep not in r:
-                        r["svc-%s-read" % dep] = {"hosts": [srv['node']]}
-                    elif srv['node'] not in r["svc-%s-read" % dep]["hosts"]:
-                        r["svc-%s-read" % dep]["hosts"].append(srv['node'])
+                        r["svc-%s-read" % dep] = {"hosts": [srv["node"]]}
+                    elif srv["node"] not in r["svc-%s-read" % dep]["hosts"]:
+                        r["svc-%s-read" % dep]["hosts"].append(srv["node"])
 
             # Generate tower.yml
             self.generate_tower_inventory(pool_name, r, srv, srv_descr)
@@ -230,29 +238,32 @@ class Environment(Model):
         return r
 
     def generate_tower_inventory(self, pool_name, r, srv, srv_descr):
-        if "category" in srv_descr[srv['service']] and srv_descr[srv['service']]["category"] == "internal":
-            node_noc_config = "noc-config-%s" % srv['node']
+        if (
+            "category" in srv_descr[srv["service"]]
+            and srv_descr[srv["service"]]["category"] == "internal"
+        ):
+            node_noc_config = "noc-config-%s" % srv["node"]
             if node_noc_config not in r:
                 r[node_noc_config] = {
-                    "hosts": [srv['node']],
-                    "vars": {
-                        "noc_services": []
-                    }
+                    "hosts": [srv["node"]],
+                    "vars": {"noc_services": []},
                 }
             line = {
-                "name": srv['service'],
-                "config": srv['config'],
+                "name": srv["service"],
+                "config": srv["config"],
                 "pool": pool_name,
-                "environment": srv_descr[srv['service']]["environment"].copy()
+                "environment": srv_descr[srv["service"]]["environment"].copy(),
             }
             # append pool configuration file to config string
-            if srv_descr[srv['service']]["level"] == "pool":
+            if srv_descr[srv["service"]]["level"] == "pool":
                 order = self.config_order.split(",")
                 for conf in order:
-                    if 'yaml://' in conf:
+                    if "yaml://" in conf:
                         path = urlparse(conf).path
                         basepath = os.path.dirname(path)
-                        pool_config_path = "yaml://" + str(os.path.join(basepath, 'pool-%s.yml' % srv['pool']))
+                        pool_config_path = "yaml://" + str(
+                            os.path.join(basepath, "pool-%s.yml" % srv["pool"])
+                        )
                         order.insert(-1, pool_config_path)
                         break
                 pooled_order = ",".join(order)
@@ -277,14 +288,11 @@ class Environment(Model):
                     has_cert = True
                     certificate[s] = {
                         "key": ln["cert_key"],
-                        "cert": ln["cert"]
+                        "cert": ln["cert"],
                     }
             if not has_cert and need_cert:
                 key, cert = self.generate_certificate()
-                certificate[s] = {
-                    "key": key,
-                    "cert": cert
-                }
+                certificate[s] = {"key": key, "cert": cert}
 
             for n in need_cert:
                 conf = json.loads(n.config)
@@ -304,76 +312,99 @@ class Environment(Model):
     def get_service_config(self):
         from .node import Node
         from .pool import Pool
+
         r = []
         nodes = {}
-        for n in Node.select().where(Node.environment == self, Node.is_enabled == True).execute():  # noqa
+        for n in (
+            Node.select()
+            .where(Node.environment == self, Node.is_enabled == True)
+            .execute()
+        ):  # noqa
             nodes[n.id] = n.name
         pools = {None: "global"}
         for p in Pool.select().where(Pool.environment == self).execute():
             pools[p.id] = p.name
 
         srv_list = db.execute_sql(
-            'SELECT\n'
-            '    s.id,service,pool_id,node_id, config, present\n'
-            'FROM\n'
-            '    service s\n'
-            '    left JOIN role r on s.service==r.role_name\n'
-            'WHERE\n'
-            '    s.environment_id=?\n'
-            '    AND s.present=1\n'
-            '    and (r.is_enabled=1 or r.is_enabled is null)\n'
-            'ORDER BY s.service\n',
-            str(self.id))
+            "SELECT\n"
+            "    s.id,service,pool_id,node_id, config, present\n"
+            "FROM\n"
+            "    service s\n"
+            "    left JOIN role r on s.service==r.role_name\n"
+            "WHERE\n"
+            "    s.environment_id=?\n"
+            "    AND s.present=1\n"
+            "    and (r.is_enabled=1 or r.is_enabled is null)\n"
+            "ORDER BY s.service\n",
+            str(self.id),
+        )
         for srv in srv_list:
             try:
-                r.append({
-                    "id": str(srv[0]),
-                    "service": srv[1],
-                    "pool": pools[srv[2]],
-                    "node": nodes[srv[3]],
-                    "config": json.loads(srv[4]),
-                    "form": []
-                })
+                r.append(
+                    {
+                        "id": str(srv[0]),
+                        "service": srv[1],
+                        "pool": pools[srv[2]],
+                        "node": nodes[srv[3]],
+                        "config": json.loads(srv[4]),
+                        "form": [],
+                    }
+                )
             except (ValueError, KeyError):
                 pass
         return r
 
     @property
     def playbook_path(self):
-        return os.path.abspath(os.path.join("var", "tower", "playbooks", self.name))
+        return os.path.abspath(
+            os.path.join("var", "tower", "playbooks", self.name)
+        )
 
     @property
     def roles_prefix(self):
         return os.path.abspath(
-            os.path.join("var", "tower", "playbooks", self.name, "additional_roles")
+            os.path.join(
+                "var", "tower", "playbooks", self.name, "additional_roles"
+            )
         )
 
     @property
     def services_path(self):
         from .role import Role
+
         r = glob.glob(
             os.path.abspath(
                 os.path.join(
-                    "var", "tower", "playbooks",
+                    "var",
+                    "tower",
+                    "playbooks",
                     self.name,
                     "noc_roles",
                     "*",
-                    "meta", "tower.yml"
+                    "meta",
+                    "tower.yml",
                 )
             )
         )
-        r.extend(glob.glob(
-            os.path.abspath(
-                os.path.join(
-                    "var", "tower", "playbooks",
-                    self.name,
-                    "system_roles",
-                    "*",
-                    "meta", "tower.yml"
+        r.extend(
+            glob.glob(
+                os.path.abspath(
+                    os.path.join(
+                        "var",
+                        "tower",
+                        "playbooks",
+                        self.name,
+                        "system_roles",
+                        "*",
+                        "meta",
+                        "tower.yml",
+                    )
                 )
             )
-        ))
-        for role in Role.select().where(Role.environment == self, Role.is_enabled == True):  # noqa
+        )
+        for role in Role.select().where(
+            Role.environment == self, Role.is_enabled == True
+        ):  # noqa
             r.append(
                 os.path.join(
                     self.roles_prefix, role.role_name, "meta", "tower.yml"
@@ -393,14 +424,13 @@ class Environment(Model):
 
     @property
     def data_path(self):
-        return os.path.abspath(
-            os.path.join("var", "tower", "data", self.name)
-        )
+        return os.path.abspath(os.path.join("var", "tower", "data", self.name))
 
     @property
     def src_path(self):
         return os.path.abspath(
-            os.path.join("var", "tower", "data", "src_dist"))
+            os.path.join("var", "tower", "data", "src_dist")
+        )
 
     @property
     def deploy_keys(self):
@@ -415,12 +445,11 @@ class Environment(Model):
 
     @property
     def ssh_keys_path(self):
-        return os.path.abspath(
-            os.path.join("var", "tower", "ssh", self.name)
-        )
+        return os.path.abspath(os.path.join("var", "tower", "ssh", self.name))
 
     def get_services_description(self):
         import yaml
+
         r = {}
         # Load services description
         for path in self.services_path:
@@ -437,11 +466,17 @@ class Environment(Model):
                     "id": srv,
                     "name": srv,
                     "level": descr["services"][srv].get("level", None),
-                    "require_cert": bool(descr["services"][srv].get("require_cert")),
-                    "required_assets": descr["services"][srv].get("required_assets", []),
+                    "require_cert": bool(
+                        descr["services"][srv].get("require_cert")
+                    ),
+                    "required_assets": descr["services"][srv].get(
+                        "required_assets", []
+                    ),
                     "depends": descr["services"][srv].get("depends", None),
-                    "category": descr["services"][srv].get("category", "external"),
-                    "environment": descr["services"][srv]
+                    "category": descr["services"][srv].get(
+                        "category", "external"
+                    ),
+                    "environment": descr["services"][srv],
                 }
         return r
 
@@ -450,6 +485,7 @@ class Environment(Model):
         Generate all necessary ssh keys
         """
         from .pool import Pool
+
         key_types = [("rsa", 4096)]
 
         if not os.path.isdir(self.ssh_keys_path):
@@ -463,20 +499,41 @@ class Environment(Model):
             for t, b in key_types:
                 fn = os.path.join(prefix, "id_%s" % t)
                 if not os.path.isfile(fn):
-                    logging.info("Generating %s key for pool %s",
-                                 t, pool.name)
+                    logging.info("Generating %s key for pool %s", t, pool.name)
                     if os.getenv("OSTYPE") == "FreeBSD":
-                        subprocess.check_call([
-                            "ssh-keygen", "-q", "-t", t, "-b", str(b),
-                            "-f", fn,
-                            "-N", "\\\\\"\\\\\"", "-C", "%s@noc" % pool.name
-                        ])
+                        subprocess.check_call(
+                            [
+                                "ssh-keygen",
+                                "-q",
+                                "-t",
+                                t,
+                                "-b",
+                                str(b),
+                                "-f",
+                                fn,
+                                "-N",
+                                '\\\\"\\\\"',
+                                "-C",
+                                "%s@noc" % pool.name,
+                            ]
+                        )
                     else:
-                        subprocess.check_call([
-                            "ssh-keygen", "-q", "-t", t, "-b", str(b),
-                            "-f", fn,
-                            "-N", "", "-C", "%s@noc" % pool.name
-                        ])
+                        subprocess.check_call(
+                            [
+                                "ssh-keygen",
+                                "-q",
+                                "-t",
+                                t,
+                                "-b",
+                                str(b),
+                                "-f",
+                                fn,
+                                "-N",
+                                "",
+                                "-C",
+                                "%s@noc" % pool.name,
+                            ]
+                        )
 
     def generate_certificate(self):
         """
@@ -485,14 +542,24 @@ class Environment(Model):
         """
         kf = tempfile.NamedTemporaryFile(delete=True)
         cf = tempfile.NamedTemporaryFile(delete=True)
-        subprocess.check_call([
-            "openssl", "req", "-x509", "-nodes",
-            "-newkey", "rsa:4096",
-            "-keyout", kf.name,
-            "-out", cf.name,
-            "-days", "3650",
-            "-subj", "/CN=%s" % (self.web_host or "noc")
-        ])
+        subprocess.check_call(
+            [
+                "openssl",
+                "req",
+                "-x509",
+                "-nodes",
+                "-newkey",
+                "rsa:4096",
+                "-keyout",
+                kf.name,
+                "-out",
+                cf.name,
+                "-days",
+                "3650",
+                "-subj",
+                "/CN=%s" % (self.web_host or "noc"),
+            ]
+        )
         return kf.read().decode(), cf.read().decode()
 
     def delete_instance(self, *args, **kwargs):

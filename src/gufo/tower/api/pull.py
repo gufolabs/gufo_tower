@@ -59,22 +59,17 @@ class PullAPI(API):
         try:
             env = Environment.get(Environment.id == int(env_id))
         except Environment.DoesNotExist:
-            return {
-                "success": False
-            }
+            return {"success": False}
         with db.atomic():
             job = PullLog(
                 start_ts=datetime.datetime.now(),
                 environment=env,
                 user=self.handler.current_user.name,
-                repo=env.playbook_link
+                repo=env.playbook_link,
             )
             job.save()
             self.executor.submit(self.pull_job_via_pip, job)
-            return {
-                "success": True,
-                "job": job.id
-            }
+            return {"success": True, "job": job.id}
 
     @api
     def get_job_status(self, env_id, job_id):
@@ -82,16 +77,13 @@ class PullAPI(API):
             try:
                 env = Environment.get(Environment.id == int(env_id))
             except Environment.DoesNotExist:
-                return {
-                    "success": False
-                }
+                return {"success": False}
             try:
-                job = PullLog.get(PullLog.id == int(job_id),
-                                  PullLog.environment == env)
+                job = PullLog.get(
+                    PullLog.id == int(job_id), PullLog.environment == env
+                )
             except PullLog.DoesNotExist:
-                return {
-                    "success": False
-                }
+                return {"success": False}
         r = {
             "success": True,
             "complete": job.complete_ts is not None,
@@ -111,7 +103,9 @@ class PullAPI(API):
             repo_playbooks_path = env.repo_path
         shutil.rmtree(env.playbook_path, ignore_errors=True)
         shutil.move(repo_playbooks_path, env.playbook_path)
-        for role in Role.select().where(Role.environment == env, Role.is_enabled == True):  # noqa
+        for role in Role.select().where(
+            Role.environment == env, Role.is_enabled == True
+        ):  # noqa
             self.pull(role.link, role.role_path)
 
         with db.atomic():

@@ -1,4 +1,3 @@
-
 # Third-party modules
 import yaml
 from peewee import BooleanField, CharField, Model, TextField
@@ -19,8 +18,8 @@ def migrate(migrator):
                 ("test", "Test"),
                 ("dev", "Develop"),
                 ("eval", "Evaluation"),
-                ("other", "Other")
-            ]
+                ("other", "Other"),
+            ],
         )
         # Installation name as shown in interface header
         installation_name = CharField(default="Unconfigured installation")
@@ -55,10 +54,7 @@ def migrate(migrator):
         mongo_rs = CharField(default="noc")
         mongo_engine = CharField(
             default="wiredTiger",
-            choices=[
-                ("wiredTiger", "WiredTiger"),
-                ("mmapv1", "MMAPv1")
-            ]
+            choices=[("wiredTiger", "WiredTiger"), ("mmapv1", "MMAPv1")],
         )
         # InfluxDB settings
         influxdb_db = CharField(default="noc")
@@ -73,6 +69,8 @@ def migrate(migrator):
         config = yaml.full_load(env.service_config)
         if "session_ttl" in config[None]["login"]:
             if "d" not in str(config[None]["login"]["session_ttl"]):
-                config[None]["login"]["session_ttl"] = str(config[None]["login"]["session_ttl"]) + "d"
+                config[None]["login"]["session_ttl"] = (
+                    str(config[None]["login"]["session_ttl"]) + "d"
+                )
                 env.service_config = yaml.dump(config)
                 env.save()

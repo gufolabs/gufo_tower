@@ -36,7 +36,7 @@ class DeployHandler(BaseHandler):
         r"^(\S+)\s*:\s+"
         r"ok=(\d+)\s+changed=(\d+)\s+"
         r"unreachable=(\d+)\s+failed=(\d+)\s*$",
-        re.MULTILINE
+        re.MULTILINE,
     )
 
     def initialize(self):
@@ -55,7 +55,12 @@ class DeployHandler(BaseHandler):
         except Environment.DoesNotExist:
             raise tornado.web.HTTPError(404)
         try:
-            self.deploy_options = set([int(i) for i in self.get_argument("deployment_options").split(",")])
+            self.deploy_options = set(
+                [
+                    int(i)
+                    for i in self.get_argument("deployment_options").split(",")
+                ]
+            )
         except:  # noqa
             raise tornado.web.HTTPError(404)
         env = os.environ.copy()
@@ -74,26 +79,22 @@ class DeployHandler(BaseHandler):
             if 91 in self.deploy_options:
                 self.ansible_verbose = "-vvvvvvvv"
             if 92 in self.deploy_options:
-                env.update({
-                    "TOWER_SHOW_SECRETS": "1"
-                })
+                env.update({"TOWER_SHOW_SECRETS": "1"})
             if 93 in self.deploy_options:
-                env.update({
-                    "TOWER_RUN_CHECKS": "1"
-                })
+                env.update({"TOWER_RUN_CHECKS": "1"})
             if 94 in self.deploy_options:
-                env.update({
-                    "TOWER_RUN_TESTS": "1"
-                })
+                env.update({"TOWER_RUN_TESTS": "1"})
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
-        logger.info("Running deploy on %s %s", self.env.name, self.deploy_options)
+        logger.info(
+            "Running deploy on %s %s", self.env.name, self.deploy_options
+        )
         with db.atomic():
             self.job_log = JobLog(
                 environment=self.env,
                 start_ts=datetime.datetime.now(),
                 user=self.current_user.name,
-                playbook="site.yml"
+                playbook="site.yml",
             )
             self.job_log.save()
         # Disable nginx proxy buffering
@@ -106,30 +107,37 @@ class DeployHandler(BaseHandler):
         # Run playbook
         bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
         if os.path.exists("/.dockerenv"):
-            ansible_ssh_cp = os.path.join("/root/.ansible/cp/ansible-ssh-%%r-%%h-%%r")
-        else:
             ansible_ssh_cp = os.path.join(
-                "/tmp/tower-%%r-%%h-%%r"
+                "/root/.ansible/cp/ansible-ssh-%%r-%%h-%%r"
             )
-        env.update({
-            "NOC_ENV": str(self.env.name),
-            "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
-            "ANSIBLE_SSH_PIPELINING": "1",
-            "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
-            "ANSIBLE_HOST_KEY_CHECKING": "False",
-            "ANSIBLE_STDOUT_CALLBACK": "debug",
-            "ANSIBLE_ROLES_PATH": ":".join([
-                self.env.roles_prefix,
-                os.path.join(self.env.playbook_path, "system_roles"),
-                os.path.join(self.env.playbook_path, "noc_roles")
-            ]),
-            "PYTHONUNBUFFERED": "1",
-            "TOWER_VERSION": self.version
-        })
+        else:
+            ansible_ssh_cp = os.path.join("/tmp/tower-%%r-%%h-%%r")
+        env.update(
+            {
+                "NOC_ENV": str(self.env.name),
+                "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
+                "ANSIBLE_SSH_PIPELINING": "1",
+                "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
+                "ANSIBLE_HOST_KEY_CHECKING": "False",
+                "ANSIBLE_STDOUT_CALLBACK": "debug",
+                "ANSIBLE_ROLES_PATH": ":".join(
+                    [
+                        self.env.roles_prefix,
+                        os.path.join(self.env.playbook_path, "system_roles"),
+                        os.path.join(self.env.playbook_path, "noc_roles"),
+                    ]
+                ),
+                "PYTHONUNBUFFERED": "1",
+                "TOWER_VERSION": self.version,
+            }
+        )
         command = [
             os.path.join(bin_path, "ansible-playbook"),
-            "-i", os.path.join(bin_path, "tower-inv"),
-            "site.yml", "-f 50", "--diff"
+            "-i",
+            os.path.join(bin_path, "tower-inv"),
+            "site.yml",
+            "-f 50",
+            "--diff",
         ]
         if self.ansible_verbose:
             command.append(self.ansible_verbose)
@@ -142,18 +150,17 @@ class DeployHandler(BaseHandler):
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
             cwd=os.path.join(self.env.playbook_path),
-            close_fds=True
+            close_fds=True,
         )
         self.write_pb()
         self.sp.stdout.set_close_callback(self.on_stream_close)
         self.read_future = self.sp.stdout.read_bytes(
-            self.BUFFSIZE,
-            streaming_callback=self.on_data,
-            partial=True
+            self.BUFFSIZE, streaming_callback=self.on_data, partial=True
         )
 
     def write_pb(self):
         from tower.models.service import Service
+
         order = Service.get_execution_order(self.env)
         pb_order = []
         for service in order:
@@ -161,26 +168,30 @@ class DeployHandler(BaseHandler):
             if not pb:
                 continue
             pb_order.append(pb)
-        tower_autogen = os.path.abspath(os.path.join(self.env.playbook_path, "tower.yml"))
+        tower_autogen = os.path.abspath(
+            os.path.join(self.env.playbook_path, "tower.yml")
+        )
         with open(tower_autogen, "w") as f:
             for line in pb_order:
                 f.write("- import_playbook: %s\n" % line)
 
     def resolv_pb(self, service):
         if os.path.exists(
-                os.path.join(self.env.roles_prefix, service, "service.yml")
+            os.path.join(self.env.roles_prefix, service, "service.yml")
         ):
-            return os.path.join(
-                self.env.roles_prefix, service, "service.yml"
-            )
+            return os.path.join(self.env.roles_prefix, service, "service.yml")
         if os.path.exists(
-                os.path.join(self.env.playbook_path, "system_roles", service, "service.yml")
+            os.path.join(
+                self.env.playbook_path, "system_roles", service, "service.yml"
+            )
         ):
             return os.path.join(
                 self.env.playbook_path, "system_roles", service, "service.yml"
             )
         if os.path.exists(
-                os.path.join(self.env.playbook_path, "noc_roles", service, "service.yml")
+            os.path.join(
+                self.env.playbook_path, "noc_roles", service, "service.yml"
+            )
         ):
             return os.path.join(
                 self.env.playbook_path, "noc_roles", service, "service.yml"
@@ -189,9 +200,12 @@ class DeployHandler(BaseHandler):
 
     def get_version(self):
         from os.path import abspath, dirname, join, realpath
-        version_path = realpath(join(dirname(abspath(__file__)), '../../../../../VERSION'))
+
+        version_path = realpath(
+            join(dirname(abspath(__file__)), "../../../../../VERSION")
+        )
         if not os.path.exists(version_path):
-            self.version = 'old'
+            self.version = "old"
         else:
             with open(version_path) as f:
                 self.version = f.read().splitlines()[0]
@@ -235,6 +249,10 @@ class DeployHandler(BaseHandler):
             self.job_log.complete_ts = datetime.datetime.now()
             self.job_log.is_complete = True
             self.job_log.log = "".join(str(self.play_log))
-            (self.job_log.n_ok, self.job_log.n_changed,
-             self.job_log.n_unreachable, self.job_log.n_failed) = recap
+            (
+                self.job_log.n_ok,
+                self.job_log.n_changed,
+                self.job_log.n_unreachable,
+                self.job_log.n_failed,
+            ) = recap
             self.job_log.save()

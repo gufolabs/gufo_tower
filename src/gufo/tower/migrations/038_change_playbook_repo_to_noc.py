@@ -1,4 +1,3 @@
-
 # Third-party modules
 from peewee import CharField, Model
 
@@ -14,6 +13,11 @@ def migrate(migrator):
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
-            if env.playbook_link == 'git+https://github.com/nocproject/ansible_deploy@microservices':
-                env.playbook_link = "git+https://github.com/nocproject/noc@stable"
+            if (
+                env.playbook_link
+                == "git+https://github.com/nocproject/ansible_deploy@microservices"
+            ):
+                env.playbook_link = (
+                    "git+https://github.com/nocproject/noc@stable"
+                )
                 env.save()

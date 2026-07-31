@@ -1,4 +1,3 @@
-
 # Third-party modules
 import os
 import shutil
@@ -21,8 +20,8 @@ def migrate(migrator):
                 ("test", "Test"),
                 ("dev", "Develop"),
                 ("eval", "Evaluation"),
-                ("other", "Other")
-            ]
+                ("other", "Other"),
+            ],
         )
         # Installation name as shown in interface header
         installation_name = CharField(default="Unconfigured installation")
@@ -57,10 +56,7 @@ def migrate(migrator):
         mongo_rs = CharField(default="noc")
         mongo_engine = CharField(
             default="wiredTiger",
-            choices=[
-                ("wiredTiger", "WiredTiger"),
-                ("mmapv1", "MMAPv1")
-            ]
+            choices=[("wiredTiger", "WiredTiger"), ("mmapv1", "MMAPv1")],
         )
         # InfluxDB settings
         influxdb_db = CharField(default="noc")
@@ -70,23 +66,25 @@ def migrate(migrator):
         # pool id -> service -> key -> value
         service_config = TextField(default="")
         is_default = BooleanField(default=False)
-        config_order = CharField(default="legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC")
+        config_order = CharField(
+            default="legacy:///,yaml:///opt/noc/etc/settings.yml,env:///NOC"
+        )
 
         @property
         def playbook_path(self):
             return os.path.join("var", "tower", "playbooks", self.name)
 
     for env in Environment.select():
-        if 'https://bitbucket.org/nocproject/noc' in env.repo:
+        if "https://bitbucket.org/nocproject/noc" in env.repo:
             env.repo = "https://github.com/nocproject/noc.git"
-        if 'https://bitbucket.com/nocproject/noc' in env.repo:
+        if "https://bitbucket.com/nocproject/noc" in env.repo:
             env.repo = "https://github.com/nocproject/noc.git"
-        if 'feature/microservices' in env.branch:
-            env.branch = 'microservices'
-        if 'git_migrate' in env.branch:
-            env.branch = 'microservices'
-        if 'tip' in env.changeset:
-            env.changeset = 'HEAD'
+        if "feature/microservices" in env.branch:
+            env.branch = "microservices"
+        if "git_migrate" in env.branch:
+            env.branch = "microservices"
+        if "tip" in env.changeset:
+            env.changeset = "HEAD"
         env.save()
 
         # remove current playbook path
@@ -96,22 +94,8 @@ def migrate(migrator):
             except OSError:
                 pass
 
-    migrator.rename_column(
-        "environment",
-        "branch",
-        "version"
-    )
+    migrator.rename_column("environment", "branch", "version")
 
-    migrator.rename_column(
-        "environment",
-        "custom_branch",
-        "custom_version"
-    )
-    migrator.drop_column(
-        "environment",
-        "custom_changeset"
-    ),
-    migrator.drop_column(
-        "environment",
-        "changeset"
-    )
+    migrator.rename_column("environment", "custom_branch", "custom_version")
+    (migrator.drop_column("environment", "custom_changeset"),)
+    migrator.drop_column("environment", "changeset")

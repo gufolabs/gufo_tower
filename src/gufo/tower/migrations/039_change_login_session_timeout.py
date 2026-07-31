@@ -1,4 +1,3 @@
-
 # Third-party modules
 import json
 
@@ -49,6 +48,8 @@ def migrate(migrator):
                     conf = yaml.full_load(s.config)
                     if "session_ttl" in conf:
                         if "d" not in str(conf["session_ttl"]):
-                            conf["session_ttl"] = str(conf["session_ttl"]) + "d"
+                            conf["session_ttl"] = (
+                                str(conf["session_ttl"]) + "d"
+                            )
                             s.config = json.dumps(conf, sort_keys=True)
                             s.save()

@@ -1,4 +1,3 @@
-
 # Third-party modules
 from peewee import CharField, ForeignKeyField, Model, TextField
 
@@ -11,9 +10,7 @@ class Environment(Model):
 class Pool(Model):
     class Meta:
         db_table = "pool"
-        indexes = (
-            (("environment_id", "name"), True),
-        )
+        indexes = ((("environment_id", "name"), True),)
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     name = CharField()

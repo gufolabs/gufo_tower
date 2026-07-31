@@ -28,16 +28,14 @@ class Settings(Model):
     DEFAULTS = {
         "url": "http://example.com/",
         "installation_name": "Unconfigured installation",
-        "group_by": "node"
+        "group_by": "node",
     }
 
     @classmethod
     def get_item(cls, name):
         with db.atomic():
             try:
-                return json.loads(
-                    Settings.get(Settings.key == name).value
-                )
+                return json.loads(Settings.get(Settings.key == name).value)
             except DoesNotExist:
                 raise KeyError
 
@@ -55,10 +53,7 @@ class Settings(Model):
         with db.atomic():
             r = list(Settings.select().where(Settings.key == name))
             if len(r) == 0:
-                r = Settings(
-                    key=name,
-                    value=value
-                )
+                r = Settings(key=name, value=value)
                 r.save(force_insert=True)
             else:
                 # Update

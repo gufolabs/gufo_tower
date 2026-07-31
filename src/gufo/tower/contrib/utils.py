@@ -1,4 +1,3 @@
-
 # Python modules
 import logging
 import os
@@ -21,25 +20,24 @@ def check_destination(self, dest, url, rev_options, rev_display):
             existing_url = self.get_url(dest)
             if self.compare_urls(existing_url, url):
                 logger.debug(
-                    '%s in %s exists, and has correct URL (%s)',
+                    "%s in %s exists, and has correct URL (%s)",
                     self.repo_name.title(),
                     dest,
                     url,
                 )
                 if not self.check_version(dest, rev_options):
                     logger.info(
-                        'Updating %s %s%s',
+                        "Updating %s %s%s",
                         dest,
                         self.repo_name,
                         rev_display,
                     )
                     self.update(dest, rev_options)
                 else:
-                    logger.info(
-                        'Skipping because already up-to-date.')
+                    logger.info("Skipping because already up-to-date.")
             else:
                 logger.warning(
-                    '%s %s in %s exists with URL %s',
+                    "%s %s in %s exists with URL %s",
                     self.name,
                     self.repo_name,
                     dest,
@@ -47,7 +45,7 @@ def check_destination(self, dest, url, rev_options, rev_display):
                 )
         else:
             logger.warning(
-                'Directory %s already exists, and is not a %s %s.',
+                "Directory %s already exists, and is not a %s %s.",
                 dest,
                 self.name,
                 self.repo_name,

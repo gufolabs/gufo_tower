@@ -20,9 +20,7 @@ class Node(Model):
     class Meta:
         database = db
         db_table = "node"
-        indexes = (
-            (("environment", "name"), True),
-        )
+        indexes = ((("environment", "name"), True),)
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     datacenter = ForeignKeyField(Datacenter, on_delete="RESTRICT")
@@ -45,7 +43,7 @@ class Node(Model):
             "name": self.name,
             "description": self.description,
             "address": self.address,
-            "login_as": self.login_as
+            "login_as": self.login_as,
         }
 
     def get_vars(self):
@@ -69,6 +67,7 @@ class Node(Model):
 
     def delete_instance(self, *args, **kwargs):
         from .service import Service
+
         for service in Service.select().where(Service.node == self):
             service.delete_instance()
         return super().delete_instance(*args, **kwargs)

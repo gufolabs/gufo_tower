@@ -19,7 +19,7 @@ class NodeAPI(ModelAPI):
     def prepare_node(self, node_id):
         # Get NODE
         try:
-            node = Node.get(Node.id == int(node_id)) # noqa
+            node = Node.get(Node.id == int(node_id))  # noqa
         except Node.DoesNotExist:
             raise APIError("Node not found")
         # Check node is reachable

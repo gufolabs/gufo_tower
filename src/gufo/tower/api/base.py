@@ -46,8 +46,7 @@ class APIBase(type):
         m = type.__new__(mcs, name, bases, attrs)
         if m.name:
             SDL[m.name] = [
-                n for n in dir(m)
-                if getattr(getattr(m, n), "api", False)
+                n for n in dir(m) if getattr(getattr(m, n), "api", False)
             ]
             APIClasses[m.name] = m
         return m

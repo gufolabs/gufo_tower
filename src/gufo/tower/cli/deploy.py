@@ -56,6 +56,7 @@ def get_default_env():
 
 def write_pb(env):
     from tower.models.service import Service
+
     order = Service.get_execution_order(env)
     pb_order = []
     for service in order:
@@ -63,27 +64,25 @@ def write_pb(env):
         if not pb:
             continue
         pb_order.append(pb)
-    tower_autogen = os.path.abspath(os.path.join(env.playbook_path, "tower.yml"))
+    tower_autogen = os.path.abspath(
+        os.path.join(env.playbook_path, "tower.yml")
+    )
     with open(tower_autogen, "w") as f:
         for line in pb_order:
             f.write("- import_playbook: %s\n" % line)
 
 
 def resolv_pb(env, service):
+    if os.path.exists(os.path.join(env.roles_prefix, service, "service.yml")):
+        return os.path.join(env.roles_prefix, service, "service.yml")
     if os.path.exists(
-            os.path.join(env.roles_prefix, service, "service.yml")
-    ):
-        return os.path.join(
-            env.roles_prefix, service, "service.yml"
-        )
-    if os.path.exists(
-            os.path.join(env.playbook_path, "system_roles", service, "service.yml")
+        os.path.join(env.playbook_path, "system_roles", service, "service.yml")
     ):
         return os.path.join(
             env.playbook_path, "system_roles", service, "service.yml"
         )
     if os.path.exists(
-            os.path.join(env.playbook_path, "noc_roles", service, "service.yml")
+        os.path.join(env.playbook_path, "noc_roles", service, "service.yml")
     ):
         return os.path.join(
             env.playbook_path, "noc_roles", service, "service.yml"
