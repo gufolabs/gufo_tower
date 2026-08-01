@@ -49,7 +49,6 @@ def migrate(migrator):
         n_instances = IntegerField(default=0)
         n_backup_instances = IntegerField(default=0)
         present = BooleanField(default=False)  # present/absent
-        config = TextField(default="")
         loglevel = CharField(default="info")
 
     migrator.add_column("service", "present", BooleanField(default=False))

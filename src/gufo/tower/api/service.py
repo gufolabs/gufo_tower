@@ -1,12 +1,13 @@
 # ----------------------------------------------------------------------
 # Service API
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Python modules
 # Third-party modules
+import contextlib
 import json
 import os
 from itertools import product
@@ -128,8 +129,9 @@ class ServiceAPI(API):
         # Find environment
         try:
             env = Environment.get(Environment.id == env)
-        except Environment.DoesNotExist:
-            raise APIError("Environment does not exist")
+        except Environment.DoesNotExist as e:
+            msg = "Environment does not exist"
+            raise APIError(msg) from e
         srvs = self.get_available_services(env)
         for srv in srvs:
             r[srv] = self.get_service_form(srvs[srv]["form"], srv)
@@ -161,7 +163,9 @@ class ServiceAPI(API):
                     ).where(Service.id == srv[0]).execute()
 
     def init_services(self, env):
-        """Probably sholud be optimized for much greater lists.
+        """Initialize services.
+
+        Probably sholud be optimized for much greater lists.
         Current max at about 10k services.
         10k services should be enought for all. (c)
 
@@ -198,10 +202,8 @@ class ServiceAPI(API):
                 lines.add((s, n, None))
 
         for srv in current_list:
-            try:
+            with contextlib.suppress(ValueError, KeyError):
                 lines.remove((srv[0], srv[1], srv[2]))
-            except (ValueError, KeyError):
-                pass
         to_insert = []
         for line in lines:
             to_insert.append(
@@ -223,8 +225,9 @@ class ServiceAPI(API):
         # Find environment
         try:
             env = Environment.get(Environment.id == env_id)
-        except Environment.DoesNotExist:
-            raise APIError("Environment does not exist")
+        except Environment.DoesNotExist as e:
+            msg = "Environment does not exist"
+            raise APIError(msg) from e
         self.init_services(env)
         self.migrate_settings(env)
 
@@ -254,7 +257,7 @@ class ServiceAPI(API):
             env_id,
         )
         for srv in srv_list:
-            try:
+            with contextlib.suppress(ValueError, KeyError):
                 r.append(
                     {
                         "id": str(srv[0]),
@@ -266,15 +269,13 @@ class ServiceAPI(API):
                         "form": [],
                     }
                 )
-            except (ValueError, KeyError):
-                # disabled nodes
-                # bad formed json
-                pass
         return r
 
     @api
     def save_config(self, env_id, config):
-        """Config is a list of dicts with keys
+        """Save config.
+
+        Config is a list of dicts with keys
         service, pool, nodes, config
 
         Args:
@@ -284,8 +285,9 @@ class ServiceAPI(API):
         # Find environment
         try:
             Environment.get(Environment.id == env_id)
-        except Environment.DoesNotExist:
-            raise APIError("Environment does not exist")
+        except Environment.DoesNotExist as e:
+            msg = "Environment does not exist"
+            raise APIError(msg) from e
         with db.atomic():
             for cfg in config:
                 q = Service.update(

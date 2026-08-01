@@ -1,12 +1,13 @@
 # ----------------------------------------------------------------------
 # Environment model
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Python modules
 import base64
+import contextlib
 import copy
 import glob
 import hashlib
@@ -114,7 +115,7 @@ class Environment(Model):
             "_meta": {"hostvars": {}},
             "nodes": {"vars": {}, "hosts": []},
         }
-        active_services = set(s for s in srv_descr)
+        active_services = set(srv_descr)
         service_data = defaultdict(list)
         service_nodes = defaultdict(list)
         node_services = defaultdict(list)
@@ -133,9 +134,7 @@ class Environment(Model):
                     service_data[s.service] += [s]
                     node_services[s.node.name] += [s]
         for s in service_data:
-            service_nodes[s] = sorted(
-                set(sd.node.name for sd in service_data[s])
-            )
+            service_nodes[s] = sorted({sd.node.name for sd in service_data[s]})
         # Hosts variables
         for node in nodes:
             r["nodes"]["hosts"] += [node.name]
@@ -166,7 +165,7 @@ class Environment(Model):
             for s in node_services[node.name]:
                 required_assets += srv_descr[s.service]["required_assets"]
             r["_meta"]["hostvars"][node.name]["required_assets"] = sorted(
-                list(set(required_assets))
+                set(required_assets)
             )
         need_cert = []
         has_cert = False
@@ -336,7 +335,7 @@ class Environment(Model):
             str(self.id),
         )
         for srv in srv_list:
-            try:
+            with contextlib.suppress(ValueError, KeyError):
                 r.append(
                     {
                         "id": str(srv[0]),
@@ -347,8 +346,6 @@ class Environment(Model):
                         "form": [],
                     }
                 )
-            except (ValueError, KeyError):
-                pass
         return r
 
     @property
@@ -439,6 +436,7 @@ class Environment(Model):
             )
         if os.path.exists(os.path.expanduser("~/.ssh/id_rsa")):
             return os.path.expanduser("~/.ssh/id_rsa")
+        return None
 
     @property
     def ssh_keys_path(self):

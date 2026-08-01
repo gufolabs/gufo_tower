@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Service model
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -88,9 +88,7 @@ class Service(Model):
         srv_descr = get_available_services()
         for srv in srv_descr:
             if "depends" in srv_descr[srv]["meta"]:
-                deps[srv].extend(
-                    [s for s in srv_descr[srv]["meta"]["depends"]]
-                )
+                deps[srv].extend(list(srv_descr[srv]["meta"]["depends"]))
                 for d in srv_descr[srv]["meta"]["depends"]:
                     if d not in deps:
                         deps[d] = []
@@ -99,5 +97,4 @@ class Service(Model):
             if "before" in srv_descr[srv]["meta"]:
                 deps[srv_descr[srv]["meta"]["before"]].extend([srv])
 
-        order = dfs_topsort(deps)
-        return order
+        return dfs_topsort(deps)

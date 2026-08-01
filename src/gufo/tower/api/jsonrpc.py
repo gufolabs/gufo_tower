@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # JSON-RPC 2.0
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ class JSONRPCHandler(BaseHandler):
         try:
             req = json.loads(self.request.body)
         except ValueError as e:
-            raise HTTPError(400, "Bad request: %s" % e)
+            raise HTTPError(400, "Bad request: %s" % e) from e
         # Parse request
         id = req.get("id", None)
         params = req.get("params", [])

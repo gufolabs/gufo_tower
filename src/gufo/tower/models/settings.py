@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Settings model
 # ----------------------------------------------------------------------
-# Copyright (C) 2007-2015 The NOC Project
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -36,8 +36,8 @@ class Settings(Model):
         with db.atomic():
             try:
                 return json.loads(Settings.get(Settings.key == name).value)
-            except DoesNotExist:
-                raise KeyError
+            except DoesNotExist as e:
+                raise KeyError from e
 
     @classmethod
     def get_items(cls, names):
