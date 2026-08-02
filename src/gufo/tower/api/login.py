@@ -1,13 +1,13 @@
 # ----------------------------------------------------------------------
 # Login API
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Tower modules
-from tower.models.user import User, db
-
+from ..models.db import db
+from ..models.user import User
 from .base import API, api, open_api
 
 

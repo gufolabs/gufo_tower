@@ -5,9 +5,8 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-# Tower modules
-from tower.models.node import Node
-
+# Gufo Tower modules
+from ..models.node import Node
 from .model import APIError, ModelAPI, api
 
 

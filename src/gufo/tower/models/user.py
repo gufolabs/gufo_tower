@@ -6,7 +6,6 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
-import bcrypt
 from peewee import BooleanField, CharField, DoesNotExist, Model
 
 # Tower modules
@@ -30,6 +29,8 @@ class User(Model):
         Args:
             password
         """
+        import bcrypt  # Hide from circular import
+
         if isinstance(password, str):
             password = password.encode("utf-8")
         return bcrypt.hashpw(password, bcrypt.gensalt(10))
@@ -42,6 +43,8 @@ class User(Model):
             password
             hashed
         """
+        import bcrypt  # Hide from circular import
+
         if isinstance(password, str):
             password = password.encode("utf-8")
         if isinstance(hashed, str):

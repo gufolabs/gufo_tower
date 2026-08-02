@@ -1,16 +1,15 @@
 # ----------------------------------------------------------------------
 # Service API handler
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Third-party models
 import yaml
 
-from tower.models.environment import Environment
-
-# Tower models
+# Gufo Tower models
+from ..models.environment import Environment
 from .model import ModelAPI, api
 
 

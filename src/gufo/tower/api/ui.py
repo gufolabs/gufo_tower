@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Tower web daemon
 # ----------------------------------------------------------------------
-# Copyright (C) 2016 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -17,8 +17,8 @@ try:
     import jsmin
 except ImportError:
     jsmin = None
-# Tower modules
-from tower.models.settings import Settings
+# Gufo Tower modules
+from ..models.settings import Settings
 
 logger = logging.getLogger("ui")
 

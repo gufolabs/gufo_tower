@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------
 # Deploy log
 # -----------------------------------------------------------------------
-# Copyright (C) 2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
@@ -13,9 +13,8 @@ import time
 from argparse import ArgumentParser
 
 # Tower modules
-os.chdir(os.path.join(os.path.dirname(sys.argv[0]), ".."))
-from tower.models.environment import Environment  # noqa
-from tower.models.joblog import JobLog  # noqa
+from ..models.environment import Environment
+from ..models.joblog import JobLog
 
 
 def main():
