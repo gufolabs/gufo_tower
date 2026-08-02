@@ -41,7 +41,7 @@ jobs:
             --no-hashes \
             --format requirements-txt\
             | grep -v -- "-e ." > /tmp/requirements.txt
-          uv pip install --system -r requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
 
       - name: Check Formatting
         run: ruff format --check src/ tests/
@@ -74,7 +74,7 @@ jobs:
             --no-hashes \
             --format requirements-txt\
             | grep -v -- "-e ." > /tmp/requirements.txt
-          uv pip install --system -r requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
 
       - name: Run Tests
         run: pytest -v --cov --cov-branch --cov-report=xml tests/
@@ -114,7 +114,7 @@ jobs:
             --no-hashes \
             --format requirements-txt\
             | grep -v -- "-e ." > /tmp/requirements.txt
-          uv pip install --system -r requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
 
       - name: Run Tests
         run: pytest -v tests/

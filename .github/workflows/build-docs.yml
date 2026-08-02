@@ -39,7 +39,7 @@ jobs:
             --no-hashes \
             --format requirements-txt\
             | grep -v -- "-e ." > /tmp/requirements.txt
-          uv pip install --system -r requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
 
       # Build documentation
       - name: Build & Deploy Docs
