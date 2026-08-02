@@ -20,13 +20,12 @@ from pip._internal.network.session import PipSession
 from pip._internal.operations.prepare import unpack_url
 from pip._internal.vcs.versioncontrol import VersionControl
 
+# Gufo Tower modules
 from ..contrib.utils import check_destination, unpack
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.pulllog import PullLog
 from ..models.role import Role
-
-# Tower modules
 from .base import API, api
 
 logger = logging.getLogger(__name__)

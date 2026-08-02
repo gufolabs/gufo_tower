@@ -14,6 +14,7 @@ from argparse import ArgumentParser
 
 # Tower modules
 from ..api.pull import PullAPI
+from ..config import config
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.pulllog import PullLog
@@ -30,6 +31,7 @@ def main():
         default=os.environ.get("NOC_ENV", "test"),
     )
     args = parser.parse_args()
+    config.setup()
     try:
         env = Environment.get(Environment.name == args.env)
     except Environment.DoesNotExist:

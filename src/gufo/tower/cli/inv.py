@@ -12,6 +12,7 @@ import sys
 from argparse import ArgumentParser
 
 # Gufo Tower modules
+from ..config import config
 from ..models.environment import Environment
 
 
@@ -33,6 +34,7 @@ def main():
         help="Ansible inventory",
     )
     args = parser.parse_args()
+    config.setup()
     if args.cmd == "list":
         ansible_list(args)
 

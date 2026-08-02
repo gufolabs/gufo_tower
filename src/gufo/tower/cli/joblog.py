@@ -13,6 +13,7 @@ import time
 from argparse import ArgumentParser
 
 # Tower modules
+from ..config import config
 from ..models.environment import Environment
 from ..models.joblog import JobLog
 
@@ -56,6 +57,7 @@ def main():
     )
 
     args = parser.parse_args()
+    config.setup()
     if args.cmd == "list":
         joblog_list(args)
     elif args.cmd == "view":
