@@ -13,12 +13,15 @@ RUN \
     &&(curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh)\
     && pip install --upgrade pip\
     && pip install --upgrade build\
-    && uv export\
+    && (uv export\
     --extra test\
     --extra lint\
     --extra docs\
-    --no-hashes > /tmp/requirements.txt\
+    --no-hashes\
+    --format requirements-txt\
+    | grep -v -- "-e ." > /tmp/requirements.txt)\
     && uv pip install\
     --system\
     -r /tmp/requirements.txt\
+    build\
     && rm /tmp/requirements.txt
