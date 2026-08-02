@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------
 # Generate pb and deploy
 # -----------------------------------------------------------------------
-# Copyright (C) 2015-2021 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
@@ -11,14 +11,13 @@ import os
 import sys
 from argparse import ArgumentParser
 
-# Tower modules
-from tower.models.environment import Environment
-
-os.chdir(os.path.join(os.path.dirname(sys.argv[0]), ".."))
+# Gufo Tower modules
+from ..config import config
+from ..models.environment import Environment
 
 
 def main():
-
+    config.setup()
     logging.basicConfig(level=logging.DEBUG)
     parser = ArgumentParser()
     parser.add_argument(

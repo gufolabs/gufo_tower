@@ -11,8 +11,8 @@ import codecs
 # Third-party modules
 import tornado.web
 
-# Tower modules
-from tower.models.user import User
+# Gufo Tower modules
+from ..models.user import User
 
 
 class BaseHandler(tornado.web.RequestHandler):

@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------
 # Ansible dynamic inventory
 # -----------------------------------------------------------------------
-# Copyright (C) 2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
@@ -11,9 +11,9 @@ import os
 import sys
 from argparse import ArgumentParser
 
-# Tower modules
-os.chdir(os.path.join(os.path.dirname(sys.argv[0]), ".."))
-from tower.models.environment import Environment  # noqa
+# Gufo Tower modules
+from ..config import config
+from ..models.environment import Environment
 
 
 def main():

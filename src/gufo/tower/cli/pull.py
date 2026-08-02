@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------
 # Repo pulling
 # -----------------------------------------------------------------------
-# Copyright (C) 2015-2016 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
@@ -12,14 +12,12 @@ import os
 import sys
 from argparse import ArgumentParser
 
-from tower.api.pull import PullAPI
-
 # Tower modules
-from tower.models.db import db
-from tower.models.pulllog import PullLog
-
-os.chdir(os.path.join(os.path.dirname(sys.argv[0]), ".."))
-from tower.models.environment import Environment  # noqa
+from ..api.pull import PullAPI
+from ..config import config
+from ..models.db import db
+from ..models.environment import Environment
+from ..models.pulllog import PullLog
 
 
 def main():

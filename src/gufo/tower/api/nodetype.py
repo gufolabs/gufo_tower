@@ -1,13 +1,12 @@
 # ----------------------------------------------------------------------
 # NodeType API
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-# Tower modules
-from tower.models.nodetype import NodeType
-
+# Gudo Tower modules
+from ..models.nodetype import NodeType
 from .model import ModelAPI
 
 

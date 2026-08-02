@@ -12,14 +12,13 @@ import json
 import os
 from itertools import product
 
-from tower.contrib.yaml_ordered_dict import ordered_load
-from tower.models.db import db
-from tower.models.environment import Environment
-from tower.models.node import Node
-from tower.models.pool import Pool
-from tower.models.service import Service
-
-# Tower modules
+# Gufo Tower modules
+from ..contrib.yaml_ordered_dict import ordered_load
+from ..models.db import db
+from ..models.environment import Environment
+from ..models.node import Node
+from ..models.pool import Pool
+from ..models.service import Service
 from .base import API, APIError, api
 
 

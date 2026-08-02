@@ -1,13 +1,12 @@
 # ----------------------------------------------------------------------
 # Role API
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2018 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-# Tower modules
-from tower.models.role import Role
-
+# Gufo Tower modules
+from ..models.role import Role
 from .model import ModelAPI
 
 

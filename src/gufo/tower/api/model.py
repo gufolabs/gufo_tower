@@ -9,8 +9,7 @@
 import peewee
 
 # Tower modules
-from tower.models.db import db
-
+from ..models.db import db
 from .base import API, APIError, api
 
 

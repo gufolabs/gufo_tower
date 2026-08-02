@@ -19,11 +19,10 @@ import tornado.iostream
 import tornado.process
 import tornado.web
 
-from tower.models.db import db
-from tower.models.environment import Environment
-from tower.models.joblog import JobLog
-
-# Tower modules
+# Gufo Tower modules
+from ..models.db import db
+from ..models.environment import Environment
+from ..models.joblog import JobLog
 from .base import BaseHandler
 
 logger = logging.getLogger(__name__)
