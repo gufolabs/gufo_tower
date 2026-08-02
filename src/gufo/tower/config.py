@@ -16,8 +16,17 @@ The configuration is resolved in the following order:
 
 # Python modules
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+
+ENV_TOWER_HOME = "TOWER_HOME"
+
+
+def _default_home() -> Path:
+    """Get default Config.home value."""
+    if ENV_TOWER_HOME in os.environ:
+        return Path(os.environ[ENV_TOWER_HOME])
+    return Path.home() / ".tower"
 
 
 @dataclass
@@ -29,15 +38,7 @@ class Config:
         home: Tower home directory.
     """
 
-    home: Path
-
-    @classmethod
-    def factory(cls) -> "Config":
-        """Build configuration from the environment."""
-        home = os.environ.get("TOWER_HOME")
-        if home:
-            return cls(home=Path(home))
-        return cls(home=Path.home() / ".tower")
+    home: Path = field(default_factory=_default_home)
 
     @property
     def db_dir(self) -> Path:
@@ -48,6 +49,10 @@ class Config:
     def db_path(self) -> Path:
         """Database path."""
         return self.db_dir / "config.db"
+
+    def setup(self) -> None:
+        """Prepare directories."""
+        self.ensure()
 
     @classmethod
     def _ensure_dir(cls, path: Path) -> None:
@@ -70,3 +75,6 @@ class Config:
     def ensure_db_dir(self) -> None:
         """Ensure database directory exists."""
         self._ensure_dir(self.db_dir)
+
+
+config = Config()
