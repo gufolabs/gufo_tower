@@ -149,12 +149,9 @@ class Migrator:
             table: Table name.
             name: Column name.
             field: Peewee field instance.
-
-        Returns:
-            Migration operation result.
         """
         operation = self.migrator.add_column(table, name, field)
-        return operation.run()
+        operation.run()
 
     def drop_column(
         self, table: str, field: str, cascade: bool = True
@@ -165,12 +162,9 @@ class Migrator:
             table: Table name.
             field: Column name.
             cascade: Drop dependent objects.
-
-        Returns:
-            Migration operation result.
         """
         operation = self.migrator.drop_column(table, field, cascade=cascade)
-        return operation.run()
+        operation.run()
 
     def rename_column(self, table: str, old_name: str, new_name: str) -> None:
         """Rename a table column.
@@ -179,12 +173,9 @@ class Migrator:
             table: Table name.
             old_name: Current column name.
             new_name: New column name.
-
-        Returns:
-            Migration operation result.
         """
         operation = self.migrator.rename_column(table, old_name, new_name)
-        return operation.run()
+        operation.run()
 
     def rename_table(self, old_name: str, new_name: str) -> None:
         """Rename a database table.
@@ -192,9 +183,6 @@ class Migrator:
         Args:
             old_name: Current table name.
             new_name: New table name.
-
-        Returns:
-            Migration operation result.
         """
         operation = self.migrator.rename_table(old_name, new_name)
         operation.run()
@@ -218,9 +206,6 @@ class Migrator:
         Args:
             table: Table name.
             index_name: Index name.
-
-        Returns:
-            Migration operation result.
         """
         operation = self.migrator.drop_index(table, index_name)
         operation.run()
@@ -231,9 +216,6 @@ class Migrator:
         Args:
             table: Table name.
             column: Column name.
-
-        Returns:
-            Migration operation result.
         """
         operation = self.migrator.add_not_null(table, column)
         operation.run()
@@ -244,9 +226,6 @@ class Migrator:
         Args:
             table: Table name.
             column: Column name.
-
-        Returns:
-            Migration operation result.
         """
         operation = self.migrator.drop_not_null(table, column)
         operation.run()
