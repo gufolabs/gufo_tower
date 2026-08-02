@@ -202,9 +202,6 @@ docs = [
   "mkdocs-section-index==0.3.10",
   "mkdocstrings[python]==0.29.1",
 ]
-ipython = [
-  "ipython==8.18",
-]
 lint = [
   "mypy==1.19",
   "ruff==0.15.20",
