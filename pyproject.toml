@@ -175,7 +175,6 @@ dependencies = [
   "appdirs",
   "netaddr",
   "jmespath==0.9.3",
-  "future==0.18.2",
   "cryptography>=3,<3.4",
   "ruamel.yaml==0.17.21",
 ]
@@ -201,9 +200,6 @@ docs = [
   "mkdocs-material==9.6.11",
   "mkdocs-section-index==0.3.10",
   "mkdocstrings[python]==0.29.1",
-]
-ipython = [
-  "ipython==8.18",
 ]
 lint = [
   "mypy==1.19",
