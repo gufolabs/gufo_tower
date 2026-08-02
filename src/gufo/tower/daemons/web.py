@@ -1,13 +1,14 @@
 # ----------------------------------------------------------------------
 # Tower web daemon
 # ----------------------------------------------------------------------
-# Copyright (C) 2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Python modules
 import logging
 import os
+from importlib.resources import files
 
 # Third-party modules
 import tornado.httpserver
@@ -58,7 +59,7 @@ def run():
     Migration.migrate()
     logger.info("Loading service")
     # Get static files path
-    ui_root = os.path.join(tower.__path__[0], "ui")
+    ui_root = str(files("gufo.tower") / "ui")
     logger.info("Serving UI files from %s", ui_root)
     settings = {
         "template_path": os.path.abspath(
