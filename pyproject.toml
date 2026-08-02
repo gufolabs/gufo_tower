@@ -1,9 +1,6 @@
 [build-system]
-build-backend = "setuptools.build_meta"
-requires = [
-  "setuptools>=82",
-  "wheel",
-]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -240,16 +237,14 @@ Documentation = "https://docs.gufolabs.com/gufo_tower/"
 Homepage = "https://github.com/gufolabs/gufo_tower/"
 "Source Code" = "https://github.com/gufolabs/gufo_tower/"
 
-[tool.setuptools]
-include-package-data = false
-package-dir = {"" = "src"}
+[tool.hatch.version]
+path = "src/gufo/tower/__init__.py"
+pattern = "__version__: str = \"(?P<version>.+?)\""
 
-[tool.setuptools.packages.find]
-namespaces = true
-where = ["src"]
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/gufo",
+]
 
-[tool.setuptools.package-data]
-"*" = ["py.typed"]
-
-[tool.setuptools.dynamic]
-version = {attr = "gufo.tower.__version__"}
+[tool.hatch.build.targets.wheel.force-include]
+"src/ui" = "gufo/tower/ui"

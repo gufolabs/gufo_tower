@@ -1,13 +1,14 @@
 # ----------------------------------------------------------------------
 # Tower web daemon
 # ----------------------------------------------------------------------
-# Copyright (C) 2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Python modules
 import logging
 import os
+from importlib.resources import files
 
 # Third-party modules
 import tornado.httpserver
@@ -16,22 +17,21 @@ import tornado.options
 import tornado.web
 
 # Tower modules
-import tower
-from tower.api.datacenter import DatacenterAPI  # noqa
-from tower.api.deploy import DeployHandler
-from tower.api.environment import EnvironmentAPI  # noqa
-from tower.api.jsonrpc import JSONRPCHandler
-from tower.api.login import LoginAPI  # noqa
-from tower.api.node import NodeAPI  # noqa
-from tower.api.nodetype import NodeType  # noqa
-from tower.api.pool import PoolAPI  # noqa
-from tower.api.pull import PullAPI  # noqa
-from tower.api.role import RoleAPI  # noqa
-from tower.api.service import ServiceAPI  # noqa
-from tower.api.settings import SettingsAPI  # noqa
-from tower.api.ui import UIHandler
-from tower.models.migration import Migration
-from tower.models.settings import Settings
+from gufo.tower.api.datacenter import DatacenterAPI  # noqa
+from gufo.tower.api.deploy import DeployHandler
+from gufo.tower.api.environment import EnvironmentAPI  # noqa
+from gufo.tower.api.jsonrpc import JSONRPCHandler
+from gufo.tower.api.login import LoginAPI  # noqa
+from gufo.tower.api.node import NodeAPI  # noqa
+from gufo.tower.api.nodetype import NodeType  # noqa
+from gufo.tower.api.pool import PoolAPI  # noqa
+from gufo.tower.api.pull import PullAPI  # noqa
+from gufo.tower.api.role import RoleAPI  # noqa
+from gufo.tower.api.service import ServiceAPI  # noqa
+from gufo.tower.api.settings import SettingsAPI  # noqa
+from gufo.tower.api.ui import UIHandler
+from gufo.tower.models.migration import Migration
+from gufo.tower.models.settings import Settings
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ def run():
     Migration.migrate()
     logger.info("Loading service")
     # Get static files path
-    ui_root = os.path.join(tower.__path__[0], "ui")
+    ui_root = str(files("gufo.tower") / "ui")
     logger.info("Serving UI files from %s", ui_root)
     settings = {
         "template_path": os.path.abspath(

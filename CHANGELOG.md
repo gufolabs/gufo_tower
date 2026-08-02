@@ -14,6 +14,7 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 ## Added
 
+* Build python package
 * Devcontainer
 * GitHub CI Workflows
 
@@ -25,6 +26,7 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 * Source codes moved from `tower` to `src/gufo/tower`
 * All code formatted with `ruff format`
 * Dependencies moved from `requirements.txt` to `pyproject.toml`
+* `Readme.md` renamed to `README.md`
 
 ## Removed
 
