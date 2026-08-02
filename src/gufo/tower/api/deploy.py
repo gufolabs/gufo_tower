@@ -98,7 +98,7 @@ class DeployHandler(BaseHandler):
         # Disable nginx proxy buffering
         self.set_header("X-Accel-Buffering", "no")
         # Stream output
-        self.write("Starting job #%d\n\n" % self.job_log.id)
+        self.write(f"Starting job #{self.job_log.id}\n\n")
         self.get_version()
         # Generate ssh keys
         self.env.build_ssh_keys()
@@ -171,7 +171,7 @@ class DeployHandler(BaseHandler):
         )
         with open(tower_autogen, "w") as f:
             for line in pb_order:
-                f.write("- import_playbook: %s\n" % line)
+                f.write(f"- import_playbook: {line}\n")
 
     def resolv_pb(self, service):
         if os.path.exists(

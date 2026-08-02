@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # JobLog model
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ class JobLog(Model):
 
     @property
     def log_path(self):
-        return os.path.join("var", "tower", "log", "jobs", "%s.log" % self.id)
+        return os.path.join("var", "tower", "log", "jobs", f"{self.id}.log")
 
     def append_log(self, data):
         with open(self.log_path, "a") as f:

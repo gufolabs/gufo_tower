@@ -27,7 +27,7 @@ class JSONRPCHandler(BaseHandler):
     def get(self, *args, **kwargs):
         """Returns SDL structure"""
         self.set_header("Content-Type", "text/javascript")
-        self.write("var SDL = %s" % json.dumps(SDL))
+        self.write(f"var SDL = {json.dumps(SDL)}")
 
     @tornado.gen.coroutine
     def post(self, path, **kwargs):
@@ -38,19 +38,19 @@ class JSONRPCHandler(BaseHandler):
         # Check API class
         api_class = APIClasses.get(api_name)
         if not api_class:
-            raise HTTPError(404, "Invalid API: %s" % api_name)
+            raise HTTPError(404, f"Invalid API: {api_name}")
         # Parse request
         try:
             req = json.loads(self.request.body)
         except ValueError as e:
-            raise HTTPError(400, "Bad request: %s" % e) from e
+            raise HTTPError(400, f"Bad request: {e}") from e
         # Parse request
         id = req.get("id", None)
         params = req.get("params", [])
         method = req.get("method")
         # Get handler
         if not method or method not in SDL[api_name]:
-            raise HTTPError(400, "Bad method: %s" % method)
+            raise HTTPError(400, f"Bad method: {method}")
         api = api_class(self)
         handler = getattr(api, method)
         # Check permissions

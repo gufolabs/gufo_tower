@@ -30,7 +30,7 @@ class OrderedDictYAMLLoader(yaml.Loader):
             raise yaml.constructor.ConstructorError(
                 None,
                 None,
-                "expected a mapping node, but found %s" % node.id,
+                f"expected a mapping node, but found {node.id}",
                 node.start_mark,
             )
 
@@ -44,7 +44,7 @@ class OrderedDictYAMLLoader(yaml.Loader):
                 raise yaml.constructor.ConstructorError(
                     msg,
                     node.start_mark,
-                    "found unacceptable key (%s)" % exc,
+                    f"found unacceptable key ({exc})",
                     key_node.start_mark,
                 ) from exc
             value = self.construct_object(value_node, deep=deep)

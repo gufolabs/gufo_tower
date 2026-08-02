@@ -17,7 +17,7 @@ class SettingsAPI(API):
     def get_settings(self):
         """Returns a list of current settings"""
         r = Settings.DEFAULTS.copy()
-        r["url"] = "http://%s/" % self.handler.request.headers["Host"]
+        r["url"] = "http://{}/".format(self.handler.request.headers["Host"])
         r.update(Settings.get_items(list(Settings.DEFAULTS)))
         return r
 
