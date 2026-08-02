@@ -10,7 +10,6 @@ import codecs
 
 # Third-party modules
 import tornado.web
-from future.utils import with_metaclass
 
 # Tower modules
 from tower.models.user import User
@@ -65,7 +64,7 @@ def open_api(method):
     return method
 
 
-class API(with_metaclass(APIBase, object)):
+class API(metaclass=APIBase):
     name = None
 
     def __init__(self, handler):
