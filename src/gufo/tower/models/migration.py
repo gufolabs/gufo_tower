@@ -1,26 +1,31 @@
 # ----------------------------------------------------------------------
 # Migration model
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Python modules
 import datetime
+import importlib
 import logging
-import os
+from collections.abc import Iterable
+from pkgutil import iter_modules
+from typing import Any
 
 # Third-party modules
-from peewee import CharField, DateTimeField, Model
+from peewee import CharField, DateTimeField, Field, Model
 from playhouse.migrate import SchemaMigrator
 
 # Tower modules
-from .db import db
+from .db import DatabaseType, db
 
 logger = logging.getLogger(__name__)
 
 
 class Migration(Model):
+    """Applied database migration record."""
+
     class Meta:
         database = db
         db_table = "migration"
@@ -28,92 +33,229 @@ class Migration(Model):
     name = CharField(unique=True)
     ts = DateTimeField(null=True)
 
-    MIGRATIONS = "tower.migrations"
+    @classmethod
+    def _ensure_migration_table(cls) -> None:
+        """Create the migration tracking table if it does not exist."""
+        db.create_table(Migration, safe=True)
+
+    @classmethod
+    def iter_applied_migrations(cls) -> Iterable[str]:
+        """Iterate over applied migration names.
+
+        Returns:
+            Iterable of migration module names that have already been applied.
+        """
+        for m in Migration.select():
+            yield m.name
+
+    @classmethod
+    def iter_migrations(cls) -> Iterable[str]:
+        """Iterate over available migration names.
+
+        Returns:
+            Iterable of migration module names available in the migrations package.
+        """
+        import gufo.tower.migrations
+
+        # Get all migrations
+        yield from sorted(
+            name
+            for _, name, is_pkg in iter_modules(gufo.tower.migrations.__path__)
+            if not is_pkg
+        )
 
     @classmethod
     def migrate(cls):
-        """Apply pending migrations"""
-        import tower.migrations
-
-        # Ensure table is exists
-        db.create_table(Migration, safe=True)
-        # Get applied migrations
-        applied = []
-        for m in Migration.select():
-            applied += [m.name]
-        # Get all migrations
-        prefix = tower.migrations.__path__[0]
-        for fn in sorted(
-            f
-            for f in os.listdir(prefix)
-            if f != "__init__.py" and f.endswith(".py")
-        ):
-            n = fn[:-3]
-            if n in applied:
-                continue
-            cls.run_migration(n)
+        """Apply all pending database migrations."""
+        cls._ensure_migration_table()
+        applied = set(cls.iter_applied_migrations())
+        for migration in cls.iter_migrations():
+            if migration not in applied:
+                cls.run_migration(migration)
 
     @classmethod
-    def run_migration(cls, name):
+    def mark_as_done(cls, name: str) -> None:
+        """Mark a migration as applied.
+
+        Args:
+            name: Migration module name.
+        """
+        Migration(name=name, ts=datetime.datetime.now()).save()
+
+    @classmethod
+    def run_migration(cls, name: str) -> None:
+        """Apply a single migration.
+
+        Args:
+            name: Migration module name.
+        """
         logger.info("Applying %s", name)
         migrator = Migrator(db)
-        m = __import__("%s.%s" % (cls.MIGRATIONS, name), {}, {}, "*")
+        m = importlib.import_module(f"gufo.tower.migrations.{name}")
         with db.atomic():
             m.migrate(migrator)
-            # Set mark
-            Migration(name=name, ts=datetime.datetime.now()).save()
+            cls.mark_as_done(name)
 
 
 class Migrator:
-    """Borrowed from peewee_migrations"""
+    """Database schema migration helper.
 
-    def __init__(self, db):
+    Provides a simplified interface for applying database schema changes.
+
+    Args:
+        db: Peewee database instance used for schema operations.
+    """
+
+    def __init__(self, db: DatabaseType) -> None:
         self.db = db
         self.migrator = SchemaMigrator.from_database(self.db)
 
-    def create_table(self, model):
+    def create_table(self, model: type[Model]) -> None:
+        """Create a database table.
+
+        Args:
+            model: Peewee model class.
+        """
         self.db.create_table(model)
 
-    def create_tables(self, *models):
+    def create_tables(self, *models: type[Model]) -> None:
+        """Create multiple database tables.
+
+        Args:
+            *models: Peewee model classes.
+        """
         self.db.create_tables(models)
 
-    def drop_table(self, model):
+    def drop_table(self, model: type[Model]) -> None:
+        """Drop a database table.
+
+        Args:
+            model: Peewee model class.
+        """
         self.db.drop_table(model)
 
-    def drop_tables(self, *models):
+    def drop_tables(self, *models: type[Model]) -> None:
+        """Drop multiple database tables.
+
+        Args:
+            *models: Peewee model classes.
+        """
         self.db.drop_tables(models)
 
-    def add_column(self, table, name, field):
+    def add_column(self, table: str, name: str, field: Field) -> None:
+        """Add a column to a table.
+
+        Args:
+            table: Table name.
+            name: Column name.
+            field: Peewee field instance.
+
+        Returns:
+            Migration operation result.
+        """
         operation = self.migrator.add_column(table, name, field)
         return operation.run()
 
-    def drop_column(self, table, field, cascade=True):
+    def drop_column(
+        self, table: str, field: str, cascade: bool = True
+    ) -> None:
+        """Drop a column from a table.
+
+        Args:
+            table: Table name.
+            field: Column name.
+            cascade: Drop dependent objects.
+
+        Returns:
+            Migration operation result.
+        """
         operation = self.migrator.drop_column(table, field, cascade=cascade)
         return operation.run()
 
-    def rename_column(self, table, old_name, new_name):
+    def rename_column(self, table: str, old_name: str, new_name: str) -> None:
+        """Rename a table column.
+
+        Args:
+            table: Table name.
+            old_name: Current column name.
+            new_name: New column name.
+
+        Returns:
+            Migration operation result.
+        """
         operation = self.migrator.rename_column(table, old_name, new_name)
         return operation.run()
 
-    def rename_table(self, old_name, new_name):
+    def rename_table(self, old_name: str, new_name: str) -> None:
+        """Rename a database table.
+
+        Args:
+            old_name: Current table name.
+            new_name: New table name.
+
+        Returns:
+            Migration operation result.
+        """
         operation = self.migrator.rename_table(old_name, new_name)
-        return operation.run()
+        operation.run()
 
-    def add_index(self, table, columns, unique=False):
+    def add_index(
+        self, table: str, columns: list[str], unique: bool = False
+    ) -> None:
+        """Create a database index.
+
+        Args:
+            table: Table name.
+            columns: Indexed columns.
+            unique: Create unique index.
+        """
         operation = self.migrator.add_index(table, columns, unique=unique)
-        return operation.run()
+        operation.run()
 
-    def drop_index(self, table, index_name):
+    def drop_index(self, table: str, index_name: str) -> None:
+        """Drop a database index.
+
+        Args:
+            table: Table name.
+            index_name: Index name.
+
+        Returns:
+            Migration operation result.
+        """
         operation = self.migrator.drop_index(table, index_name)
-        return operation.run()
+        operation.run()
 
-    def add_not_null(self, table, column):
+    def add_not_null(self, table: str, column: str) -> None:
+        """Add NOT NULL constraint.
+
+        Args:
+            table: Table name.
+            column: Column name.
+
+        Returns:
+            Migration operation result.
+        """
         operation = self.migrator.add_not_null(table, column)
-        return operation.run()
+        operation.run()
 
-    def drop_not_null(self, table, column):
+    def drop_not_null(self, table: str, column: str) -> None:
+        """Remove NOT NULL constraint.
+
+        Args:
+            table: Table name.
+            column: Column name.
+
+        Returns:
+            Migration operation result.
+        """
         operation = self.migrator.drop_not_null(table, column)
-        return operation.run()
+        operation.run()
 
-    def execute_sql(self, sql, params=None):
+    def execute_sql(self, sql: str, params: Any = None) -> None:
+        """Execute raw SQL statement.
+
+        Args:
+            sql: SQL statement to execute.
+            params: Query parameters.
+        """
         self.db.execute_sql(sql, params=params, require_commit=False)

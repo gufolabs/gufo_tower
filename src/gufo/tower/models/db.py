@@ -9,7 +9,17 @@
 from peewee import SqliteDatabase
 
 # Gufo Tower modules
-from ..config import Config
+from ..config import config
 
-db = SqliteDatabase(Config.db_path, autocommit=False, threadlocals=True)
-db.connect()
+DatabaseType = SqliteDatabase
+
+db = SqliteDatabase(
+    None,
+    autocommit=False,
+    threadlocals=True,
+)
+
+
+def connect() -> None:
+    db.init(config.db_path)
+    db.connect()
