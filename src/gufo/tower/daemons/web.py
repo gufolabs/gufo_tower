@@ -30,6 +30,7 @@ from gufo.tower.api.role import RoleAPI  # noqa
 from gufo.tower.api.service import ServiceAPI  # noqa
 from gufo.tower.api.settings import SettingsAPI  # noqa
 from gufo.tower.api.ui import UIHandler
+from gufo.tower.config import config
 from gufo.tower.models.migration import Migration
 from gufo.tower.models.settings import Settings
 
@@ -53,7 +54,7 @@ def run():
         type=int,
     )
     tornado.options.parse_command_line()
-
+    config.setup()
     logger.info("Applying database migrations")
     Migration.migrate()
     logger.info("Loading service")
