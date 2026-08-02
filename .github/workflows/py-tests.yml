@@ -96,7 +96,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v6
 
-      - name: Set Up Python {{ matrix.python-version }}
+      - name: Set Up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
