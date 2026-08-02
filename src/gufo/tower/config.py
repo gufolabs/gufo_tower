@@ -51,8 +51,11 @@ class Config:
         return self.db_dir / "config.db"
 
     def setup(self) -> None:
-        """Prepare directories."""
+        """Prepare directories and db."""
+        from .models.db import connect
+
         self.ensure()
+        connect()
 
     @classmethod
     def _ensure_dir(cls, path: Path) -> None:
