@@ -17,22 +17,21 @@ import tornado.options
 import tornado.web
 
 # Tower modules
-import tower
-from tower.api.datacenter import DatacenterAPI  # noqa
-from tower.api.deploy import DeployHandler
-from tower.api.environment import EnvironmentAPI  # noqa
-from tower.api.jsonrpc import JSONRPCHandler
-from tower.api.login import LoginAPI  # noqa
-from tower.api.node import NodeAPI  # noqa
-from tower.api.nodetype import NodeType  # noqa
-from tower.api.pool import PoolAPI  # noqa
-from tower.api.pull import PullAPI  # noqa
-from tower.api.role import RoleAPI  # noqa
-from tower.api.service import ServiceAPI  # noqa
-from tower.api.settings import SettingsAPI  # noqa
-from tower.api.ui import UIHandler
-from tower.models.migration import Migration
-from tower.models.settings import Settings
+from gufo.tower.api.datacenter import DatacenterAPI  # noqa
+from gufo.tower.api.deploy import DeployHandler
+from gufo.tower.api.environment import EnvironmentAPI  # noqa
+from gufo.tower.api.jsonrpc import JSONRPCHandler
+from gufo.tower.api.login import LoginAPI  # noqa
+from gufo.tower.api.node import NodeAPI  # noqa
+from gufo.tower.api.nodetype import NodeType  # noqa
+from gufo.tower.api.pool import PoolAPI  # noqa
+from gufo.tower.api.pull import PullAPI  # noqa
+from gufo.tower.api.role import RoleAPI  # noqa
+from gufo.tower.api.service import ServiceAPI  # noqa
+from gufo.tower.api.settings import SettingsAPI  # noqa
+from gufo.tower.api.ui import UIHandler
+from gufo.tower.models.migration import Migration
+from gufo.tower.models.settings import Settings
 
 logger = logging.getLogger(__name__)
 
