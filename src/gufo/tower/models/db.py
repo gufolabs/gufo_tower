@@ -1,21 +1,15 @@
 # ----------------------------------------------------------------------
 # Config database
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2020 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
-
-# Python modules
-from os import environ
-from os.path import abspath, dirname, join, realpath
 
 # Third-party packages
 from peewee import SqliteDatabase
 
-dbpath = realpath(
-    join(dirname(abspath(__file__)), "../../../../../var/tower/db/config.db")
-)
+# Gufo Tower modules
+from ..config import Config
 
-dbpath = environ.get("TOWER_DB_PATH", dbpath)
-db = SqliteDatabase(dbpath, autocommit=False, threadlocals=True)
+db = SqliteDatabase(Config.db_path, autocommit=False, threadlocals=True)
 db.connect()
