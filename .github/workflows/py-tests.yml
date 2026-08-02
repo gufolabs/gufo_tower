@@ -1,6 +1,5 @@
 name: Run Tests
 env:
-  PIP_CACHE_DIR: .pip
   PYTHONPATH: src
 on:
   push:
