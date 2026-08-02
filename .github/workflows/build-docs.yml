@@ -36,7 +36,6 @@ jobs:
         run: |
           uv export \
             --extra lint \
-            --format requirements-txt \
             --no-hashes \
             --format requirements-txt\
             | grep -v -- "-e ." > /tmp/requirements.txt
