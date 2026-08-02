@@ -12,6 +12,7 @@ import sys
 from argparse import ArgumentParser
 
 # Gufo Tower modules
+from ..config import config
 from ..models.environment import Environment
 
 
