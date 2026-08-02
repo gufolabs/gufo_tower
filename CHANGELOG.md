@@ -19,6 +19,8 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 ### Changed
 
+* `TOWER_DB_PATH` replaced with `TOWER_HOME`, defaults changed from
+  `/var/tower` to `~/.tower`
 * Updated license
 * Source codes moved from `tower` to `src/gufo/tower`
 * All code formatted with `ruff format`
