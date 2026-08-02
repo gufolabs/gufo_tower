@@ -1,0 +1,44 @@
+name: Run JS Tests
+
+on:
+  push:
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/**"
+      - "src/ui/**"
+      - ".github/workflows/js-tests.yml"
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "package.json"
+      - "scripts/build-ui.mjs"
+      - "src/ui/**"
+      - ".github/workflows/js-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  js-tests:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build UI
+        run: npm run build

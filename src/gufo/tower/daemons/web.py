@@ -15,6 +15,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 import tornado.web
+from tornado.web import RedirectHandler, StaticFileHandler
 
 # Tower modules
 from gufo.tower.api.datacenter import DatacenterAPI  # noqa
@@ -29,7 +30,6 @@ from gufo.tower.api.pull import PullAPI  # noqa
 from gufo.tower.api.role import RoleAPI  # noqa
 from gufo.tower.api.service import ServiceAPI  # noqa
 from gufo.tower.api.settings import SettingsAPI  # noqa
-from gufo.tower.api.ui import UIHandler
 from gufo.tower.config import config
 from gufo.tower.models.migration import Migration
 from gufo.tower.models.settings import Settings
@@ -70,14 +70,9 @@ def run():
     app = tornado.web.Application(
         [
             (r"^/api/(sdl.js|.+/)$", JSONRPCHandler),
-            (
-                r"^/ui/cache/([0-9a-f]{8}.js)$",
-                tornado.web.StaticFileHandler,
-                {"path": UIHandler.CACHE_ROOT},
-            ),
-            (r"^/ui/(.*)$", tornado.web.StaticFileHandler, {"path": ui_root}),
+            (r"^/ui/(.*)$", StaticFileHandler, {"path": ui_root}),
             (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
-            (r"^/$", UIHandler, {"path": ui_root}),
+            (r"^/$", RedirectHandler, {"url": "/ui/index.html"}),
         ],
         **settings,
     )

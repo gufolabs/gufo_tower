@@ -243,4 +243,4 @@ packages = [
 ]
 
 [tool.hatch.build.targets.wheel.force-include]
-"src/ui" = "gufo/tower/ui"
+"build/ui" = "gufo/tower/ui"

@@ -1,0 +1,11 @@
+{
+    "name": "gufo-tower",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "node scripts/build-ui.mjs"
+    },
+    "devDependencies": {
+        "esbuild": "^0.27.0"
+    }
+}

@@ -11,8 +11,6 @@ RUN \
     curl\
     ca-certificates\
     &&(curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh)\
-    && pip install --upgrade pip\
-    && pip install --upgrade build\
     && (uv export\
     --extra test\
     --extra lint\
@@ -24,4 +22,8 @@ RUN \
     --system\
     -r /tmp/requirements.txt\
     build\
-    && rm /tmp/requirements.txt
+    && rm /tmp/requirements.txt\
+    && (curl -fsSL https://deb.nodesource.com/setup_24.x | bash -) \
+    && apt-get install -y --no-install-recommends nodejs \
+    && node --version \
+    && npm --version
