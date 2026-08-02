@@ -1,39 +1,40 @@
 # -----------------------------------------------------------------------
 # Dump/Restore
 # -----------------------------------------------------------------------
-# Copyright (C) 2015-2016 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
 # Python modules
 import argparse
-import os
 import shutil
 import subprocess
+
+# Gufo Tower modules
+from ..config import config
 
 
 def sqlite_path():
     return "sqlite3"
 
 
-def db_path():
-    return "var/tower/db/config.db"
-
-
 def dump():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", default="/dev/stdout", help="Output path")
     args = parser.parse_args()
+    config.setup()
     with open(args.output, "w") as f:
-        subprocess.check_call([sqlite_path(), db_path(), ".dump"], stdout=f)
+        subprocess.check_call(
+            [sqlite_path(), str(config.db_path), ".dump"], stdout=f
+        )
 
 
 def restore():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", nargs=1, help="Input file path")
     args = parser.parse_args()
-    db = db_path()
-    if os.path.exists(db):
-        shutil.move(db, db + ".bak")
-    with open(args.input[0]) as f:
-        subprocess.check_call([sqlite_path(), db], stdin=f)
+    config.setup()
+    if config.db_path.exists():
+        shutil.move(str(config.db_path), str(config.db_path) + ".bak")
+    with open(args.input[0]) as fp:
+        subprocess.check_call([sqlite_path(), str(config.db_path)], stdin=fp)

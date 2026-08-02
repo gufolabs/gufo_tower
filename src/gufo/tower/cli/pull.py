@@ -30,6 +30,7 @@ def main():
         default=os.environ.get("NOC_ENV", "test"),
     )
     args = parser.parse_args()
+    config.setup()
     try:
         env = Environment.get(Environment.name == args.env)
     except Environment.DoesNotExist:

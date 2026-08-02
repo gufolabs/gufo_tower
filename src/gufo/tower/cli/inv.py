@@ -33,6 +33,7 @@ def main():
         help="Ansible inventory",
     )
     args = parser.parse_args()
+    config.setup()
     if args.cmd == "list":
         ansible_list(args)
 

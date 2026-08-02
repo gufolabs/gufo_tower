@@ -56,6 +56,7 @@ def main():
     )
 
     args = parser.parse_args()
+    config.setup()
     if args.cmd == "list":
         joblog_list(args)
     elif args.cmd == "view":
