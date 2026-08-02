@@ -14,7 +14,6 @@ from argparse import ArgumentParser
 
 # Tower modules
 from ..api.pull import PullAPI
-from ..config import config
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.pulllog import PullLog

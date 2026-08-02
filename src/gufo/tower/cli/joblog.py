@@ -13,7 +13,6 @@ import time
 from argparse import ArgumentParser
 
 # Tower modules
-from ..config import config
 from ..models.environment import Environment
 from ..models.joblog import JobLog
 
