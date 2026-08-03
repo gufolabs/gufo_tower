@@ -1,3 +1,5 @@
+import * as environment_logic from "./environment_logic";
+
 export const environment_list = {
     id: "environment_list_panel",
     rows: [
@@ -18,7 +20,7 @@ export const environment_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "environment_logic.on_add"
+                    click: environment_logic.on_add
                 },
                 {
                     view: "button",
@@ -26,7 +28,7 @@ export const environment_list = {
                     type: "icon",
                     icon: "search",
                     label: "Inventory",
-                    click: "environment_logic.on_show_inventory",
+                    click: environment_logic.on_show_inventory,
                     autowidth: true,
                     disabled: true
                 },
@@ -36,7 +38,7 @@ export const environment_list = {
                     type: "icon",
                     icon: "arrow-circle-down",
                     label: "Pull",
-                    click: "environment_logic.on_pull",
+                    click: environment_logic.on_pull,
                     autowidth: true,
                     disabled: true
                 },
@@ -46,7 +48,7 @@ export const environment_list = {
                     type: "icon",
                     icon: "play",
                     label: "Deploy",
-                    click: "environment_logic.on_deploy",
+                    click: environment_logic.on_deploy,
                     autowidth: true,
                     disabled: true,
                     tooltip: "Stop all daemons, update everything, restart everything"
@@ -107,7 +109,7 @@ export const environment_list = {
             ],
             on: {
                 onSelectChange: "environment_logic.on_select",
-                onItemDblClick: "environment_logic.on_edit"
+                onItemDblclick: environment_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -125,7 +127,7 @@ export const environment_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "environment_logic.show_list",
+                    click: environment_logic.show_list,
                     width: 32
                 },
                 {
@@ -134,7 +136,7 @@ export const environment_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "environment_logic.on_save"
+                    click: environment_logic.on_save
                 },
                 {
                     view: "button",
@@ -142,7 +144,7 @@ export const environment_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "environment_logic.on_delete"
+                    click: environment_logic.on_delete
                 },
                 {}
             ]
@@ -273,7 +275,7 @@ export const environment_inventory = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "environment_logic.show_list",
+                    click: environment_logic.show_list,
                     width: 32
                 },
                 {
@@ -305,7 +307,7 @@ export const environment_deploy = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "environment_logic.show_list",
+                    click: environment_logic.show_list,
                     width: 32
                 },
                 {

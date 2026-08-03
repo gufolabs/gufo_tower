@@ -1,3 +1,5 @@
+import * as role_logic from "./role_logic";
+
 export const role_list = {
     id: "role_list_panel",
     rows: [
@@ -19,7 +21,7 @@ export const role_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "role_logic.on_add"
+                    click: role_logic.on_add
                 }
             ]
         },
@@ -55,7 +57,7 @@ export const role_list = {
                 }
             ],
             on: {
-                onItemDblClick: "role_logic.on_edit"
+                onItemDblclick: role_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -73,7 +75,7 @@ export const role_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "role_logic.show_list",
+                    click: role_logic.show_list,
                     width: 32
                 },
                 {
@@ -82,7 +84,7 @@ export const role_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "role_logic.on_save"
+                    click: role_logic.on_save
                 },
                 {
                     view: "button",
@@ -90,7 +92,7 @@ export const role_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "role_logic.on_delete"
+                    click: role_logic.on_delete
                 },
                 {}
             ]

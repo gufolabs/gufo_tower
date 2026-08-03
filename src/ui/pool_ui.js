@@ -1,3 +1,4 @@
+import * as pool_logic from "./pool_logic";
 export const pool_list = {
     id: "pool_list_panel",
     rows: [
@@ -18,7 +19,7 @@ export const pool_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "pool_logic.on_add"
+                    click: pool_logic.on_add
                 }
             ]
         },
@@ -39,7 +40,7 @@ export const pool_list = {
                 }
             ],
             on: {
-                onItemDblClick: "pool_logic.on_edit"
+                onItemDblclick: pool_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -58,7 +59,7 @@ export const pool_form = {
                     type: "icon",
                     icon: "arrow-left",
                     width: 32,
-                    click: "pool_logic.show_list"
+                    click: pool_logic.show_list
                 },
                 {
                     view: "button",
@@ -66,7 +67,7 @@ export const pool_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "pool_logic.on_save"
+                    click: pool_logic.on_save
                 },
                 {
                     view: "button",
@@ -74,7 +75,7 @@ export const pool_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "pool_logic.on_delete"
+                    click: pool_logic.on_delete
                 },
                 {}
             ]

@@ -1,3 +1,4 @@
+import * as login_logic from "./login_logic";
 // Login form
 export const login_form = {
     id: "login_panel",
@@ -46,14 +47,14 @@ export const login_form = {
                                             view: "button",
                                             value: "Login",
                                             width: 100,
-                                            click: "login_logic.on_login",
+                                            click: login_logic.on_login,
                                             hotkey: "enter"
                                         },
                                         {
                                             view: "button",
                                             value: "Reset",
                                             width: 100,
-                                            click: "login_logic.clear_form"
+                                            click: login_logic.clear_form
                                         }
                                     ]
                                 }

@@ -1,3 +1,5 @@
+import * as datacenter_logic from "./datacenter_logic";
+
 export const datacenter_list = {
     id: "datacenter_list_panel",
     rows: [
@@ -19,7 +21,7 @@ export const datacenter_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "datacenter_logic.on_add"
+                    click: datacenter_logic.on_add
                 }
             ]
         },
@@ -41,7 +43,7 @@ export const datacenter_list = {
                 }
             ],
             on: {
-                onItemDblClick: "datacenter_logic.on_edit"
+                onItemDblclick: datacenter_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -59,7 +61,7 @@ export const datacenter_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "datacenter_logic.show_list",
+                    click: datacenter_logic.show_list,
                     width: 32
                 },
                 {
@@ -68,7 +70,7 @@ export const datacenter_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "datacenter_logic.on_save"
+                    click: datacenter_logic.on_save
                 },
                 {
                     view: "button",
@@ -76,7 +78,7 @@ export const datacenter_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "datacenter_logic.on_delete"
+                    click: datacenter_logic.on_delete
                 },
                 {}
             ]

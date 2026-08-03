@@ -1,3 +1,4 @@
+import * as settings_logic from "./settings_logic";
 export const settings_form = {
     id: "settings_form_panel",
     rows: [
@@ -10,7 +11,7 @@ export const settings_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "settings_logic.on_save"
+                    click: settings_logic.on_save
                 }
             ]
         },

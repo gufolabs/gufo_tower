@@ -1,3 +1,5 @@
+import * as node_logic from "./node_logic";
+
 export const node_list = {
     id: "node_list_panel",
     rows: [
@@ -18,7 +20,7 @@ export const node_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "node_logic.on_add"
+                    click: node_logic.on_add
                 }
             ]
         },
@@ -62,7 +64,7 @@ export const node_list = {
                 }
             ],
             on: {
-                onItemDblClick: "node_logic.on_edit"
+                onItemDblclick: node_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -80,7 +82,7 @@ export const node_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "node_logic.show_list",
+                    click: node_logic.show_list,
                     width: 32
                 },
                 {
@@ -89,7 +91,7 @@ export const node_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "node_logic.on_save"
+                    click: node_logic.on_save
                 },
                 {
                     view: "button",
@@ -97,7 +99,7 @@ export const node_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "node_logic.on_delete"
+                    click: node_logic.on_delete
                 },
                 {}
             ]

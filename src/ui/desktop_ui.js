@@ -5,6 +5,7 @@ import { pool_list, pool_form } from "./pool_ui";
 import { node_list, node_form } from "./node_ui";
 import { service_panel } from "./service_ui";
 import { settings_form } from "./settings_ui";
+import * as desktop_logic from "./desktop_logic.js";
 
 export const desktop = {
     id: "desktop",
@@ -69,7 +70,7 @@ export const desktop = {
                         }
                     ],
                     on: {
-                        onMenuItemClick: "desktop_logic.on_menu_click"
+                        onMenuItemClick: desktop_logic.on_menu_click
                     }
                 }
             ]
@@ -120,8 +121,8 @@ export const desktop = {
                         }
                     ],
                     on: {
-                        onSelectChange: "desktop_logic.on_select_app",
-                        onBeforeSelect: "desktop_logic.on_before_select_app"
+                        onSelectChange: desktop_logic.on_select_app,
+                        onBeforeSelect: desktop_logic.on_before_select_app
                     }
                 },
                 {

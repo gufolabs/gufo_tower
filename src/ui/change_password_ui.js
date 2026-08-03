@@ -1,3 +1,4 @@
+import * as desktop_logic from "./desktop_logic";
 // Login form
 export const change_password_form = {
     id: "change_password_panel",
@@ -67,7 +68,7 @@ export const change_password_form = {
                                             view: "button",
                                             value: "Close",
                                             width: 100,
-                                            click: "desktop_logic.show"
+                                            click: desktop_logic.show
                                         }
                                     ]
                                 }

@@ -12,7 +12,7 @@ export const service_panel = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "service_logic.on_save"
+                    click: service_logic.on_save
                 },
                 {},
                 {
