@@ -146,12 +146,6 @@ jobs:
       - name: Install Build
         run: uv pip install --system build
 
-      - name: Install UI Dependencies
-        run: npm ci
-
-      - name: Build UI
-        run: npm run build
-
       - name: Build Package
         run: python -m build --sdist --wheel
 

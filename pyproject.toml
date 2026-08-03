@@ -2,6 +2,9 @@
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
+[tool.hatch.build.hooks.custom]
+path = "hatch_build.py"
+
 [tool.coverage.report]
 exclude_lines = [
   "if TYPE_CHECKING", # Disable type-checking imports
