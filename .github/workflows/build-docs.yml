@@ -36,10 +36,10 @@ jobs:
         run: |
           uv export \
             --extra lint \
-            --format requirements-txt \
             --no-hashes \
-            > requirements.txt
-          uv pip install --system -r requirements.txt
+            --format requirements-txt\
+            | grep -v -- "-e ." > /tmp/requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
 
       # Build documentation
       - name: Build & Deploy Docs

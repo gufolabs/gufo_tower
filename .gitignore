@@ -10,3 +10,4 @@ dist/
 *.egg-info/
 *.dist-info/
 __pycache__
+uv.lock

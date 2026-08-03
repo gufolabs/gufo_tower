@@ -38,10 +38,10 @@ jobs:
         run: |
           uv export \
             --extra lint \
-            --format requirements-txt \
             --no-hashes \
-            > requirements.txt
-          uv pip install --system -r requirements.txt
+            --format requirements-txt\
+            | grep -v -- "-e ." > /tmp/requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
 
       - name: Check Formatting
         run: ruff format --check src/ tests/
@@ -71,10 +71,10 @@ jobs:
         run: |
           uv export \
             --extra test \
-            --format requirements-txt \
             --no-hashes \
-            > requirements.txt
-          uv pip install --system -r requirements.txt
+            --format requirements-txt\
+            | grep -v -- "-e ." > /tmp/requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
 
       - name: Run Tests
         run: pytest -v --cov --cov-branch --cov-report=xml tests/
@@ -111,10 +111,10 @@ jobs:
         run: |
           uv export \
             --extra test \
-            --format requirements-txt \
             --no-hashes \
-            > requirements.txt
-          uv pip install --system -r requirements.txt
+            --format requirements-txt\
+            | grep -v -- "-e ." > /tmp/requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
 
       - name: Run Tests
         run: pytest -v tests/
