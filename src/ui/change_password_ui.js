@@ -1,4 +1,4 @@
-import * as desktop_logic from "./desktop_logic.js";
+import { desktop_logic } from "./desktop_logic.js";
 // Login form
 export const change_password_form = {
     id: "change_password_panel",

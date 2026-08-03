@@ -1,4 +1,4 @@
-import * as pool_logic from "./pool_logic.js";
+import { pool_logic } from "./pool_logic.js";
 export const pool_list = {
     id: "pool_list_panel",
     rows: [

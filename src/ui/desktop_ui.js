@@ -5,7 +5,7 @@ import { pool_list, pool_form } from "./pool_ui.js";
 import { node_list, node_form } from "./node_ui.js";
 import { service_panel } from "./service_ui.js";
 import { settings_form } from "./settings_ui.js";
-import * as desktop_logic from "./desktop_logic.js";
+import { desktop_logic } from "./desktop_logic.js";
 
 export const desktop = {
     id: "desktop",

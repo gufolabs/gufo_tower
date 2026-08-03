@@ -1,4 +1,4 @@
-import * as role_logic from "./role_logic.js";
+import { role_logic } from "./role_logic.js";
 
 export const role_list = {
     id: "role_list_panel",

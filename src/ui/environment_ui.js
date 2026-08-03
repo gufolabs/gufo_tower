@@ -1,4 +1,4 @@
-import * as environment_logic from "./environment_logic.js";
+import { environment_logic } from "./environment_logic.js";
 
 export const environment_list = {
     id: "environment_list_panel",

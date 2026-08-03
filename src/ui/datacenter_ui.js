@@ -1,4 +1,4 @@
-import * as datacenter_logic from "./datacenter_logic.js";
+import { datacenter_logic } from "./datacenter_logic.js";
 
 export const datacenter_list = {
     id: "datacenter_list_panel",

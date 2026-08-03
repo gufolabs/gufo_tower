@@ -1,4 +1,4 @@
-import * as node_logic from "./node_logic.js";
+import { node_logic } from "./node_logic.js";
 
 export const node_list = {
     id: "node_list_panel",
