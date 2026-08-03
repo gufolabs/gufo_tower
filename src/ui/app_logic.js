@@ -1,22 +1,9 @@
-import { API } from "./rpc";
-import { app_ui } from "./app_ui";
-import { login_logic } from "./login_logic";
-import { desktop_logic } from "./desktop_logic";
-import { change_password_logic } from "./change_password_logic";
+import { API } from "./rpc.js";
+import { login_logic } from "./login_logic.js";
+import { desktop_logic } from "./desktop_logic.js";
 
 export const app_logic = {
     current_env: null,
-
-    init: function () {
-        // Build UI objects
-        webix.ui(app_ui);
-        // Initialize appropriative controllers
-        login_logic.init();
-        change_password_logic.init();
-        desktop_logic.init();
-        // Process login sequence
-        app_logic.process_login();
-    },
 
     process_login: function () {
         // Check user is logged in

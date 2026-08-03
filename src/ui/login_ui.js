@@ -1,4 +1,4 @@
-import * as login_logic from "./login_logic";
+import * as login_logic from "./login_logic.js";
 // Login form
 export const login_form = {
     id: "login_panel",

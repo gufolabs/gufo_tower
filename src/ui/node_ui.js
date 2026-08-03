@@ -1,4 +1,4 @@
-import * as node_logic from "./node_logic";
+import * as node_logic from "./node_logic.js";
 
 export const node_list = {
     id: "node_list_panel",
@@ -11,7 +11,7 @@ export const node_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "node_logic.on_search"
+                        "onChange": node_logic.on_search
                     }
                 },
                 {

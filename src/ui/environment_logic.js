@@ -1,5 +1,5 @@
-import { API } from "./rpc";
-import { app_logic } from "./app_logic";
+import { API } from "./rpc.js";
+import { app_logic } from "./app_logic.js";
 
 export const environment_logic = {
     PULL_CHECK_INTERVAL: 1000,

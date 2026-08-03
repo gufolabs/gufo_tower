@@ -1,4 +1,4 @@
-import * as pool_logic from "./pool_logic";
+import * as pool_logic from "./pool_logic.js";
 export const pool_list = {
     id: "pool_list_panel",
     rows: [
@@ -10,7 +10,7 @@ export const pool_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "pool_logic.on_search"
+                        "onChange": pool_logic.on_search
                     }
                 },
                 {

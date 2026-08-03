@@ -1,11 +1,11 @@
-import { environment_logic } from "./environment_logic";
-import { datacenter_logic } from "./datacenter_logic";
-import { role_logic } from "./role_logic";
-import { pool_logic } from "./pool_logic";
-import { app_logic } from "./app_logic";
-import { node_logic } from "./node_logic";
-import { service_logic } from "./service_logic";
-import { change_password_logic } from "./change_password_logic";
+import { environment_logic } from "./environment_logic.js";
+import { datacenter_logic } from "./datacenter_logic.js";
+import { role_logic } from "./role_logic.js";
+import { pool_logic } from "./pool_logic.js";
+import { app_logic } from "./app_logic.js";
+import { node_logic } from "./node_logic.js";
+import { service_logic } from "./service_logic.js";
+import { change_password_logic } from "./change_password_logic.js";
 
 export const desktop_logic = {
     init: function () {

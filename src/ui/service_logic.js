@@ -1,6 +1,6 @@
-import { API } from "./rpc";
-import { app_logic } from "./app_logic";
-import { settings_logic } from "./settings_logic";
+import { API } from "./rpc.js";
+import { app_logic } from "./app_logic.js";
+import { settings_logic } from "./settings_logic.js";
 
 export const service_logic = {
     init: function () {

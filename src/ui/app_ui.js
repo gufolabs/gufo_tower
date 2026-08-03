@@ -1,6 +1,6 @@
-import { login_form } from "./login_ui";
-import { change_password_form } from "./change_password_ui";
-import { desktop } from "./desktop_ui";
+import { login_form } from "./login_ui.js";
+import { change_password_form } from "./change_password_ui.js";
+import { desktop } from "./desktop_ui.js";
 export const app_ui = {
     view: "multiview",
     id: "app",

@@ -1,4 +1,4 @@
-import * as datacenter_logic from "./datacenter_logic";
+import * as datacenter_logic from "./datacenter_logic.js";
 
 export const datacenter_list = {
     id: "datacenter_list_panel",
@@ -12,7 +12,7 @@ export const datacenter_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "datacenter_logic.on_search"
+                        "onChange": datacenter_logic.on_search
                     }
                 },
                 {

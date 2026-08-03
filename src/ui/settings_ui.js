@@ -1,4 +1,4 @@
-import * as settings_logic from "./settings_logic";
+import * as settings_logic from "./settings_logic.js";
 export const settings_form = {
     id: "settings_form_panel",
     rows: [

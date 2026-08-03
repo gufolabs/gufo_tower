@@ -1,5 +1,5 @@
-import { API } from "./rpc";
-import { desktop_logic } from "./desktop_logic";
+import { API } from "./rpc.js";
+import { desktop_logic } from "./desktop_logic.js";
 
 export const login_logic = {
     init: function () {

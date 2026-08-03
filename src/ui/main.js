@@ -30,8 +30,19 @@ import "./settings_ui.js";
 import "./settings_logic.js";
 import "./desktop_ui.js";
 import "./desktop_logic.js";
-import "./app_ui.js";
-import "./app_logic.js";
+import { app_ui } from "./app_ui.js";
 import { app_logic } from "./app_logic.js";
+import { login_logic } from "./login_logic.js";
+import { change_password_logic } from "./change_password_logic.js";
+import { desktop_logic } from "./desktop_logic.js";
 
-webix.ready(app_logic.init);
+function init() {
+    webix.ui(app_ui);
+
+    login_logic.init();
+    change_password_logic.init();
+    desktop_logic.init();
+
+    app_logic.process_login();
+}
+webix.ready(init);

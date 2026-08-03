@@ -1,4 +1,4 @@
-import { API } from "./rpc";
+import { API } from "./rpc.js";
 export const settings_logic = {
     init: function () {
         API.settings.get_settings().then(function (result) {

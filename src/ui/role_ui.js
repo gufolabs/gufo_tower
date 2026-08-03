@@ -1,4 +1,4 @@
-import * as role_logic from "./role_logic";
+import * as role_logic from "./role_logic.js";
 
 export const role_list = {
     id: "role_list_panel",
@@ -12,7 +12,7 @@ export const role_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "role_logic.on_search"
+                        "onChange": role_logic.on_search
                     }
                 },
                 {

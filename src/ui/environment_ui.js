@@ -1,4 +1,4 @@
-import * as environment_logic from "./environment_logic";
+import * as environment_logic from "./environment_logic.js";
 
 export const environment_list = {
     id: "environment_list_panel",
@@ -11,7 +11,7 @@ export const environment_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "environment_logic.on_search"
+                        "onChange": environment_logic.on_search
                     }
                 },
                 {
@@ -108,7 +108,7 @@ export const environment_list = {
                 }
             ],
             on: {
-                onSelectChange: "environment_logic.on_select",
+                onSelectChange: environment_logic.on_select,
                 onItemDblclick: environment_logic.on_edit
             },
             datafetch: Tower.config.datafetch,

@@ -1,10 +1,10 @@
-import { environment_list, environment_form, environment_inventory, environment_deploy } from "./environment_ui";
-import { datacenter_list, datacenter_form } from "./datacenter_ui";
-import { role_list, role_form } from "./role_ui";
-import { pool_list, pool_form } from "./pool_ui";
-import { node_list, node_form } from "./node_ui";
-import { service_panel } from "./service_ui";
-import { settings_form } from "./settings_ui";
+import { environment_list, environment_form, environment_inventory, environment_deploy } from "./environment_ui.js";
+import { datacenter_list, datacenter_form } from "./datacenter_ui.js";
+import { role_list, role_form } from "./role_ui.js";
+import { pool_list, pool_form } from "./pool_ui.js";
+import { node_list, node_form } from "./node_ui.js";
+import { service_panel } from "./service_ui.js";
+import { settings_form } from "./settings_ui.js";
 import * as desktop_logic from "./desktop_logic.js";
 
 export const desktop = {

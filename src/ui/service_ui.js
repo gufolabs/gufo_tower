@@ -1,5 +1,5 @@
 import { threeStateCompare } from "./lib.js";
-import { service_logic } from "./service_logic.js";
+import * as service_logic from "./service_logic.js";
 export const service_panel = {
     id: "service_panel",
     rows: [
@@ -62,7 +62,7 @@ export const service_panel = {
                     fillspace: true,
                     multiselect: true,
                     on: {
-                        "onSelectChange": "service_logic.on_select_service",
+                        "onSelectChange": service_logic.on_select_service,
                         "onAfterLoad": function () {
                             service_logic.on_group_table("init")
                         }
