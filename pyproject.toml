@@ -156,23 +156,10 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "pyparsing==2.2.0",
   "bcrypt==3.1.4",
-  "certifi>=2016.9.26",
-  "paramiko==2.1.2",
-  "cffi>=0.8.5",
   "peewee==2.10.2",
-  "pycparser>=2.10",
-  "singledispatch>=3.4.0.0",
   "tornado==5.1.1",
   "ansible==2.9.26",
-  "setuptools>=11.3",
-  "packaging",
-  "appdirs",
-  "netaddr",
-  "jmespath==0.9.3",
-  "cryptography>=3,<3.4",
-  "ruamel.yaml==0.17.21",
 ]
 description = "A web-based control plane for managing NOC cluster topology, node assignments, and service configuration."
 dynamic = ["version"]
