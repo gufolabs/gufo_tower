@@ -137,8 +137,20 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v6
 
+      - name: Set Up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+
       - name: Install Build
         run: uv pip install --system build
+
+      - name: Install UI Dependencies
+        run: npm ci
+
+      - name: Build UI
+        run: npm run build
 
       - name: Build Package
         run: python -m build --sdist --wheel

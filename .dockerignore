@@ -20,3 +20,4 @@ var/
 .flake8
 venv*/
 .mypy_cache/
+node_modules/
