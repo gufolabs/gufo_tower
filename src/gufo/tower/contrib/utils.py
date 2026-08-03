@@ -55,5 +55,5 @@ def check_destination(self, dest, url, rev_options, rev_display):
 
 
 def unpack(self, location, url, verbosity):
-    """Monkey patch pip library cause they always remove downloaded dir. no idea why"""
+    """Monkey patch pip library cause they always remove downloaded dir. no idea why."""
     self.obtain(location, url=url, verbosity=verbosity)

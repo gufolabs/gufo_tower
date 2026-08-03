@@ -80,7 +80,7 @@ class Environment(Model):
 
     @property
     def ansible_inventory(self):
-        """Generate ansible-compatible dynamic inventory"""
+        """Generate ansible-compatible dynamic inventory."""
         from .node import Node
         from .pool import Pool
         from .service import Service
@@ -487,7 +487,7 @@ class Environment(Model):
         return r
 
     def build_ssh_keys(self):
-        """Generate all necessary ssh keys"""
+        """Generate all necessary ssh keys."""
         from .pool import Pool
 
         key_types = [("rsa", 4096)]
@@ -540,28 +540,30 @@ class Environment(Model):
                         )
 
     def generate_certificate(self):
-        """Generate self-signed certificate"""
-        kf = tempfile.NamedTemporaryFile(delete=True)
-        cf = tempfile.NamedTemporaryFile(delete=True)
-        subprocess.check_call(
-            [
-                "openssl",
-                "req",
-                "-x509",
-                "-nodes",
-                "-newkey",
-                "rsa:4096",
-                "-keyout",
-                kf.name,
-                "-out",
-                cf.name,
-                "-days",
-                "3650",
-                "-subj",
-                "/CN=%s" % (self.web_host or "noc"),
-            ]
-        )
-        return kf.read().decode(), cf.read().decode()
+        """Generate self-signed certificate."""
+        with (
+            tempfile.NamedTemporaryFile(delete=True) as kf,
+            tempfile.NamedTemporaryFile(delete=True) as cf,
+        ):
+            subprocess.check_call(
+                [
+                    "openssl",
+                    "req",
+                    "-x509",
+                    "-nodes",
+                    "-newkey",
+                    "rsa:4096",
+                    "-keyout",
+                    kf.name,
+                    "-out",
+                    cf.name,
+                    "-days",
+                    "3650",
+                    "-subj",
+                    "/CN=%s" % (self.web_host or "noc"),
+                ]
+            )
+            return kf.read().decode(), cf.read().decode()
 
     def delete_instance(self, *args, **kwargs):
         from .node import Node

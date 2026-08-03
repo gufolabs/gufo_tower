@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Node model
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2020 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -50,11 +50,11 @@ class Node(Model):
         return self.node_type.get_vars()
 
     def get_address(self):
-        """Returns node addess"""
+        """Returns node addess."""
         return str(self.address.split(":")[0])
 
     def get_ssh_port(self):
-        """Returns node ssh port"""
+        """Returns node ssh port."""
         if ":" in self.address:
             return int(self.address.split(":")[1])
         return 22

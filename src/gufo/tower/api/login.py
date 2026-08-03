@@ -18,12 +18,12 @@ class LoginAPI(API):
 
     @open_api
     def is_logged(self):
-        """Check current session is logged"""
+        """Check current session is logged."""
         return self.handler.current_user is not None
 
     @open_api
     def login(self, credentials):
-        """Logout user
+        """Logout user.
 
         Args:
             credentials
@@ -38,7 +38,7 @@ class LoginAPI(API):
 
     @api
     def logout(self):
-        """Logout session"""
+        """Logout session."""
         self.handler.clear_cookie(self.USER_COOKIE)
 
     @api

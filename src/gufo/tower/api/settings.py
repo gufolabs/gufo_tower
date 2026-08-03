@@ -15,7 +15,7 @@ class SettingsAPI(API):
 
     @api
     def get_settings(self):
-        """Returns a list of current settings"""
+        """Returns a list of current settings."""
         r = Settings.DEFAULTS.copy()
         r["url"] = "http://{}/".format(self.handler.request.headers["Host"])
         r.update(Settings.get_items(list(Settings.DEFAULTS)))
@@ -23,7 +23,7 @@ class SettingsAPI(API):
 
     @api
     def save_settings(self, data):
-        """Save current settings"""
+        """Save current settings."""
         current = Settings.get_items(list(Settings.DEFAULTS))
         for k in data:
             if k not in Settings.DEFAULTS:

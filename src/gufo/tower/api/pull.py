@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # Pull repo
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2016 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ class PullAPI(API):
 
     @api
     def is_pulled(self, env_id):
-        """Check repo is pulled and ready to deploy
+        """Check repo is pulled and ready to deploy.
 
         Args:
             env_id

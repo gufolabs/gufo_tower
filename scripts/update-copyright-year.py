@@ -6,8 +6,7 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-"""
-Update copyright year in modified git files.
+"""Update copyright year in modified git files.
 
 Looks for lines like:
 
