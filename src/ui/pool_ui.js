@@ -1,4 +1,4 @@
-var pool_list = {
+export const pool_list = {
     id: "pool_list_panel",
     rows: [
         {
@@ -47,7 +47,7 @@ var pool_list = {
     ]
 };
 
-var pool_form = {
+export const pool_form = {
     id: "pool_form_panel",
     rows: [
         {

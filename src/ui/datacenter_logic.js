@@ -1,4 +1,4 @@
-var datacenter_logic = {
+export const datacenter_logic = {
     init: function () {
     },
 

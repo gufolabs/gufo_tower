@@ -1,4 +1,4 @@
-var change_password_logic = {
+export const change_password_logic = {
     init: function () {
     },
 

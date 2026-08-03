@@ -1,4 +1,4 @@
-var environment_list = {
+export const environment_list = {
     id: "environment_list_panel",
     rows: [
         {
@@ -62,13 +62,13 @@ var environment_list = {
                             value: "Install Everything",
                             tooltip: "Ignore other options except verbose. Normal install"
                         },
-                        {id: 93, value: "Run pre deploy checks"},
-                        {id: 94, value: "Run post deploy tests"},
-                        {id: 50, value: "Restart quick", tooltip: "Stop all, start all"},
-                        {id: 51, value: "Restart gentle", tooltip: "Restart one by one"},
-                        {id: 90, value: "Be verbose", tooltip: "Debug output -v"},
-                        {id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv"},
-                        {id: 92, value: "Show secrets in deploy log", tooltip: "Disable no_log"}
+                        { id: 93, value: "Run pre deploy checks" },
+                        { id: 94, value: "Run post deploy tests" },
+                        { id: 50, value: "Restart quick", tooltip: "Stop all, start all" },
+                        { id: 51, value: "Restart gentle", tooltip: "Restart one by one" },
+                        { id: 90, value: "Be verbose", tooltip: "Debug output -v" },
+                        { id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv" },
+                        { id: 92, value: "Show secrets in deploy log", tooltip: "Disable no_log" }
                     ],
                     value: "1,93,94"
                 }
@@ -115,7 +115,7 @@ var environment_list = {
     ]
 };
 
-var environment_form = {
+export const environment_form = {
     id: "environment_form_panel",
     rows: [
         {
@@ -201,11 +201,11 @@ var environment_form = {
                                 label: "Type",
                                 required: true,
                                 options: [
-                                    {id: "prod", value: "Productive"},
-                                    {id: "test", value: "Test"},
-                                    {id: "dev", value: "Develop"},
-                                    {id: "eval", value: "Evaluation"},
-                                    {id: "other", value: "Other"}
+                                    { id: "prod", value: "Productive" },
+                                    { id: "test", value: "Test" },
+                                    { id: "dev", value: "Develop" },
+                                    { id: "eval", value: "Evaluation" },
+                                    { id: "other", value: "Other" }
                                 ],
                                 value: "eval"
                             },
@@ -226,13 +226,14 @@ var environment_form = {
                     label: "Repo",
                     body: {
                         rows: [
-                            {   cols: [
+                            {
+                                cols: [
                                     {
                                         view: "label",
                                         label: "",
                                         id: "pulled_label",
                                     }
-                                ]   
+                                ]
                             },
                             {
                                 cols: [
@@ -262,7 +263,7 @@ var environment_form = {
     ]
 };
 
-var environment_inventory = {
+export const environment_inventory = {
     id: "environment_inventory_panel",
     rows: [
         {
@@ -294,7 +295,7 @@ var environment_inventory = {
     ]
 };
 
-var environment_deploy = {
+export const environment_deploy = {
     id: "environment_deploy_panel",
     rows: [
         {
@@ -313,10 +314,10 @@ var environment_deploy = {
                     type: "header",
                     borderless: true,
                     template: "<span class='ansible-ok-tag' title='ok'>#ok#</span> " +
-                    "<span class='ansible-changed-tag' title='changed'>#changed#</span> " +
-                    "<span class='ansible-unreachable-tag' title='unreachable'>#unreach#</span> " +
-                    "<span class='ansible-failed-tag' title='failed'>#failed#</span> " +
-                    "Deploy: #status#",
+                        "<span class='ansible-changed-tag' title='changed'>#changed#</span> " +
+                        "<span class='ansible-unreachable-tag' title='unreachable'>#unreach#</span> " +
+                        "<span class='ansible-failed-tag' title='failed'>#failed#</span> " +
+                        "Deploy: #status#",
                     data: {
                         ok: 0,
                         changed: 0,

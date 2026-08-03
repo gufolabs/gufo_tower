@@ -1,4 +1,4 @@
-var node_list = {
+export const node_list = {
     id: "node_list_panel",
     rows: [
         {
@@ -70,7 +70,7 @@ var node_list = {
     ]
 };
 
-var node_form = {
+export const node_form = {
     id: "node_form_panel",
     rows: [
         {

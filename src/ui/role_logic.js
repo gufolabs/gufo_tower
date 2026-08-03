@@ -1,4 +1,4 @@
-var role_logic = {
+export const role_logic = {
     init: function () {
     },
 

@@ -1,4 +1,4 @@
-var role_list = {
+export const role_list = {
     id: "role_list_panel",
     rows: [
         {
@@ -63,7 +63,7 @@ var role_list = {
     ]
 };
 
-var role_form = {
+export const role_form = {
     id: "role_form_panel",
     rows: [
         {

@@ -1,4 +1,4 @@
-var pool_logic = {
+export const pool_logic = {
     init: function () {
         $$("pool_form").bind($$("pool_list"));
     },

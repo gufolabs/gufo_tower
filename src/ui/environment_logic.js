@@ -1,4 +1,4 @@
-var environment_logic = {
+export const environment_logic = {
     PULL_CHECK_INTERVAL: 1000,
 
     init: function () {
@@ -216,7 +216,7 @@ var environment_logic = {
                     s = (s >= 10) ? ("" + s) : ("0" + s);
                     m = (m >= 10) ? ("" + m) : ("0" + m);
                     t = m + ":" + s;
-                    clock.setValues({time: t});
+                    clock.setValues({ time: t });
                     if (running) {
                         webix.delay(update_clock, output_panel, [], 1000);
                     }

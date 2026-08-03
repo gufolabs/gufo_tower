@@ -1,4 +1,4 @@
-var login_logic = {
+export const login_logic = {
     init: function () {
     },
 

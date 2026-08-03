@@ -1,4 +1,4 @@
-var app_logic = {
+export const app_logic = {
     current_env: null,
 
     init: function () {

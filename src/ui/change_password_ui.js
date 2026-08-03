@@ -1,5 +1,5 @@
 // Login form
-var change_password_form = {
+export const change_password_form = {
     id: "change_password_panel",
     rows: [
         {},  // Top spacer

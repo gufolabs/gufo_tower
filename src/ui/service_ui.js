@@ -1,4 +1,5 @@
-var service_panel = {
+import { threeStateCompare } from "./lib.js";
+export const service_panel = {
     id: "service_panel",
     rows: [
         {
@@ -57,7 +58,7 @@ var service_panel = {
                     threeState: true,
                     select: "row",
                     gravity: 2,
-                    fillspace:true,
+                    fillspace: true,
                     multiselect: true,
                     on: {
                         "onSelectChange": "service_logic.on_select_service",
@@ -69,7 +70,7 @@ var service_panel = {
                         [
                             {
                                 id: "service",
-                                header: ["Service", {content: "textFilter"}],
+                                header: ["Service", { content: "textFilter" }],
                                 template: function (obj, common) {
                                     return service_logic.on_column_group(obj, common, "service")
                                 },
@@ -79,7 +80,7 @@ var service_panel = {
                             },
                             {
                                 id: "node",
-                                header: ["Node", {content: "textFilter"}],
+                                header: ["Node", { content: "textFilter" }],
                                 template: function (obj, common) {
                                     return service_logic.on_column_group(obj, common, "node")
                                 },
@@ -101,7 +102,7 @@ var service_panel = {
                             },
                             {
                                 id: "pool",
-                                header: ["Pool", {content: "selectFilter"}],
+                                header: ["Pool", { content: "selectFilter" }],
                                 sort: "string",
                                 fillspace: 1
                             }
@@ -112,14 +113,14 @@ var service_panel = {
                     datafetch: Tower.config.datafetch,
                     loadahead: Tower.config.loadahead
                 },
-                { view:"resizer" },
+                { view: "resizer" },
                 {
                     view: "form",
                     id: "service_form",
                     borderless: true,
                     scroll: true,
-                    gravity:1,
-                    minWidth:430,
+                    gravity: 1,
+                    minWidth: 430,
                     datafetch: Tower.config.datafetch,
                     loadahead: Tower.config.loadahead,
                     elements: [

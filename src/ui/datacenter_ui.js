@@ -1,4 +1,4 @@
-var datacenter_list = {
+export const datacenter_list = {
     id: "datacenter_list_panel",
     rows: [
         {
@@ -49,7 +49,7 @@ var datacenter_list = {
     ]
 };
 
-var datacenter_form = {
+export const datacenter_form = {
     id: "datacenter_form_panel",
     rows: [
         {

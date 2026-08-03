@@ -1,5 +1,5 @@
 // Login form
-var login_form = {
+export const login_form = {
     id: "login_panel",
     rows: [
         {},  // Top spacer

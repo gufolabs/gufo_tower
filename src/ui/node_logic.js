@@ -1,4 +1,4 @@
-var node_logic = {
+export const node_logic = {
     init: function () {
         $$("node_form").bind($$("node_list"));
     },
@@ -26,25 +26,25 @@ var node_logic = {
     },
 
     on_add: function () {
-		var dc = $$("node_form").elements.datacenter;
-		var nt = $$("node_form").elements.node_type;
+        var dc = $$("node_form").elements.datacenter;
+        var nt = $$("node_form").elements.node_type;
 
-		API.datacenter.get_items().then(result => {
-			if (dc.data.options.count() == 0) 
-				result.data.forEach(el => dc.data.options.add({id: el.id, value: el.name}))
-		}).then(
-			API.nodetype.get_items().then(result => { 
-				if (nt.data.options.count() == 0) 
-					result.data.forEach(el => nt.data.options.add({id: el.id, value: el.name}))
-			})
-		).then(function () {
-			node_logic.show_form();
-			$$("node_form").setValues({
-				login_as: "ansible",
-				node_type: 1,
-				is_enabled: true
-			});
-		});
+        API.datacenter.get_items().then(result => {
+            if (dc.data.options.count() == 0)
+                result.data.forEach(el => dc.data.options.add({ id: el.id, value: el.name }))
+        }).then(
+            API.nodetype.get_items().then(result => {
+                if (nt.data.options.count() == 0)
+                    result.data.forEach(el => nt.data.options.add({ id: el.id, value: el.name }))
+            })
+        ).then(function () {
+            node_logic.show_form();
+            $$("node_form").setValues({
+                login_as: "ansible",
+                node_type: 1,
+                is_enabled: true
+            });
+        });
 
     },
 
@@ -76,7 +76,7 @@ var node_logic = {
                         Tower.msg.complete("Changed");
                     },
                     function (err) {
-                        Tower.msg.failed("Failed to change "+ err);
+                        Tower.msg.failed("Failed to change " + err);
                     }
                 );
             }

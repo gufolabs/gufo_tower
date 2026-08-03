@@ -1,4 +1,4 @@
-var settings_form = {
+export const settings_form = {
     id: "settings_form_panel",
     rows: [
         {
@@ -42,8 +42,8 @@ var settings_form = {
                     label: "Group services by",
                     value: "node",
                     options: [
-                        {value: "service"},
-                        {value: "node"}
+                        { value: "service" },
+                        { value: "node" }
                     ]
                 },
                 {}

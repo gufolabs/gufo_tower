@@ -1,4 +1,4 @@
-var desktop_logic = {
+export const desktop_logic = {
     init: function () {
         environment_logic.init();
         datacenter_logic.init();

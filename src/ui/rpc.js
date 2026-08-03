@@ -1,4 +1,4 @@
-var API = (function () {
+export const API = (function () {
     var r = {
         _base_url: "/api/",
         tid: 0
@@ -46,7 +46,7 @@ webix.proxy.rpc = {
     $proxy: true,
 
     load: function (view, callback, params) {
-        var r = {dynamic: true},
+        var r = { dynamic: true },
             state = {},
             source = this.source,
             i, j, p, v, method;
