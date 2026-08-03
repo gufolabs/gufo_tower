@@ -1,3 +1,7 @@
+import { API } from "./rpc";
+import { app_logic } from "./app_logic";
+import { settings_logic } from "./settings_logic";
+
 export const service_logic = {
     init: function () {
     },
@@ -129,8 +133,8 @@ export const service_logic = {
                         lines.forEach(function (line) {
                             // sorry for that.
                             for (var key in values) {
-                                nm = key.split("-").pop(-1);
-                                val = values[key];
+                                var nm = key.split("-").pop(-1);
+                                var val = values[key];
                                 $$("service_list").data.pull[line.id].config[nm] = val;
                             }
                         });
@@ -189,15 +193,15 @@ export const service_logic = {
             }
         );
     },
-    sortGroupTitle: function () {
-        grid.markSorting("service", "asc");
-        grid.sort(function (a, b) {
-            if (a.service === b.service)
-                return (a.node > b.node) ? 1 : -1;
-            else
-                return (a.service > b.service) ? 1 : -1;
-        });
-    },
+    // sortGroupTitle: function () {
+    //     grid.markSorting("service", "asc");
+    //     grid.sort(function (a, b) {
+    //         if (a.service === b.service)
+    //             return (a.node > b.node) ? 1 : -1;
+    //         else
+    //             return (a.service > b.service) ? 1 : -1;
+    //     });
+    // },
     on_group_table: function (mode) {
         if (mode === "init") {
             mode = $$("settings_form").getValues()["group_by"]

@@ -32,5 +32,6 @@ import "./desktop_ui.js";
 import "./desktop_logic.js";
 import "./app_ui.js";
 import "./app_logic.js";
+import { app_logic } from "./app_logic.js";
 
 webix.ready(app_logic.init);

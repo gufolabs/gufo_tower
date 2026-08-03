@@ -1,3 +1,6 @@
+import { API } from "./rpc";
+import { app_logic } from "./app_logic";
+
 export const environment_logic = {
     PULL_CHECK_INTERVAL: 1000,
 
@@ -189,7 +192,7 @@ export const environment_logic = {
             rx_task = /^.+?\*{3}\s*$/mg,
             rx_line = /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
             rx_stars = /\s+\*{3,}/;
-        deploy = function () {
+        var deploy = function () {
             var xhr = new XMLHttpRequest(),
                 offset = 0,
                 output_panel = $$("environment_deploy_output"),

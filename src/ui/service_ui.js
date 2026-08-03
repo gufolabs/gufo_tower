@@ -1,4 +1,5 @@
 import { threeStateCompare } from "./lib.js";
+import { service_logic } from "./service_logic.js";
 export const service_panel = {
     id: "service_panel",
     rows: [

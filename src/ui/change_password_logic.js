@@ -1,3 +1,6 @@
+import { API } from "./rpc";
+import { desktop_logic } from "./desktop_logic";
+
 export const change_password_logic = {
     init: function () {
     },

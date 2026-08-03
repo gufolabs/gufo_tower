@@ -1,3 +1,5 @@
+import { API } from "./rpc";
+
 export const datacenter_logic = {
     init: function () {
     },

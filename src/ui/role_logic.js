@@ -1,3 +1,6 @@
+import { API } from "./rpc";
+import { app_logic } from "./app_logic";
+
 export const role_logic = {
     init: function () {
     },
