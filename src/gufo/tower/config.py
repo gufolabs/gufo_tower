@@ -4,8 +4,7 @@
 # Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
-"""
-Tower configuration management.
+"""Tower configuration management.
 
 The configuration is resolved in the following order:
 
@@ -31,8 +30,7 @@ def _default_home() -> Path:
 
 @dataclass
 class Config:
-    """
-    Tower configuration.
+    """Tower configuration.
 
     Attributes:
         home: Tower home directory.

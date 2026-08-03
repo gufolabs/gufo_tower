@@ -53,7 +53,7 @@ def die(msg):
 
 
 def ansible_list(args):
-    """Ansible dynamic inventory"""
+    """Ansible dynamic inventory."""
     try:
         env = Environment.get(Environment.name == args.env)
         print(json.dumps(env.ansible_inventory, sort_keys=True, indent=2))

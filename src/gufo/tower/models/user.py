@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------
 # User model
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2015 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ class User(Model):
 
     @classmethod
     def hash_password(cls, password):
-        """Return hashed password data
+        """Return hashed password data.
 
         Args:
             password
@@ -37,7 +37,7 @@ class User(Model):
 
     @classmethod
     def check_password(cls, password, hashed):
-        """Check plain-text password matched hashed implementation
+        """Check plain-text password matched hashed implementation.
 
         Args:
             password
@@ -64,7 +64,7 @@ class User(Model):
 
     @classmethod
     def authenticate(cls, user, password):
-        """Perform user authentication
+        """Perform user authentication.
 
         Args:
             user
