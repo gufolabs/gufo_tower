@@ -52,7 +52,6 @@ ignore = [
   "PLC0415", # 20 - `import` should be at the top-level of a file
   "C901", # 6 - C901 `get_execution_order` is too complex (22 > 10)
   "E501", # 5 - Line too long (91 > 79)
-  "UP031", # 54 - Use format specifiers instead of percent format
   "S324", # 1 - Probable use of insecure hash functions in `hashlib`: `sha1`
   "S603", # 5 - `subprocess` call: check for execution of untrusted input
   "S607", # 3 - Starting a process with a partial executable path

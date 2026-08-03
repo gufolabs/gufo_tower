@@ -80,15 +80,10 @@ def die(msg):
 
 
 def print_stat(joblog):
-    print("Start: %s ; Completed: %s" % (joblog.start_ts, joblog.complete_ts))
+    print(f"Start: {joblog.start_ts} ; Completed: {joblog.complete_ts}")
     print(
-        "OK: %d; Changed: %d; Unreachable: %d; Failed: %d"
-        % (
-            joblog.n_ok,
-            joblog.n_changed,
-            joblog.n_unreachable,
-            joblog.n_failed,
-        )
+        f"OK: {joblog.n_ok}; Changed: {joblog.n_changed}; "
+        f"Unreachable: {joblog.n_unreachable}; Failed: {joblog.n_failed}"
     )
     print("\n")
 
@@ -99,7 +94,7 @@ def joblog_list(args):
         env = Environment.get(Environment.name == args.env)
         # print(json.dumps(env.ansible_inventory, sort_keys=True, indent=2))
     except Environment.DoesNotExist:
-        die("Invalid environment: '%s'" % args.env)
+        die(f"Invalid environment: '{args.env}'")
     print("=" * 20, env.name, "=" * 20)
     print("")
     for log in JobLog.filter(environment=env).order_by(("start_ts", "DESC")):
@@ -112,7 +107,7 @@ def joblog_view(args):
         print(joblog.log)
         print_stat(joblog)
     except JobLog.DoesNotExist:
-        die("Invalid Joblog Start Ts: '%s'" % args.env)
+        die(f"Invalid Joblog Start Ts: '{args.env}'")
 
 
 def joblog_clean(args):
@@ -120,28 +115,26 @@ def joblog_clean(args):
     if args.before:
         before = datetime.datetime.strptime(args.before, "%Y-%m-%d %H:%M")
         cleaned_job = JobLog.filter(start_ts__gte=before)
-        print(
-            " %d JobLog before %s will be cleaned"
-            % (cleaned_job.count(), args.before)
-        )
+        cnt = cleaned_job.count()
+        print(f" {cnt} JobLog before {args.before} will be cleaned")
     elif args.save_last and joblog_count > args.save_last:
         cleaned_job = JobLog.order_by(JobLog.start_ts).limit(
             joblog_count - args.save_last
         )
+        cnt = cleaned_job.count()
         print(
-            " %d/%d JobLog more %s will be cleaned"
-            % (cleaned_job.count(), joblog_count, args.save_last)
+            f" {cnt}/{joblog_count} JobLog more {args.save_last} will be cleaned"
         )
     elif args.save_last and joblog_count <= args.save_last:
         die(
-            "JobLog count is %d less (or equal) that save param: %d"
-            % (joblog_count, args.save_last)
+            f"JobLog count is {joblog_count} less (or equal) "
+            f"that save param: {args.save_last}"
         )
     else:
         die("Please set cleanup policy")
-    print(" %d JobLog will be Remove..\n" % cleaned_job.count())
+    print(f" {cnt} JobLog will be Remove..\n")
     for i in reversed(range(1, 10)):
-        print("%d\n" % i)
+        print(f"{i}\n")
         time.sleep(1)
     for x, job in enumerate(cleaned_job):
         print(x, job)

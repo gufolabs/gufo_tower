@@ -35,7 +35,7 @@ def main():
     try:
         env = Environment.get(Environment.name == args.env)
     except Environment.DoesNotExist:
-        die("Invalid environment: '%s'" % args.env)
+        die(f"Invalid environment: '{args.env}'")
     with db.atomic():
         job = PullLog(
             start_ts=datetime.datetime.now(),

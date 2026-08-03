@@ -42,7 +42,7 @@ def migrate(migrator):
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
-            print("Migrating %s" % env.name)
+            print(f"Migrating {env.name}")
             for s in Service.select().where(Service.environment == env.id):
                 if s.service == "login":
                     conf = yaml.full_load(s.config)

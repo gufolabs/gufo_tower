@@ -119,7 +119,7 @@ def migrate(migrator):
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
-            print("Migrating %s" % env.name)
+            print(f"Migrating {env.name}")
             # remove nodes without services
             noc_promote_nodes = set()
             ct_promote_nodes = set()

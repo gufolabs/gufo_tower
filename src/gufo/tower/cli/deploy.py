@@ -39,7 +39,7 @@ def main():
     try:
         env = Environment.get(Environment.name == args.env)
     except Environment.DoesNotExist:
-        die("Invalid environment: '%s'" % args.env)
+        die(f"Invalid environment: '{args.env}'")
 
     if args.cmd == "generate":
         write_pb(env)
@@ -68,7 +68,7 @@ def write_pb(env):
     )
     with open(tower_autogen, "w") as f:
         for line in pb_order:
-            f.write("- import_playbook: %s\n" % line)
+            f.write(f"- import_playbook: {line}\n")
 
 
 def resolv_pb(env, service):

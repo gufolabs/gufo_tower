@@ -58,4 +58,4 @@ def ansible_list(args):
         env = Environment.get(Environment.name == args.env)
         print(json.dumps(env.ansible_inventory, sort_keys=True, indent=2))
     except Environment.DoesNotExist:
-        die("Invalid environment: '%s'" % args.env)
+        die(f"Invalid environment: '{args.env}'")

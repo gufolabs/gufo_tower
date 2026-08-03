@@ -52,7 +52,7 @@ def migrate(migrator):
 
     if len(Environment.select()) != 0:
         for env in Environment.select():
-            print("Migrating %s" % env.name)
+            print(f"Migrating {env.name}")
             # remove nodes without services
 
             config = yaml.full_load(env.service_config)

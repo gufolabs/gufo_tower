@@ -153,9 +153,11 @@ class Environment(Model):
                 hostvars.update(hv)
             # Set up has_svc_XXXX variables
             for s in node_services[node.name]:
-                hostvars["has_svc_%s" % s.service.replace("-", "_")] = True
+                hostvars["has_svc_{}".format(s.service.replace("-", "_"))] = (
+                    True
+                )
             r["_meta"]["hostvars"][node.name] = hostvars
-            dcn = "dc-%s" % node.datacenter.name
+            dcn = f"dc-{node.datacenter.name}"
             if dcn not in r:
                 r[dcn] = {"hosts": [], "vars": {}}
                 if node.datacenter.proxy:
@@ -194,13 +196,16 @@ class Environment(Model):
                 srv_name = "-".join(["cfg", srv["service"], srv["node"]])
                 pool_name = "global"
 
-            if "svc-%s" % srv["service"] not in r:
-                r["svc-%s" % srv["service"]] = {
+            if "svc-{}".format(srv["service"]) not in r:
+                r["svc-{}".format(srv["service"])] = {
                     "vars": self.name_config(srv["config"], srv["service"]),
-                    "children": [srv_name, "svc-%s-read" % srv["service"]],
+                    "children": [
+                        srv_name,
+                        "svc-{}-read".format(srv["service"]),
+                    ],
                 }
             else:
-                r["svc-%s" % srv["service"]]["children"].append(srv_name)
+                r["svc-{}".format(srv["service"])]["children"].append(srv_name)
 
             # make service group
             if srv_name not in r:
@@ -208,14 +213,18 @@ class Environment(Model):
                     "vars": self.name_config(srv["config"], srv["service"]),
                     "hosts": [srv["node"]],
                 }
-                if "svc-%s-read" % srv["service"] not in r:
-                    r["svc-%s-read" % srv["service"]] = {"hosts": []}
+                if "svc-{}-read".format(srv["service"]) not in r:
+                    r["svc-{}-read".format(srv["service"])] = {"hosts": []}
 
             # make execution group
-            if "svc-%s-exec" % srv["service"] not in r:
-                r["svc-%s-exec" % srv["service"]] = {"hosts": [srv["node"]]}
+            if "svc-{}-exec".format(srv["service"]) not in r:
+                r["svc-{}-exec".format(srv["service"])] = {
+                    "hosts": [srv["node"]]
+                }
             else:
-                r["svc-%s-exec" % srv["service"]]["hosts"].append(srv["node"])
+                r["svc-{}-exec".format(srv["service"])]["hosts"].append(
+                    srv["node"]
+                )
 
             # resolve depends
             if (
@@ -223,10 +232,10 @@ class Environment(Model):
                 and srv_descr[srv["service"]]["depends"]
             ):
                 for dep in srv_descr[srv["service"]]["depends"]:
-                    if "svc-%s-read" % dep not in r:
-                        r["svc-%s-read" % dep] = {"hosts": [srv["node"]]}
-                    elif srv["node"] not in r["svc-%s-read" % dep]["hosts"]:
-                        r["svc-%s-read" % dep]["hosts"].append(srv["node"])
+                    if f"svc-{dep}-read" not in r:
+                        r[f"svc-{dep}-read"] = {"hosts": [srv["node"]]}
+                    elif srv["node"] not in r[f"svc-{dep}-read"]["hosts"]:
+                        r[f"svc-{dep}-read"]["hosts"].append(srv["node"])
 
             # Generate tower.yml
             self.generate_tower_inventory(pool_name, r, srv, srv_descr)
@@ -238,7 +247,7 @@ class Environment(Model):
             "category" in srv_descr[srv["service"]]
             and srv_descr[srv["service"]]["category"] == "internal"
         ):
-            node_noc_config = "noc-config-%s" % srv["node"]
+            node_noc_config = "noc-config-{}".format(srv["node"])
             if node_noc_config not in r:
                 r[node_noc_config] = {
                     "hosts": [srv["node"]],
@@ -258,7 +267,9 @@ class Environment(Model):
                         path = urlparse(conf).path
                         basepath = os.path.dirname(path)
                         pool_config_path = "yaml://" + str(
-                            os.path.join(basepath, "pool-%s.yml" % srv["pool"])
+                            os.path.join(
+                                basepath, "pool-{}.yml".format(srv["pool"])
+                            )
                         )
                         order.insert(-1, pool_config_path)
                         break
@@ -490,7 +501,7 @@ class Environment(Model):
                 logging.info("Create directory %s", prefix)
                 os.mkdir(prefix, 0o0700)
             for t, b in key_types:
-                fn = os.path.join(prefix, "id_%s" % t)
+                fn = os.path.join(prefix, f"id_{t}")
                 if not os.path.isfile(fn):
                     logging.info("Generating %s key for pool %s", t, pool.name)
                     if os.getenv("OSTYPE") == "FreeBSD":
@@ -507,7 +518,7 @@ class Environment(Model):
                                 "-N",
                                 '\\\\"\\\\"',
                                 "-C",
-                                "%s@noc" % pool.name,
+                                f"{pool.name}@noc",
                             ]
                         )
                     else:
@@ -524,7 +535,7 @@ class Environment(Model):
                                 "-N",
                                 "",
                                 "-C",
-                                "%s@noc" % pool.name,
+                                f"{pool.name}@noc",
                             ]
                         )
 
