@@ -69,11 +69,12 @@ def get_sdl() -> dict[str, list[str]]:
                 or not issubclass(cls, API)
             ):
                 continue
-            if not (name := getattr(cls, "name", None)):
+            name = getattr(cls, "name", None)
+            if not name:
                 continue
             result[name] = sorted(
                 attr_name
-                for attr_name, attr in vars(cls).items()
+                for attr_name, attr in inspect.getmembers(cls)
                 if getattr(attr, "api", False)
             )
     return {n: result[n] for n in sorted(result)}

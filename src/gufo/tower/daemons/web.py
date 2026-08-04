@@ -18,6 +18,7 @@ import tornado.web
 from tornado.web import RedirectHandler, StaticFileHandler
 
 # Tower modules
+# @todo: Remove api imports after migration to Gufo Loader
 from gufo.tower.api.datacenter import DatacenterAPI  # noqa
 from gufo.tower.api.deploy import DeployHandler
 from gufo.tower.api.environment import EnvironmentAPI  # noqa
@@ -69,7 +70,7 @@ def run():
     }
     app = tornado.web.Application(
         [
-            (r"^/api/(sdl.js|.+/)$", JSONRPCHandler),
+            (r"^/api/([a-z][a-z0-9]*)/$", JSONRPCHandler),
             (r"^/ui/(.*)$", StaticFileHandler, {"path": ui_root}),
             (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
             (r"^/$", RedirectHandler, {"url": "/ui/index.html"}),

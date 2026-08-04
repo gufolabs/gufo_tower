@@ -8,9 +8,20 @@
 // Copyright 2015-2026 Gufo Labs
 // ------------------------------------------------------------------------
 export const SDL = {
-    "datacenter": [],
+    "datacenter": [
+        "create_item",
+        "delete_item",
+        "get_items",
+        "lookup_items",
+        "update_item"
+    ],
     "environment": [
-        "ansible_inventory"
+        "ansible_inventory",
+        "create_item",
+        "delete_item",
+        "get_items",
+        "lookup_items",
+        "update_item"
     ],
     "login": [
         "change_password",
@@ -19,16 +30,39 @@ export const SDL = {
         "logout"
     ],
     "node": [
-        "prepare_node"
+        "create_item",
+        "delete_item",
+        "get_items",
+        "lookup_items",
+        "prepare_node",
+        "update_item"
     ],
-    "nodetype": [],
-    "pool": [],
+    "nodetype": [
+        "create_item",
+        "delete_item",
+        "get_items",
+        "lookup_items",
+        "update_item"
+    ],
+    "pool": [
+        "create_item",
+        "delete_item",
+        "get_items",
+        "lookup_items",
+        "update_item"
+    ],
     "pull": [
         "get_job_status",
         "is_pulled",
         "start_job"
     ],
-    "role": [],
+    "role": [
+        "create_item",
+        "delete_item",
+        "get_items",
+        "lookup_items",
+        "update_item"
+    ],
     "service": [
         "get_forms",
         "get_service_list",

@@ -38,6 +38,15 @@ class BaseHandler(tornado.web.RequestHandler):
 APIClasses = {}  # api -> API class
 
 
+# @todo: Remove after migration to Gufo Loader
+class APIBase(type):
+    def __new__(mcs, name, bases, attrs):
+        m = type.__new__(mcs, name, bases, attrs)
+        if m.name:
+            APIClasses[m.name] = m
+        return m
+
+
 def api(method):
     """Authenticated API method decorator."""
     method.api = True
@@ -52,7 +61,7 @@ def open_api(method):
     return method
 
 
-class API:
+class API(metaclass=APIBase):
     name = None
 
     def __init__(self, handler):
