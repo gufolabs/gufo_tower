@@ -35,17 +35,14 @@ class BaseHandler(tornado.web.RequestHandler):
         return None
 
 
-SDL = {}  # api -> [methods]
 APIClasses = {}  # api -> API class
 
 
+# @todo: Remove after migration to Gufo Loader
 class APIBase(type):
     def __new__(mcs, name, bases, attrs):
         m = type.__new__(mcs, name, bases, attrs)
         if m.name:
-            SDL[m.name] = [
-                n for n in dir(m) if getattr(getattr(m, n), "api", False)
-            ]
             APIClasses[m.name] = m
         return m
 

@@ -9,14 +9,13 @@
 import json
 import logging
 
-import peewee
-
 # Third-party modules
+import peewee
 import tornado.gen
 from tornado.web import HTTPError
 
 # Tower modules
-from .base import SDL, APIClasses, APIError, BaseHandler
+from .base import APIClasses, APIError, BaseHandler
 
 logger = logging.getLogger("rpc")
 
@@ -24,17 +23,10 @@ logger = logging.getLogger("rpc")
 class JSONRPCHandler(BaseHandler):
     MIME_TYPE = "text/json"
 
-    def get(self, *args, **kwargs):
-        """Returns SDL structure."""
-        self.set_header("Content-Type", "text/javascript")
-        self.write(f"var SDL = {json.dumps(SDL)}")
-
     @tornado.gen.coroutine
     def post(self, path, **kwargs):
         # Get API name
-        api_name = None
-        if path.endswith("/"):
-            api_name = str(path[:-1])
+        api_name = str(path)
         # Check API class
         api_class = APIClasses.get(api_name)
         if not api_class:
@@ -49,10 +41,12 @@ class JSONRPCHandler(BaseHandler):
         params = req.get("params", [])
         method = req.get("method")
         # Get handler
-        if not method or method not in SDL[api_name]:
+        if not method:
             raise HTTPError(400, f"Bad method: {method}")
         api = api_class(self)
-        handler = getattr(api, method)
+        handler = getattr(api, method, None)
+        if handler is None or not getattr(handler, "api", False):
+            raise HTTPError(400, f"Bad method: {method}")
         # Check permissions
         if self.current_user is None and not handler.open_api:
             raise HTTPError(403, "Permission denied")
