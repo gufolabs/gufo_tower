@@ -32,6 +32,10 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 * `VERSION` file, moved to `src/gufo/tower/__init__.py`
 
+## Dependencies
+
+* bcrypt 5.0.0
+
 ## 1.1.1 (2023-04-11)
 * Fix settings save 2
 * Fix nginx cert handling
