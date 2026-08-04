@@ -1,4 +1,13 @@
-var environment_logic = {
+// ----------------------------------------------------------------------
+// Environment logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { API } from "./rpc.js";
+import { app_logic } from "./app_logic.js";
+
+export const environment_logic = {
     PULL_CHECK_INTERVAL: 1000,
 
     init: function () {
@@ -189,7 +198,7 @@ var environment_logic = {
             rx_task = /^.+?\*{3}\s*$/mg,
             rx_line = /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
             rx_stars = /\s+\*{3,}/;
-        deploy = function () {
+        var deploy = function () {
             var xhr = new XMLHttpRequest(),
                 offset = 0,
                 output_panel = $$("environment_deploy_output"),
@@ -216,7 +225,7 @@ var environment_logic = {
                     s = (s >= 10) ? ("" + s) : ("0" + s);
                     m = (m >= 10) ? ("" + m) : ("0" + m);
                     t = m + ":" + s;
-                    clock.setValues({time: t});
+                    clock.setValues({ time: t });
                     if (running) {
                         webix.delay(update_clock, output_panel, [], 1000);
                     }

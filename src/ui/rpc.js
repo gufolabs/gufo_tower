@@ -1,4 +1,10 @@
-var API = (function () {
+// ----------------------------------------------------------------------
+// API and RPC wrapper
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+export const API = (function () {
     var r = {
         _base_url: "/api/",
         tid: 0
@@ -46,7 +52,7 @@ webix.proxy.rpc = {
     $proxy: true,
 
     load: function (view, callback, params) {
-        var r = {dynamic: true},
+        var r = { dynamic: true },
             state = {},
             source = this.source,
             i, j, p, v, method;

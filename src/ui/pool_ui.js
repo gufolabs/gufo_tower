@@ -1,4 +1,11 @@
-var pool_list = {
+// ----------------------------------------------------------------------
+// Pool UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { pool_logic } from "./pool_logic.js";
+export const pool_list = {
     id: "pool_list_panel",
     rows: [
         {
@@ -9,7 +16,7 @@ var pool_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "pool_logic.on_search"
+                        "onChange": pool_logic.on_search
                     }
                 },
                 {
@@ -18,7 +25,7 @@ var pool_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "pool_logic.on_add"
+                    click: pool_logic.on_add
                 }
             ]
         },
@@ -39,7 +46,7 @@ var pool_list = {
                 }
             ],
             on: {
-                onItemDblClick: "pool_logic.on_edit"
+                onItemDblClick: pool_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -47,7 +54,7 @@ var pool_list = {
     ]
 };
 
-var pool_form = {
+export const pool_form = {
     id: "pool_form_panel",
     rows: [
         {
@@ -58,7 +65,7 @@ var pool_form = {
                     type: "icon",
                     icon: "arrow-left",
                     width: 32,
-                    click: "pool_logic.show_list"
+                    click: pool_logic.show_list
                 },
                 {
                     view: "button",
@@ -66,7 +73,7 @@ var pool_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "pool_logic.on_save"
+                    click: pool_logic.on_save
                 },
                 {
                     view: "button",
@@ -74,7 +81,7 @@ var pool_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "pool_logic.on_delete"
+                    click: pool_logic.on_delete
                 },
                 {}
             ]

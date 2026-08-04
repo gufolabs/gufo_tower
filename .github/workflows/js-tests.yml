@@ -5,6 +5,7 @@ on:
     paths:
       - "package.json"
       - "package-lock.json"
+      - "eslint.config.mjs"
       - "scripts/**"
       - "src/ui/**"
       - ".github/workflows/js-tests.yml"
@@ -16,6 +17,7 @@ on:
       - master
     paths:
       - "package.json"
+      - "eslint.config.mjs"
       - "scripts/build-ui.mjs"
       - "src/ui/**"
       - ".github/workflows/js-tests.yml"
@@ -39,6 +41,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
 
       - name: Build UI
         run: npm run build

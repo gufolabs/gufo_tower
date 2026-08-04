@@ -1,4 +1,11 @@
-var settings_form = {
+// ----------------------------------------------------------------------
+// Settings UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { settings_logic } from "./settings_logic.js";
+export const settings_form = {
     id: "settings_form_panel",
     rows: [
         {
@@ -10,7 +17,7 @@ var settings_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "settings_logic.on_save"
+                    click: settings_logic.on_save
                 }
             ]
         },
@@ -42,8 +49,8 @@ var settings_form = {
                     label: "Group services by",
                     value: "node",
                     options: [
-                        {value: "service"},
-                        {value: "node"}
+                        { value: "service" },
+                        { value: "node" }
                     ]
                 },
                 {}

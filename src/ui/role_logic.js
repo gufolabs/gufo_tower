@@ -1,4 +1,13 @@
-var role_logic = {
+// ----------------------------------------------------------------------
+// Role logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { API } from "./rpc.js";
+import { app_logic } from "./app_logic.js";
+
+export const role_logic = {
     init: function () {
     },
 

@@ -1,4 +1,12 @@
-var datacenter_list = {
+// ----------------------------------------------------------------------
+// Datacenter UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { datacenter_logic } from "./datacenter_logic.js";
+
+export const datacenter_list = {
     id: "datacenter_list_panel",
     rows: [
         {
@@ -10,7 +18,7 @@ var datacenter_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "datacenter_logic.on_search"
+                        "onChange": datacenter_logic.on_search
                     }
                 },
                 {
@@ -19,7 +27,7 @@ var datacenter_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "datacenter_logic.on_add"
+                    click: datacenter_logic.on_add
                 }
             ]
         },
@@ -41,7 +49,7 @@ var datacenter_list = {
                 }
             ],
             on: {
-                onItemDblClick: "datacenter_logic.on_edit"
+                onItemDblClick: datacenter_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -49,7 +57,7 @@ var datacenter_list = {
     ]
 };
 
-var datacenter_form = {
+export const datacenter_form = {
     id: "datacenter_form_panel",
     rows: [
         {
@@ -59,7 +67,7 @@ var datacenter_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "datacenter_logic.show_list",
+                    click: datacenter_logic.show_list,
                     width: 32
                 },
                 {
@@ -68,7 +76,7 @@ var datacenter_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "datacenter_logic.on_save"
+                    click: datacenter_logic.on_save
                 },
                 {
                     view: "button",
@@ -76,7 +84,7 @@ var datacenter_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "datacenter_logic.on_delete"
+                    click: datacenter_logic.on_delete
                 },
                 {}
             ]

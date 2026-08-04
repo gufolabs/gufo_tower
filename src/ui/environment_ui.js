@@ -1,4 +1,12 @@
-var environment_list = {
+// ----------------------------------------------------------------------
+// Environment UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { environment_logic } from "./environment_logic.js";
+
+export const environment_list = {
     id: "environment_list_panel",
     rows: [
         {
@@ -9,7 +17,7 @@ var environment_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "environment_logic.on_search"
+                        "onChange": environment_logic.on_search
                     }
                 },
                 {
@@ -18,7 +26,7 @@ var environment_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "environment_logic.on_add"
+                    click: environment_logic.on_add
                 },
                 {
                     view: "button",
@@ -26,7 +34,7 @@ var environment_list = {
                     type: "icon",
                     icon: "search",
                     label: "Inventory",
-                    click: "environment_logic.on_show_inventory",
+                    click: environment_logic.on_show_inventory,
                     autowidth: true,
                     disabled: true
                 },
@@ -36,7 +44,7 @@ var environment_list = {
                     type: "icon",
                     icon: "arrow-circle-down",
                     label: "Pull",
-                    click: "environment_logic.on_pull",
+                    click: environment_logic.on_pull,
                     autowidth: true,
                     disabled: true
                 },
@@ -46,7 +54,7 @@ var environment_list = {
                     type: "icon",
                     icon: "play",
                     label: "Deploy",
-                    click: "environment_logic.on_deploy",
+                    click: environment_logic.on_deploy,
                     autowidth: true,
                     disabled: true,
                     tooltip: "Stop all daemons, update everything, restart everything"
@@ -62,13 +70,13 @@ var environment_list = {
                             value: "Install Everything",
                             tooltip: "Ignore other options except verbose. Normal install"
                         },
-                        {id: 93, value: "Run pre deploy checks"},
-                        {id: 94, value: "Run post deploy tests"},
-                        {id: 50, value: "Restart quick", tooltip: "Stop all, start all"},
-                        {id: 51, value: "Restart gentle", tooltip: "Restart one by one"},
-                        {id: 90, value: "Be verbose", tooltip: "Debug output -v"},
-                        {id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv"},
-                        {id: 92, value: "Show secrets in deploy log", tooltip: "Disable no_log"}
+                        { id: 93, value: "Run pre deploy checks" },
+                        { id: 94, value: "Run post deploy tests" },
+                        { id: 50, value: "Restart quick", tooltip: "Stop all, start all" },
+                        { id: 51, value: "Restart gentle", tooltip: "Restart one by one" },
+                        { id: 90, value: "Be verbose", tooltip: "Debug output -v" },
+                        { id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv" },
+                        { id: 92, value: "Show secrets in deploy log", tooltip: "Disable no_log" }
                     ],
                     value: "1,93,94"
                 }
@@ -106,8 +114,8 @@ var environment_list = {
                 }
             ],
             on: {
-                onSelectChange: "environment_logic.on_select",
-                onItemDblClick: "environment_logic.on_edit"
+                onSelectChange: environment_logic.on_select,
+                onItemDblClick: environment_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -115,7 +123,7 @@ var environment_list = {
     ]
 };
 
-var environment_form = {
+export const environment_form = {
     id: "environment_form_panel",
     rows: [
         {
@@ -125,7 +133,7 @@ var environment_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "environment_logic.show_list",
+                    click: environment_logic.show_list,
                     width: 32
                 },
                 {
@@ -134,7 +142,7 @@ var environment_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "environment_logic.on_save"
+                    click: environment_logic.on_save
                 },
                 {
                     view: "button",
@@ -142,7 +150,7 @@ var environment_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "environment_logic.on_delete"
+                    click: environment_logic.on_delete
                 },
                 {}
             ]
@@ -201,11 +209,11 @@ var environment_form = {
                                 label: "Type",
                                 required: true,
                                 options: [
-                                    {id: "prod", value: "Productive"},
-                                    {id: "test", value: "Test"},
-                                    {id: "dev", value: "Develop"},
-                                    {id: "eval", value: "Evaluation"},
-                                    {id: "other", value: "Other"}
+                                    { id: "prod", value: "Productive" },
+                                    { id: "test", value: "Test" },
+                                    { id: "dev", value: "Develop" },
+                                    { id: "eval", value: "Evaluation" },
+                                    { id: "other", value: "Other" }
                                 ],
                                 value: "eval"
                             },
@@ -226,13 +234,14 @@ var environment_form = {
                     label: "Repo",
                     body: {
                         rows: [
-                            {   cols: [
+                            {
+                                cols: [
                                     {
                                         view: "label",
                                         label: "",
                                         id: "pulled_label",
                                     }
-                                ]   
+                                ]
                             },
                             {
                                 cols: [
@@ -262,7 +271,7 @@ var environment_form = {
     ]
 };
 
-var environment_inventory = {
+export const environment_inventory = {
     id: "environment_inventory_panel",
     rows: [
         {
@@ -272,7 +281,7 @@ var environment_inventory = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "environment_logic.show_list",
+                    click: environment_logic.show_list,
                     width: 32
                 },
                 {
@@ -294,7 +303,7 @@ var environment_inventory = {
     ]
 };
 
-var environment_deploy = {
+export const environment_deploy = {
     id: "environment_deploy_panel",
     rows: [
         {
@@ -304,7 +313,7 @@ var environment_deploy = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "environment_logic.show_list",
+                    click: environment_logic.show_list,
                     width: 32
                 },
                 {
@@ -313,10 +322,10 @@ var environment_deploy = {
                     type: "header",
                     borderless: true,
                     template: "<span class='ansible-ok-tag' title='ok'>#ok#</span> " +
-                    "<span class='ansible-changed-tag' title='changed'>#changed#</span> " +
-                    "<span class='ansible-unreachable-tag' title='unreachable'>#unreach#</span> " +
-                    "<span class='ansible-failed-tag' title='failed'>#failed#</span> " +
-                    "Deploy: #status#",
+                        "<span class='ansible-changed-tag' title='changed'>#changed#</span> " +
+                        "<span class='ansible-unreachable-tag' title='unreachable'>#unreach#</span> " +
+                        "<span class='ansible-failed-tag' title='failed'>#failed#</span> " +
+                        "Deploy: #status#",
                     data: {
                         ok: 0,
                         changed: 0,

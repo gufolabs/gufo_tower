@@ -1,4 +1,13 @@
-var node_list = {
+// ----------------------------------------------------------------------
+// Node UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+
+import { node_logic } from "./node_logic.js";
+
+export const node_list = {
     id: "node_list_panel",
     rows: [
         {
@@ -9,7 +18,7 @@ var node_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "node_logic.on_search"
+                        "onChange": node_logic.on_search
                     }
                 },
                 {
@@ -18,7 +27,7 @@ var node_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "node_logic.on_add"
+                    click: node_logic.on_add
                 }
             ]
         },
@@ -62,7 +71,7 @@ var node_list = {
                 }
             ],
             on: {
-                onItemDblClick: "node_logic.on_edit"
+                onItemDblClick: node_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -70,7 +79,7 @@ var node_list = {
     ]
 };
 
-var node_form = {
+export const node_form = {
     id: "node_form_panel",
     rows: [
         {
@@ -80,7 +89,7 @@ var node_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "node_logic.show_list",
+                    click: node_logic.show_list,
                     width: 32
                 },
                 {
@@ -89,7 +98,7 @@ var node_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "node_logic.on_save"
+                    click: node_logic.on_save
                 },
                 {
                     view: "button",
@@ -97,7 +106,7 @@ var node_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "node_logic.on_delete"
+                    click: node_logic.on_delete
                 },
                 {}
             ]

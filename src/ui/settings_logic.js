@@ -1,4 +1,11 @@
-var settings_logic = {
+// ----------------------------------------------------------------------
+// Settings logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { API } from "./rpc.js";
+export const settings_logic = {
     init: function () {
         API.settings.get_settings().then(function (result) {
             $$("settings_form").setValues(result);

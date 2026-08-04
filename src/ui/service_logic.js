@@ -1,4 +1,14 @@
-var service_logic = {
+// ----------------------------------------------------------------------
+// Service Logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { API } from "./rpc.js";
+import { app_logic } from "./app_logic.js";
+import { settings_logic } from "./settings_logic.js";
+
+export const service_logic = {
     init: function () {
     },
 
@@ -70,19 +80,19 @@ var service_logic = {
     on_column_group: function (obj, common, name) {
         var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
         // var name = this.column;
-		if (obj.$group && obj[name]) {
+        if (obj.$group && obj[name]) {
             // folder
-			return common.space(obj, common) +
+            return common.space(obj, common) +
                 common.icon(obj, common) +
                 common.folder(obj, common) +
                 "<span>" + obj[name] + "</span>"
-		} else if (parent !== obj[name]) {
+        } else if (parent !== obj[name]) {
             return obj[name];
         } else {
-			if (obj.hasOwnProperty("node") && obj.hasOwnProperty("service") && ( obj.node == obj.service ) ) { 
-				if (name == $$("service_list").Nk)
-					return obj[name];
-			}
+            if (obj.hasOwnProperty("node") && obj.hasOwnProperty("service") && (obj.node == obj.service)) {
+                if (name == $$("service_list").Nk)
+                    return obj[name];
+            }
             return "";
         }
     },
@@ -129,8 +139,8 @@ var service_logic = {
                         lines.forEach(function (line) {
                             // sorry for that.
                             for (var key in values) {
-                                nm = key.split("-").pop(-1);
-                                val = values[key];
+                                var nm = key.split("-").pop(-1);
+                                var val = values[key];
                                 $$("service_list").data.pull[line.id].config[nm] = val;
                             }
                         });
@@ -189,15 +199,15 @@ var service_logic = {
             }
         );
     },
-	sortGroupTitle:	function (){
-        grid.markSorting("service", "asc");
-        grid.sort(function(a,b){
-        if (a.service === b.service)
-            return (a.node>b.node)?1:-1;
-        else
-            return (a.service>b.service)?1:-1;
-        });
-    },
+    // sortGroupTitle: function () {
+    //     grid.markSorting("service", "asc");
+    //     grid.sort(function (a, b) {
+    //         if (a.service === b.service)
+    //             return (a.node > b.node) ? 1 : -1;
+    //         else
+    //             return (a.service > b.service) ? 1 : -1;
+    //     });
+    // },
     on_group_table: function (mode) {
         if (mode === "init") {
             mode = $$("settings_form").getValues()["group_by"]
@@ -218,12 +228,12 @@ var service_logic = {
                     ]
                 }
             });
-            grid.sort(function(a,b){
-				if (a.node === b.node)
-					return (a.service>b.service)?1:-1;
-				else
-					return (a.node>b.node)?1:-1;
-			});
+            grid.sort(function (a, b) {
+                if (a.node === b.node)
+                    return (a.service > b.service) ? 1 : -1;
+                else
+                    return (a.node > b.node) ? 1 : -1;
+            });
         } else if (mode === "service") {
             grid.moveColumn("service", 0);
             grid.markSorting("node", "asc");
@@ -237,17 +247,17 @@ var service_logic = {
                     ]
                 }
             });
-            grid.sort(function(a,b){
-				if (a.service === b.service)
-					return (a.node>b.node)?1:-1;
-				else
-					return (a.service>b.service)?1:-1;
-			});
+            grid.sort(function (a, b) {
+                if (a.service === b.service)
+                    return (a.node > b.node) ? 1 : -1;
+                else
+                    return (a.service > b.service) ? 1 : -1;
+            });
         }
         var i = 0;
-        grid.eachRow(function(id) {
+        grid.eachRow(function (id) {
             i++;
-            if(i === 1) this.open(id);
+            if (i === 1) this.open(id);
         });
         grid.filterByAll();
     },
@@ -258,5 +268,5 @@ var service_logic = {
             $$("service_list").closeAll();
     }
 }
-;
+    ;
 

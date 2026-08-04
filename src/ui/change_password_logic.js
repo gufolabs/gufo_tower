@@ -1,4 +1,13 @@
-var change_password_logic = {
+// ----------------------------------------------------------------------
+// Change password logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { API } from "./rpc.js";
+import { desktop_logic } from "./desktop_logic.js";
+
+export const change_password_logic = {
     init: function () {
     },
 

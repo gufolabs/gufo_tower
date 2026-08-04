@@ -1,16 +1,15 @@
-var app_logic = {
-    current_env: null,
+// ----------------------------------------------------------------------
+// Application logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { API } from "./rpc.js";
+import { login_logic } from "./login_logic.js";
+import { desktop_logic } from "./desktop_logic.js";
 
-    init: function () {
-        // Build UI objects
-        webix.ui(app_ui);
-        // Initialize appropriative controllers
-        login_logic.init();
-        change_password_logic.init();
-        desktop_logic.init();
-        // Process login sequence
-        app_logic.process_login();
-    },
+export const app_logic = {
+    current_env: null,
 
     process_login: function () {
         // Check user is logged in

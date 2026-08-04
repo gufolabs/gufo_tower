@@ -12,11 +12,16 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 ## [Unreleased]
 
+## Fixed
+
+* Editing on double-click on grid line.
+
 ## Added
 
 * Build python package
 * Devcontainer
 * GitHub CI Workflows
+* UI building and bundling
 
 ### Changed
 

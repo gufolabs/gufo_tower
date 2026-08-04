@@ -1,4 +1,12 @@
-var service_panel = {
+// ----------------------------------------------------------------------
+// Service ui
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { threeStateCompare } from "./lib.js";
+import { service_logic } from "./service_logic.js";
+export const service_panel = {
     id: "service_panel",
     rows: [
         {
@@ -10,7 +18,7 @@ var service_panel = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "service_logic.on_save"
+                    click: service_logic.on_save
                 },
                 {},
                 {
@@ -57,10 +65,10 @@ var service_panel = {
                     threeState: true,
                     select: "row",
                     gravity: 2,
-                    fillspace:true,
+                    fillspace: true,
                     multiselect: true,
                     on: {
-                        "onSelectChange": "service_logic.on_select_service",
+                        "onSelectChange": service_logic.on_select_service,
                         "onAfterLoad": function () {
                             service_logic.on_group_table("init")
                         }
@@ -69,7 +77,7 @@ var service_panel = {
                         [
                             {
                                 id: "service",
-                                header: ["Service", {content: "textFilter"}],
+                                header: ["Service", { content: "textFilter" }],
                                 template: function (obj, common) {
                                     return service_logic.on_column_group(obj, common, "service")
                                 },
@@ -79,7 +87,7 @@ var service_panel = {
                             },
                             {
                                 id: "node",
-                                header: ["Node", {content: "textFilter"}],
+                                header: ["Node", { content: "textFilter" }],
                                 template: function (obj, common) {
                                     return service_logic.on_column_group(obj, common, "node")
                                 },
@@ -101,7 +109,7 @@ var service_panel = {
                             },
                             {
                                 id: "pool",
-                                header: ["Pool", {content: "selectFilter"}],
+                                header: ["Pool", { content: "selectFilter" }],
                                 sort: "string",
                                 fillspace: 1
                             }
@@ -112,14 +120,14 @@ var service_panel = {
                     datafetch: Tower.config.datafetch,
                     loadahead: Tower.config.loadahead
                 },
-                { view:"resizer" },
+                { view: "resizer" },
                 {
                     view: "form",
                     id: "service_form",
                     borderless: true,
                     scroll: true,
-                    gravity:1,
-                    minWidth:430,
+                    gravity: 1,
+                    minWidth: 430,
                     datafetch: Tower.config.datafetch,
                     loadahead: Tower.config.loadahead,
                     elements: [

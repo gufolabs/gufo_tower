@@ -12,4 +12,3 @@ node_modules/
 *.dist-info/
 __pycache__
 uv.lock
-package-lock.json

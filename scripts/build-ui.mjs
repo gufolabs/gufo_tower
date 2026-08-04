@@ -30,6 +30,7 @@ async function main() {
         bundle: true,
         minify: true,
         sourcemap: false,
+        //sourcemap: "linked",
         outdir: assetsDir,
         entryNames: "[name]-[hash]",
         assetNames: "[name]-[hash]",

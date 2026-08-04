@@ -1,4 +1,12 @@
-var role_list = {
+// ----------------------------------------------------------------------
+// Role UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { role_logic } from "./role_logic.js";
+
+export const role_list = {
     id: "role_list_panel",
     rows: [
         {
@@ -10,7 +18,7 @@ var role_list = {
                     placeholder: "Search...",
                     width: 150,
                     on: {
-                        "onChange": "role_logic.on_search"
+                        "onChange": role_logic.on_search
                     }
                 },
                 {
@@ -19,7 +27,7 @@ var role_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: "role_logic.on_add"
+                    click: role_logic.on_add
                 }
             ]
         },
@@ -55,7 +63,7 @@ var role_list = {
                 }
             ],
             on: {
-                onItemDblClick: "role_logic.on_edit"
+                onItemDblClick: role_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead
@@ -63,7 +71,7 @@ var role_list = {
     ]
 };
 
-var role_form = {
+export const role_form = {
     id: "role_form_panel",
     rows: [
         {
@@ -73,7 +81,7 @@ var role_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: "role_logic.show_list",
+                    click: role_logic.show_list,
                     width: 32
                 },
                 {
@@ -82,7 +90,7 @@ var role_form = {
                     icon: "save",
                     label: "Save",
                     autowidth: true,
-                    click: "role_logic.on_save"
+                    click: role_logic.on_save
                 },
                 {
                     view: "button",
@@ -90,7 +98,7 @@ var role_form = {
                     icon: "trash-o",
                     label: "Delete",
                     autowidth: true,
-                    click: "role_logic.on_delete"
+                    click: role_logic.on_delete
                 },
                 {}
             ]

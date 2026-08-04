@@ -1,4 +1,12 @@
-var datacenter_logic = {
+// ----------------------------------------------------------------------
+// Datacenter logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+import { API } from "./rpc.js";
+
+export const datacenter_logic = {
     init: function () {
     },
 
