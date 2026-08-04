@@ -4,6 +4,8 @@
 // Copyright (C) 2015-2026 Gufo Labs
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
+import { SDL } from "./generated/sdl.js";
+
 export const API = (function () {
     var r = {
         _base_url: "/api/",

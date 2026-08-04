@@ -21,7 +21,6 @@ export default [
                 webix: "readonly",
                 "$$": "readonly",
                 Tower: "readonly",
-                SDL: "readonly",
             },
         },
         rules: {

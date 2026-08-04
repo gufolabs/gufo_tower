@@ -16,18 +16,13 @@ import tornado.gen
 from tornado.web import HTTPError
 
 # Tower modules
-from .base import SDL, APIClasses, APIError, BaseHandler
+from .base import APIClasses, APIError, BaseHandler
 
 logger = logging.getLogger("rpc")
 
 
 class JSONRPCHandler(BaseHandler):
     MIME_TYPE = "text/json"
-
-    def get(self, *args, **kwargs):
-        """Returns SDL structure."""
-        self.set_header("Content-Type", "text/javascript")
-        self.write(f"var SDL = {json.dumps(SDL)}")
 
     @tornado.gen.coroutine
     def post(self, path, **kwargs):

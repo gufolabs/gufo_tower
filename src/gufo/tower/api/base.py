@@ -35,19 +35,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return None
 
 
-SDL = {}  # api -> [methods]
 APIClasses = {}  # api -> API class
-
-
-class APIBase(type):
-    def __new__(mcs, name, bases, attrs):
-        m = type.__new__(mcs, name, bases, attrs)
-        if m.name:
-            SDL[m.name] = [
-                n for n in dir(m) if getattr(getattr(m, n), "api", False)
-            ]
-            APIClasses[m.name] = m
-        return m
 
 
 def api(method):
@@ -64,7 +52,7 @@ def open_api(method):
     return method
 
 
-class API(metaclass=APIBase):
+class API:
     name = None
 
     def __init__(self, handler):
