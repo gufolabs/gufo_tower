@@ -20,7 +20,6 @@ export default [
                 XMLHttpRequest: "readonly",
                 webix: "readonly",
                 "$$": "readonly",
-                Tower: "readonly",
             },
         },
         rules: {

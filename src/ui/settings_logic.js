@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "./rpc.js";
+import { Tower } from "./lib.js";
 export const settings_logic = {
     init: function () {
         API.settings.get_settings().then(function (result) {

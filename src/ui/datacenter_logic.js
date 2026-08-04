@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "./rpc.js";
+import { Tower } from "./lib.js";
 
 export const datacenter_logic = {
     init: function () {

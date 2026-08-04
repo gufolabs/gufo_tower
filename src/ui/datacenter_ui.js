@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { datacenter_logic } from "./datacenter_logic.js";
+import { Tower } from "./lib.js";
 
 export const datacenter_list = {
     id: "datacenter_list_panel",

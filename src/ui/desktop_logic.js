@@ -12,6 +12,7 @@ import { app_logic } from "./app_logic.js";
 import { node_logic } from "./node_logic.js";
 import { service_logic } from "./service_logic.js";
 import { change_password_logic } from "./change_password_logic.js";
+import { Tower } from "./lib.js";
 
 export const desktop_logic = {
     init: function () {

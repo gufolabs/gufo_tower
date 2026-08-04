@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------
 import { API } from "./rpc.js";
 import { desktop_logic } from "./desktop_logic.js";
+import { Tower } from "./lib.js";
 
 export const login_logic = {
     init: function () {
