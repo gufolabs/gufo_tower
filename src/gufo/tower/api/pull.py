@@ -14,14 +14,7 @@ import shutil
 # Third-party modules
 from concurrent.futures import ThreadPoolExecutor
 
-from pip._internal.index.collector import Link
-from pip._internal.network.download import Downloader
-from pip._internal.network.session import PipSession
-from pip._internal.operations.prepare import unpack_url
-from pip._internal.vcs.versioncontrol import VersionControl
-
 # Gufo Tower modules
-from ..contrib.utils import check_destination, unpack
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.pulllog import PullLog
@@ -30,9 +23,6 @@ from .base import API, api
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
-
-VersionControl.check_destination = check_destination
-VersionControl.unpack = unpack
 
 
 class PullAPI(API):
@@ -115,6 +105,19 @@ class PullAPI(API):
 
     @staticmethod
     def pull(link, path):
+        from pip._internal.index.collector import Link
+        from pip._internal.network.download import Downloader
+        from pip._internal.network.session import PipSession
+        from pip._internal.operations.prepare import unpack_url
+        from pip._internal.vcs.versioncontrol import VersionControl
+
+        from ..contrib.utils import check_destination, unpack
+
+        if VersionControl.check_destination is not check_destination:
+            VersionControl.check_destination = check_destination
+        if VersionControl.unpack is not unpack:
+            VersionControl.unpack = unpack
+
         logger.debug("Pull link: %s, path: %s", link, path)
         try:
             unpack_url(Link(link), path, Downloader(PipSession(), ""), 0)
