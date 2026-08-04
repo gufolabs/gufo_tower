@@ -10,9 +10,14 @@ import datetime
 import logging
 import os
 import shutil
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Optional, Union
 
 # Third-party modules
-from concurrent.futures import ThreadPoolExecutor
+from dulwich import porcelain
+from dulwich.repo import Repo
 
 # Gufo Tower modules
 from ..models.db import db
@@ -57,7 +62,7 @@ class PullAPI(API):
                 repo=env.playbook_link,
             )
             job.save()
-            self.executor.submit(self.pull_job_via_pip, job)
+            self.executor.submit(self.pull_job, job)
             return {"success": True, "job": job.id}
 
     @api
@@ -81,7 +86,7 @@ class PullAPI(API):
             r["status"] = job.status
         return r
 
-    def pull_job_via_pip(self, job):
+    def pull_job(self, job):
         env = job.environment
         status = True
         log = []
@@ -104,24 +109,69 @@ class PullAPI(API):
             job.save()
 
     @staticmethod
-    def pull(link, path):
-        from pip._internal.index.collector import Link
-        from pip._internal.network.download import Downloader
-        from pip._internal.network.session import PipSession
-        from pip._internal.operations.prepare import unpack_url
-        from pip._internal.vcs.versioncontrol import VersionControl
+    def pull(link: str, path: Union[str, Path]) -> None:
+        """Clone or update a git repository.
 
-        from ..contrib.utils import check_destination, unpack
+        Args:
+            link: Repository URL.
+            path: Local repository path.
 
-        if VersionControl.check_destination is not check_destination:
-            VersionControl.check_destination = check_destination
-        if VersionControl.unpack is not unpack:
-            VersionControl.unpack = unpack
+        Raises:
+            RuntimeError: on invalid repo or missed tag.
+        """
+        spec = RepoSpec.from_url(link)
+        path = Path(path)
 
-        logger.debug("Pull link: %s, path: %s", link, path)
+        logger.debug(
+            "Pull repo: %s, revision: %s, path: %s",
+            spec.url,
+            spec.revision,
+            path,
+        )
+
         try:
-            unpack_url(Link(link), path, Downloader(PipSession(), ""), 0)
-        except KeyboardInterrupt:
-            raise
-        except Exception as e:
-            logger.error("Pull error: %s", e)
+            if (path / ".git").is_dir():
+                repo = Repo(path)
+                porcelain.fetch(repo)
+            else:
+                shutil.rmtree(path, ignore_errors=True)
+                porcelain.clone(
+                    source=spec.url,
+                    target=path,
+                )
+                repo = Repo(path)
+        except BaseException as e:
+            msg = f"failed to fetch repo: {e}"
+            raise RuntimeError(msg) from e
+        if spec.revision is not None:
+            try:
+                porcelain.checkout(repo, spec.revision)
+            except KeyError as e:
+                msg = f"Invalid tag: {spec.revision}"
+                raise RuntimeError(msg) from e
+
+
+@dataclass
+class RepoSpec:
+    """Git repository specification."""
+
+    url: str
+    revision: Optional[str] = None
+
+    @classmethod
+    def from_url(cls, url: str) -> "RepoSpec":
+        """Parse repository URL.
+
+        Args:
+            url: Repository URL, optionally suffixed with "@revision".
+
+        Returns:
+            Parsed repository specification.
+        """
+        head, sep, tail = url.rpartition("@")
+        if not sep:
+            return cls(url=url)
+        # '@' belongs to SSH user part.
+        if "/" in tail or ":" in tail:
+            return cls(url=url)
+        return cls(url=head, revision=tail)
