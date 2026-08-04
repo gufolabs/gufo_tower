@@ -44,7 +44,7 @@ class Compression(Enum):
 
     Attributes:
         NONE: Store snapshot without compression.
-        GZIP: Compress snapshot using GZIP alorithm.
+        GZIP: Compress snapshot using GZIP algorithm.
         XZ: Compress snapshot using the XZ algorithm.
     """
 
@@ -111,7 +111,7 @@ class ProtectionToken:
         return cls(_id=uuid.uuid4())
 
 
-class SnapshotError(BaseException):
+class SnapshotError(Exception):
     """Base class for snapshot errors."""
 
 
