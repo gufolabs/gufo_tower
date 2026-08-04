@@ -7,6 +7,7 @@
 import { API } from "./rpc.js";
 import { app_logic } from "./app_logic.js";
 import { settings_logic } from "./settings_logic.js";
+import { Tower } from "./lib.js";
 
 export const service_logic = {
     init: function () {

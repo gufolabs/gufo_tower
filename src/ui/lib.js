@@ -5,7 +5,14 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 
-Tower = {
+export const Tower = {
+    config: {
+        // Dynamic data loading
+        // Batch size
+        datafetch: 50,
+        // Prefetch buffer size
+        loadahead: 100
+    },
     //
     // Validation rules
     //

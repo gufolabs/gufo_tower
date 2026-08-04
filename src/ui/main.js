@@ -9,7 +9,6 @@ import "./style.css";
 import "./skin.js";
 import "./rpc.js";
 import "./lib.js";
-import "./config.js";
 import "./login_ui.js";
 import "./login_logic.js";
 import "./change_password_ui.js";

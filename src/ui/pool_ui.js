@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { pool_logic } from "./pool_logic.js";
+import { Tower } from "./lib.js";
 export const pool_list = {
     id: "pool_list_panel",
     rows: [

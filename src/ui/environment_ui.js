@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { environment_logic } from "./environment_logic.js";
+import { Tower } from "./lib.js";
 
 export const environment_list = {
     id: "environment_list_panel",

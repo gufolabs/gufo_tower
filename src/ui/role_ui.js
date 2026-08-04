@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { role_logic } from "./role_logic.js";
+import { Tower } from "./lib.js";
 
 export const role_list = {
     id: "role_list_panel",

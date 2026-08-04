@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------
 import { API } from "./rpc.js";
 import { app_logic } from "./app_logic.js";
+import { Tower } from "./lib.js";
 
 export const environment_logic = {
     PULL_CHECK_INTERVAL: 1000,
