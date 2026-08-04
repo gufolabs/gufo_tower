@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Role UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { role_logic } from "./role_logic.js";
 
 export const role_list = {
@@ -57,7 +63,7 @@ export const role_list = {
                 }
             ],
             on: {
-                onItemDblclick: role_logic.on_edit
+                onItemDblClick: role_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead

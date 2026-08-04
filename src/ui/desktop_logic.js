@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Desktop logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { environment_logic } from "./environment_logic.js";
 import { datacenter_logic } from "./datacenter_logic.js";
 import { role_logic } from "./role_logic.js";

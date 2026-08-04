@@ -1,4 +1,9 @@
-//[Skin Customization]
+// ----------------------------------------------------------------------
+// Skin customizations
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 webix.skin.flat.barHeight = 45;
 webix.skin.flat.tabbarHeight = 45;
 webix.skin.flat.rowHeight = 34;

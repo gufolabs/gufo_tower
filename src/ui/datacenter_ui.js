@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Datacenter UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { datacenter_logic } from "./datacenter_logic.js";
 
 export const datacenter_list = {
@@ -43,7 +49,7 @@ export const datacenter_list = {
                 }
             ],
             on: {
-                onItemDblclick: datacenter_logic.on_edit
+                onItemDblClick: datacenter_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead

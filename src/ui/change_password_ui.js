@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Change password UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { desktop_logic } from "./desktop_logic.js";
 // Login form
 export const change_password_form = {

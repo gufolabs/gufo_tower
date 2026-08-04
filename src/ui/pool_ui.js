@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Pool UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { pool_logic } from "./pool_logic.js";
 export const pool_list = {
     id: "pool_list_panel",
@@ -40,7 +46,7 @@ export const pool_list = {
                 }
             ],
             on: {
-                onItemDblclick: pool_logic.on_edit
+                onItemDblClick: pool_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead

@@ -1,3 +1,10 @@
+// ----------------------------------------------------------------------
+// Node UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+
 import { node_logic } from "./node_logic.js";
 
 export const node_list = {
@@ -64,7 +71,7 @@ export const node_list = {
                 }
             ],
             on: {
-                onItemDblclick: node_logic.on_edit
+                onItemDblClick: node_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead

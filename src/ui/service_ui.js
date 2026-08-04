@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Service ui
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { threeStateCompare } from "./lib.js";
 import { service_logic } from "./service_logic.js";
 export const service_panel = {

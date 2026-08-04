@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Application ui
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { login_form } from "./login_ui.js";
 import { change_password_form } from "./change_password_ui.js";
 import { desktop } from "./desktop_ui.js";

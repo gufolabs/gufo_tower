@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Environment UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { environment_logic } from "./environment_logic.js";
 
 export const environment_list = {
@@ -109,7 +115,7 @@ export const environment_list = {
             ],
             on: {
                 onSelectChange: environment_logic.on_select,
-                onItemDblclick: environment_logic.on_edit
+                onItemDblClick: environment_logic.on_edit
             },
             datafetch: Tower.config.datafetch,
             loadahead: Tower.config.loadahead

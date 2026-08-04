@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Service Logic
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { API } from "./rpc.js";
 import { app_logic } from "./app_logic.js";
 import { settings_logic } from "./settings_logic.js";

@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------
+// Settings UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
 import { settings_logic } from "./settings_logic.js";
 export const settings_form = {
     id: "settings_form_panel",
