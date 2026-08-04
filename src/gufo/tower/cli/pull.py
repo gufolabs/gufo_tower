@@ -45,7 +45,7 @@ def main():
         )
         job.save()
     api = PullAPI(None)
-    api.pull_job_via_pip(job)
+    api.pull_job(job)
 
 
 def die(msg):
