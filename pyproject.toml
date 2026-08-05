@@ -162,6 +162,7 @@ dependencies = [
   "tornado==5.1.1",
   "ansible==2.9.26",
   "dulwich==0.24.10", # Last supporting python 3.9
+  "gufo-err==0.6.0",
 ]
 description = "A web-based control plane for managing NOC cluster topology, node assignments, and service configuration."
 dynamic = ["version"]

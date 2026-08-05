@@ -19,6 +19,12 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+# Third-party modules
+from gufo.err import err
+
+# Gufo Tower modules
+from . import __version__
+
 ENV_TOWER_HOME = "TOWER_HOME"
 
 
@@ -64,6 +70,12 @@ class Config:
         """Prepare directories and db."""
         from .models.db import connect
 
+        err.setup(
+            name="gufo-tower",
+            version=__version__,
+            catch_all=True,
+            format="extend",
+        )
         self.ensure()
         connect()
 
