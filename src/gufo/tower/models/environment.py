@@ -18,6 +18,8 @@ import shutil
 import subprocess
 import tempfile
 from collections import defaultdict
+from pathlib import Path
+from typing import Any
 from urllib.parse import urlparse
 
 # Third-party modules
@@ -25,6 +27,7 @@ from peewee import BooleanField, CharField, TextField
 from playhouse.signals import Model
 
 # Tower modules
+from ..config import config
 from .db import db
 
 logging.getLogger(__name__)
@@ -360,18 +363,17 @@ class Environment(Model):
         return r
 
     @property
-    def playbook_path(self):
-        return os.path.abspath(
-            os.path.join("var", "tower", "playbooks", self.name)
-        )
+    def cache_path(self) -> Path:
+        """Environment's cache directory path."""
+        return config.cache_dir / self.name
 
     @property
-    def roles_prefix(self):
-        return os.path.abspath(
-            os.path.join(
-                "var", "tower", "playbooks", self.name, "additional_roles"
-            )
-        )
+    def playbook_path(self) -> Path:
+        return self.cache_path / "playbooks"
+
+    @property
+    def roles_dir(self) -> Path:
+        return self.cache_path / "additional_roles"
 
     @property
     def services_path(self):
@@ -410,11 +412,7 @@ class Environment(Model):
         for role in Role.select().where(
             Role.environment == self, Role.is_enabled == True
         ):
-            r.append(
-                os.path.join(
-                    self.roles_prefix, role.role_name, "meta", "tower.yml"
-                )
-            )
+            r.append(self.roles_dir / role.role_name / "meta" / "tower.yml")
         return r
 
     @property
@@ -424,18 +422,16 @@ class Environment(Model):
         ).decode("utf-8")[:6]
 
     @property
-    def repo_path(self):
-        return os.path.join("var", "tower", "repo", self.repo_hash)
+    def repo_path(self) -> Path:
+        return config.home / "repo" / self.repo_hash
 
     @property
-    def data_path(self):
-        return os.path.abspath(os.path.join("var", "tower", "data", self.name))
+    def data_path(self) -> Path:
+        return self.cache_path / "data"
 
     @property
-    def src_path(self):
-        return os.path.abspath(
-            os.path.join("var", "tower", "data", "src_dist")
-        )
+    def src_path(self) -> Path:
+        return self.data_path / "src_dist"
 
     @property
     def deploy_keys(self):
@@ -450,10 +446,10 @@ class Environment(Model):
         return None
 
     @property
-    def ssh_keys_path(self):
-        return os.path.abspath(os.path.join("var", "tower", "ssh", self.name))
+    def ssh_keys_path(self) -> Path:
+        return self.cache_path / "ssh"
 
-    def get_services_description(self):
+    def get_services_description(self) -> dict[str, Any]:
         import yaml
 
         r = {}
@@ -576,24 +572,10 @@ class Environment(Model):
             pool.delete_instance()
         for role in Role.select().where(Role.environment == self):
             role.delete_instance()
-        try:
-            shutil.rmtree(self.roles_prefix)
-            shutil.rmtree(self.playbook_path)
-            shutil.rmtree(self.data_path)
-        except OSError:
-            pass
+        with contextlib.suppress(OSError):
+            shutil.rmtree(self.cache_path)
         super().delete_instance(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        for path in (self.playbook_path, self.data_path):
-            try:
-                os.mkdir(path)
-            except FileExistsError:
-                if os.path.isdir(path):
-                    pass
-                else:
-                    raise
-            except OSError:
-                raise
-
+        self.cache_path.mkdir(parents=True, exist_ok=True)
         super().save(*args, **kwargs)

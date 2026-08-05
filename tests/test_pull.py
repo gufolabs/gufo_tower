@@ -116,6 +116,16 @@ def test_pull_revision(
             "v1",
         ),
         (
+            "git+https://github.com/gufolabs/git-test.git",
+            "https://github.com/gufolabs/git-test.git",
+            None,
+        ),
+        (
+            "git+https://github.com/gufolabs/git-test.git@stable",
+            "https://github.com/gufolabs/git-test.git",
+            "stable",
+        ),
+        (
             "ssh://git@github.com/gufolabs/git-test.git",
             "ssh://git@github.com/gufolabs/git-test.git",
             None,
@@ -124,6 +134,16 @@ def test_pull_revision(
             "ssh://git@github.com/gufolabs/git-test.git@v2",
             "ssh://git@github.com/gufolabs/git-test.git",
             "v2",
+        ),
+        (
+            "git+ssh://git@github.com/gufolabs/git-test.git",
+            "ssh://git@github.com/gufolabs/git-test.git",
+            None,
+        ),
+        (
+            "git+ssh://git@github.com/gufolabs/git-test.git@main",
+            "ssh://git@github.com/gufolabs/git-test.git",
+            "main",
         ),
         (
             "git@github.com:gufolabs/git-test.git",
@@ -139,8 +159,12 @@ def test_pull_revision(
     ids=[
         "https",
         "https-tag",
+        "git+https",
+        "git+https-tag",
         "ssh",
         "ssh-tag",
+        "git+ssh",
+        "git+ssh-tag",
         "scp",
         "scp-tag",
     ],
@@ -150,8 +174,7 @@ def test_repo_spec_from_url(
     expected_url: str,
     expected_revision: Optional[str],
 ) -> None:
-    """Test parsing repository URLs."""
+    """Test parsing repository specifications."""
     spec = RepoSpec.from_url(url)
-
     assert spec.url == expected_url
     assert spec.revision == expected_revision

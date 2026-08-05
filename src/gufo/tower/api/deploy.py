@@ -12,6 +12,7 @@ import logging
 import os
 import re
 import subprocess
+from pathlib import Path
 
 # Third-party modules
 import tornado.ioloop
@@ -120,9 +121,9 @@ class DeployHandler(BaseHandler):
                 "ANSIBLE_STDOUT_CALLBACK": "debug",
                 "ANSIBLE_ROLES_PATH": ":".join(
                     [
-                        self.env.roles_prefix,
-                        os.path.join(self.env.playbook_path, "system_roles"),
-                        os.path.join(self.env.playbook_path, "noc_roles"),
+                        str(self.env.roles_dir),
+                        str(self.env.playbook_path / "system_roles"),
+                        str(self.env.playbook_path / "noc_roles"),
                     ]
                 ),
                 "PYTHONUNBUFFERED": "1",
@@ -173,27 +174,18 @@ class DeployHandler(BaseHandler):
             for line in pb_order:
                 f.write(f"- import_playbook: {line}\n")
 
-    def resolv_pb(self, service):
-        if os.path.exists(
-            os.path.join(self.env.roles_prefix, service, "service.yml")
-        ):
-            return os.path.join(self.env.roles_prefix, service, "service.yml")
-        if os.path.exists(
-            os.path.join(
-                self.env.playbook_path, "system_roles", service, "service.yml"
-            )
-        ):
-            return os.path.join(
-                self.env.playbook_path, "system_roles", service, "service.yml"
-            )
-        if os.path.exists(
-            os.path.join(
-                self.env.playbook_path, "noc_roles", service, "service.yml"
-            )
-        ):
-            return os.path.join(
-                self.env.playbook_path, "noc_roles", service, "service.yml"
-            )
+    def resolv_pb(self, service) -> Path:
+        path = self.env.roles_dir / service / "service.yml"
+        if path.exists():
+            return path
+        path = (
+            self.env.playbook_path / "system_roles" / service / "service.yml"
+        )
+        if path.exists():
+            return path
+        path = self.env.playbook_path / "noc_roles" / service / "service.yml"
+        if path.exists():
+            return path
         return None
 
     def get_version(self):

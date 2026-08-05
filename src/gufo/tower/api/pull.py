@@ -8,7 +8,6 @@
 # Python modules
 import datetime
 import logging
-import os
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
@@ -18,6 +17,7 @@ from typing import Optional, Union
 # Third-party modules
 from dulwich import porcelain
 from dulwich.repo import Repo
+from gufo.err import err
 
 # Gufo Tower modules
 from ..models.db import db
@@ -45,8 +45,7 @@ class PullAPI(API):
             env = Environment.get(Environment.id == int(env_id))
         except Environment.DoesNotExist:
             return False
-        playbook = os.path.join(env.playbook_path, "site.yml")
-        return os.path.exists(playbook)
+        return (env.playbook_path / "site.yml").is_file()
 
     @api
     def start_job(self, env_id):
@@ -86,26 +85,35 @@ class PullAPI(API):
             r["status"] = job.status
         return r
 
-    def pull_job(self, job):
+    def pull_job(self, job: PullLog) -> None:
         env = job.environment
         status = True
-        log = []
-        self.pull(env.playbook_link, env.repo_path)
-        repo_playbooks_path = os.path.join(env.repo_path, "ansible")
-        if not os.path.isdir(repo_playbooks_path):
-            # Playbooks on repo root
-            repo_playbooks_path = env.repo_path
-        shutil.rmtree(env.playbook_path, ignore_errors=True)
-        shutil.move(repo_playbooks_path, env.playbook_path)
-        for role in Role.select().where(
-            Role.environment == env, Role.is_enabled == True
-        ):
-            self.pull(role.link, role.role_path)
-
+        log = "success"
+        try:
+            self.pull(env.playbook_link, env.repo_path)
+            # Detect playbooks root
+            repo_playbooks_path = env.repo_path / "ansible"
+            if not repo_playbooks_path.is_dir():
+                # Playbooks on repo root
+                repo_playbooks_path = env.repo_path
+            # Clear old playbooks
+            shutil.rmtree(env.playbook_path, ignore_errors=True)
+            # Extract new from repo to playbooks
+            shutil.move(repo_playbooks_path, env.playbook_path)
+            # Pull all enabled roles
+            for role in Role.select().where(
+                Role.environment == env, Role.is_enabled == True
+            ):
+                self.pull(role.link, role.role_path)
+        except BaseException as e:
+            logger.error("Failed to pull: %s", e)
+            err.process()
+            status = False
+            log = f"Failed: {e}"
         with db.atomic():
             job.complete_ts = datetime.datetime.now()
             job.status = status
-            job.log = "\n".join(log)
+            job.log = log
             job.save()
 
     @staticmethod
@@ -130,6 +138,9 @@ class PullAPI(API):
         )
 
         try:
+            # Ensure repo is exists
+            path.mkdir(parents=True, exist_ok=True)
+            # Pull
             if (path / ".git").is_dir():
                 repo = Repo(path)
                 porcelain.fetch(repo)
@@ -141,6 +152,7 @@ class PullAPI(API):
                 )
                 repo = Repo(path)
         except BaseException as e:
+            err.process()
             msg = f"failed to fetch repo: {e}"
             raise RuntimeError(msg) from e
         if spec.revision is not None:
@@ -153,25 +165,48 @@ class PullAPI(API):
 
 @dataclass
 class RepoSpec:
-    """Git repository specification."""
+    """Normalized Git repository specification.
+
+    The parser accepts repository specifications in either native Git form
+    or the `pip`-style notation:
+
+    * `https://github.com/org/repo.git`
+    * `https://github.com/org/repo.git@stable`
+    * `git+https://github.com/org/repo.git@stable`
+    * `git+ssh://git@github.com/org/repo.git@main`
+    * `git@github.com:org/repo.git`
+    * `git@github.com:org/repo.git@v1.2.3`
+
+    The optional `git+` prefix is stripped from the URL. If a revision is
+    present, it is returned separately.
+    """
 
     url: str
     revision: Optional[str] = None
 
     @classmethod
     def from_url(cls, url: str) -> "RepoSpec":
-        """Parse repository URL.
+        """Parse a repository specification.
 
         Args:
-            url: Repository URL, optionally suffixed with "@revision".
+            url: Repository specification. May optionally start with
+                `git+` and/or end with `@<revision>`.
 
         Returns:
-            Parsed repository specification.
+            Parsed repository specification with a normalized repository URL
+            and an optional revision.
         """
+        if url.startswith("git+"):
+            url = url[4:]
         head, sep, tail = url.rpartition("@")
         if not sep:
             return cls(url=url)
-        # '@' belongs to SSH user part.
+        # '@' belongs to the revision only when it is the last separator.
+        # Examples:
+        #
+        #   https://host/repo.git@main      -> revision
+        #   git@github.com:org/repo.git     -> SSH user
+        #
         if "/" in tail or ":" in tail:
             return cls(url=url)
         return cls(url=head, revision=tail)
