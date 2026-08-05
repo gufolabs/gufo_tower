@@ -12,6 +12,7 @@ import { node_list, node_form } from "./node_ui.js";
 import { service_panel } from "./service_ui.js";
 import { settings_form } from "./settings_ui.js";
 import { desktop_logic } from "./desktop_logic.js";
+import { version } from "./generated/version.js";
 
 export const desktop = {
     id: "desktop",
@@ -70,7 +71,7 @@ export const desktop = {
                                 {
                                     id: "version",
                                     icon: "info",
-                                    value: "Version: 1.1.1"
+                                    value: `Version: ${version}`
                                 }
                             ]
                         }
