@@ -128,8 +128,8 @@ export const desktop = {
                         }
                     ],
                     on: {
-                        onSelectChange: desktop_logic.on_select_app,
-                        onBeforeSelect: desktop_logic.on_before_select_app
+                        onSelectChange: desktop_logic.on_select_app.bind(desktop_logic),
+                        onBeforeSelect: desktop_logic.on_before_select_app.bind(desktop_logic)
                     }
                 },
                 {
