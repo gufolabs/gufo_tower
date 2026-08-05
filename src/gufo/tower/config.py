@@ -15,6 +15,7 @@ The configuration is resolved in the following order:
 
 # Python modules
 import os
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -23,8 +24,14 @@ ENV_TOWER_HOME = "TOWER_HOME"
 
 def _default_home() -> Path:
     """Get default Config.home value."""
-    if ENV_TOWER_HOME in os.environ:
-        return Path(os.environ[ENV_TOWER_HOME])
+    # Check TOWER_HOME
+    if os.environ.get("TOWER_HOME", None):
+        return Path(os.environ["TOWER_HOME"])
+    # Check venv
+    prefix = Path(sys.prefix)
+    if (prefix / "pyvenv.cfg").is_file():
+        return prefix / "data"
+    # ~/.tower/
     return Path.home() / ".tower"
 
 
@@ -42,6 +49,11 @@ class Config:
     def db_dir(self) -> Path:
         """Database directory."""
         return self.home / "db"
+
+    @property
+    def cache_dir(self) -> Path:
+        """Cache directory."""
+        return self.home / "cache"
 
     @property
     def db_path(self) -> Path:
