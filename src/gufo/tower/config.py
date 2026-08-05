@@ -29,7 +29,7 @@ def _default_home() -> Path:
         return Path(os.environ["TOWER_HOME"])
     # Check venv
     prefix = Path(sys.prefix)
-    if (prefix / "pyenv.cfg").is_file():
+    if (prefix / "pyvenv.cfg").is_file():
         return prefix / "data"
     # ~/.tower/
     return Path.home() / ".tower"
@@ -49,6 +49,11 @@ class Config:
     def db_dir(self) -> Path:
         """Database directory."""
         return self.home / "db"
+
+    @property
+    def cache_dir(self) -> Path:
+        """Cache directory."""
+        return self.home / "cache"
 
     @property
     def db_path(self) -> Path:
