@@ -16,12 +16,16 @@ import { Tower } from "./lib.js";
 
 export const desktop_logic = {
     init: function () {
-        environment_logic.init();
-        datacenter_logic.init();
-        role_logic.init();
-        pool_logic.init();
-        node_logic.init();
-        service_logic.init();
+        Object.values(this.apps).forEach(app => app.init());
+    },
+
+    apps: {
+        environment: environment_logic,
+        datacenter: datacenter_logic,
+        role: role_logic,
+        pool: pool_logic,
+        node: node_logic,
+        service: service_logic,
     },
 
     show: function () {
@@ -30,11 +34,7 @@ export const desktop_logic = {
     },
 
     on_before_select_app: function (app) {
-        var logic = window[app + "_logic"],
-            can_run = true;
-        if (logic && logic.can_run) {
-            can_run = logic.can_run();
-        }
+        var can_run = this.apps[app]?.can_run?.() ?? true;
         if (!can_run) {
             Tower.msg.failed("Select environment");
         }
@@ -42,10 +42,7 @@ export const desktop_logic = {
     },
 
     on_select_app: function (selection) {
-        var logic = window[selection[0] + "_logic"];
-        if (logic) {
-            logic.show();
-        }
+        this.apps[selection[0]]?.show();
     },
 
     select_environment: function (env) {
