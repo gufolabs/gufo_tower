@@ -54,7 +54,7 @@ def get_default_env():
 
 
 def write_pb(env):
-    from tower.models.service import Service
+    from gufo.tower.models.service import Service
 
     order = Service.get_execution_order(env)
     pb_order = []
