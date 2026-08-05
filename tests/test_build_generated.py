@@ -8,6 +8,7 @@
 # Python modules
 import importlib.util
 import shutil
+import tempfile
 from pathlib import Path
 
 # Thirs-party modules
@@ -28,20 +29,21 @@ def load_main():
 
 
 @pytest.fixture(scope="module")
-def clean_generated(tmp_path):
-    backup = tmp_path / "generated"
-    if GENERATED.exists():
-        shutil.copytree(GENERATED, backup)
+def clean_generated():
+    with tempfile.TemporaryDirectory() as tmp:
+        backup = Path(tmp) / "generated"
+        if GENERATED.exists():
+            shutil.copytree(GENERATED, backup)
+            shutil.rmtree(GENERATED)
+        GENERATED.mkdir(parents=True, exist_ok=True)
+        yield
         shutil.rmtree(GENERATED)
-    GENERATED.mkdir(parents=True, exist_ok=True)
-    yield
-    shutil.rmtree(GENERATED)
-    if backup.exists():
-        shutil.copytree(backup, GENERATED)
+        if backup.exists():
+            shutil.copytree(backup, GENERATED)
 
 
 @pytest.fixture(scope="module")
-def run_script():
+def run_script(clean_generated):
     main = load_main()
     main()
 
