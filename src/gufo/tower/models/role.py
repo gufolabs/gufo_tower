@@ -87,7 +87,7 @@ class Role(Model):
             shutil.rmtree(self.role_path)
 
     def save(self, *args, **kwargs):
-        from tower.api.pull import PullAPI
+        from gufo.tower.api.pull import PullAPI
 
         for attr in self.dirty_fields:
             if attr.name == "link":
@@ -101,7 +101,7 @@ class Role(Model):
         return super().save(*args, **kwargs)
 
     def delete_instance(self, *args, **kwargs):
-        from tower.models.service import Service
+        from gufo.tower.models.service import Service
 
         for srv in Service.select().where(
             Service.environment == self.environment,

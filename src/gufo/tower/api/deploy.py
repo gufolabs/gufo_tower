@@ -157,7 +157,7 @@ class DeployHandler(BaseHandler):
         )
 
     def write_pb(self):
-        from tower.models.service import Service
+        from gufo.tower.models.service import Service
 
         order = Service.get_execution_order(self.env)
         pb_order = []
