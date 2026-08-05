@@ -40,6 +40,7 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 ## Dependencies
 
 * bcrypt 5.0.0
+* Gufo Err 0.6.0
 
 ## 1.1.1 (2023-04-11)
 * Fix settings save 2
