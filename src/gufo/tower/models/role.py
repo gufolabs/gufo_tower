@@ -6,7 +6,6 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
-import os
 import shutil
 from pathlib import Path
 
@@ -84,8 +83,8 @@ class Role(Model):
         return {"id": str(self.id), "value": self.name}
 
     def remove_role_dir(self):
-        if os.path.exists(self.role_path):
-            shutil.rmtree(self.role_path)
+        """Remove the role directory and all its contents if it exists."""
+        shutil.rmtree(self.role_path, ignore_errors=True)
 
     def save(self, *args, **kwargs):
         from gufo.tower.api.pull import PullAPI
