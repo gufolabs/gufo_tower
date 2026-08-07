@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { desktop_logic } from "./desktop_logic.js";
+import { change_password_logic } from "./change_password_logic.js";
 // Login form
 export const change_password_form = {
     id: "change_password_panel",
@@ -62,13 +63,13 @@ export const change_password_form = {
                                             view: "button",
                                             value: "Change",
                                             width: 100,
-                                            click: "change_password_logic.on_change_password"
+                                            click: change_password_logic.on_change_password
                                         },
                                         {
                                             view: "button",
                                             value: "Reset",
                                             width: 100,
-                                            click: "change_password_logic.clear_form"
+                                            click: change_password_logic.clear_form
                                         },
                                         {
                                             view: "button",
