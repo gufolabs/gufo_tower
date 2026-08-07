@@ -1,13 +1,13 @@
 # ----------------------------------------------------------------------
 # Role model
 # ----------------------------------------------------------------------
-# Copyright (C) 2015-2018 Gufo Labs
+# Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
 # Third-party modules
-import os
 import shutil
+from pathlib import Path
 
 from peewee import BooleanField, CharField, ForeignKeyField, TextField
 from playhouse.signals import Model, post_save
@@ -83,8 +83,8 @@ class Role(Model):
         return {"id": str(self.id), "value": self.name}
 
     def remove_role_dir(self):
-        if os.path.exists(self.role_path):
-            shutil.rmtree(self.role_path)
+        """Remove the role directory and all its contents if it exists."""
+        shutil.rmtree(self.role_path, ignore_errors=True)
 
     def save(self, *args, **kwargs):
         from gufo.tower.api.pull import PullAPI
@@ -113,10 +113,8 @@ class Role(Model):
         return super().delete_instance(*args, **kwargs)
 
     @property
-    def role_path(self):
-        return os.path.abspath(
-            os.path.join(self.environment.roles_prefix, self.role_name)
-        )
+    def role_path(self) -> Path:
+        return self.environment.roles_dir / self.role_name
 
 
 @post_save(sender=Environment)

@@ -72,8 +72,8 @@ def write_pb(env):
 
 
 def resolv_pb(env, service):
-    if os.path.exists(os.path.join(env.roles_prefix, service, "service.yml")):
-        return os.path.join(env.roles_prefix, service, "service.yml")
+    if os.path.exists(os.path.join(env.roles_dir, service, "service.yml")):
+        return os.path.join(env.roles_dir, service, "service.yml")
     if os.path.exists(
         os.path.join(env.playbook_path, "system_roles", service, "service.yml")
     ):
