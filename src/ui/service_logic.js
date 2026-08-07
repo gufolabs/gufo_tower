@@ -92,8 +92,8 @@ export const service_logic = {
         } else {
             if (Object.hasOwn(obj, "node") &&
                 Object.hasOwn(obj, "service") &&
-                (obj.node == obj.service) &&
-                (name == $$("service_list").Nk)) { // @todo: this code smells
+                (obj.node === obj.service) &&
+                (name === $$("service_list").Nk)) { // @todo: this code smells
                 return obj[name];
             }
             return "";
