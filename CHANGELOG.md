@@ -22,6 +22,7 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 * Devcontainer
 * GitHub CI Workflows
 * UI building and bundling
+* Migration of playbook urls from `nocproject/noc` to `gufolabs/noc`
 
 ### Changed
 
@@ -32,6 +33,7 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 * All code formatted with `ruff format`
 * Dependencies moved from `requirements.txt` to `pyproject.toml`
 * `Readme.md` renamed to `README.md`
+* Default playbook repo url now points to `https://github.com/gufolabs/noc`
 
 ## Removed
 
