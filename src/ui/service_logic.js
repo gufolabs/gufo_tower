@@ -232,10 +232,11 @@ export const service_logic = {
                 }
             });
             grid.sort(function (a, b) {
-                if (a.node === b.node)
+                if (a.node === b.node) {
                     return (a.service > b.service) ? 1 : -1;
-                else
+                } else {
                     return (a.node > b.node) ? 1 : -1;
+                }
             });
         } else if (mode === "service") {
             grid.moveColumn("service", 0);
@@ -251,23 +252,27 @@ export const service_logic = {
                 }
             });
             grid.sort(function (a, b) {
-                if (a.service === b.service)
+                if (a.service === b.service) {
                     return (a.node > b.node) ? 1 : -1;
-                else
+                } else {
                     return (a.service > b.service) ? 1 : -1;
+                }
             });
         }
         var i = 0;
         grid.eachRow(function (id) {
             i++;
-            if (i === 1) this.open(id);
+            if (i === 1) {
+                this.open(id);
+            }
         });
         grid.filterByAll();
     },
     on_expand_tree: function (mode) {
-        if (mode)
+        if (mode) {
             $$("service_list").openAll();
-        else
+        } else {
             $$("service_list").closeAll();
+        }
     }
 };

@@ -37,6 +37,7 @@ export default [
                 },
             ],
             "eqeqeq": ["error", "always"],
+            "curly": ["error", "all"],
         },
     },
 ];

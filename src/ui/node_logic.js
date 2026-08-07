@@ -40,12 +40,14 @@ export const node_logic = {
         var nt = $$("node_form").elements.node_type;
 
         API.datacenter.get_items().then(result => {
-            if (dc.data.options.count() === 0)
+            if (dc.data.options.count() === 0) {
                 result.data.forEach(el => dc.data.options.add({ id: el.id, value: el.name }))
+            }
         }).then(
             API.nodetype.get_items().then(result => {
-                if (nt.data.options.count() === 0)
+                if (nt.data.options.count() === 0) {
                     result.data.forEach(el => nt.data.options.add({ id: el.id, value: el.name }))
+                }
             })
         ).then(function () {
             node_logic.show_form();
