@@ -1,3 +1,10 @@
+# ----------------------------------------------------------------------
+# 029_migrate_to_github
+# ----------------------------------------------------------------------
+# Copyright (C) 2015-2026 Gufo Labs
+# See LICENSE for details
+# ----------------------------------------------------------------------
+
 # Third-party modules
 import contextlib
 import os
@@ -5,8 +12,11 @@ import shutil
 
 from peewee import BooleanField, CharField, Model, TextField
 
+# Gufo Tower modules
+from gufo.tower.models.migration import Migrator
 
-def migrate(migrator):
+
+def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db
