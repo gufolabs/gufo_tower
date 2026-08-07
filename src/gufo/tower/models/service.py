@@ -5,9 +5,6 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-# Python modules
-import os
-
 # Third-party modules
 import yaml
 from peewee import BooleanField, CharField, ForeignKeyField, TextField
@@ -42,7 +39,7 @@ class Service(Model):
         def get_available_services():
             svc = {}
             for path in env.services_path:
-                if not os.path.exists(path):
+                if not path.exists():
                     continue
                 with open(path) as f:
                     descr = yaml.full_load(f)

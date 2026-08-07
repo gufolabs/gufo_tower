@@ -9,7 +9,6 @@
 import base64
 import contextlib
 import copy
-import glob
 import hashlib
 import json
 import logging
@@ -376,44 +375,30 @@ class Environment(Model):
         return self.cache_path / "additional_roles"
 
     @property
-    def services_path(self):
+    def services_path(self) -> list[Path]:
+        """Gets the paths to all service definition files available in the environment.
+
+        Includes service definitions from the playbook's built-in roles and all enabled custom roles.
+
+        Returns:
+            Paths to all available service definition files (``meta/tower.yml``).
+        """
         from .role import Role
 
-        r = glob.glob(
-            os.path.abspath(
-                os.path.join(
-                    "var",
-                    "tower",
-                    "playbooks",
-                    self.name,
-                    "noc_roles",
-                    "*",
-                    "meta",
-                    "tower.yml",
-                )
+        paths: list[Path] = []
+        for roles_dir in ("noc_roles", "system_roles"):
+            paths.extend(
+                (self.playbook_path / roles_dir).glob("*/meta/tower.yml")
             )
-        )
-        r.extend(
-            glob.glob(
-                os.path.abspath(
-                    os.path.join(
-                        "var",
-                        "tower",
-                        "playbooks",
-                        self.name,
-                        "system_roles",
-                        "*",
-                        "meta",
-                        "tower.yml",
-                    )
-                )
-            )
-        )
+
         for role in Role.select().where(
-            Role.environment == self, Role.is_enabled == True
+            Role.environment == self,
+            Role.is_enabled == True,
         ):
-            r.append(self.roles_dir / role.role_name / "meta" / "tower.yml")
-        return r
+            paths.append(
+                self.roles_dir / role.role_name / "meta" / "tower.yml"
+            )
+        return paths
 
     @property
     def repo_hash(self):
