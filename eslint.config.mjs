@@ -1,13 +1,18 @@
 // ----------------------------------------------------------------------
 // ESLint configuration
 // ----------------------------------------------------------------------
+import eslint from "@eslint/js";
 
 export default [
     {
-        files: ["src/ui/**/*.js"],
         ignores: [
             "src/ui/pkg/**",
+            "src/ui/pkg/**/*.js",
         ],
+    },
+    eslint.configs.recommended,
+    {
+        files: ["src/ui/**/*.js"],
         languageOptions: {
             ecmaVersion: "latest",
             sourceType: "module",
