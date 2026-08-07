@@ -13,6 +13,7 @@ import { node_logic } from "./node_logic.js";
 import { service_logic } from "./service_logic.js";
 import { change_password_logic } from "./change_password_logic.js";
 import { Tower } from "./lib.js";
+import { settings_logic } from "./settings_logic.js";
 
 export const desktop_logic = {
     init: function () {
@@ -26,6 +27,7 @@ export const desktop_logic = {
         pool: pool_logic,
         node: node_logic,
         service: service_logic,
+        settings: settings_logic,
     },
 
     show: function () {
