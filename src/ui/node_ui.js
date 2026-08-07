@@ -127,7 +127,7 @@ export const node_form = {
                     required: true,
                     bottomLabel: "Hostname of server will be replaced with that name. Along with ip address will be placed to /etc/hosts",
                     invalidMessage: "Cannot be empty, have to be alphanumeric",
-                    validate: Tower.rules.regex(/^[a-zA-Z0-9\_\.-]*[a-zA-Z0-9]$/)
+                    validate: Tower.rules.regex(/^[a-zA-Z0-9_.-]*[a-zA-Z0-9]$/)
                 },
                 {
                     view: "checkbox",

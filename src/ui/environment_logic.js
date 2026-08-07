@@ -250,7 +250,7 @@ export const environment_logic = {
                 t = webix.template.escape(ft.substr(offset));
                 offset = ft.length;
                 // Get progress
-                while (match = rx_progress.exec(t)) {
+                while ((match = rx_progress.exec(t))) {
                     switch (match[1]) {
                         case "ok":
                             status.ok++;

@@ -193,7 +193,7 @@ export const environment_form = {
                                         required: true,
                                         placeholder: "noc.example.com",
                                         bottomLabel: "NOC URL. Prefer DNS than IP",
-                                        validate: Tower.rules.regex(/^[a-zA-Z0-9\-_\.]+$/)
+                                        validate: Tower.rules.regex(/^[a-zA-Z0-9\-_.]+$/)
                                     },
                                     {
                                         view: "text",
