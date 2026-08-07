@@ -56,7 +56,7 @@ export const service_logic = {
         );
     },
     set_enabled: function (obj, common) {
-        if (obj.hasOwnProperty('config') && obj['config'].hasOwnProperty('backup_power')) {
+        if (Object.hasOwn(obj, 'config') && Object.hasOwn(obj['config'], 'backup_power')) {
             return common.treecheckbox(obj, common) +
                 common.space(obj, common) +
                 '<span class="mywebix_badge">' +
@@ -66,7 +66,7 @@ export const service_logic = {
                 obj.config.backup_power +
                 "</span>"
         }
-        else if (obj.hasOwnProperty('config') && obj['config'].hasOwnProperty('power')) {
+        else if (Object.hasOwn(obj, 'config') && Object.hasOwn(obj['config'], 'power')) {
             return common.treecheckbox(obj, common) +
                 common.space(obj, common) +
                 '<span class="mywebix_badge">' +
@@ -90,7 +90,7 @@ export const service_logic = {
         } else if (parent !== obj[name]) {
             return obj[name];
         } else {
-            if (obj.hasOwnProperty("node") && obj.hasOwnProperty("service") && (obj.node == obj.service)) {
+            if (Object.hasOwn(obj, "node") && Object.hasOwn(obj, "service") && (obj.node == obj.service)) {
                 if (name == $$("service_list").Nk)
                     return obj[name];
             }
@@ -164,7 +164,7 @@ export const service_logic = {
                     return function (nv, ov) {
                         if (this.validate()) {
                             // Dynamically set tree data
-                            if (data.hasOwnProperty('config')) {
+                            if (Object.hasOwn(data, 'config')) {
                                 data.config[name] = nv;
                                 $$("service_list").refresh();
                             }
@@ -172,7 +172,7 @@ export const service_logic = {
                     }
                 })(fname)
             );
-            if (data.hasOwnProperty('config') && data.config[fname]) {
+            if (Object.hasOwn(data, 'config') && data.config[fname]) {
                 cv[ci].setValue(data.config[fname]);
             }
         }

@@ -12,7 +12,7 @@ export const API = (function () {
         tid: 0
     };
     for (var api in SDL) {
-        if (!SDL.hasOwnProperty(api)) {
+        if (!Object.hasOwn(SDL, api)) {
             continue;
         }
         r[api] = {};
