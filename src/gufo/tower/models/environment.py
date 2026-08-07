@@ -53,7 +53,7 @@ class Environment(Model):
     # Installation name as shown in interface header
     installation_name = CharField(default="Unconfigured installation")
     playbook_link = CharField(
-        default="git+https://github.com/nocproject/noc@stable"
+        default="git+https://github.com/gufolabs/noc@stable"
     )
     # Web settings
     web_host = CharField(default="127.0.0.1:8000")
