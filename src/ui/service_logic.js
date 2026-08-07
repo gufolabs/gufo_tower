@@ -90,9 +90,11 @@ export const service_logic = {
         } else if (parent !== obj[name]) {
             return obj[name];
         } else {
-            if (Object.hasOwn(obj, "node") && Object.hasOwn(obj, "service") && (obj.node == obj.service)) {
-                if (name == $$("service_list").Nk)
-                    return obj[name];
+            if (Object.hasOwn(obj, "node") &&
+                Object.hasOwn(obj, "service") &&
+                (obj.node == obj.service) &&
+                (name == $$("service_list").Nk)) { // @todo: this code smells
+                return obj[name];
             }
             return "";
         }
@@ -140,7 +142,7 @@ export const service_logic = {
                         lines.forEach(function (line) {
                             // sorry for that.
                             for (var key in values) {
-                                var nm = key.split("-").pop(-1);
+                                var nm = key.split("-").pop();
                                 var val = values[key];
                                 $$("service_list").data.pull[line.id].config[nm] = val;
                             }
@@ -268,6 +270,4 @@ export const service_logic = {
         else
             $$("service_list").closeAll();
     }
-}
-    ;
-
+};
