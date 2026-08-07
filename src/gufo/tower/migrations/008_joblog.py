@@ -1,3 +1,10 @@
+# ----------------------------------------------------------------------
+# 008_joblog
+# ----------------------------------------------------------------------
+# Copyright (C) 2015-2026 Gufo Labs
+# See LICENSE for details
+# ----------------------------------------------------------------------
+
 # Third-party modules
 from peewee import (
     BooleanField,
@@ -8,6 +15,9 @@ from peewee import (
     Model,
     TextField,
 )
+
+# Gufo Tower modules
+from gufo.tower.models.migration import Migrator
 
 
 class Environment(Model):
@@ -32,5 +42,5 @@ class JobLog(Model):
     n_failed = IntegerField(default=0)
 
 
-def migrate(migrator):
+def migrate(migrator: Migrator) -> None:
     migrator.create_table(JobLog)

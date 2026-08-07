@@ -1,3 +1,10 @@
+# ----------------------------------------------------------------------
+# 032_add_default_roles
+# ----------------------------------------------------------------------
+# Copyright (C) 2015-2026 Gufo Labs
+# See LICENSE for details
+# ----------------------------------------------------------------------
+
 # Third-party modules
 import yaml
 from peewee import (
@@ -8,6 +15,9 @@ from peewee import (
     Model,
     TextField,
 )
+
+# Gufo Tower modules
+from gufo.tower.models.migration import Migrator
 
 DEFAULT_ROLES = [
     {
@@ -62,7 +72,7 @@ DEFAULT_ROLES = [
 ]
 
 
-def migrate(migrator):
+def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db

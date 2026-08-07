@@ -1,5 +1,15 @@
+# ----------------------------------------------------------------------
+# 011_nodetype
+# ----------------------------------------------------------------------
+# Copyright (C) 2015-2026 Gufo Labs
+# See LICENSE for details
+# ----------------------------------------------------------------------
+
 # Third-party modules
 from peewee import BooleanField, CharField, ForeignKeyField, Model
+
+# Gufo Tower modules
+from gufo.tower.models.migration import Migrator
 
 
 class NodeType(Model):
@@ -14,7 +24,7 @@ class NodeType(Model):
     ansible_connection = CharField(max_length=255, default="smart")
 
 
-def migrate(migrator):
+def migrate(migrator: Migrator) -> None:
     migrator.create_table(NodeType)
     migrator.add_column(
         "node",

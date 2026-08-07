@@ -1,10 +1,20 @@
+# ----------------------------------------------------------------------
+# 031_role
+# ----------------------------------------------------------------------
+# Copyright (C) 2015-2026 Gufo Labs
+# See LICENSE for details
+# ----------------------------------------------------------------------
+
 # Third-party modules
 import os
 
 from peewee import BooleanField, CharField, ForeignKeyField, Model, TextField
 
+# Gufo Tower modules
+from gufo.tower.models.migration import Migrator
 
-def migrate(migrator):
+
+def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db

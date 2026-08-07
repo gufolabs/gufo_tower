@@ -1,11 +1,21 @@
+# ----------------------------------------------------------------------
+# 039_change_login_session_timeout
+# ----------------------------------------------------------------------
+# Copyright (C) 2015-2026 Gufo Labs
+# See LICENSE for details
+# ----------------------------------------------------------------------
+
 # Third-party modules
 import json
 
 import yaml
 from peewee import CharField, ForeignKeyField, Model, TextField
 
+# Gufo Tower modules
+from gufo.tower.models.migration import Migrator
 
-def migrate(migrator):
+
+def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db

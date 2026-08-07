@@ -1,11 +1,21 @@
+# ----------------------------------------------------------------------
+# 033_remove_custom
+# ----------------------------------------------------------------------
+# Copyright (C) 2015-2026 Gufo Labs
+# See LICENSE for details
+# ----------------------------------------------------------------------
+
 # Third-party modules
 import re
 
 import yaml
 from peewee import BooleanField, CharField, Model, TextField
 
+# Gufo Tower modules
+from gufo.tower.models.migration import Migrator
 
-def migrate(migrator):
+
+def migrate(migrator: Migrator) -> None:
     rx_pk = re.compile(
         r"-----BEGIN (?P<type>\S*\s*)PRIVATE KEY-----"
         r".+"
