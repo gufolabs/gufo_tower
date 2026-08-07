@@ -36,6 +36,7 @@ export default [
                     ignoreRestSiblings: true,
                 },
             ],
+            "eqeqeq": ["error", "always"],
         },
     },
 ];

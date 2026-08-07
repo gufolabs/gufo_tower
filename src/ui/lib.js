@@ -88,8 +88,8 @@ export const Tower = {
 };
 
 export function threeStateCompare(value, filter) {
-    if (filter == "thirdState") return true;
-    return value == filter
+    if (filter === "thirdState") return true;
+    return value === filter
 }
 
 webix.ui.datafilter.customFilterBool = {
