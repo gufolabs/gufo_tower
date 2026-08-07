@@ -13,9 +13,9 @@ import os
 import re
 import subprocess
 from pathlib import Path
+from typing import Optional
 
 # Third-party modules
-import tornado.ioloop
 import tornado.iostream
 import tornado.process
 import tornado.web
@@ -174,7 +174,7 @@ class DeployHandler(BaseHandler):
             for line in pb_order:
                 f.write(f"- import_playbook: {line}\n")
 
-    def resolv_pb(self, service) -> Path:
+    def resolv_pb(self, service) -> Optional[Path]:
         path = self.env.roles_dir / service / "service.yml"
         if path.exists():
             return path
