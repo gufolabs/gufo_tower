@@ -9,7 +9,6 @@
 # Third-party modules
 import contextlib
 import json
-import os
 from itertools import product
 
 # Gufo Tower modules
@@ -28,7 +27,7 @@ class ServiceAPI(API):
     def get_available_services(self, env):
         svc = {}
         for path in env.services_path:
-            if not os.path.exists(path):
+            if not path.exists():
                 continue
             with open(path) as f:
                 descr = ordered_load(f)
