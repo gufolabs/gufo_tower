@@ -30,18 +30,18 @@ export const service_logic = {
                 if (result) {
                     $$("service_list").clearAll();
                     API.service.get_service_list(env_id).then(
-                        function (result) {
+                        function (res) {
                             // Load service list
-                            $$("service_list").parse(result);
+                            $$("service_list").parse(res);
                         },
                         function (err) {
                             Tower.msg.failed("Failed to get config");
                         }
                     );
                     API.service.get_forms(env_id).then(
-                        function (result) {
+                        function (res) {
                             // Load forms list
-                            $$("service_form").parse(result);
+                            $$("service_form").parse(res);
                         },
                         function (err) {
                             Tower.msg.failed("Failed to get forms.");

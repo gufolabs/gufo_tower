@@ -147,8 +147,8 @@ export const environment_logic = {
 
     on_pull: function () {
         const env_id = app_logic.current_env.id;
-        const check_status = function (env_id, job_id) {
-            API.pull.get_job_status(env_id, job_id).then(
+        const check_status = function (env, job_id) {
+            API.pull.get_job_status(env, job_id).then(
                 function (result) {
                     if (result.complete) {
                         // Pull done
@@ -163,7 +163,7 @@ export const environment_logic = {
                     } else {
                         // Run another check
                         webix.delay(check_status, environment_logic,
-                            [env_id, job_id],
+                            [env, job_id],
                             environment_logic.PULL_CHECK_INTERVAL);
                     }
                 },
