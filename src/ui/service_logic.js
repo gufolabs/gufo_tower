@@ -104,7 +104,7 @@ export const service_logic = {
         const ids = $$("service_list").getSelectedId(true);
         // we are filtering. staying on groupped service
         if (ids.length === 0) {
-            return []
+            return;
         }
         const data = $$("service_list").data.pull[ids[0].id];
         const form_info = $$("service_form").getValues();
