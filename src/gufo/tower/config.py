@@ -66,6 +66,18 @@ class Config:
         """Database path."""
         return self.db_dir / "config.db"
 
+    @property
+    def log_dir(self) -> Path:
+        return self.home / "logs"
+
+    @property
+    def deploy_keys_dir(self) -> Path:
+        return self.home / "deploy_keys"
+
+    @property
+    def in_docker(self) -> bool:
+        return Path("/.dockerenv").exists()
+
     def setup(self) -> None:
         """Prepare directories and db."""
         from .models.db import connect
