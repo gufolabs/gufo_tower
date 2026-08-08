@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-import os
+from pathlib import Path
 
 # Third-party modules
 from peewee import (
@@ -20,11 +20,14 @@ from peewee import (
 )
 
 # Tower modules
+from ..config import config
 from .db import db
 from .environment import Environment
 
 
 class JobLog(Model):
+    """Store execution metadata and log for a playbook run."""
+
     class Meta:
         database = db
         db_table = "joblog"
@@ -42,17 +45,30 @@ class JobLog(Model):
     n_failed = IntegerField(default=0)
 
     @property
-    def log_path(self):
-        return os.path.join("var", "tower", "log", "jobs", f"{self.id}.log")
+    def log_path(self) -> Path:
+        """Return the path to the job log file.
 
-    def append_log(self, data):
-        with open(self.log_path, "a") as f:
-            f.write(data.decode("utf-8"))
+        Returns:
+            Path to the log file.
+        """
+        return config.log_dir / "jobs" / f"{self.id}.log"
 
-    def get_log(self):
-        path = self.log_path
-        if os.path.exists(path):
-            with open(path) as f:
-                return f.read()
-        else:
-            return ""
+    def append_log(self, data: bytes) -> None:
+        """Append log data to the job log file.
+
+        Args:
+            data: Log data to append.
+        """
+        with open(self.log_path, "a") as fp:
+            fp.write(data.decode())
+
+    def get_log(self) -> str:
+        """Return the job log contents.
+
+        Returns:
+            Job log contents, or an empty string if the log file does not
+            exist.
+        """
+        if self.log_path.exists():
+            return self.log_path.read_text()
+        return ""

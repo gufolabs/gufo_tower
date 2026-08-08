@@ -18,7 +18,7 @@ import subprocess
 import tempfile
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 from urllib.parse import urlparse
 
 # Third-party modules
@@ -249,7 +249,7 @@ class Environment(Model):
             "category" in srv_descr[srv["service"]]
             and srv_descr[srv["service"]]["category"] == "internal"
         ):
-            node_noc_config = "noc-config-{}".format(srv["node"])
+            node_noc_config = f"noc-config-{srv['node']}"
             if node_noc_config not in r:
                 r[node_noc_config] = {
                     "hosts": [srv["node"]],
@@ -266,14 +266,11 @@ class Environment(Model):
                 order = self.config_order.split(",")
                 for conf in order:
                     if "yaml://" in conf:
-                        path = urlparse(conf).path
-                        basepath = os.path.dirname(path)
-                        pool_config_path = "yaml://" + str(
-                            os.path.join(
-                                basepath, "pool-{}.yml".format(srv["pool"])
-                            )
+                        yaml_path = (
+                            Path(urlparse(conf).path).parent
+                            / f"pool-{srv['pool']}.yml"
                         )
-                        order.insert(-1, pool_config_path)
+                        order.insert(-1, f"yaml://{yaml_path}")
                         break
                 pooled_order = ",".join(order)
                 line["config_order"] = pooled_order
@@ -419,15 +416,14 @@ class Environment(Model):
         return self.data_path / "src_dist"
 
     @property
-    def deploy_keys(self):
-        if os.getenv("TOWER_SSH_KEY_PATH") and os.getenv("TOWER_SSH_KEY_PATH"):
-            return os.getenv("TOWER_SSH_KEY_PATH")
-        if os.path.exists("/.dockerenv"):
-            return os.path.abspath(
-                os.path.join("var", "tower", "data", "deploy_keys", "id_rsa")
-            )
-        if os.path.exists(os.path.expanduser("~/.ssh/id_rsa")):
-            return os.path.expanduser("~/.ssh/id_rsa")
+    def deploy_keys(self) -> Optional[Path]:
+        if path := os.getenv("TOWER_SSH_KEY_PATH"):
+            return Path(path)
+        if config.in_docker:
+            return config.deploy_keys_dir / "id_rsa"
+        path = Path.home() / ".ssh" / "id_rsa"
+        if path.exists():
+            return path
         return None
 
     @property
@@ -440,7 +436,7 @@ class Environment(Model):
         r = {}
         # Load services description
         for path in self.services_path:
-            if not os.path.exists(path):
+            if not path.exists():
                 continue
             with open(path) as f:
                 descr = yaml.full_load(f)
@@ -473,17 +469,17 @@ class Environment(Model):
 
         key_types = [("rsa", 4096)]
 
-        if not os.path.isdir(self.ssh_keys_path):
+        if not self.ssh_keys_path.is_dir():
             logging.info("Create directory %s", self.ssh_keys_path)
             os.makedirs(self.ssh_keys_path)
         for pool in Pool.select().where(Pool.environment == self):
-            prefix = os.path.join(self.ssh_keys_path, pool.name)
-            if not os.path.isdir(prefix):
+            prefix = self.ssh_keys_path / pool.name
+            if not prefix.is_dir():
                 logging.info("Create directory %s", prefix)
-                os.mkdir(prefix, 0o0700)
+                prefix.mkdir(mode=0o700)
             for t, b in key_types:
-                fn = os.path.join(prefix, f"id_{t}")
-                if not os.path.isfile(fn):
+                fn = prefix / f"id_{t}"
+                if not fn.is_file():
                     logging.info("Generating %s key for pool %s", t, pool.name)
                     if os.getenv("OSTYPE") == "FreeBSD":
                         subprocess.check_call(
