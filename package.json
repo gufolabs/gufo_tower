@@ -6,6 +6,9 @@
         "build": "node scripts/build-ui.mjs",
         "lint": "eslint src/ui"
     },
+    "dependencies": {
+        "webix": "5.4.0"
+    },
     "devDependencies": {
         "esbuild": "^0.27.0",
         "eslint": "^9.39.5"
