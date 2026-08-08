@@ -41,7 +41,7 @@ export const role_logic = {
     },
 
     on_save: function () {
-        var data,
+        let data,
             form = $$("role_form");
 
         if (form.validate()) {
@@ -78,7 +78,7 @@ export const role_logic = {
     },
 
     on_edit: function () {
-        var data = $$("role_list").getSelectedItem();
+        let data = $$("role_list").getSelectedItem();
         $$("role_form").setValues(data);
         role_logic.show_form();
     },
@@ -88,7 +88,7 @@ export const role_logic = {
     },
 
     on_delete: function () {
-        var data = $$("role_form").getValues();
+        let data = $$("role_form").getValues();
         if (data.id) {
             API.role.delete_item(data).then(
                 function () {

@@ -41,7 +41,7 @@ export const pool_logic = {
     },
 
     on_save: function () {
-        var data,
+        let data,
             form = $$("pool_form");
 
         if (form.validate()) {
@@ -79,7 +79,7 @@ export const pool_logic = {
     },
 
     on_edit: function () {
-        var data = $$("pool_list").getSelectedItem();
+        let data = $$("pool_list").getSelectedItem();
         $$("pool_form").setValues(data);
         pool_logic.show_form();
     },
@@ -89,7 +89,7 @@ export const pool_logic = {
     },
 
     on_delete: function () {
-        var data = $$("pool_form").getValues();
+        let data = $$("pool_form").getValues();
         if (data.id) {
             API.pool.delete_item(data).then(
                 function () {

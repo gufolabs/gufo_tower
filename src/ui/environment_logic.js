@@ -49,7 +49,7 @@ export const environment_logic = {
     },
 
     on_save: function () {
-        var data,
+        let data,
             form = $$("environment_form");
 
         if (form.validate()) {
@@ -85,7 +85,7 @@ export const environment_logic = {
     },
 
     on_select: function () {
-        var data = $$("environment_list").getSelectedItem();
+        let data = $$("environment_list").getSelectedItem();
         app_logic.select_environment(data);
         $$("environment_inventory_button").enable();
         $$("environment_pull_button").enable();
@@ -94,7 +94,7 @@ export const environment_logic = {
     },
 
     on_edit: function () {
-        var data = $$("environment_list").getSelectedItem();
+        let data = $$("environment_list").getSelectedItem();
         $$("environment_form").setValues(data);
         API.pull.is_pulled(data.id).then(
             function (result) {
@@ -115,7 +115,7 @@ export const environment_logic = {
     },
 
     on_delete: function () {
-        var data = $$("environment_form").getValues();
+        let data = $$("environment_form").getValues();
         if (data.id) {
             API.environment.delete_item(data).then(
                 function () {
@@ -146,7 +146,7 @@ export const environment_logic = {
     },
 
     on_pull: function () {
-        var env_id = app_logic.current_env.id,
+        let env_id = app_logic.current_env.id,
             check_status = function (env_id, job_id) {
                 API.pull.get_job_status(env_id, job_id).then(
                     function (result) {
@@ -193,14 +193,14 @@ export const environment_logic = {
     },
 
     on_deploy: function () {
-        var env_id = app_logic.current_env.id,
+        let env_id = app_logic.current_env.id,
             env_name = app_logic.current_env.name,
             rx_progress = /^(ok|changed|unreachable|failed|fatal): \[/mg,
             rx_task = /^.+?\*{3}\s*$/mg,
             rx_line = /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
             rx_stars = /\s+\*{3,}/;
-        var deploy = function () {
-            var xhr = new XMLHttpRequest(),
+        let deploy = function () {
+            let xhr = new XMLHttpRequest(),
                 offset = 0,
                 output_panel = $$("environment_deploy_output"),
                 badges_panel = $$("environment_deploy_badges"),
@@ -219,7 +219,7 @@ export const environment_logic = {
                 // Update wall clocks
                 //
                 update_clock = function () {
-                    var dt = Math.floor((Date.now() - start_time) / 1000),
+                    let dt = Math.floor((Date.now() - start_time) / 1000),
                         s = dt % 60,  // Seconds
                         m = Math.floor((dt - s) / 60), // Minutes
                         t;
@@ -244,7 +244,7 @@ export const environment_logic = {
                 true
             );
             xhr.onprogress = function () {
-                var ft = xhr.responseText,
+                let ft = xhr.responseText,
                     match, t, ct;
                 // Process only last chunk
                 t = webix.template.escape(ft.substr(offset));
@@ -278,7 +278,7 @@ export const environment_logic = {
                     return "<span class='ansible-task' style=white-space:nowrap>" + x + "<span style='float: right'>" + clock.getValues().time + "</span></span>";
                 });
                 ct = ct.replace(rx_line, function (x) {
-                    var c = x.split(":")[0];
+                    let c = x.split(":")[0];
                     if (c === "fatal") {
                         c = "failed";
                     }

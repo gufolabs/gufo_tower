@@ -23,7 +23,7 @@ export const login_logic = {
     },
 
     on_login: function () {
-        var data;
+        let data;
         if (!$$("login_form").validate()) {
             return;
         }

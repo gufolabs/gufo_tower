@@ -101,8 +101,8 @@ webix.ui.datafilter.customFilterBool = {
         };
     },
     getValue: function (node) {
-        var value = this.getInputNode(node).checked;
-        var three = this.getInputNode(node).indeterminate;
+        let value = this.getInputNode(node).checked;
+        let three = this.getInputNode(node).indeterminate;
         return three ? "thirdState" : value;
     },
     _stateSetter: function (e) {
@@ -122,7 +122,7 @@ webix.ui.datafilter.customFilterBool = {
         }
     },
     render: function (master, column) {
-        var html = "<input type='checkbox' id='cb1'>";
+        let html = "<input type='checkbox' id='cb1'>";
         return html;
     }
 };
