@@ -1,0 +1,73 @@
+steps:
+  # Environment
+  - name: environment - get_items
+    method: environment.get_items
+    expected:
+      pos: 0
+      data:
+        - id: "1"
+          name: simple
+          description: Simple one-node install
+          env_type: test
+          config_order: yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC
+          installation_name: Simple
+          playbook_link: git+https://github.com/gufolabs/noc@stable
+          install_method: git
+          web_host: simple.test.example.com
+  - name: environment - lookup items
+    method: environment.lookup_items
+    params:
+      - {}
+    expected:
+      pos: 0
+      data:
+        - id: "1"
+          value: simple
+  # @todo: Fix inventory builder
+  # - name: Ansible inventory
+  #   method: environment.ansible_inventory
+  #   params:
+  #     - 1
+  #   expected:
+  #     - name: X
+  # Datacenter
+  - name: datacenter - get_items
+    method: datacenter.get_items
+    expected:
+      pos: 0
+      data:
+        - id: "1"
+          name: dc1
+          description: default datacenter
+          proxy: ""
+  - name: datacenter - lookup items
+    method: datacenter.lookup_items
+    params:
+      - {}
+    expected:
+      pos: 0
+      data:
+        - id: "1"
+          value: dc1
+  # Pool
+  - name: pool - get_items
+    method: pool.get_items
+    expected:
+      pos: 0
+      data:
+        - id: "1"
+          environment_id:
+            id: "1"
+            value: simple
+          name: default
+          description: Default pool for simple
+  # @todo: Broken
+  # - name: pool - lookup items
+  #   method: pool.lookup_items
+  #   params:
+  #     - {}
+  #   expected:
+  #     pos: 0
+  #     data:
+  #       - id: "1"
+  #         value: dc1

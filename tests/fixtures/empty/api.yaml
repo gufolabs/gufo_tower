@@ -1,0 +1,41 @@
+steps:
+  - name: Empty environments
+    method: environment.get_items
+    expected:
+      pos: 0
+      data: []
+  - name: Create environment
+    method: environment.create_item
+    params:
+      - name: empty
+        description: "empty environment test"
+        env_type: test
+        config_order: yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC
+        installation_name: Empty
+        playbook_link: git+https://github.com/gufolabs/noc@master
+        install_method: git
+        web_host: empty.test.example.com
+    expected:
+      id: "1"
+      name: empty
+      description: "empty environment test"
+      env_type: test
+      config_order: yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC
+      installation_name: Empty
+      playbook_link: git+https://github.com/gufolabs/noc@master
+      install_method: git
+      web_host: empty.test.example.com
+  - name: Check environment
+    method: environment.get_items
+    expected:
+      pos: 0
+      data:
+        - id: "1"
+          name: empty
+          description: "empty environment test"
+          env_type: test
+          config_order: yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC
+          installation_name: Empty
+          playbook_link: git+https://github.com/gufolabs/noc@master
+          install_method: git
+          web_host: empty.test.example.com
