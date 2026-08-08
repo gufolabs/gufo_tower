@@ -43,6 +43,7 @@ class Index:
     unique: bool
 
     def __repr__(self) -> str:
+        """Return a human-readable representation of the index."""
         prefix = "UNIQUE " if self.unique else ""
         return f"<{prefix}{', '.join(self.fields)}>"
 
