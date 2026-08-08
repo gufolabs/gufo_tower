@@ -36,7 +36,7 @@ export const desktop_logic = {
     },
 
     on_before_select_app: function (app) {
-        var can_run = this.apps[app]?.can_run?.() ?? true;
+        let can_run = this.apps[app]?.can_run?.() ?? true;
         if (!can_run) {
             Tower.msg.failed("Select environment");
         }

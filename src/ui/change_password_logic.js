@@ -23,7 +23,7 @@ export const change_password_logic = {
     },
 
     on_change_password: function () {
-        var data;
+        let data;
         if (!$$("change_password_form").validate()) {
             return;
         }

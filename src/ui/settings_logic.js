@@ -25,7 +25,7 @@ export const settings_logic = {
     },
 
     on_save: function () {
-        var form = $$("settings_form");
+        let form = $$("settings_form");
         if (form.validate()) {
             API.settings.save_settings(form.getValues()).then(
                 function () {

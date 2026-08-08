@@ -24,7 +24,7 @@ export const service_logic = {
 
     load: function () {
         settings_logic.init();
-        var env_id = app_logic.current_env.id;
+        let env_id = app_logic.current_env.id;
         API.pull.is_pulled(env_id).then(
             function (result) {
                 if (result) {
@@ -79,8 +79,8 @@ export const service_logic = {
     },
 
     on_column_group: function (obj, common, name) {
-        var parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
-        // var name = this.column;
+        let parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
+        // let name = this.column;
         if (obj.$group && obj[name]) {
             // folder
             return common.space(obj, common) +
@@ -101,15 +101,15 @@ export const service_logic = {
     },
 
     on_select_service: function () {
-        var ids = $$("service_list").getSelectedId(true);
+        let ids = $$("service_list").getSelectedId(true);
         // we are filtering. staying on groupped service
         if (ids.length === 0) {
             return []
         }
-        var data = $$("service_list").data.pull[ids[0].id];
-        var form_info = $$("service_form").getValues();
-        var form = $$("service_form");
-        var ci, cv, fname;
+        let data = $$("service_list").data.pull[ids[0].id];
+        let form_info = $$("service_form").getValues();
+        let form = $$("service_form");
+        let ci, cv, fname;
 
         // possibly old service
         if (form_info[data.service] === undefined) {
@@ -118,7 +118,7 @@ export const service_logic = {
         data["form"] = form_info[data.service];
         // add button to propagate values to lower tree
         if (data.$level === 1) {
-            var fm = data.form.map(function (e) {
+            let fm = data.form.map(function (e) {
                 e.value = null;
                 return e;
             });
@@ -132,7 +132,7 @@ export const service_logic = {
                 click: function (nv, ov) {
                     if (this.getFormView().getDirtyValues()) {
                         // Dynamically set tree data to leaves
-                        var lines = [],
+                        let lines = [],
                             values = this.getFormView().getDirtyValues();
                         $$("service_list").data.each(function (v) {
                             if (v.$parent === ids[0].id) {
@@ -141,9 +141,9 @@ export const service_logic = {
                         });
                         lines.forEach(function (line) {
                             // sorry for that.
-                            for (var key in values) {
-                                var nm = key.split("-").pop();
-                                var val = values[key];
+                            for (let key in values) {
+                                let nm = key.split("-").pop();
+                                let val = values[key];
                                 $$("service_list").data.pull[line.id].config[nm] = val;
                             }
                         });
@@ -181,7 +181,7 @@ export const service_logic = {
     },
 
     on_save: function () {
-        var r = [],
+        let r = [],
             env_id = app_logic.current_env.id;
         $$("service_list").data.each(function (v) {
             if (!v.config) {
@@ -215,7 +215,7 @@ export const service_logic = {
         if (mode === "init") {
             mode = $$("settings_form").getValues()["group_by"]
         }
-        var grid = $$("service_list");
+        let grid = $$("service_list");
         grid.filter("");
         grid.ungroup();
         if (mode === "node") {
@@ -259,7 +259,7 @@ export const service_logic = {
                 }
             });
         }
-        var i = 0;
+        let i = 0;
         grid.eachRow(function (id) {
             i++;
             if (i === 1) {
