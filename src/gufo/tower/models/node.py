@@ -20,7 +20,7 @@ class Node(Model):
     class Meta:
         database = db
         db_table = "node"
-        indexes = ((("environment", "name"), True),)
+        indexes = ((("environment", "datacenter", "name"), True),)
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     datacenter = ForeignKeyField(Datacenter, on_delete="RESTRICT")
