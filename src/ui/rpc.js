@@ -7,20 +7,20 @@
 import { SDL } from "./generated/sdl.js";
 
 export const API = (function () {
-    let r = {
+    const r = {
         _base_url: "/api/",
         tid: 0
     };
-    for (let api in SDL) {
+    for (const api in SDL) {
         if (!Object.hasOwn(SDL, api)) {
             continue;
         }
         r[api] = {};
-        for (let mi in SDL[api]) {
-            let method = SDL[api][mi];
+        for (const mi in SDL[api]) {
+            const method = SDL[api][mi];
             r[api][method] = (function (r, api, method) {
                 return function () {
-                    let defer = webix.promise.defer();
+                    const defer = webix.promise.defer();
                     webix.ajax().headers({
                         "Content-Type": "text/json"
                     }).post(
@@ -32,7 +32,7 @@ export const API = (function () {
                             params: Array.prototype.slice.call(arguments)
                         })
                     ).then(function (resp) {
-                        let data = resp.json();
+                        const data = resp.json();
                         if (!data.error) {
                             defer.resolve(data.result);
                         } else {
@@ -54,8 +54,8 @@ webix.proxy.rpc = {
     $proxy: true,
 
     load: function (view, callback, params) {
-        let r = { dynamic: true },
-            state = {},
+        const r = { dynamic: true };
+        let state = {},
             source = this.source,
             i, j, p, v, method;
         if (view.getState) {
