@@ -18,17 +18,17 @@ export const API = (function () {
         r[api] = {};
         for (const mi in SDL[api]) {
             const method = SDL[api][mi];
-            r[api][method] = (function (r, api, method) {
+            r[api][method] = (function (rr, rpc_api, http_method) {
                 return function () {
                     const defer = webix.promise.defer();
                     webix.ajax().headers({
                         "Content-Type": "text/json"
                     }).post(
-                        r._base_url + api + "/",
+                        rr._base_url + rpc_api + "/",
                         JSON.stringify({
-                            id: r.tid++,
+                            id: rr.tid++,
                             jsonrpc: "2.0",
-                            method: method,
+                            method: http_method,
                             params: Array.prototype.slice.call(arguments)
                         })
                     ).then(function (resp) {
