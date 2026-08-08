@@ -23,11 +23,10 @@ export const change_password_logic = {
     },
 
     on_change_password: function () {
-        let data;
         if (!$$("change_password_form").validate()) {
             return;
         }
-        data = $$("change_password_form").getValues();
+        const data = $$("change_password_form").getValues();
         if (data.new_password !== data.new_password2) {
             Tower.msg.failed("Passwords mismatch");
             return;

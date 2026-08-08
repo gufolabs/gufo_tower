@@ -23,11 +23,10 @@ export const login_logic = {
     },
 
     on_login: function () {
-        let data;
         if (!$$("login_form").validate()) {
             return;
         }
-        data = $$("login_form").getValues();
+        const data = $$("login_form").getValues();
         login_logic.login(data.user, data.password);
     },
 

@@ -36,8 +36,8 @@ export const node_logic = {
     },
 
     on_add: function () {
-        let dc = $$("node_form").elements.datacenter;
-        let nt = $$("node_form").elements.node_type;
+        const dc = $$("node_form").elements.datacenter;
+        const nt = $$("node_form").elements.node_type;
 
         API.datacenter.get_items().then(result => {
             if (dc.data.options.count() === 0) {
@@ -61,8 +61,8 @@ export const node_logic = {
     },
 
     on_save: function () {
-        let data,
-            form = $$("node_form");
+        let data;
+        const form = $$("node_form");
 
         if (form.validate()) {
             data = form.getValues();
@@ -98,7 +98,7 @@ export const node_logic = {
     },
 
     on_edit: function () {
-        let data = $$("node_list").getSelectedItem();
+        const data = $$("node_list").getSelectedItem();
         data.datacenter = data.datacenter.id;
         data.node_type = data.node_type.id;
         $$("node_form").setValues(data);
@@ -110,7 +110,7 @@ export const node_logic = {
     },
 
     on_delete: function () {
-        let data = $$("node_form").getValues();
+        const data = $$("node_form").getValues();
         if (data.id) {
             API.node.delete_item(data).then(
                 function () {

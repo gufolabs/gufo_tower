@@ -36,8 +36,8 @@ export const datacenter_logic = {
     },
 
     on_save: function () {
-        let data,
-            form = $$("datacenter_form");
+        let data;
+        const form = $$("datacenter_form");
 
         if (form.validate()) {
             data = form.getValues();
@@ -72,7 +72,7 @@ export const datacenter_logic = {
     },
 
     on_edit: function () {
-        let data = $$("datacenter_list").getSelectedItem();
+        const data = $$("datacenter_list").getSelectedItem();
         $$("datacenter_form").setValues(data);
         datacenter_logic.show_form();
     },
@@ -82,7 +82,7 @@ export const datacenter_logic = {
     },
 
     on_delete: function () {
-        let data = $$("datacenter_form").getValues();
+        const data = $$("datacenter_form").getValues();
         if (data.id) {
             API.datacenter.delete_item(data).then(
                 function () {

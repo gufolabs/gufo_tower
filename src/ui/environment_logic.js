@@ -49,8 +49,8 @@ export const environment_logic = {
     },
 
     on_save: function () {
-        let data,
-            form = $$("environment_form");
+        let data;
+        const form = $$("environment_form");
 
         if (form.validate()) {
             data = form.getValues();
@@ -85,7 +85,7 @@ export const environment_logic = {
     },
 
     on_select: function () {
-        let data = $$("environment_list").getSelectedItem();
+        const data = $$("environment_list").getSelectedItem();
         app_logic.select_environment(data);
         $$("environment_inventory_button").enable();
         $$("environment_pull_button").enable();
@@ -94,7 +94,7 @@ export const environment_logic = {
     },
 
     on_edit: function () {
-        let data = $$("environment_list").getSelectedItem();
+        const data = $$("environment_list").getSelectedItem();
         $$("environment_form").setValues(data);
         API.pull.is_pulled(data.id).then(
             function (result) {
@@ -115,7 +115,7 @@ export const environment_logic = {
     },
 
     on_delete: function () {
-        let data = $$("environment_form").getValues();
+        const data = $$("environment_form").getValues();
         if (data.id) {
             API.environment.delete_item(data).then(
                 function () {
@@ -146,34 +146,34 @@ export const environment_logic = {
     },
 
     on_pull: function () {
-        let env_id = app_logic.current_env.id,
-            check_status = function (env_id, job_id) {
-                API.pull.get_job_status(env_id, job_id).then(
-                    function (result) {
-                        if (result.complete) {
-                            // Pull done
-                            if (result.status) {
-                                Tower.msg.complete("Pull complete");
-                                Tower.notification("Pull complete");
-                            } else {
-                                Tower.msg.failed("Failed to pull");
-                                Tower.notification("Failed to pull");
-                            }
-                            $$("environment_list").hideProgress();
+        const env_id = app_logic.current_env.id;
+        const check_status = function (env_id, job_id) {
+            API.pull.get_job_status(env_id, job_id).then(
+                function (result) {
+                    if (result.complete) {
+                        // Pull done
+                        if (result.status) {
+                            Tower.msg.complete("Pull complete");
+                            Tower.notification("Pull complete");
                         } else {
-                            // Run another check
-                            webix.delay(check_status, environment_logic,
-                                [env_id, job_id],
-                                environment_logic.PULL_CHECK_INTERVAL);
+                            Tower.msg.failed("Failed to pull");
+                            Tower.notification("Failed to pull");
                         }
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to pull");
-                        Tower.notification("Failed to pull");
                         $$("environment_list").hideProgress();
+                    } else {
+                        // Run another check
+                        webix.delay(check_status, environment_logic,
+                            [env_id, job_id],
+                            environment_logic.PULL_CHECK_INTERVAL);
                     }
-                );
-            };
+                },
+                function (err) {
+                    Tower.msg.failed("Failed to pull");
+                    Tower.notification("Failed to pull");
+                    $$("environment_list").hideProgress();
+                }
+            );
+        };
 
         $$("environment_list").showProgress({
             type: "icon"
@@ -193,44 +193,43 @@ export const environment_logic = {
     },
 
     on_deploy: function () {
-        let env_id = app_logic.current_env.id,
-            env_name = app_logic.current_env.name,
-            rx_progress = /^(ok|changed|unreachable|failed|fatal): \[/mg,
-            rx_task = /^.+?\*{3}\s*$/mg,
-            rx_line = /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg,
-            rx_stars = /\s+\*{3,}/;
-        let deploy = function () {
-            let xhr = new XMLHttpRequest(),
-                offset = 0,
-                output_panel = $$("environment_deploy_output"),
-                badges_panel = $$("environment_deploy_badges"),
-                clock = $$("environment_deploy_clock"),
+        const env_id = app_logic.current_env.id;
+        const env_name = app_logic.current_env.name;
+        const rx_progress = /^(ok|changed|unreachable|failed|fatal): \[/mg;
+        const rx_task = /^.+?\*{3}\s*$/mg;
+        const rx_line = /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg;
+        const rx_stars = /\s+\*{3,}/;
+        const deploy = function () {
+            const xhr = new XMLHttpRequest();
+            let offset = 0,
                 output = "",
-                start_time = Date.now(),
-                running = true,
-                status = {
-                    ok: 0,
-                    changed: 0,
-                    unreach: 0,
-                    failed: 0,
-                    status: "<i class='fa fa-cog fa-spin'></i> Running"
-                },
-                //
-                // Update wall clocks
-                //
-                update_clock = function () {
-                    let dt = Math.floor((Date.now() - start_time) / 1000),
-                        s = dt % 60,  // Seconds
-                        m = Math.floor((dt - s) / 60), // Minutes
-                        t;
-                    s = (s >= 10) ? ("" + s) : ("0" + s);
-                    m = (m >= 10) ? ("" + m) : ("0" + m);
-                    t = m + ":" + s;
-                    clock.setValues({ time: t });
-                    if (running) {
-                        webix.delay(update_clock, output_panel, [], 1000);
-                    }
-                };
+                running = true;
+            const output_panel = $$("environment_deploy_output");
+            const badges_panel = $$("environment_deploy_badges");
+            const clock = $$("environment_deploy_clock");
+            const start_time = Date.now();
+            const status = {
+                ok: 0,
+                changed: 0,
+                unreach: 0,
+                failed: 0,
+                status: "<i class='fa fa-cog fa-spin'></i> Running"
+            };
+            //
+            // Update wall clocks
+            //
+            const update_clock = function () {
+                const dt = Math.floor((Date.now() - start_time) / 1000);
+                let s = dt % 60,  // Seconds
+                    m = Math.floor((dt - s) / 60); // Minutes                        
+                s = (s >= 10) ? ("" + s) : ("0" + s);
+                m = (m >= 10) ? ("" + m) : ("0" + m);
+                const t = m + ":" + s;
+                clock.setValues({ time: t });
+                if (running) {
+                    webix.delay(update_clock, output_panel, [], 1000);
+                }
+            };
             // Reset badges
             badges_panel.setValues(status);
             // Switch to deploy panel
@@ -244,10 +243,10 @@ export const environment_logic = {
                 true
             );
             xhr.onprogress = function () {
-                let ft = xhr.responseText,
-                    match, t, ct;
+                const ft = xhr.responseText;
+                let match, ct;
                 // Process only last chunk
-                t = webix.template.escape(ft.substr(offset));
+                const t = webix.template.escape(ft.substr(offset));
                 offset = ft.length;
                 // Get progress
                 while ((match = rx_progress.exec(t))) {

@@ -24,7 +24,7 @@ export const service_logic = {
 
     load: function () {
         settings_logic.init();
-        let env_id = app_logic.current_env.id;
+        const env_id = app_logic.current_env.id;
         API.pull.is_pulled(env_id).then(
             function (result) {
                 if (result) {
@@ -79,7 +79,7 @@ export const service_logic = {
     },
 
     on_column_group: function (obj, common, name) {
-        let parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
+        const parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
         // let name = this.column;
         if (obj.$group && obj[name]) {
             // folder
@@ -101,15 +101,15 @@ export const service_logic = {
     },
 
     on_select_service: function () {
-        let ids = $$("service_list").getSelectedId(true);
+        const ids = $$("service_list").getSelectedId(true);
         // we are filtering. staying on groupped service
         if (ids.length === 0) {
             return []
         }
-        let data = $$("service_list").data.pull[ids[0].id];
-        let form_info = $$("service_form").getValues();
+        const data = $$("service_list").data.pull[ids[0].id];
+        const form_info = $$("service_form").getValues();
         let form = $$("service_form");
-        let ci, cv, fname;
+        let fname;
 
         // possibly old service
         if (form_info[data.service] === undefined) {
@@ -118,7 +118,7 @@ export const service_logic = {
         data["form"] = form_info[data.service];
         // add button to propagate values to lower tree
         if (data.$level === 1) {
-            let fm = data.form.map(function (e) {
+            const fm = data.form.map(function (e) {
                 e.value = null;
                 return e;
             });
@@ -132,8 +132,8 @@ export const service_logic = {
                 click: function (nv, ov) {
                     if (this.getFormView().getDirtyValues()) {
                         // Dynamically set tree data to leaves
-                        let lines = [],
-                            values = this.getFormView().getDirtyValues();
+                        const lines = [];
+                        const values = this.getFormView().getDirtyValues();
                         $$("service_list").data.each(function (v) {
                             if (v.$parent === ids[0].id) {
                                 lines.push(v);
@@ -141,9 +141,9 @@ export const service_logic = {
                         });
                         lines.forEach(function (line) {
                             // sorry for that.
-                            for (let key in values) {
-                                let nm = key.split("-").pop();
-                                let val = values[key];
+                            for (const key in values) {
+                                const nm = key.split("-").pop();
+                                const val = values[key];
                                 $$("service_list").data.pull[line.id].config[nm] = val;
                             }
                         });
@@ -157,8 +157,8 @@ export const service_logic = {
             webix.ui(data.form, form);
         }
 
-        cv = form.getChildViews();
-        for (ci in cv) {
+        const cv = form.getChildViews();
+        for (const ci in cv) {
             fname = cv[ci]["data"].id;
             cv[ci].attachEvent(
                 "onChange",
@@ -181,8 +181,8 @@ export const service_logic = {
     },
 
     on_save: function () {
-        let r = [],
-            env_id = app_logic.current_env.id;
+        const r = [];
+        const env_id = app_logic.current_env.id;
         $$("service_list").data.each(function (v) {
             if (!v.config) {
                 return;
@@ -215,7 +215,7 @@ export const service_logic = {
         if (mode === "init") {
             mode = $$("settings_form").getValues()["group_by"]
         }
-        let grid = $$("service_list");
+        const grid = $$("service_list");
         grid.filter("");
         grid.ungroup();
         if (mode === "node") {
