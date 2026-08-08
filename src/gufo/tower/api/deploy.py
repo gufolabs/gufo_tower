@@ -21,6 +21,8 @@ import tornado.process
 import tornado.web
 
 # Gufo Tower modules
+from .. import __version__
+from ..config import config
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.joblog import JobLog
@@ -100,17 +102,16 @@ class DeployHandler(BaseHandler):
         self.set_header("X-Accel-Buffering", "no")
         # Stream output
         self.write(f"Starting job #{self.job_log.id}\n\n")
-        self.get_version()
         # Generate ssh keys
         self.env.build_ssh_keys()
         # Run playbook
-        bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
-        if os.path.exists("/.dockerenv"):
-            ansible_ssh_cp = os.path.join(
-                "/root/.ansible/cp/ansible-ssh-%%r-%%h-%%r"
+        bin_path = Path.cwd() / "bin"
+        if config.in_docker:
+            ansible_ssh_cp = (
+                Path("/root/.ansible/cp") / "ansible-ssh-%%r-%%h-%%r"
             )
         else:
-            ansible_ssh_cp = os.path.join("/tmp/tower-%%r-%%h-%%r")
+            ansible_ssh_cp = Path("/tmp") / "tower-%%r-%%h-%%r"
         env.update(
             {
                 "NOC_ENV": str(self.env.name),
@@ -127,15 +128,16 @@ class DeployHandler(BaseHandler):
                     ]
                 ),
                 "PYTHONUNBUFFERED": "1",
-                "TOWER_VERSION": self.version,
+                "TOWER_VERSION": __version__,
             }
         )
         command = [
-            os.path.join(bin_path, "ansible-playbook"),
+            str(bin_path / "ansible-playbook"),
             "-i",
-            os.path.join(bin_path, "tower-inv"),
+            str(bin_path / "tower-inv"),
             "site.yml",
-            "-f 50",
+            "-f",
+            "50",
             "--diff",
         ]
         if self.ansible_verbose:
@@ -148,7 +150,7 @@ class DeployHandler(BaseHandler):
             env=env,
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
-            cwd=os.path.join(self.env.playbook_path),
+            cwd=str(self.env.playbook_path),
             close_fds=True,
         )
         self.write_pb()
@@ -167,9 +169,7 @@ class DeployHandler(BaseHandler):
             if not pb:
                 continue
             pb_order.append(pb)
-        tower_autogen = os.path.abspath(
-            os.path.join(self.env.playbook_path, "tower.yml")
-        )
+        tower_autogen = (self.env.playbook_path / "tower.yml").resolve()
         with open(tower_autogen, "w") as f:
             for line in pb_order:
                 f.write(f"- import_playbook: {line}\n")
@@ -187,18 +187,6 @@ class DeployHandler(BaseHandler):
         if path.exists():
             return path
         return None
-
-    def get_version(self):
-        from os.path import abspath, dirname, join, realpath
-
-        version_path = realpath(
-            join(dirname(abspath(__file__)), "../../../../../VERSION")
-        )
-        if not os.path.exists(version_path):
-            self.version = "old"
-        else:
-            with open(version_path) as f:
-                self.version = f.read().splitlines()[0]
 
     def on_connection_close(self, *args, **kwargs):
         logger.info("Connection terminated")

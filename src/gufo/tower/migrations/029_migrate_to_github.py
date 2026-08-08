@@ -5,11 +5,12 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-# Third-party modules
+# Python modules
 import contextlib
-import os
 import shutil
+from pathlib import Path
 
+# Third-party modules
 from peewee import BooleanField, CharField, Model, TextField
 
 # Gufo Tower modules
@@ -82,8 +83,9 @@ def migrate(migrator: Migrator) -> None:
         )
 
         @property
-        def playbook_path(self):
-            return os.path.join("var", "tower", "playbooks", self.name)
+        def playbook_path(self) -> Path:
+            """Legacy playbooks path."""
+            return Path("var", "tower", "playbooks", self.name)
 
     for env in Environment.select():
         if "https://bitbucket.org/nocproject/noc" in env.repo:
@@ -99,9 +101,8 @@ def migrate(migrator: Migrator) -> None:
         env.save()
 
         # remove current playbook path
-        if os.path.exists(env.playbook_path):
-            with contextlib.suppress(OSError):
-                shutil.rmtree(env.playbook_path)
+        with contextlib.suppress(OSError):
+            shutil.rmtree(env.playbook_path, ignore_errors=True)
 
     migrator.rename_column("environment", "branch", "version")
 

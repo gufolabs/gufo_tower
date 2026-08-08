@@ -9,6 +9,7 @@
 import logging
 import os
 from importlib.resources import files
+from pathlib import Path
 
 # Third-party modules
 import tornado.httpserver
@@ -63,9 +64,7 @@ def run():
     ui_root = str(files("gufo.tower") / "ui")
     logger.info("Serving UI files from %s", ui_root)
     settings = {
-        "template_path": os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "..", "templates")
-        ),
+        "template_path": str(Path(__file__).parent.parent / "templates"),
         "cookie_secret": Settings.get_cookie_secret(),
     }
     app = tornado.web.Application(

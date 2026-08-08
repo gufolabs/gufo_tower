@@ -37,5 +37,10 @@ Where:
     - `data/` — cached runtime data.
     - `ssh/` — cached SSH-related data.
 
+- `deploy_keys/` - optional ssh keys for deploy.
+
+- `logs/` - log files.
+  - `jobs/` - deploy jobs logs.
+
 - `repo/` — stores cloned Git repositories.
   - `<hash>/` — repository clone, where `<hash>` is calculated from the repository URL.
