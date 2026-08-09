@@ -6,12 +6,12 @@
 # ----------------------------------------------------------------------
 
 # Python modules
+import inspect
 import json
 import logging
 
 # Third-party modules
 import peewee
-import tornado.gen
 from tornado.web import HTTPError
 
 # Tower modules
@@ -23,8 +23,7 @@ logger = logging.getLogger("rpc")
 class JSONRPCHandler(BaseHandler):
     MIME_TYPE = "text/json"
 
-    @tornado.gen.coroutine
-    def post(self, path, **kwargs):
+    async def post(self, path, **kwargs):
         # Get API name
         api_name = str(path)
         # Check API class
@@ -58,8 +57,8 @@ class JSONRPCHandler(BaseHandler):
         logger.info("CALL %s.%s", api_name, method)
         try:
             result = handler(*params)
-            if tornado.gen.is_future(result):
-                result = yield result
+            if inspect.isawaitable(result):
+                result = await result
             response["result"] = result
         except APIError as e:
             response["error"] = str(e)
