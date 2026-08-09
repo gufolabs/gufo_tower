@@ -16,7 +16,7 @@ def migrate(migrator: Migrator) -> None:
     class NodeType(Model):
         class Meta:
             database = migrator.db
-            db_table = "node_type"
+            table_name = "node_type"
 
         name = CharField(max_length=64, unique=True)
         shell_type = CharField(max_length=256, default="sh")
@@ -32,6 +32,6 @@ def migrate(migrator: Migrator) -> None:
         "node",
         "node_type_id",
         ForeignKeyField(
-            NodeType, on_delete="RESTRICT", null=True, to_field=NodeType.id
+            NodeType, on_delete="RESTRICT", null=True, field=NodeType.id
         ),
     )

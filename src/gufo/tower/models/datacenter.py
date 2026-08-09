@@ -15,7 +15,7 @@ from .db import db
 class Datacenter(Model):
     class Meta:
         database = db
-        db_table = "datacenter"
+        table_name = "datacenter"
 
     name = CharField(unique=True)
     description = TextField()

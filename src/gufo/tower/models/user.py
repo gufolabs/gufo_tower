@@ -16,7 +16,7 @@ from .db import db
 class User(Model):
     class Meta:
         database = db
-        db_table = "user"
+        table_name = "user"
 
     name = CharField(unique=True)
     is_active = BooleanField(default=True)

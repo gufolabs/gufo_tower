@@ -23,12 +23,12 @@ def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db
-            db_table = "environment"
+            table_name = "environment"
 
     class PullLog(Model):
         class Meta:
             database = migrator.db
-            db_table = "pulllog"
+            table_name = "pulllog"
 
         start_ts = DateTimeField()
         complete_ts = DateTimeField(null=True)

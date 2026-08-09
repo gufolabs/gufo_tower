@@ -16,7 +16,7 @@ def migrate(migrator: Migrator) -> None:
     class Datacenter(Model):
         class Meta:
             database = migrator.db
-            db_table = "datacenter"
+            table_name = "datacenter"
 
         name = CharField(unique=True)
         description = TextField()

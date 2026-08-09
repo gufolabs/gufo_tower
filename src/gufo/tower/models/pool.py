@@ -19,7 +19,7 @@ DEFAULT_POOL = "default"
 class Pool(Model):
     class Meta:
         database = db
-        db_table = "pool"
+        table_name = "pool"
         indexes = ((("environment", "name"), True),)
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")

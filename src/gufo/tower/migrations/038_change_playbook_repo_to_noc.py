@@ -16,7 +16,7 @@ def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db
-            db_table = "environment"
+            table_name = "environment"
 
         name = CharField(unique=True)
         playbook_link = CharField()

@@ -16,17 +16,17 @@ def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db
-            db_table = "environment"
+            table_name = "environment"
 
     class Datacenter(Model):
         class Meta:
             database = migrator.db
-            db_table = "datacenter"
+            table_name = "datacenter"
 
     class Node(Model):
         class Meta:
             database = migrator.db
-            db_table = "node"
+            table_name = "node"
 
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
         datacenter = ForeignKeyField(Datacenter, on_delete="RESTRICT")

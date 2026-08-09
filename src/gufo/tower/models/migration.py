@@ -28,7 +28,7 @@ class Migration(Model):
 
     class Meta:
         database = db
-        db_table = "migration"
+        table_name = "migration"
 
     name = CharField(unique=True)
     ts = DateTimeField(null=True)

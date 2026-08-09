@@ -16,12 +16,12 @@ def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db
-            db_table = "environment"
+            table_name = "environment"
 
     class Pool(Model):
         class Meta:
             database = migrator.db
-            db_table = "pool"
+            table_name = "pool"
             indexes = ((("environment_id", "name"), True),)
 
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")

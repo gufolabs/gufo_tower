@@ -16,7 +16,7 @@ def migrate(migrator: Migrator) -> None:
     class Settings(Model):
         class Meta:
             database = migrator.db
-            db_table = "settings"
+            table_name = "settings"
 
         key = CharField(primary_key=True)
         value = TextField()

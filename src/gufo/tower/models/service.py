@@ -20,7 +20,7 @@ from .pool import Pool
 class Service(Model):
     class Meta:
         database = db
-        db_table = "service"
+        table_name = "service"
         indexes = ((("environment", "service", "pool", "node"), True),)
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")

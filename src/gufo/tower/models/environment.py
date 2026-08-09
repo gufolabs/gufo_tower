@@ -35,7 +35,7 @@ logging.getLogger(__name__)
 class Environment(Model):
     class Meta:
         database = db
-        db_table = "environment"
+        table_name = "environment"
 
     name = CharField(unique=True)
     description = TextField()

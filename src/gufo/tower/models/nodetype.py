@@ -15,7 +15,7 @@ from .db import db
 class NodeType(Model):
     class Meta:
         database = db
-        db_table = "node_type"
+        table_name = "node_type"
 
     # Node type name
     name = CharField(max_length=64, unique=True)
