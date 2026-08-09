@@ -20,6 +20,7 @@ import tornado.process
 import tornado.web
 
 # Gufo Tower modules
+from .. import __version__
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.joblog import JobLog
@@ -105,7 +106,6 @@ class DeployHandler(BaseHandler):
 
         # Stream output
         self.write(f"Starting job #{self.job_log.id}\n\n")
-        self.get_version()
 
         # Generate ssh keys
         self.env.build_ssh_keys()
@@ -135,7 +135,7 @@ class DeployHandler(BaseHandler):
                     ]
                 ),
                 "PYTHONUNBUFFERED": "1",
-                "TOWER_VERSION": self.version,
+                "TOWER_VERSION": __version__,
             }
         )
 
@@ -160,7 +160,7 @@ class DeployHandler(BaseHandler):
             env=env,
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
-            cwd=os.path.join(self.env.playbook_path),
+            cwd=str(self.env.playbook_path),
             close_fds=True,
         )
 
@@ -215,19 +215,6 @@ class DeployHandler(BaseHandler):
             return path
 
         return None
-
-    def get_version(self):
-        from os.path import abspath, dirname, join, realpath
-
-        version_path = realpath(
-            join(dirname(abspath(__file__)), "../../../../../VERSION")
-        )
-
-        if not os.path.exists(version_path):
-            self.version = "old"
-        else:
-            with open(version_path) as f:
-                self.version = f.read().splitlines()[0]
 
     def on_connection_close(self, *args, **kwargs):
         logger.info("Connection terminated")
