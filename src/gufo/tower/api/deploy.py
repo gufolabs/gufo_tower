@@ -49,7 +49,7 @@ class DeployHandler(BaseHandler):
         self.ansible_verbose = ""
 
     @tornado.web.authenticated
-    @tornado.web.asynchronous
+    @tornado.gen.coroutine
     def get(self, env_id, *args, **kwargs):
         try:
             self.env = Environment.get(Environment.id == env_id)
