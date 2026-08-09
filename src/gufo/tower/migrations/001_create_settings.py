@@ -12,13 +12,13 @@ from peewee import CharField, Model, TextField
 from gufo.tower.models.migration import Migrator
 
 
-class Settings(Model):
-    class Meta:
-        db_table = "settings"
-
-    key = CharField(primary_key=True)
-    value = TextField()
-
-
 def migrate(migrator: Migrator) -> None:
+    class Settings(Model):
+        class Meta:
+            database = migrator.db
+            db_table = "settings"
+
+        key = CharField(primary_key=True)
+        value = TextField()
+
     migrator.create_table(Settings)

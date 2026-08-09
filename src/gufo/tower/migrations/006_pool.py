@@ -12,20 +12,20 @@ from peewee import CharField, ForeignKeyField, Model, TextField
 from gufo.tower.models.migration import Migrator
 
 
-class Environment(Model):
-    class Meta:
-        db_table = "environment"
-
-
-class Pool(Model):
-    class Meta:
-        db_table = "pool"
-        indexes = ((("environment_id", "name"), True),)
-
-    environment = ForeignKeyField(Environment, on_delete="RESTRICT")
-    name = CharField()
-    description = TextField()
-
-
 def migrate(migrator: Migrator) -> None:
+    class Environment(Model):
+        class Meta:
+            database = migrator.db
+            db_table = "environment"
+
+    class Pool(Model):
+        class Meta:
+            database = migrator.db
+            db_table = "pool"
+            indexes = ((("environment_id", "name"), True),)
+
+        environment = ForeignKeyField(Environment, on_delete="RESTRICT")
+        name = CharField()
+        description = TextField()
+
     migrator.create_table(Pool)

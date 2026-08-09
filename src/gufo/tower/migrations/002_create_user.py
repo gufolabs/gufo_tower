@@ -12,15 +12,15 @@ from peewee import BooleanField, CharField, Model
 from gufo.tower.models.migration import Migrator
 
 
-class User(Model):
-    class Meta:
-        db_table = "user"
-
-    name = CharField(unique=True)
-    is_active = BooleanField(default=True)
-    full_name = CharField(null=True)
-    password = CharField(default="NOLOGIN")
-
-
 def migrate(migrator: Migrator) -> None:
+    class User(Model):
+        class Meta:
+            database = migrator.db
+            db_table = "user"
+
+        name = CharField(unique=True)
+        is_active = BooleanField(default=True)
+        full_name = CharField(null=True)
+        password = CharField(default="NOLOGIN")
+
     migrator.create_table(User)

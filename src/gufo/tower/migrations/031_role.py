@@ -26,7 +26,7 @@ def migrate(migrator: Migrator) -> None:
             database = migrator.db
             db_table = "role"
 
-        name = CharField(unique=True)
+        name = CharField()
         description = TextField()
         link = CharField()
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")

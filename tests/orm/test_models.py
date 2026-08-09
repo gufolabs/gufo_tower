@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 # Third-party modules
 import pytest
+from peewee import ForeignKeyField
 
 # Gufo Tower modules
 from gufo.tower.models.datacenter import Datacenter
@@ -84,8 +85,7 @@ class Index:
         if field not in model._meta.fields:
             # Already a database column name.
             return field
-        f = model._meta.fields[field]
-        return f.db_column or f"{f.name}_id"
+        return model._meta.fields[field].column_name
 
 
 @pytest.fixture(params=MODELS, ids=lambda m: m.__name__)
@@ -97,7 +97,7 @@ def model(request):
 def get_database_indexes(model) -> set[Index]:
     """Return indexes defined in the database."""
     cursor = model._meta.database.execute_sql(
-        f'PRAGMA index_list("{model._meta.db_table}")'
+        f'PRAGMA index_list("{model._meta.table_name}")'
     )
     indexes = set()
     for row in cursor.fetchall():
@@ -118,28 +118,33 @@ def get_model_indexes(model) -> set[Index]:
     def to_column(field) -> str:
         if isinstance(field, str):
             field = model._meta.fields[field]
-        return field.db_column or f"{field.name}_id"
+        return field.column_name
 
     indexes: set[Index] = set()
 
-    # Indexes declared on individual fields.
     for name, field in model._meta.fields.items():
-        if (field.primary_key and name != "id") or field.unique:
+        if isinstance(field, ForeignKeyField):
             indexes.add(
                 Index(
-                    fields=(to_column(field),),
+                    fields=(field.column_name,),
+                    unique=False,
+                )
+            )
+        elif (field.primary_key and name != "id") or field.unique:
+            indexes.add(
+                Index(
+                    fields=(field.column_name,),
                     unique=True,
                 )
             )
         elif field.index:
             indexes.add(
                 Index(
-                    fields=(to_column(field),),
+                    fields=(field.column_name,),
                     unique=False,
                 )
             )
 
-    # Composite indexes declared in Meta.indexes.
     for fields, unique in model._meta.indexes:
         indexes.add(
             Index(
