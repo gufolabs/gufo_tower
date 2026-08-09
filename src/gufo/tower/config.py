@@ -66,6 +66,18 @@ class Config:
         """Database path."""
         return self.db_dir / "config.db"
 
+    @property
+    def log_dir(self) -> Path:
+        return self.home / "logs"
+
+    @property
+    def deploy_keys_dir(self) -> Path:
+        return self.home / "deploy_keys"
+
+    @property
+    def in_docker(self) -> bool:
+        return Path("/.dockerenv").exists()
+
     def setup(self) -> None:
         """Prepare directories and db."""
         from .models.db import connect
@@ -90,16 +102,10 @@ class Config:
 
     def ensure(self) -> None:
         """Ensure required directory structure exists."""
-        self.ensure_home()
-        self.ensure_db_dir()
-
-    def ensure_home(self) -> None:
-        """Ensure Tower home directory exists."""
         self._ensure_dir(self.home)
-
-    def ensure_db_dir(self) -> None:
-        """Ensure database directory exists."""
         self._ensure_dir(self.db_dir)
+        self._ensure_dir(self.log_dir)
+        self._ensure_dir(self.deploy_keys_dir)
 
 
 config = Config()

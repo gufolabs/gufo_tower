@@ -6,8 +6,6 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
-import os
-
 from peewee import BooleanField, CharField, ForeignKeyField, Model, TextField
 
 # Gufo Tower modules
@@ -22,14 +20,6 @@ def migrate(migrator: Migrator) -> None:
 
         name = CharField(unique=True)
         service_config = TextField(default="")
-
-        @property
-        def roles_path(self):
-            return os.path.abspath(
-                os.path.join(
-                    "var", "tower", "playbooks", self.name, "additional_roles"
-                )
-            )
 
     class Role(Model):
         class Meta:
