@@ -59,6 +59,8 @@ export const desktop_logic = {
             case "change_password":
                 change_password_logic.show();
                 break;
+            default:
+                break;
         }
     }
 };
