@@ -264,6 +264,8 @@ export const environment_logic = {
                         case "fatal":
                             status.failed++;
                             break;
+                        default:
+                            break;
                     }
                 }
                 if (t.match(/(\.\.\.ignoring)/)) {

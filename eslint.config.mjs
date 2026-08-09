@@ -42,6 +42,7 @@ export default [
             "prefer-const": "error",
             "no-shadow": "warn",
             "consistent-return": "warn",
+            "default-case": "warn",
         },
     },
 ];
