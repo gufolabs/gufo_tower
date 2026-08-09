@@ -102,16 +102,10 @@ class Config:
 
     def ensure(self) -> None:
         """Ensure required directory structure exists."""
-        self.ensure_home()
-        self.ensure_db_dir()
-
-    def ensure_home(self) -> None:
-        """Ensure Tower home directory exists."""
         self._ensure_dir(self.home)
-
-    def ensure_db_dir(self) -> None:
-        """Ensure database directory exists."""
         self._ensure_dir(self.db_dir)
+        self._ensure_dir(self.log_dir)
+        self._ensure_dir(self.deploy_keys_dir)
 
 
 config = Config()
