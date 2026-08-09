@@ -28,9 +28,7 @@ from ..config import config
 DatabaseType = SqliteDatabase
 
 db = SqliteDatabase(
-    None,
-    autocommit=False,
-    threadlocals=True,
+    None, autocommit=False, threadlocals=True, pragmas=[("foreign_keys", "ON")]
 )
 
 
