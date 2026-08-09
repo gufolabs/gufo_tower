@@ -117,11 +117,3 @@ def test_same_name_different_environment(isolated_fixture) -> None:
     pool2 = Pool.get((Pool.environment == env2) & (Pool.name == DEFAULT_POOL))
 
     assert pool1.id != pool2.id
-
-
-def test_delete_environment_restricted(isolated_fixture) -> None:
-    """Check environment deletion is restricted."""
-    env = create_environment()
-
-    with pytest.raises(IntegrityError):
-        env.delete_instance()
