@@ -49,14 +49,15 @@ class DeployHandler(BaseHandler):
         self.job_log = None
         self.tags = ""
         self.ansible_verbose = ""
+        self.connection_closed = False
 
     @tornado.web.authenticated
-    @tornado.web.asynchronous
-    def get(self, env_id, *args, **kwargs):
+    async def get(self, env_id, *args, **kwargs):
         try:
             self.env = Environment.get(Environment.id == env_id)
         except Environment.DoesNotExist as e:
             raise tornado.web.HTTPError(404) from e
+
         try:
             self.deploy_options = {
                 int(i)
@@ -64,6 +65,7 @@ class DeployHandler(BaseHandler):
             }
         except BaseException as e:
             raise tornado.web.HTTPError(404) from e
+
         env = os.environ.copy()
         if self.get_argument("deployment_options"):
             tags = []
@@ -87,9 +89,11 @@ class DeployHandler(BaseHandler):
                 env.update({"TOWER_RUN_TESTS": "1"})
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
+
         logger.info(
             "Running deploy on %s %s", self.env.name, self.deploy_options
         )
+
         with db.atomic():
             self.job_log = JobLog(
                 environment=self.env,
@@ -98,20 +102,26 @@ class DeployHandler(BaseHandler):
                 playbook="site.yml",
             )
             self.job_log.save()
+
         # Disable nginx proxy buffering
         self.set_header("X-Accel-Buffering", "no")
+
         # Stream output
         self.write(f"Starting job #{self.job_log.id}\n\n")
+        self.get_version()
+
         # Generate ssh keys
         self.env.build_ssh_keys()
+
         # Run playbook
-        bin_path = Path.cwd() / "bin"
-        if config.in_docker:
-            ansible_ssh_cp = (
-                Path("/root/.ansible/cp") / "ansible-ssh-%%r-%%h-%%r"
+        bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
+        if os.path.exists("/.dockerenv"):
+            ansible_ssh_cp = os.path.join(
+                "/root/.ansible/cp/ansible-ssh-%%r-%%h-%%r"
             )
         else:
-            ansible_ssh_cp = Path("/tmp") / "tower-%%r-%%h-%%r"
+            ansible_ssh_cp = os.path.join("/tmp/tower-%%r-%%h-%%r")
+
         env.update(
             {
                 "NOC_ENV": str(self.env.name),
@@ -128,36 +138,50 @@ class DeployHandler(BaseHandler):
                     ]
                 ),
                 "PYTHONUNBUFFERED": "1",
-                "TOWER_VERSION": __version__,
+                "TOWER_VERSION": self.version,
             }
         )
+
         command = [
-            str(bin_path / "ansible-playbook"),
+            os.path.join(bin_path, "ansible-playbook"),
             "-i",
-            str(bin_path / "tower-inv"),
+            os.path.join(bin_path, "tower-inv"),
             "site.yml",
-            "-f",
-            "50",
+            "-f 50",
             "--diff",
         ]
+
         if self.ansible_verbose:
             command.append(self.ansible_verbose)
         if self.tags:
             command.append(self.tags)
+
         logger.info("Running command %s", command)
+
         self.sp = tornado.process.Subprocess(
             command,
             env=env,
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
-            cwd=str(self.env.playbook_path),
+            cwd=os.path.join(self.env.playbook_path),
             close_fds=True,
         )
+
         self.write_pb()
-        self.sp.stdout.set_close_callback(self.on_stream_close)
-        self.read_future = self.sp.stdout.read_bytes(
-            self.BUFFSIZE, streaming_callback=self.on_data, partial=True
-        )
+
+        while True:
+            try:
+                data = await self.sp.stdout.read_bytes(
+                    self.BUFFSIZE,
+                    partial=True,
+                )
+            except tornado.iostream.StreamClosedError:
+                break
+
+            self.on_data(data)
+
+        if not self.connection_closed:
+            self.on_stream_close()
 
     def write_pb(self):
         from gufo.tower.models.service import Service
@@ -169,7 +193,11 @@ class DeployHandler(BaseHandler):
             if not pb:
                 continue
             pb_order.append(pb)
-        tower_autogen = (self.env.playbook_path / "tower.yml").resolve()
+
+        tower_autogen = os.path.abspath(
+            os.path.join(self.env.playbook_path, "tower.yml")
+        )
+
         with open(tower_autogen, "w") as f:
             for line in pb_order:
                 f.write(f"- import_playbook: {line}\n")
@@ -178,21 +206,43 @@ class DeployHandler(BaseHandler):
         path = self.env.roles_dir / service / "service.yml"
         if path.exists():
             return path
+
         path = (
             self.env.playbook_path / "system_roles" / service / "service.yml"
         )
         if path.exists():
             return path
+
         path = self.env.playbook_path / "noc_roles" / service / "service.yml"
         if path.exists():
             return path
+
         return None
+
+    def get_version(self):
+        from os.path import abspath, dirname, join, realpath
+
+        version_path = realpath(
+            join(dirname(abspath(__file__)), "../../../../../VERSION")
+        )
+
+        if not os.path.exists(version_path):
+            self.version = "old"
+        else:
+            with open(version_path) as f:
+                self.version = f.read().splitlines()[0]
 
     def on_connection_close(self, *args, **kwargs):
         logger.info("Connection terminated")
+
+        self.connection_closed = True
+
         self.sp.stdout.close()
+
         super().on_connection_close(*args, **kwargs)
+
         self.play_log += ["\nConnection terminated\n"]
+
         with db.atomic():
             self.job_log.complete_ts = datetime.datetime.now()
             self.job_log.log = "".join(self.play_log)
@@ -205,22 +255,27 @@ class DeployHandler(BaseHandler):
             return x
 
         logger.debug("PROGRESS: %s", qlog(data))
+
         self.write(data)
         self.flush()
+
         self.job_log.append_log(data)
+
         for match in self.rx_recap.finditer(str(data)):
             g = match.groups()
             self.recap[g[0]] = [int(x) for x in g[1:]]
+
         self.play_log += [data]
 
     def on_stream_close(self):
         logger.info("Deploy complete")
+
         self.finish()
-        with contextlib.suppress(tornado.iostream.StreamClosedError):
-            self.read_future.result()
+
         recap = [0, 0, 0, 0]
         for v in list(self.recap.values()):
             recap = [(x + y) for x, y in zip(recap, v)]
+
         with db.atomic():
             self.job_log.complete_ts = datetime.datetime.now()
             self.job_log.is_complete = True
