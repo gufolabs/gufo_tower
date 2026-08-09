@@ -12,7 +12,6 @@ import logging
 
 # Third-party modules
 import peewee
-import tornado.gen
 from tornado.web import HTTPError
 
 # Tower modules

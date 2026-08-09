@@ -6,7 +6,6 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-import contextlib
 import datetime
 import logging
 import os
@@ -21,8 +20,6 @@ import tornado.process
 import tornado.web
 
 # Gufo Tower modules
-from .. import __version__
-from ..config import config
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.joblog import JobLog
