@@ -210,8 +210,6 @@ def test_same_name_different_environment(isolated_fixture) -> None:
 
 def test_delete_datacenter_restricted(isolated_fixture) -> None:
     """Check datacenter deletion is restricted."""
-    from gufo.tower.models.db import db
-
     datacenter = create_datacenter(name="orm-node-restrict-dc")
     create_node(datacenter=datacenter)
     with pytest.raises(IntegrityError):
