@@ -19,7 +19,7 @@ from .nodetype import NodeType
 class Node(Model):
     class Meta:
         database = db
-        db_table = "node"
+        table_name = "node"
         indexes = ((("environment", "datacenter", "name"), True),)
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")

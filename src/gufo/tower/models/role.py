@@ -59,7 +59,7 @@ DEFAULT_ROLES = [
 class Role(Model):
     class Meta:
         database = db
-        db_table = "role"
+        table_name = "role"
         indexes = ((("environment", "name"), True),)
 
     name = CharField()

@@ -20,27 +20,27 @@ from peewee import (
 from gufo.tower.models.migration import Migrator
 
 
-class Environment(Model):
-    class Meta:
-        db_table = "environment"
-
-
-class JobLog(Model):
-    class Meta:
-        db_table = "joblog"
-
-    start_ts = DateTimeField()
-    complete_ts = DateTimeField(null=True)
-    environment = ForeignKeyField(Environment)
-    user = CharField()
-    playbook = CharField()
-    log = TextField(default="")
-    is_complete = BooleanField(default=False)
-    n_ok = IntegerField(default=0)
-    n_changed = IntegerField(default=0)
-    n_unreachable = IntegerField(default=0)
-    n_failed = IntegerField(default=0)
-
-
 def migrate(migrator: Migrator) -> None:
+    class Environment(Model):
+        class Meta:
+            database = migrator.db
+            table_name = "environment"
+
+    class JobLog(Model):
+        class Meta:
+            database = migrator.db
+            table_name = "joblog"
+
+        start_ts = DateTimeField()
+        complete_ts = DateTimeField(null=True)
+        environment = ForeignKeyField(Environment)
+        user = CharField()
+        playbook = CharField()
+        log = TextField(default="")
+        is_complete = BooleanField(default=False)
+        n_ok = IntegerField(default=0)
+        n_changed = IntegerField(default=0)
+        n_unreachable = IntegerField(default=0)
+        n_failed = IntegerField(default=0)
+
     migrator.create_table(JobLog)

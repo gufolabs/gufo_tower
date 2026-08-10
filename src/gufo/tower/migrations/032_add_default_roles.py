@@ -76,7 +76,7 @@ def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db
-            db_table = "environment"
+            table_name = "environment"
 
         name = CharField(unique=True)
         service_config = TextField(default="")
@@ -84,7 +84,7 @@ def migrate(migrator: Migrator) -> None:
     class Role(Model):
         class Meta:
             database = migrator.db
-            db_table = "role"
+            table_name = "role"
 
         name = CharField(unique=True)
         description = TextField()
@@ -96,7 +96,7 @@ def migrate(migrator: Migrator) -> None:
     class Node(Model):
         class Meta:
             database = migrator.db
-            db_table = "node"
+            table_name = "node"
 
         name = CharField()
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
@@ -104,7 +104,7 @@ def migrate(migrator: Migrator) -> None:
     class Pool(Model):
         class Meta:
             database = migrator.db
-            db_table = "pool"
+            table_name = "pool"
 
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
         name = CharField()
@@ -112,7 +112,7 @@ def migrate(migrator: Migrator) -> None:
     class Service(Model):
         class Meta:
             database = migrator.db
-            db_table = "service"
+            table_name = "service"
 
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")
         service = CharField()

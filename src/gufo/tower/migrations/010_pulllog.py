@@ -19,25 +19,25 @@ from peewee import (
 from gufo.tower.models.migration import Migrator
 
 
-class Environment(Model):
-    class Meta:
-        db_table = "environment"
-
-
-class PullLog(Model):
-    class Meta:
-        db_table = "pulllog"
-
-    start_ts = DateTimeField()
-    complete_ts = DateTimeField(null=True)
-    environment = ForeignKeyField(Environment)
-    user = CharField()
-    repo = CharField()
-    branch = CharField()
-    changeset = CharField()
-    status = BooleanField(default=False)
-    log = TextField(default="")
-
-
 def migrate(migrator: Migrator) -> None:
+    class Environment(Model):
+        class Meta:
+            database = migrator.db
+            table_name = "environment"
+
+    class PullLog(Model):
+        class Meta:
+            database = migrator.db
+            table_name = "pulllog"
+
+        start_ts = DateTimeField()
+        complete_ts = DateTimeField(null=True)
+        environment = ForeignKeyField(Environment)
+        user = CharField()
+        repo = CharField()
+        branch = CharField()
+        changeset = CharField()
+        status = BooleanField(default=False)
+        log = TextField(default="")
+
     migrator.create_table(PullLog)

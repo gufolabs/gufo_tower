@@ -20,7 +20,7 @@ from .db import db
 class Settings(Model):
     class Meta:
         database = db
-        db_table = "settings"
+        table_name = "settings"
 
     key = CharField(primary_key=True)
     value = TextField()

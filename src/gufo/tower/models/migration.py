@@ -28,7 +28,7 @@ class Migration(Model):
 
     class Meta:
         database = db
-        db_table = "migration"
+        table_name = "migration"
 
     name = CharField(unique=True)
     ts = DateTimeField(null=True)
@@ -36,7 +36,7 @@ class Migration(Model):
     @classmethod
     def _ensure_migration_table(cls) -> None:
         """Create the migration tracking table if it does not exist."""
-        db.create_table(Migration, safe=True)
+        Migration.create_table(safe=True)
 
     @classmethod
     def iter_applied_migrations(cls) -> Iterable[str]:
@@ -116,7 +116,7 @@ class Migrator:
         Args:
             model: Peewee model class.
         """
-        self.db.create_table(model)
+        model.create_table()
 
     def create_tables(self, *models: type[Model]) -> None:
         """Create multiple database tables.
@@ -132,7 +132,7 @@ class Migrator:
         Args:
             model: Peewee model class.
         """
-        self.db.drop_table(model)
+        model.drop_table()
 
     def drop_tables(self, *models: type[Model]) -> None:
         """Drop multiple database tables.
@@ -239,4 +239,4 @@ class Migrator:
             sql: SQL statement to execute.
             params: Query parameters.
         """
-        self.db.execute_sql(sql, params=params, require_commit=False)
+        self.db.execute_sql(sql, params=params)

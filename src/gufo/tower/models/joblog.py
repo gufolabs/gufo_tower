@@ -30,7 +30,7 @@ class JobLog(Model):
 
     class Meta:
         database = db
-        db_table = "joblog"
+        table_name = "joblog"
 
     start_ts = DateTimeField()
     complete_ts = DateTimeField(null=True)

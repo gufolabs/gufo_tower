@@ -16,7 +16,7 @@ def migrate(migrator: Migrator) -> None:
     class Environment(Model):
         class Meta:
             database = migrator.db
-            db_table = "environment"
+            table_name = "environment"
 
         name = CharField(unique=True)
         service_config = TextField(default="")
@@ -24,9 +24,9 @@ def migrate(migrator: Migrator) -> None:
     class Role(Model):
         class Meta:
             database = migrator.db
-            db_table = "role"
+            table_name = "role"
 
-        name = CharField(unique=True)
+        name = CharField()
         description = TextField()
         link = CharField()
         environment = ForeignKeyField(Environment, on_delete="RESTRICT")

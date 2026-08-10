@@ -43,6 +43,8 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 * bcrypt 5.0.0
 * Gufo Err 0.6.0
+* Peewee 3.19.0
+* Tornado 6.5.8
 
 ## 1.1.1 (2023-04-11)
 * Fix settings save 2

@@ -27,13 +27,11 @@ from ..config import config
 
 DatabaseType = SqliteDatabase
 
-db = SqliteDatabase(
-    None, autocommit=False, threadlocals=True, pragmas=[("foreign_keys", "ON")]
-)
+db = SqliteDatabase(None)
 
 
 def connect() -> None:
-    db.init(config.db_path)
+    db.init(config.db_path, pragmas=[("foreign_keys", "ON")])
     db.connect()
 
 
@@ -161,7 +159,7 @@ class SnapshotManager:
             shutil.copy2(db_path, raw_path)
         else:
             with sqlite3.connect(raw_path) as dst:
-                db.get_conn().backup(dst)
+                db.connection().backup(dst)
 
         snapshot_path = raw_path
         if compression is not Compression.NONE:

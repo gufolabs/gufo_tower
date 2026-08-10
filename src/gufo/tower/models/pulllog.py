@@ -23,7 +23,7 @@ from .environment import Environment
 class PullLog(Model):
     class Meta:
         database = db
-        db_table = "pulllog"
+        table_name = "pulllog"
 
     start_ts = DateTimeField()
     complete_ts = DateTimeField(null=True)

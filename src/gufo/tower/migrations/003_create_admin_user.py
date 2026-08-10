@@ -16,7 +16,7 @@ def migrate(migrator: Migrator) -> None:
     class User(Model):
         class Meta:
             database = migrator.db
-            db_table = "user"
+            table_name = "user"
 
         name = CharField(unique=True)
         is_active = BooleanField(default=True)
