@@ -160,7 +160,7 @@ dependencies = [
   "peewee==4.3.0",
   "tornado==6.5.8",
   "ansible==2.9.26",
-  "dulwich==0.24.10", # Last supporting python 3.9
+  "dulwich==1.2.12",
   "gufo-err==0.6.0",
 ]
 description = "A web-based control plane for managing NOC cluster topology, node assignments, and service configuration."
