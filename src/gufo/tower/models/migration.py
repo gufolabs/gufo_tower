@@ -11,7 +11,6 @@ import importlib
 import logging
 from collections.abc import Iterable
 from pkgutil import iter_modules
-from typing import Optional
 
 # Third-party modules
 from peewee import CharField, DateTimeField, Field, Model
@@ -231,7 +230,7 @@ class Migrator:
         operation.run()
 
     def execute_sql(
-        self, sql: str, params: Optional[tuple[object]] = None
+        self, sql: str, params: tuple[object] | None = None
     ) -> None:
         """Execute raw SQL statement.
 

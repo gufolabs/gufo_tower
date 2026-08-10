@@ -17,7 +17,6 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from operator import attrgetter
 from pathlib import Path
-from typing import Optional
 
 # Third-party packages
 from peewee import SqliteDatabase
@@ -270,7 +269,7 @@ class SnapshotManager:
             raise IndexError(msg)
         self.restore(snapshot)
 
-    def last(self) -> Optional[DBSnapshot]:
+    def last(self) -> DBSnapshot | None:
         """Get the most recent snapshot.
 
         Returns:
@@ -339,7 +338,7 @@ class SnapshotManager:
             return 0
 
     @property
-    def _protected_watermark(self) -> Optional[int]:
+    def _protected_watermark(self) -> int | None:
         """Highest protected snapshot number.
 
         Returns:

@@ -25,8 +25,8 @@ directory = "dist/coverage"
 # Exclude a variety of commonly ignored directories.
 exclude = [".git", "build", "dist"]
 line-length = 79
-# Assume Python 3.9
-target-version = "py39"
+# Assume Python 3.10+
+target-version = "py310"
 # Always autofix, but never try to fix `F401` (unused imports).
 fix = true
 
@@ -149,7 +149,6 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3.14",
   "Topic :: Software Development",
   "Topic :: Software Development :: Libraries",
   "Topic :: Software Development :: Libraries :: Python Modules",
@@ -177,7 +176,7 @@ keywords = [
 ]
 license = {file = "LICENSE.md"}
 name = "gufo_tower"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 docs = [
