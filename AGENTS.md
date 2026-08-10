@@ -5,7 +5,7 @@ Web-based control plane for managing NOC cluster topology, node assignments, and
 ## Compatibility
 
 - **Python**: Python: The project targets Python 3.10 and later. All submitted code must remain compatible with Python 3.10+. Do not use syntax or standard library APIs unavailable in Python 3.10
-- **WebIX**: The frontend targets **WebIX 5.2.0**. Do not use APIs introduced in newer WebIX versions.
+- **WebIX**: The frontend targets **WebIX 3.1**. Do not use APIs introduced in newer WebIX versions.
 
 ## Dev environment
 
