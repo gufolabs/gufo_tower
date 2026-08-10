@@ -4,8 +4,8 @@ Web-based control plane for managing NOC cluster topology, node assignments, and
 
 ## Compatibility
 
-- **Python**: The project currently targets **Python 3.9**. All submitted code **must remain compatible with Python 3.9**. Do not use syntax or standard library APIs introduced in Python 3.10 or later unless explicitly requested.
-- **WebIX**: The frontend targets **WebIX 3.1**. Do not use APIs introduced in newer WebIX versions.
+- **Python**: Python: The project targets Python 3.10 and later. All submitted code must remain compatible with Python 3.10+. Do not use syntax or standard library APIs unavailable in Python 3.10
+- **WebIX**: The frontend targets **WebIX 5.2.0**. Do not use APIs introduced in newer WebIX versions.
 
 ## Dev environment
 
@@ -59,4 +59,4 @@ tests/             — Pytest tests; conftest.py sets up temp home + sqlite db
 - **Generated files**: `src/ui/generated/version.js` and `src/ui/generated/sdl.js` are auto-generated. Run `./scripts/run-dev python scripts/build-generated.py` before building the UI if they need regeneration.
 - **UI build output** goes to `build/ui/`, **not** `dist/`. The Hatch build hook (`hatch_build.py`) includes it in the wheel via `[tool.hatch.build.targets.wheel.force-include]`.
 - **esbuild configuration** lives in `scripts/build-ui.mjs`. Entry points are `vendor.js` and `main.js`; output assets use `[name]-[hash]` naming.
-- **CI runs on Python 3.9 with system `uv`**. It filters editable installs from `uv export` (`grep -v -- "-e ."`) before dependency installation. Lockfile differences caused only by editable installs are generally not significant.
+- **CI runs on Python 3.13 with system `uv`**. It filters editable installs from `uv export` (`grep -v -- "-e ."`) before dependency installation. Lockfile differences caused only by editable installs are generally not significant.

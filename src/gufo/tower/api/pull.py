@@ -12,7 +12,6 @@ import shutil
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, Union
 
 # Third-party modules
 from dulwich import porcelain
@@ -117,7 +116,7 @@ class PullAPI(API):
             job.save()
 
     @staticmethod
-    def pull(link: str, path: Union[str, Path]) -> None:
+    def pull(link: str, path: str | Path) -> None:
         """Clone or update a git repository.
 
         Args:
@@ -182,7 +181,7 @@ class RepoSpec:
     """
 
     url: str
-    revision: Optional[str] = None
+    revision: str | None = None
 
     @classmethod
     def from_url(cls, url: str) -> "RepoSpec":

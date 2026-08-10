@@ -12,7 +12,6 @@ import os
 import re
 import subprocess
 from pathlib import Path
-from typing import Optional
 
 # Third-party modules
 import tornado.iostream
@@ -199,7 +198,7 @@ class DeployHandler(BaseHandler):
             for line in pb_order:
                 f.write(f"- import_playbook: {line}\n")
 
-    def resolv_pb(self, service) -> Optional[Path]:
+    def resolv_pb(self, service) -> Path | None:
         path = self.env.roles_dir / service / "service.yml"
         if path.exists():
             return path
@@ -258,7 +257,7 @@ class DeployHandler(BaseHandler):
 
         recap = [0, 0, 0, 0]
         for v in list(self.recap.values()):
-            recap = [(x + y) for x, y in zip(recap, v)]
+            recap = [(x + y) for x, y in zip(recap, v, strict=True)]
 
         with db.atomic():
             self.job_log.complete_ts = datetime.datetime.now()

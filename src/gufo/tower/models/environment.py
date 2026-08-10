@@ -18,7 +18,7 @@ import subprocess
 import tempfile
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 # Third-party modules
@@ -416,7 +416,7 @@ class Environment(Model):
         return self.data_path / "src_dist"
 
     @property
-    def deploy_keys(self) -> Optional[Path]:
+    def deploy_keys(self) -> Path | None:
         if path := os.getenv("TOWER_SSH_KEY_PATH"):
             return Path(path)
         if config.in_docker:

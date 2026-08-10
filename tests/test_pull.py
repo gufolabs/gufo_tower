@@ -9,7 +9,6 @@
 import tempfile
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Optional
 
 # Third paryy modules
 import pytest
@@ -88,7 +87,7 @@ def test_pull_missing_remote_branch(workdir: Path) -> None:
 def test_pull_revision(
     workdir: Path,
     revision: str,
-    expected_version: Optional[str],
+    expected_version: str | None,
 ) -> None:
     """Test pulling different repository revisions."""
     repo = workdir / "repo"
@@ -172,7 +171,7 @@ def test_pull_revision(
 def test_repo_spec_from_url(
     url: str,
     expected_url: str,
-    expected_revision: Optional[str],
+    expected_revision: str | None,
 ) -> None:
     """Test parsing repository specifications."""
     spec = RepoSpec.from_url(url)
