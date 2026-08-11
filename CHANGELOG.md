@@ -43,6 +43,7 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 * bcrypt 5.0.0
 * Gufo Err 0.6.0
+* Gufo Loader 2.0.1
 * Peewee 3.19.0
 * Tornado 6.5.8
 

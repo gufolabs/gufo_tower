@@ -15,7 +15,7 @@ import peewee
 from tornado.web import HTTPError
 
 # Tower modules
-from .base import APIClasses, APIError, BaseHandler
+from .base import APIError, BaseHandler, loader
 
 logger = logging.getLogger("rpc")
 
@@ -27,7 +27,7 @@ class JSONRPCHandler(BaseHandler):
         # Get API name
         api_name = str(path)
         # Check API class
-        api_class = APIClasses.get(api_name)
+        api_class = loader.get(api_name)
         if not api_class:
             raise HTTPError(404, f"Invalid API: {api_name}")
         # Parse request
