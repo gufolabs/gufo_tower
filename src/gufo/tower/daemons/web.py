@@ -21,6 +21,9 @@ from tornado.web import RedirectHandler, StaticFileHandler
 # Tower modules
 from gufo.tower.api.deploy import DeployHandler
 from gufo.tower.api.jsonrpc import JSONRPCHandler
+from gufo.tower.config import config
+from gufo.tower.models.migration import Migration
+from gufo.tower.models.settings import Settings
 
 logger = logging.getLogger(__name__)
 
