@@ -19,22 +19,8 @@ import tornado.web
 from tornado.web import RedirectHandler, StaticFileHandler
 
 # Tower modules
-# @todo: Remove api imports after migration to Gufo Loader
-from gufo.tower.api.datacenter import DatacenterAPI  # noqa
 from gufo.tower.api.deploy import DeployHandler
-from gufo.tower.api.environment import EnvironmentAPI  # noqa
 from gufo.tower.api.jsonrpc import JSONRPCHandler
-from gufo.tower.api.login import LoginAPI  # noqa
-from gufo.tower.api.node import NodeAPI  # noqa
-from gufo.tower.api.nodetype import NodeType  # noqa
-from gufo.tower.api.pool import PoolAPI  # noqa
-from gufo.tower.api.pull import PullAPI  # noqa
-from gufo.tower.api.role import RoleAPI  # noqa
-from gufo.tower.api.service import ServiceAPI  # noqa
-from gufo.tower.api.settings import SettingsAPI  # noqa
-from gufo.tower.config import config
-from gufo.tower.models.migration import Migration
-from gufo.tower.models.settings import Settings
 
 logger = logging.getLogger(__name__)
 

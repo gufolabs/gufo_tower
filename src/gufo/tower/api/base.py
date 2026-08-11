@@ -10,6 +10,7 @@ import codecs
 
 # Third-party modules
 import tornado.web
+from gufo.loader import Loader
 
 # Gufo Tower modules
 from ..models.user import User
@@ -35,18 +36,6 @@ class BaseHandler(tornado.web.RequestHandler):
         return None
 
 
-APIClasses = {}  # api -> API class
-
-
-# @todo: Remove after migration to Gufo Loader
-class APIBase(type):
-    def __new__(mcs, name, bases, attrs):
-        m = type.__new__(mcs, name, bases, attrs)
-        if m.name:
-            APIClasses[m.name] = m
-        return m
-
-
 def api(method):
     """Authenticated API method decorator."""
     method.api = True
@@ -61,8 +50,8 @@ def open_api(method):
     return method
 
 
-class API(metaclass=APIBase):
-    name = None
+class API:
+    name: str
 
     def __init__(self, handler):
         self.handler = handler
@@ -70,3 +59,6 @@ class API(metaclass=APIBase):
 
 class APIError(Exception):
     pass
+
+
+loader = Loader[type[API]](base="gufo.tower.api", exclude=["base"])

@@ -162,6 +162,7 @@ dependencies = [
   "ansible==2.9.26",
   "dulwich==1.2.12",
   "gufo-err==0.6.0",
+  "gufo-loader==2.0.1"
 ]
 description = "A web-based control plane for managing NOC cluster topology, node assignments, and service configuration."
 dynamic = ["version"]
