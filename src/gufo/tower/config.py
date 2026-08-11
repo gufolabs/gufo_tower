@@ -15,6 +15,7 @@ The configuration is resolved in the following order:
 
 # Python modules
 import os
+import shutil
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -106,6 +107,24 @@ class Config:
         self._ensure_dir(self.db_dir)
         self._ensure_dir(self.log_dir)
         self._ensure_dir(self.deploy_keys_dir)
+        self._move_old_database()
+
+    def _move_old_database(self) -> None:
+        """Copy the database from a legacy location if needed.
+
+        If the database already exists at the current location,
+        no action is taken. Otherwise, try to copy it from one of the
+        known legacy locations.
+        """
+        if self.db_path.exists():
+            return  # No need to migrate
+        for old_path in (
+            Path("/", "var", "tower", "db", "config.db"),
+            Path("/", "opt", "tower", "var", "tower", "db", "config.db"),
+        ):
+            if old_path.exists():
+                shutil.copy(old_path, self.db_path)
+                break
 
 
 config = Config()
