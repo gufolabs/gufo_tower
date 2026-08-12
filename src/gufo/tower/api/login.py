@@ -22,11 +22,11 @@ class LoginAPI(API):
         return self.handler.current_user is not None
 
     @open_api
-    def login(self, credentials):
+    def login(self, credentials: dict[str, str]) -> bool:
         """Logout user.
 
         Args:
-            credentials
+            credentials: dict containing `user` and `password` keys.
         """
         user = credentials.get("user")
         password = credentials.get("password")

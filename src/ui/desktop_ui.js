@@ -59,6 +59,17 @@ export const desktop = {
                             css: "app_button",
                             submenu: [
                                 {
+                                    id: "version",
+                                    icon: "info",
+                                    value: `Version: ${version}`
+                                },
+                                {
+                                    id: "docs",
+                                    icon: "book",
+                                    value: "Documentation"
+                                },
+                                { $template: "Separator" },
+                                {
                                     id: "change_password",
                                     value: "Change Password...",
                                     icon: "key"
@@ -68,11 +79,6 @@ export const desktop = {
                                     value: "Logout",
                                     icon: "sign-out"
                                 },
-                                {
-                                    id: "version",
-                                    icon: "info",
-                                    value: `Version: ${version}`
-                                }
                             ]
                         }
                     ],

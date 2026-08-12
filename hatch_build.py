@@ -38,13 +38,21 @@ class CustomBuildHook(BuildHookInterface):
             build_data: Mutable build metadata prepared by Hatchling.
         """
         if self.target_name == "wheel":
+            # Install npm packets
             subprocess.run(
                 ["npm", "install"],
                 cwd=self.root,
                 check=True,
             )
+            # Build ui
             subprocess.run(
                 ["npm", "run", "build"],
+                cwd=self.root,
+                check=True,
+            )
+            # Build docs
+            subprocess.run(
+                ["mkdocs", "build", "-d", "build/docs"],
                 cwd=self.root,
                 check=True,
             )

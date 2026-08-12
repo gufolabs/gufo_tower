@@ -52,6 +52,8 @@ def run():
     # Get static files path
     ui_root = str(files("gufo.tower") / "ui")
     logger.info("Serving UI files from %s", ui_root)
+    docs_root = str(files("gufo.tower") / "docs")
+    logger.info("Serving docs files from %s", docs_root)
     settings = {
         "template_path": str(Path(__file__).parent.parent / "templates"),
         "cookie_secret": Settings.get_cookie_secret(),
@@ -60,6 +62,7 @@ def run():
         [
             (r"^/api/([a-z][a-z0-9]*)/$", JSONRPCHandler),
             (r"^/ui/(.*)$", StaticFileHandler, {"path": ui_root}),
+            (r"^/docs/(.*)$", StaticFileHandler, {"path": docs_root}),
             (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
             (r"^/$", RedirectHandler, {"url": "/ui/index.html"}),
         ],
