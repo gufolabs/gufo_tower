@@ -5,5 +5,4 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 
-import "./pkg/webix/webix.js";
-import "./pkg/webix/sidebar.js";
+import "webix/webix.js";
