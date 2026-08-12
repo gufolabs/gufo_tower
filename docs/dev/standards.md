@@ -1,6 +1,6 @@
 # Supported Standards
 
-Gufo Thor implements and is guided by the following standards:
+Gufo Tower implements and is guided by the following standards:
 
 ## :simple-python: Python PEP
 

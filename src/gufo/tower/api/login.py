@@ -23,7 +23,7 @@ class LoginAPI(API):
 
     @open_api
     def login(self, credentials: dict[str, str]) -> bool:
-        """Logout user.
+        """Authorize session.
 
         Args:
             credentials: dict containing `user` and `password` keys.

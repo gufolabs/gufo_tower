@@ -1,6 +1,6 @@
-# Gufo Thor: Developer's Guide
+# Gufo Tower: Developer's Guide
 
-This section is intended for Gufo Thor developers and for entities, 
+This section is intended for Gufo Tower developers and for entities, 
 including both individuals and companies, interested in contributing to the project.
 
 - [Developer's Environment](environment.md)

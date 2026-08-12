@@ -2,5 +2,5 @@
 
 ## Bump Version
 
-* [ ] Change `__version__` in `src/gufo/thor/__init__.py`
+* [ ] Change `__version__` in `src/gufo/tower/__init__.py`
 * [ ] Add section in `CHANGELOG.md`
