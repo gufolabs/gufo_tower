@@ -247,19 +247,22 @@ export const environment_form = {
                             {
                                 cols: [
                                     {
+                                        view: "combo",
+                                        name: "install_method",
+                                        label: "Install method",
+                                        width: 250,
+                                        required: true,
+                                        value: "git",
+                                        options: [
+                                            { id: "git", value: "Git" }
+                                        ]
+                                    },
+                                    {
                                         view: "text",
                                         name: "playbook_link",
                                         label: "Playbook Repo URL",
                                         required: true,
                                         bottomLabel: "Playbook repo format is <a href=https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support>written here</a>"
-                                    },
-                                    {
-                                        view: "text",
-                                        name: "install_method",
-                                        label: "Install method",
-                                        required: true,
-                                        bottomLabel: "Either <strong>git</strong> or custom recommendations",
-                                        value: "git"
                                     }
                                 ]
                             }
