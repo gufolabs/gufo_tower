@@ -28,6 +28,13 @@ from gufo.tower.models.settings import Settings
 
 
 class WebServer:
+    """Tower HTTP server.
+
+    Configures the Tornado application, applies database migrations,
+    binds the HTTP server to the configured address, and manages its
+    lifecycle.
+    """
+
     def __init__(self) -> None:
         self.logger = logging.getLogger("web")
         self._shutdown_event: asyncio.Event | None = None
@@ -37,6 +44,13 @@ class WebServer:
         self._server: tornado.httpserver.HTTPServer | None = None
 
     def _parse_args(self, argv: Iterable[str]) -> None:
+        """Parse command-line arguments and configure the listening endpoint.
+
+        The listening address and port are taken from ``--listen`` or,
+        when the option is omitted, from the ``TOWER_LISTEN`` environment
+        variable. The number of worker processes is configured by
+        ``--children`` or ``TOWER_CHILDREN``.
+        """
         parser = argparse.ArgumentParser()
         parser.add_argument(
             "--listen",
@@ -60,10 +74,16 @@ class WebServer:
             self._port = int(ns.listen)
 
     def _migrate(self) -> None:
+        """Apply all pending database migrations."""
         self.logger.info("Applying database migrations")
         Migration.migrate()
 
     def _get_app(self) -> tornado.web.Application:
+        """Build and configure the Tornado web application.
+
+        The application provides the Tower API, static UI files,
+        documentation, and deployment endpoints.
+        """
         self.logger.info("Preparing application")
         # Get static files path
         pkg_root = files("gufo.tower")
@@ -87,11 +107,19 @@ class WebServer:
         )
 
     def _get_server(self) -> tornado.httpserver.HTTPServer:
+        """Create and bind the HTTP server to the configured endpoint."""
         server = tornado.httpserver.HTTPServer(self._get_app(), xheaders=True)
         server.bind(self._port, address=self._addr)
         return server
 
     async def run_from_argv(self, argv: Iterable[str]) -> None:
+        """Initialize and run the web server.
+
+        The method parses command-line arguments, initializes the
+        configuration, applies database migrations, starts the configured
+        number of worker processes, and waits until `shutdown` is
+        called.
+        """
         logging.basicConfig(
             level=logging.DEBUG,
             format="%(asctime)s [%(name)s] %(message)s",
@@ -111,11 +139,13 @@ class WebServer:
             self._server.stop()
 
     def shutdown(self) -> None:
+        """Request a graceful shutdown of the web server."""
         if self._shutdown_event is not None:
             self._shutdown_event.set()
 
 
 def run() -> None:
+    """Run the Tower web server using command-line arguments."""
     import sys
 
     server = WebServer()
