@@ -229,4 +229,5 @@ packages = [
 ]
 
 [tool.hatch.build.targets.wheel.force-include]
+"build/docs" = "gufo/tower/docs"
 "build/ui" = "gufo/tower/ui"

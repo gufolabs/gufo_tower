@@ -53,6 +53,9 @@ export const desktop_logic = {
 
     on_menu_click: function (item_id) {
         switch (item_id) {
+            case "docs":
+                window.open("/docs/index.html", "_blank");
+                break;
             case "logout":
                 app_logic.logout();
                 break;

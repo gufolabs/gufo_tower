@@ -12,13 +12,14 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 ## [Unreleased]
 
-## Fixed
+### Fixed
 
 * Editing on double-click on grid line.
 
-## Added
+### Added
 
 * Build python package
+* Documentation
 * Devcontainer
 * GitHub CI Workflows
 * UI building and bundling
@@ -35,11 +36,11 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 * `Readme.md` renamed to `README.md`
 * Default playbook repo url now points to `https://github.com/gufolabs/noc`
 
-## Removed
+### Removed
 
 * `VERSION` file, moved to `src/gufo/tower/__init__.py`
 
-## Dependencies
+### Dependencies
 
 * bcrypt 5.0.0
 * Gufo Err 0.6.0

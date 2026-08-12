@@ -5,7 +5,7 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-# Gufo Thor modules
+# Gufo Tower modules
 from .utils.fixture import Fixture
 
 

@@ -146,6 +146,15 @@ jobs:
       - name: Install Build
         run: uv pip install --system build
 
+      - name: Install Dependencies
+        run: |
+          uv export \
+            --extra docs \
+            --no-hashes \
+            --format requirements-txt\
+            | grep -v -- "-e ." > /tmp/requirements.txt
+          uv pip install --system -r /tmp/requirements.txt
+
       - name: Build Package
         run: python -m build --sdist --wheel
 
