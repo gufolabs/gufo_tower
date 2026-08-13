@@ -191,6 +191,7 @@ lint = [
   "mypy==1.19",
   "ruff==0.15.20",
   "types-PyYAML==6.0.12.3",
+  "types-peewee==4.3.0.20260807",
 ]
 test = [
   "PyYAML>=6.0",
