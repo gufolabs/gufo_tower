@@ -53,7 +53,7 @@ def open_api(method):
 class API:
     name: str
 
-    def __init__(self, handler):
+    def __init__(self, handler: tornado.web.RequestHandler) -> None:
         self.handler = handler
 
 

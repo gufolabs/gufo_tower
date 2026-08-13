@@ -61,7 +61,7 @@ class Settings(Model):
                 r[0].save()
 
     @classmethod
-    def get_cookie_secret(cls):
+    def get_cookie_secret(cls) -> bytes:
         try:
             return Settings.get_item("cookie_secret")
         except KeyError:
