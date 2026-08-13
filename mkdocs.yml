@@ -9,6 +9,7 @@ repo_name: gufolabs/gufo_tower
 nav:
   - Home: index.md
   - Installation: installation.md
+  - User Guide: user-guide/
   - Developers' Guide:
       - Overview: dev/index.md
       - Developer's Environment: dev/environment.md

@@ -15,6 +15,7 @@ RUN \
     --extra test\
     --extra lint\
     --extra docs\
+    --extra playwright\
     --no-hashes\
     --format requirements-txt\
     | grep -v -- "-e ." > /tmp/requirements.txt)\
@@ -26,4 +27,11 @@ RUN \
     && (curl -fsSL https://deb.nodesource.com/setup_24.x | bash -) \
     && apt-get install -y --no-install-recommends nodejs \
     && node --version \
-    && npm --version
+    && npm --version \
+    && playwright install chromium \
+    && playwright install-deps\
+    && apt-get install -y --no-install-recommends build-essential\
+    && (curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+    | sh -s -- -y --no-modify-path --profile minimal --default-toolchain=1.97.1)\
+    && . ~/.cargo/env\
+    && cargo install oxipng

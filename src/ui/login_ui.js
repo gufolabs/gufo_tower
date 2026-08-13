@@ -14,10 +14,11 @@ export const login_form = {
             cols: [
                 {},  // Left spacer
                 {
+                    id: "login",
                     rows: [
                         {
                             type: "header",
-                            template: "NOC Tower Login"
+                            template: "Gufo Tower Login"
                         },
                         // Login form
                         {

@@ -20,6 +20,7 @@ export const desktop = {
         // Toolbar
         {
             type: "clean",
+            id: "header",
             cols: [
                 {
                     view: "toolbar",
@@ -28,6 +29,7 @@ export const desktop = {
                     elements: [
                         {
                             view: "button",
+                            id: "grill",
                             type: "icon",
                             icon: "bars",
                             width: 37,
