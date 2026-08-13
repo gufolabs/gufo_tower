@@ -37,7 +37,8 @@ class WebServer:
 
     def __init__(self) -> None:
         self.logger = logging.getLogger("web")
-        self._shutdown_event: asyncio.Event | None = None
+        self._ready_event = asyncio.Event()
+        self._shutdown_event = asyncio.Event()
         self._children = 1
         self._addr: str | None = None
         self._port = 8888
@@ -88,13 +89,11 @@ class WebServer:
         # Get static files path
         pkg_root = files("gufo.tower")
         ui_root = str(pkg_root / "ui")
+        if not Path(ui_root).exists():
+            ui_root = str(Path("build", "ui"))  # Test run
         self.logger.info("Serving UI files from %s", ui_root)
         docs_root = str(pkg_root / "docs")
         self.logger.info("Serving docs files from %s", docs_root)
-        settings: dict[str, str] = {
-            "template_path": str(Path(__file__).parent.parent / "templates"),
-            "cookie_secret": Settings.get_cookie_secret(),
-        }
         return tornado.web.Application(
             [
                 (r"^/api/([a-z][a-z0-9]*)/$", JSONRPCHandler),
@@ -103,7 +102,8 @@ class WebServer:
                 (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
                 (r"^/$", RedirectHandler, {"url": "/ui/index.html"}),
             ],
-            **settings,
+            template_path=str(Path(__file__).parent.parent / "templates"),
+            cookie_secret=Settings.get_cookie_secret(),
         )
 
     def _get_server(self) -> tornado.httpserver.HTTPServer:
@@ -127,12 +127,12 @@ class WebServer:
         self._parse_args(argv)
         config.setup()
         self._migrate()
-        self._shutdown_event = asyncio.Event()
         self._server = self._get_server()
         self._server.start(self._children)
         self.logger.info(
             "Service is ready. Listening on %s:%s", self._addr, self._port
         )
+        self._ready_event.set()
         try:
             await self._shutdown_event.wait()
         finally:
@@ -142,6 +142,9 @@ class WebServer:
         """Request a graceful shutdown of the web server."""
         if self._shutdown_event is not None:
             self._shutdown_event.set()
+
+    async def wait_for_ready(self) -> None:
+        await self._ready_event.wait()
 
 
 def run() -> None:
