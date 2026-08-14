@@ -14,19 +14,20 @@ from playwright.async_api import Page
 # Gufo Tower modules
 from .base import BaseShotter
 
+USER_GUIDE = Path("user-guide")
+DESKTOP = USER_GUIDE / "desktop"
+
 
 class DesktopShotter(BaseShotter):
     require_authorized = True
     screenshots = {
-        "desktop": Path("user-guide", "desktop", "desktop.png"),
-        "desktop-header": Path("user-guide", "desktop", "desktop-header.png"),
-        "desktop-sidebar": Path(
-            "user-guide", "desktop", "desktop-sidebar.png"
-        ),
-        "desktop-sidebar-collapsed": Path(
-            "user-guide", "desktop", "desktop-sidebar-collapsed.png"
-        ),
-        "desktop-grill": Path("user-guide", "desktop", "desktop-grill.png"),
+        "desktop": DESKTOP / "desktop.png",
+        "desktop-header": DESKTOP / "desktop-header.png",
+        "desktop-sidebar": DESKTOP / "desktop-sidebar.png",
+        "desktop-sidebar-collapsed": DESKTOP / "desktop-sidebar-collapsed.png",
+        "desktop-grill": DESKTOP / "desktop-grill.png",
+        "desktop-working-area": DESKTOP / "desktop-working-area.png",
+        "desktop-menu": DESKTOP / "desktop-menu.png",
     }
 
     async def make_shots(self, page: Page) -> None:
@@ -51,3 +52,14 @@ class DesktopShotter(BaseShotter):
             await self.screenshot(page, "desktop-sidebar-collapsed")
         # Click grill (expand)
         await grill.click()
+        # Highlight working area
+        async with self.highlight(page.locator('[view_id="apps"]')):
+            await self.screenshot(page, "desktop-working-area")
+        # Highlight desktop menu
+        async with self.highlight(page.locator('[view_id="desktop_menu"]')):
+            link = page.locator('[view_id="desktop_menu"] a')
+            await link.hover()
+            # wait for menu (last item)
+            menu = page.locator('[webix_l_id="logout"]')
+            await menu.wait_for(state="visible")
+            await self.screenshot(page, "desktop-menu")

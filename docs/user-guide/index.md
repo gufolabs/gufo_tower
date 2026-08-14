@@ -8,6 +8,7 @@ Use the sections below to learn about the available operations and workflows.
 
 ## Table of Content
 
-- [Getting started](gettings-started.md)
-- [Login](login.md)
-- [Desktop](desktop.md)
+- [Getting started](getting-started.md)
+- [Login](login/index.md)
+- [Main Desktop](desktop/index.md)
+- [Change Password](change-password/index.md)
