@@ -43,50 +43,50 @@ export const desktop = {
                             id: "environment_label",
                             view: "label",
                             label: "NOC Tower: Select environment"
+                        },
+                        {
+                            view: "menu",
+                            id: "desktop_menu",
+                            height: "auto",
+                            width: 32,
+                            submenuConfig: {
+                                width: 200
+                            },
+                            data: [
+                                {
+                                    id: "user_menu",
+                                    icon: "menu_user",
+                                    css: "app_button",
+                                    submenu: [
+                                        {
+                                            id: "version",
+                                            icon: "info",
+                                            value: `Version: ${version}`
+                                        },
+                                        {
+                                            id: "docs",
+                                            icon: "book",
+                                            value: "Documentation"
+                                        },
+                                        { $template: "Separator" },
+                                        {
+                                            id: "change_password",
+                                            value: "Change Password...",
+                                            icon: "key"
+                                        },
+                                        {
+                                            id: "logout",
+                                            value: "Logout",
+                                            icon: "sign-out"
+                                        },
+                                    ]
+                                }
+                            ],
+                            on: {
+                                onMenuItemClick: desktop_logic.on_menu_click
+                            }
                         }
                     ]
-                },
-                {
-                    view: "menu",
-                    id: "desktop_menu",
-                    height: "auto",
-                    width: 50,
-                    submenuConfig: {
-                        width: 200
-                    },
-                    data: [
-                        {
-                            id: "user_menu",
-                            icon: "menu_user",
-                            css: "app_button",
-                            submenu: [
-                                {
-                                    id: "version",
-                                    icon: "info",
-                                    value: `Version: ${version}`
-                                },
-                                {
-                                    id: "docs",
-                                    icon: "book",
-                                    value: "Documentation"
-                                },
-                                { $template: "Separator" },
-                                {
-                                    id: "change_password",
-                                    value: "Change Password...",
-                                    icon: "key"
-                                },
-                                {
-                                    id: "logout",
-                                    value: "Logout",
-                                    icon: "sign-out"
-                                },
-                            ]
-                        }
-                    ],
-                    on: {
-                        onMenuItemClick: desktop_logic.on_menu_click
-                    }
                 }
             ]
         },
