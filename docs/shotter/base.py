@@ -148,6 +148,11 @@ class BaseShotter(ABC):
     documentation screenshots. It provides the browser, authentication,
     navigation, highlighting, and screenshot infrastructure shared by all
     documentation scenarios.
+
+    Attributes:
+        require_authorized: Switch between authorized and non-authorized sessions.
+        screenshots: Expected screenshots definition.
+        capture_console: If set, print output of JS console.
     """
 
     _playwright: ClassVar[Playwright | None] = None
@@ -159,6 +164,7 @@ class BaseShotter(ABC):
     _device_scale_factor = 2
     require_authorized: bool
     screenshots: dict[str, Path]
+    capture_console = False
 
     def __init__(self) -> None:
         self._host = "127.0.0.1"
@@ -370,6 +376,8 @@ class BaseShotter(ABC):
                 else:
                     ctx = await shotter.get_clear_context()
                 page = await ctx.new_page()
+                if shotter.capture_console:
+                    page.on("console", lambda msg: print(f"JS: {msg.text}"))
                 try:
                     await shotter.make_shots(page)
                 finally:
