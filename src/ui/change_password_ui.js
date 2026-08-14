@@ -18,7 +18,7 @@ export const change_password_form = {
                     rows: [
                         {
                             type: "header",
-                            template: "Change NOC Tower password"
+                            template: "Change Gufo Tower password"
                         },
                         // Login form
                         {
