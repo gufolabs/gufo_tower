@@ -103,8 +103,8 @@ class Environment(Model):
                     # Web settions
                     "noc_web_host": self.web_host,
                     # Tower local settings
-                    "tower_data": self.data_path,
-                    "tower_ssh_keys": self.ssh_keys_path,
+                    "tower_data": str(self.data_path),
+                    "tower_ssh_keys": str(self.ssh_keys_path),
                     # All pools
                     "noc_all_pools": [
                         {"name": p.name, "description": p.description}
