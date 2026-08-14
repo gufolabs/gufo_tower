@@ -79,3 +79,4 @@ class JSONRPCHandler(BaseHandler):
         if isinstance(value, HTTPError):
             return super().log_exception(typ, value, tb)
         err.process()
+        return None
