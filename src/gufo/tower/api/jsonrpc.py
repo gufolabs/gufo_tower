@@ -9,9 +9,11 @@
 import inspect
 import json
 import logging
+from types import TracebackType
 
 # Third-party modules
 import peewee
+from gufo.err import err
 from tornado.web import HTTPError
 
 # Tower modules
@@ -67,3 +69,13 @@ class JSONRPCHandler(BaseHandler):
         # Return response
         self.set_header("Content-Type", self.MIME_TYPE)
         self.write(json.dumps(response))
+
+    def log_exception(
+        self,
+        typ: type[BaseException] | None,
+        value: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
+        if isinstance(value, HTTPError):
+            return super().log_exception(typ, value, tb)
+        err.process()
