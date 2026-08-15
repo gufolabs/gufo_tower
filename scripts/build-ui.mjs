@@ -88,14 +88,17 @@ async function main() {
         .replace(
             "{{JS}}",
             [
-                `<script src="assets/${vendorJs}"></script>`,
-                `<script src="assets/${mainJs}"></script>`,
+                `<script src="/assets/${vendorJs}"></script>`,
+                `<script src="/assets/${mainJs}"></script>`,
             ].join("\n"),
         )
         .replace(
             "{{CSS}}",
-            `<link rel="stylesheet" href="assets/${cssFile}">`,
-        );
+            `<link rel="stylesheet" href="/assets/${cssFile}">`,
+        )
+        .replace(/\s+/g, " ")
+        .replace(/> </g, "><")
+        .trim();
 
     await writeFile(
         join(outDir, "index.html"),
@@ -106,7 +109,7 @@ async function main() {
     // Static resources which are not handled by imports yet.
     await cp(
         join(srcDir, "pkg", "favicon", "airport.png"),
-        join(outDir, "favicon.png"),
+        join(outDir, "assets", "favicon.png"),
     );
 
     console.log(`Vendor JS: ${vendorJs}`);

@@ -8,9 +8,12 @@
 # Python modules
 import argparse
 import asyncio
+import hashlib
 import logging
 import os
 from collections.abc import Iterable
+from email.utils import formatdate
+from http import HTTPStatus
 from importlib.resources import files
 from pathlib import Path
 
@@ -89,11 +92,11 @@ class WebServer:
         self.logger.info("Preparing application")
         # Get static files path
         pkg_root = files("gufo.tower")
-        ui_root = str(pkg_root / "ui")
-        if not Path(ui_root).exists():
-            ui_root = str(Path("build", "ui"))  # Test run
+        ui_root = Path(str(pkg_root)) / "ui"
+        if not ui_root.exists():
+            ui_root = Path("build", "ui")  # Test run
         self.logger.info("Serving UI files from %s", ui_root)
-        docs_root = str(pkg_root / "docs")
+        docs_root = Path(str(pkg_root)) / "docs"
         self.logger.info("Serving docs files from %s", docs_root)
         return tornado.web.Application(
             [
@@ -105,9 +108,14 @@ class WebServer:
                 ),
                 (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
                 (
-                    r"^/(.*)$",
+                    r"^/assets/(.*)$",
                     StaticFileHandler,
-                    {"path": ui_root, "default_filename": "index.html"},
+                    {"path": ui_root / "assets"},
+                ),
+                (
+                    r"^/(.*)$",
+                    UIHandler,
+                    {"index_path": ui_root / "index.html"},
                 ),
             ],
             template_path=str(Path(__file__).parent.parent / "templates"),
@@ -153,6 +161,30 @@ class WebServer:
 
     async def wait_for_ready(self) -> None:
         await self._ready_event.wait()
+
+
+class UIHandler(tornado.web.RequestHandler):
+    """Serve the UI entry point for all application routes."""
+
+    def initialize(self, index_path: Path) -> None:
+        """Load and cache index.html and its HTTP cache metadata."""
+        self.content = index_path.read_bytes()
+        self.etag = f'"{hashlib.sha256(self.content).hexdigest()}"'
+        self.modified = formatdate(
+            index_path.stat().st_mtime,
+            usegmt=True,
+        )
+
+    async def get(self, path: str) -> None:
+        """Serve index.html or return 304 when the cached version is current."""
+        self.set_header("Content-Type", "text/html; charset=UTF-8")
+        self.set_header("Cache-Control", "no-cache")
+        self.set_header("Last-Modified", self.modified)
+        self.set_header("ETag", self.etag)
+        if self.request.headers.get("If-None-Match") == self.etag:
+            self.set_status(HTTPStatus.NOT_MODIFIED)
+            return
+        self.write(self.content)
 
 
 def run() -> None:
