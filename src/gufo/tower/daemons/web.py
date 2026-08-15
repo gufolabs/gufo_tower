@@ -17,7 +17,7 @@ from pathlib import Path
 # Third-party modules
 import tornado.httpserver
 import tornado.web
-from tornado.web import RedirectHandler, StaticFileHandler
+from tornado.web import StaticFileHandler
 
 # Tower modules
 from gufo.tower.api.deploy import DeployHandler
