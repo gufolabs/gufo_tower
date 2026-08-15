@@ -10,6 +10,7 @@ nav:
   - Home: index.md
   - Installation: installation.md
   - User Guide: user-guide/
+  - Reference: reference/
   - Developers' Guide:
       - Overview: dev/index.md
       - Developer's Environment: dev/environment.md
