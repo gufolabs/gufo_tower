@@ -17,6 +17,7 @@ from pathlib import Path
 # Third-party modules
 import tornado.httpserver
 import tornado.web
+from gufo.err import err
 from tornado.web import StaticFileHandler
 
 # Tower modules
@@ -163,4 +164,5 @@ def run() -> None:
 
 
 if __name__ == "__main__":
+    err.setup(catch_all=True, format="extend")
     run()
