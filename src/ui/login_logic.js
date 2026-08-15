@@ -8,29 +8,29 @@ import { API } from "./rpc.js";
 import { desktop_logic } from "./desktop_logic.js";
 import { Tower } from "./lib.js";
 
-export const login_logic = {
-    init: function () {
-    },
+export class LoginLogic {
+    init = () => {
+    };
 
-    show: function () {
+    show = () => {
         $$("login_panel").show();
         login_logic.clear_form();
-    },
+    };
 
-    clear_form: function () {
+    clear_form = () => {
         $$("login_form").clear();
         $$("login_form").focus("user");
-    },
+    };
 
-    on_login: function () {
+    on_login = () => {
         if (!$$("login_form").validate()) {
             return;
         }
         const data = $$("login_form").getValues();
         login_logic.login(data.user, data.password);
-    },
+    };
 
-    login: function (user, password) {
+    login = (user, password) => {
         API.login.login({
             user: user,
             password: password
@@ -43,11 +43,12 @@ export const login_logic = {
         }, function (err) {
             Tower.msg.failed("Connection failed");
         });
-    },
+    };
 
-    logout: function () {
+    logout = () => {
         API.login.logout().then(function (result) {
             login_logic.show();
         });
-    }
+    };
 };
+export const login_logic = new LoginLogic();

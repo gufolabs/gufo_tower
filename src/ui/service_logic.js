@@ -9,20 +9,20 @@ import { app_logic } from "./app_logic.js";
 import { settings_logic } from "./settings_logic.js";
 import { Tower } from "./lib.js";
 
-export const service_logic = {
-    init: function () {
-    },
+export class ServiceLogic {
+    init = () => {
+    };
 
-    can_run: function () {
+    can_run = () => {
         return app_logic.is_environment_selected();
-    },
+    };
 
-    show: function () {
+    show = () => {
         $$("service_panel").show();
         service_logic.load();
-    },
+    };
 
-    load: function () {
+    load = () => {
         settings_logic.init();
         const env_id = app_logic.current_env.id;
         API.pull.is_pulled(env_id).then(
@@ -54,8 +54,8 @@ export const service_logic = {
                 Tower.msg.failed("Cannot connect to server");
             }
         );
-    },
-    set_enabled: function (obj, common) {
+    };
+    set_enabled = (obj, common) => {
         if (Object.hasOwn(obj, 'config') && Object.hasOwn(obj['config'], 'backup_power')) {
             return common.treecheckbox(obj, common) +
                 common.space(obj, common) +
@@ -76,9 +76,9 @@ export const service_logic = {
         else {
             return common.treecheckbox(obj, common)
         }
-    },
+    };
 
-    on_column_group: function (obj, common, name) {
+    on_column_group = (obj, common, name) => {
         const parent = obj.$parent ? obj.$parent.split("$")[1] : undefined;
         // let name = this.column;
         if (obj.$group && obj[name]) {
@@ -98,9 +98,9 @@ export const service_logic = {
             }
             return "";
         }
-    },
+    };
 
-    on_select_service: function () {
+    on_select_service = () => {
         const ids = $$("service_list").getSelectedId(true);
         // we are filtering. staying on groupped service
         if (ids.length === 0) {
@@ -178,9 +178,9 @@ export const service_logic = {
                 cv[ci].setValue(data.config[fname]);
             }
         }
-    },
+    };
 
-    on_save: function () {
+    on_save = () => {
         const r = [];
         const env_id = app_logic.current_env.id;
         $$("service_list").data.each(function (v) {
@@ -201,17 +201,8 @@ export const service_logic = {
                 Tower.msg.failed("Failed to save");
             }
         );
-    },
-    // sortGroupTitle: function () {
-    //     grid.markSorting("service", "asc");
-    //     grid.sort(function (a, b) {
-    //         if (a.service === b.service)
-    //             return (a.node > b.node) ? 1 : -1;
-    //         else
-    //             return (a.service > b.service) ? 1 : -1;
-    //     });
-    // },
-    on_group_table: function (mode) {
+    };
+    on_group_table = (mode) => {
         if (mode === "init") {
             mode = $$("settings_form").getValues()["group_by"]
         }
@@ -267,12 +258,13 @@ export const service_logic = {
             }
         });
         grid.filterByAll();
-    },
-    on_expand_tree: function (mode) {
+    };
+    on_expand_tree = (mode) => {
         if (mode) {
             $$("service_list").openAll();
         } else {
             $$("service_list").closeAll();
         }
-    }
+    };
 };
+export const service_logic = new ServiceLogic();

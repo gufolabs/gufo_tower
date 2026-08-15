@@ -7,35 +7,35 @@
 import { API } from "./rpc.js";
 import { Tower } from "./lib.js";
 
-export const datacenter_logic = {
-    init: function () {
-    },
+export class DatacenterLogic {
+    init = () => {
+    };
 
-    show: function () {
+    show = () => {
         datacenter_logic.show_list();
         $$("datacenter_form").bind($$("datacenter_list"));
-    },
+    };
 
-    show_list: function () {
+    show_list = () => {
         $$("datacenter_list_panel").show();
         datacenter_logic.load();
-    },
+    };
 
-    show_form: function () {
+    show_form = () => {
         $$("datacenter_form_panel").show();
-    },
+    };
 
     // Load data info list
-    load: function () {
+    load = () => {
         $$("datacenter_list").load("rpc->datacenter");
-    },
+    };
 
-    on_add: function () {
+    on_add = () => {
         $$("datacenter_form").clear();
         datacenter_logic.show_form();
-    },
+    };
 
-    on_save: function () {
+    on_save = () => {
         let data;
         const form = $$("datacenter_form");
 
@@ -69,19 +69,19 @@ export const datacenter_logic = {
         } else {
             Tower.msg.failed("Error in data");
         }
-    },
+    };
 
-    on_edit: function () {
+    on_edit = () => {
         const data = $$("datacenter_list").getSelectedItem();
         $$("datacenter_form").setValues(data);
         datacenter_logic.show_form();
-    },
+    };
 
-    on_search: function (nv, ov) {
+    on_search = (nv, ov) => {
         console.log("Search", nv, ov);
-    },
+    };
 
-    on_delete: function () {
+    on_delete = () => {
         const data = $$("datacenter_form").getValues();
         if (data.id) {
             API.datacenter.delete_item(data).then(
@@ -98,5 +98,7 @@ export const datacenter_logic = {
             Tower.msg.complete("Deleted");
             datacenter_logic.show_list();
         }
-    }
+    };
 };
+
+export const datacenter_logic = new DatacenterLogic();

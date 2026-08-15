@@ -6,25 +6,25 @@
 // ----------------------------------------------------------------------
 import { API } from "./rpc.js";
 import { Tower } from "./lib.js";
-export const settings_logic = {
-    init: function () {
+export class SettingsLogic {
+    init = () => {
         API.settings.get_settings().then(function (result) {
             $$("settings_form").setValues(result);
         }).fail(function (err) {
             Tower.msg.failed("Failed to get settings")
         });
-    },
+    };
 
-    show: function () {
+    show = () => {
         $$("settings_form_panel").show();
         API.settings.get_settings().then(function (result) {
             $$("settings_form").setValues(result);
         }).fail(function (err) {
             Tower.msg.failed("Failed to get settings")
         });
-    },
+    };
 
-    on_save: function () {
+    on_save = () => {
         const form = $$("settings_form");
         if (form.validate()) {
             API.settings.save_settings(form.getValues()).then(
@@ -37,5 +37,6 @@ export const settings_logic = {
         } else {
             Tower.msg.failed("Error in settings");
         }
-    }
+    };
 };
+export const settings_logic = new SettingsLogic();
