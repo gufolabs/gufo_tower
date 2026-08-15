@@ -20,10 +20,7 @@ class LoginShotter(BaseShotter):
     screenshots = {"login": Path("user-guide", "login", "login.png")}
 
     async def make_shots(self, page: Page) -> None:
-        resp = await page.goto(self.resolve_path("/"))
-        if not resp or not resp.ok:
-            msg = f"failed to get page: {resp}"
-            raise RuntimeError(msg)
+        await self.open_page(page)
         await page.locator("#user").fill("admin")
         await page.locator("#password").fill("admin")
         view = page.locator('[view_id="login"]')

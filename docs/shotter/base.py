@@ -388,7 +388,7 @@ class BaseShotter(ABC):
                     raise RuntimeError(msg)
         finally:
             await cls.close()
-        Screenshot.compress_all()
+            Screenshot.compress_all()
 
 
 loader = Loader[type[BaseShotter]](
