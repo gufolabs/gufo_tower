@@ -17,7 +17,7 @@ from pathlib import Path
 # Third-party modules
 import tornado.httpserver
 import tornado.web
-from tornado.web import RedirectHandler, StaticFileHandler
+from tornado.web import StaticFileHandler
 
 # Tower modules
 from gufo.tower.api.deploy import DeployHandler
@@ -97,10 +97,17 @@ class WebServer:
         return tornado.web.Application(
             [
                 (r"^/api/([a-z][a-z0-9]*)/$", JSONRPCHandler),
-                (r"^/ui/(.*)$", StaticFileHandler, {"path": ui_root}),
-                (r"^/docs/(.*)$", StaticFileHandler, {"path": docs_root}),
+                (
+                    r"^/docs/(.*)$",
+                    StaticFileHandler,
+                    {"path": docs_root, "default_filename": "index.html"},
+                ),
                 (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
-                (r"^/$", RedirectHandler, {"url": "/ui/index.html"}),
+                (
+                    r"^/(.*)$",
+                    StaticFileHandler,
+                    {"path": ui_root, "default_filename": "index.html"},
+                ),
             ],
             template_path=str(Path(__file__).parent.parent / "templates"),
             cookie_secret=Settings.get_cookie_secret(),
