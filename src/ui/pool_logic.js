@@ -8,39 +8,39 @@ import { API } from "./rpc.js";
 import { app_logic } from "./app_logic.js";
 import { Tower } from "./lib.js";
 
-export const pool_logic = {
-    init: function () {
+export class PoolLogic {
+    init = () => {
         $$("pool_form").bind($$("pool_list"));
-    },
+    };
 
-    can_run: function () {
+    can_run = () => {
         return app_logic.is_environment_selected();
-    },
+    };
 
-    show: function () {
+    show = () => {
         pool_logic.show_list();
-    },
+    };
 
-    show_list: function () {
+    show_list = () => {
         $$("pool_list_panel").show();
         pool_logic.load();
-    },
+    };
 
-    show_form: function () {
+    show_form = () => {
         $$("pool_form_panel").show();
-    },
+    };
 
     // Load data info list
-    load: function () {
+    load = () => {
         $$("pool_list").load("rpc->pool");
-    },
+    };
 
-    on_add: function () {
+    on_add = () => {
         $$("pool_form").clear();
         pool_logic.show_form();
-    },
+    };
 
-    on_save: function () {
+    on_save = () => {
         let data;
         const form = $$("pool_form");
 
@@ -76,19 +76,19 @@ export const pool_logic = {
         } else {
             Tower.msg.failed("Error in data");
         }
-    },
+    };
 
-    on_edit: function () {
+    on_edit = () => {
         const data = $$("pool_list").getSelectedItem();
         $$("pool_form").setValues(data);
         pool_logic.show_form();
-    },
+    };
 
-    on_search: function (nv, ov) {
+    on_search = (nv, ov) => {
         console.log("Search", nv, ov);
-    },
+    };
 
-    on_delete: function () {
+    on_delete = () => {
         const data = $$("pool_form").getValues();
         if (data.id) {
             API.pool.delete_item(data).then(
@@ -105,5 +105,7 @@ export const pool_logic = {
             Tower.msg.complete("Deleted");
             pool_logic.show_list();
         }
-    }
+    };
 };
+
+export const pool_logic = new PoolLogic();

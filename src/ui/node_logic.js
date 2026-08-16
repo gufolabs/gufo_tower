@@ -8,34 +8,34 @@ import { API } from "./rpc.js";
 import { app_logic } from "./app_logic.js";
 import { Tower } from "./lib.js";
 
-export const node_logic = {
-    init: function () {
+export class NodeLogic {
+    init = () => {
         $$("node_form").bind($$("node_list"));
-    },
+    };
 
-    can_run: function () {
+    can_run = () => {
         return app_logic.is_environment_selected();
-    },
+    };
 
-    show: function () {
+    show = () => {
         node_logic.show_list();
-    },
+    };
 
-    show_list: function () {
+    show_list = () => {
         $$("node_list_panel").show();
         node_logic.load();
-    },
+    };
 
-    show_form: function () {
+    show_form = () => {
         $$("node_form_panel").show();
-    },
+    };
 
     // Load data info list
-    load: function () {
+    load = () => {
         $$("node_list").load("rpc->node");
-    },
+    };
 
-    on_add: function () {
+    on_add = () => {
         const dc = $$("node_form").elements.datacenter;
         const nt = $$("node_form").elements.node_type;
 
@@ -58,9 +58,9 @@ export const node_logic = {
             });
         });
 
-    },
+    };
 
-    on_save: function () {
+    on_save = () => {
         let data;
         const form = $$("node_form");
 
@@ -95,21 +95,21 @@ export const node_logic = {
         } else {
             Tower.msg.failed("Error in data");
         }
-    },
+    };
 
-    on_edit: function () {
+    on_edit = () => {
         const data = $$("node_list").getSelectedItem();
         data.datacenter = data.datacenter.id;
         data.node_type = data.node_type.id;
         $$("node_form").setValues(data);
         node_logic.show_form();
-    },
+    };
 
-    on_search: function (nv, ov) {
+    on_search = (nv, ov) => {
         console.log("Search", nv, ov);
-    },
+    };
 
-    on_delete: function () {
+    on_delete = () => {
         const data = $$("node_form").getValues();
         if (data.id) {
             API.node.delete_item(data).then(
@@ -126,5 +126,6 @@ export const node_logic = {
             Tower.msg.complete("Deleted");
             node_logic.show_list();
         }
-    }
+    };
 };
+export const node_logic = new NodeLogic();

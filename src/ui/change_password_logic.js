@@ -8,21 +8,21 @@ import { API } from "./rpc.js";
 import { desktop_logic } from "./desktop_logic.js";
 import { Tower } from "./lib.js";
 
-export const change_password_logic = {
-    init: function () {
-    },
+export class ChangePasswordLogic {
+    init = () => {
+    };
 
-    show: function () {
+    show = () => {
         $$("change_password_panel").show();
         change_password_logic.clear_form();
-    },
+    };
 
-    clear_form: function () {
+    clear_form = () => {
         $$("change_password_form").clear();
         $$("change_password_form").focus("old_password");
-    },
+    };
 
-    on_change_password: function () {
+    on_change_password = () => {
         if (!$$("change_password_form").validate()) {
             return;
         }
@@ -40,5 +40,7 @@ export const change_password_logic = {
                 Tower.msg.failed("Failed to change password");
             }
         );
-    }
+    };
 };
+
+export const change_password_logic = new ChangePasswordLogic();

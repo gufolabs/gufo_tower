@@ -8,39 +8,39 @@ import { API } from "./rpc.js";
 import { app_logic } from "./app_logic.js";
 import { Tower } from "./lib.js";
 
-export const role_logic = {
-    init: function () {
-    },
+export class RoleLogic {
+    init = () => {
+    };
 
-    can_run: function () {
+    can_run = () => {
         return app_logic.is_environment_selected();
-    },
+    };
 
-    show: function () {
+    show = () => {
         role_logic.show_list();
         $$("role_form").bind($$("role_list"));
-    },
+    };
 
-    show_list: function () {
+    show_list = () => {
         $$("role_list_panel").show();
         role_logic.load();
-    },
+    };
 
-    show_form: function () {
+    show_form = () => {
         $$("role_form_panel").show();
-    },
+    };
 
     // Load data info list
-    load: function () {
+    load = () => {
         $$("role_list").load("rpc->role");
-    },
+    };
 
-    on_add: function () {
+    on_add = () => {
         $$("role_form").clear();
         role_logic.show_form();
-    },
+    };
 
-    on_save: function () {
+    on_save = () => {
         let data;
         const form = $$("role_form");
 
@@ -75,19 +75,19 @@ export const role_logic = {
         } else {
             Tower.msg.failed("Error in data");
         }
-    },
+    };
 
-    on_edit: function () {
+    on_edit = () => {
         const data = $$("role_list").getSelectedItem();
         $$("role_form").setValues(data);
         role_logic.show_form();
-    },
+    };
 
-    on_search: function (nv, ov) {
+    on_search = (nv, ov) => {
         console.log("Search", nv, ov);
-    },
+    };
 
-    on_delete: function () {
+    on_delete = () => {
         const data = $$("role_form").getValues();
         if (data.id) {
             API.role.delete_item(data).then(
@@ -104,5 +104,7 @@ export const role_logic = {
             Tower.msg.complete("Deleted");
             role_logic.show_list();
         }
-    }
+    };
 };
+
+export const role_logic = new RoleLogic();

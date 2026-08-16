@@ -15,12 +15,12 @@ import { change_password_logic } from "./change_password_logic.js";
 import { Tower } from "./lib.js";
 import { settings_logic } from "./settings_logic.js";
 
-export const desktop_logic = {
-    init: function () {
+export class DesktopLogic {
+    init = () => {
         Object.values(this.apps).forEach(app => app.init());
-    },
+    };
 
-    apps: {
+    apps = {
         environment: environment_logic,
         datacenter: datacenter_logic,
         role: role_logic,
@@ -28,30 +28,30 @@ export const desktop_logic = {
         node: node_logic,
         service: service_logic,
         settings: settings_logic,
-    },
+    };
 
-    show: function () {
+    show = () => {
         $$("desktop").show();
         $$("sidebar").select("environment");
-    },
+    };
 
-    on_before_select_app: function (app) {
+    on_before_select_app = (app) => {
         const can_run = this.apps[app]?.can_run?.() ?? true;
         if (!can_run) {
             Tower.msg.failed("Select environment");
         }
         return can_run;
-    },
+    };
 
-    on_select_app: function (selection) {
+    on_select_app = (selection) => {
         this.apps[selection[0]]?.show();
-    },
+    };
 
-    select_environment: function (env) {
+    select_environment = (env) => {
         $$("environment_label").setValue("NOC Tower: " + env.name);
-    },
+    };
 
-    on_menu_click: function (item_id) {
+    on_menu_click = (item_id) => {
         switch (item_id) {
             case "docs":
                 window.open("/docs/index.html", "_blank");
@@ -65,5 +65,6 @@ export const desktop_logic = {
             default:
                 break;
         }
-    }
+    };
 };
+export const desktop_logic = new DesktopLogic();

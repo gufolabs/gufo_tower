@@ -8,34 +8,34 @@ import { API } from "./rpc.js";
 import { app_logic } from "./app_logic.js";
 import { Tower } from "./lib.js";
 
-export const environment_logic = {
-    PULL_CHECK_INTERVAL: 1000,
+export class EnvironmentLogic {
+    PULL_CHECK_INTERVAL = 1000;
 
-    init: function () {
+    init = () => {
         webix.extend($$("environment_list"), webix.ProgressBar);
         $$("environment_form").bind($$("environment_list"));
-    },
+    };
 
-    show: function () {
+    show = () => {
         environment_logic.show_list();
         //self.load();
-    },
+    };
 
-    show_list: function () {
+    show_list = () => {
         $$("environment_list_panel").show();
         environment_logic.load();
-    },
+    };
 
-    show_form: function () {
+    show_form = () => {
         $$("environment_form_panel").show();
-    },
+    };
 
     // Load data info list
-    load: function () {
+    load = () => {
         $$("environment_list").load("rpc->environment");
-    },
+    };
 
-    on_add: function () {
+    on_add = () => {
         environment_logic.show_form();
         $$("environment_form").setValues({
             env_type: "eval",
@@ -46,9 +46,9 @@ export const environment_logic = {
             name: "NOC"
         });
         $$("pulled_label").setHTML("");
-    },
+    };
 
-    on_save: function () {
+    on_save = () => {
         let data;
         const form = $$("environment_form");
 
@@ -82,18 +82,18 @@ export const environment_logic = {
         } else {
             Tower.msg.failed("Error in data");
         }
-    },
+    };
 
-    on_select: function () {
+    on_select = () => {
         const data = $$("environment_list").getSelectedItem();
         app_logic.select_environment(data);
         $$("environment_inventory_button").enable();
         $$("environment_pull_button").enable();
         $$("environment_deploy_button").enable();
         $$("deployment_options").enable();
-    },
+    };
 
-    on_edit: function () {
+    on_edit = () => {
         const data = $$("environment_list").getSelectedItem();
         $$("environment_form").setValues(data);
         API.pull.is_pulled(data.id).then(
@@ -108,13 +108,13 @@ export const environment_logic = {
             }
         );
         environment_logic.show_form();
-    },
+    };
 
-    on_search: function (nv, ov) {
+    on_search = (nv, ov) => {
         console.log("Search", nv, ov);
-    },
+    };
 
-    on_delete: function () {
+    on_delete = () => {
         const data = $$("environment_form").getValues();
         if (data.id) {
             API.environment.delete_item(data).then(
@@ -132,9 +132,9 @@ export const environment_logic = {
             Tower.msg.complete("Deleted");
             environment_logic.show_list();
         }
-    },
+    };
 
-    on_show_inventory: function () {
+    on_show_inventory = () => {
         API.environment.ansible_inventory(app_logic.current_env.id).then(function (result) {
             $$("environment_inventory_text").setValues({
                 text: result  // JSON.stringify(result, undefined, 2)
@@ -143,9 +143,9 @@ export const environment_logic = {
         }, function (err) {
             Tower.msg.failed("Cannot get inventory");
         });
-    },
+    };
 
-    on_pull: function () {
+    on_pull = () => {
         const env_id = app_logic.current_env.id;
         const check_status = function (env, job_id) {
             API.pull.get_job_status(env, job_id).then(
@@ -190,9 +190,9 @@ export const environment_logic = {
                 Tower.msg.failed("Cannot pull repo");
             }
         );
-    },
+    };
 
-    on_deploy: function () {
+    on_deploy = () => {
         const env_id = app_logic.current_env.id;
         const env_name = app_logic.current_env.name;
         const rx_progress = /^(ok|changed|unreachable|failed|fatal): \[/mg;
@@ -327,5 +327,7 @@ export const environment_logic = {
                 Tower.msg.failed("Cannot connect to server");
             }
         );
-    }
+    };
 };
+
+export const environment_logic = new EnvironmentLogic();
