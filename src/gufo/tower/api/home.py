@@ -20,7 +20,7 @@ from .base import API, api
 
 class HomeAPI(API):
     name = "home"
-    ENV_TYPES: dict[str, str] = {k: v for k, v in Environment.env_type.choices}
+    ENV_TYPES: dict[str, str] = dict(Environment.env_type.choices)
 
     @api
     def get_data(self) -> dict[str, Any]:
