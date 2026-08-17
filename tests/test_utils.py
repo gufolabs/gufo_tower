@@ -64,7 +64,7 @@ def test_get_size_directory(tmp_path: Path):
     file2 = path / "file2"
     file2.write_bytes(b"\0" * 200)
 
-    expected = file1.stat().st_blocks * 512 + file2.stat().st_blocks * 512
+    expected = sum(p.stat().st_blocks * 512 for p in (path, file1, file2))
 
     assert get_size(path) == expected
 
@@ -82,7 +82,9 @@ def test_get_size_directory_recursive(tmp_path: Path):
     file2 = nested / "file2"
     file2.write_bytes(b"\0" * 200)
 
-    expected = file1.stat().st_blocks * 512 + file2.stat().st_blocks * 512
+    expected = sum(
+        p.stat().st_blocks * 512 for p in (path, file1, nested, file2)
+    )
 
     assert get_size(path) == expected
 
@@ -97,6 +99,6 @@ def test_get_size_directory_ignores_symlink(tmp_path: Path):
     link = path / "link"
     link.symlink_to(file)
 
-    expected = file.stat().st_blocks * 512
+    expected = sum(p.stat().st_blocks * 512 for p in (path, file))
 
     assert get_size(path) == expected
