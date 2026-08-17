@@ -41,7 +41,7 @@ export class HomeLogic {
         </p>
 
         <p>
-            <a href="/docs/" target="_"><i class="fa fa-book"></i> Documentation</a>
+            <a href="/docs/" target="_blank"><i class="fa fa-book"></i> Documentation</a>
                     &nbsp;
             <a href="${data.github}" target="_blank">
                 <i class="fa fa-github"></i>GitHub
