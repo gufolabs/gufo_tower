@@ -33,10 +33,17 @@ def humanize_size(size: int) -> str:
 
 
 def get_size(path: Path) -> int:
-    """Calculate file or directory size."""
+    """Return the size of a file or the disk usage of a directory.
+
+    For files, return the file size in bytes. For directories, return
+    the total disk space occupied by the directory and its contents.
+    Symbolic links are not followed.
+    """
     if path.is_file():
         return path.stat().st_size
 
     return sum(
-        p.stat().st_blocks * 512 for p in path.rglob("*") if not p.is_symlink()
+        p.stat().st_blocks * 512
+        for p in (path, *path.rglob("*"))
+        if not p.is_symlink()
     )
