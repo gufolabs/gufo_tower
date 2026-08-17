@@ -14,6 +14,7 @@ import { service_logic } from "./service_logic.js";
 import { change_password_logic } from "./change_password_logic.js";
 import { Tower } from "./lib.js";
 import { settings_logic } from "./settings_logic.js";
+import { home_logic } from "./home_logic.js";
 
 export class DesktopLogic {
     init = () => {
@@ -21,6 +22,7 @@ export class DesktopLogic {
     };
 
     apps = {
+        home: home_logic,
         environment: environment_logic,
         datacenter: datacenter_logic,
         role: role_logic,
@@ -32,7 +34,7 @@ export class DesktopLogic {
 
     show = () => {
         $$("desktop").show();
-        $$("sidebar").select("environment");
+        $$("sidebar").select("home");
     };
 
     on_before_select_app = (app) => {
@@ -48,7 +50,7 @@ export class DesktopLogic {
     };
 
     select_environment = (env) => {
-        $$("environment_label").setValue("NOC Tower: " + env.name);
+        $$("environment_label").setValue("Gufo Tower: " + env.name);
     };
 
     on_menu_click = (item_id) => {

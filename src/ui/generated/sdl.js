@@ -23,6 +23,9 @@ export const SDL = {
         "lookup_items",
         "update_item"
     ],
+    "home": [
+        "get_data"
+    ],
     "login": [
         "change_password",
         "is_logged",

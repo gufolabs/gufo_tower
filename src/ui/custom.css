@@ -118,13 +118,12 @@ div[view_id="sidebar"] .webix_selected {
     margin-right: 4px;
 }
 
-.webix_info div {
-}
+.webix_info div {}
 
 /*
  * Deploy styling
  */
-div[view_id="environment_deploy_output"] > DIV {
+div[view_id="environment_deploy_output"]>DIV {
     font-family: monospace;
     line-height: 14px;
     white-space: pre;
@@ -259,4 +258,34 @@ span.ansible-skipping::before {
     font-size: 20pt;
     padding-top: 5pt;
     vertical-align: middle;
+}
+
+
+.home .summary {
+    display: grid;
+    grid-template-columns: max-content auto;
+    column-gap: 32px;
+    row-gap: 6px;
+}
+
+.home table {
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+}
+
+.home th,
+.home td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+}
+
+.home a,
+.home a:visited {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dashed currentColor;
+}
+
+.home a:hover {
+    border-bottom-style: solid;
 }

@@ -4,6 +4,7 @@
 // Copyright (C) 2015-2026 Gufo Labs
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
+import { home_panel } from "./home_ui.js";
 import { environment_list, environment_form, environment_inventory, environment_deploy } from "./environment_ui.js";
 import { datacenter_list, datacenter_form } from "./datacenter_ui.js";
 import { role_list, role_form } from "./role_ui.js";
@@ -42,7 +43,7 @@ export const desktop = {
                         {
                             id: "environment_label",
                             view: "label",
-                            label: "NOC Tower: Select environment"
+                            label: "Gufo Tower: Select environment"
                         },
                         {
                             view: "menu",
@@ -100,6 +101,11 @@ export const desktop = {
                     select: true,
                     data: [
                         {
+                            id: "home",
+                            value: "Home",
+                            icon: "home"
+                        },
+                        {
                             id: "environment",
                             value: "Environments",
                             icon: "cloud"
@@ -144,6 +150,7 @@ export const desktop = {
                     view: "multiview",
                     id: "apps",
                     cells: [
+                        home_panel,
                         environment_list,
                         environment_form,
                         environment_inventory,
