@@ -58,6 +58,7 @@ export class HomeLogic {
                 <th>URL</th>
                 <th>Type</th>
                 <th>Installation name</th>
+                <th>Pools</th>                
                 <th>DC</th>
                 <th>Nodes</th>
             </tr>
@@ -73,8 +74,9 @@ export class HomeLogic {
                     </td>
                     <td>${environment.env_type}</td>
                     <td>${environment.installation_name}</td>
-                    <td>${environment.datacenters || "—"}</td>
-                    <td>${environment.nodes || "—"}</td>
+                    <td>${environment.pools || "-"}</td>
+                    <td>${environment.datacenters || "-"}</td>
+                    <td>${environment.nodes || "-"}</td>
                 </tr>
             `).join("")}
         </tbody>

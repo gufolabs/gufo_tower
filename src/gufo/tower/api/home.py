@@ -14,6 +14,7 @@ from ..config import config
 from ..models.datacenter import Datacenter
 from ..models.environment import Environment
 from ..models.node import Node
+from ..models.pool import Pool
 from ..utils import get_size, humanize_size
 from .base import API, api
 
@@ -39,6 +40,7 @@ class HomeAPI(API):
 
     def get_environment(self, env: Environment) -> dict[str, Any]:
         """Get row for environments table."""
+        pools = Pool.select().where(Pool.environment == env).count()
         datacenters = (
             Datacenter.select()
             .join(Node)
@@ -46,7 +48,6 @@ class HomeAPI(API):
             .distinct()
             .count()
         )
-
         nodes = Node.select().where(Node.environment == env).count()
         return {
             "name": env.name,
@@ -54,6 +55,7 @@ class HomeAPI(API):
             "url": f"https://{env.web_host}/",
             "env_type": self.ENV_TYPES[env.env_type],
             "installation_name": env.installation_name,
+            "pools": pools,
             "datacenters": datacenters,
             "nodes": nodes,
         }
