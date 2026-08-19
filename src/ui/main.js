@@ -7,41 +7,75 @@
 
 import "./style.css";
 import "./skin.js";
-import "./rpc.js";
-import "./lib.js";
-import "./login_ui.js";
-import "./login_logic.js";
-import "./change_password_ui.js";
-import "./change_password_logic.js";
-import "./environment_ui.js";
-import "./environment_logic.js";
-import "./datacenter_ui.js";
-import "./datacenter_logic.js";
-import "./role_ui.js";
-import "./role_logic.js";
-import "./pool_ui.js";
-import "./pool_logic.js";
-import "./node_ui.js";
-import "./node_logic.js";
-import "./service_ui.js";
-import "./service_logic.js";
-import "./settings_ui.js";
-import "./settings_logic.js";
-import "./desktop_ui.js";
-import "./desktop_logic.js";
-import { app_ui } from "./app_ui.js";
-import { app_logic } from "./app_logic.js";
-import { login_logic } from "./login_logic.js";
-import { change_password_logic } from "./change_password_logic.js";
-import { desktop_logic } from "./desktop_logic.js";
+import "./login/ui.js";
+import "./change_password/ui.js";
+import "./desktop/ui.js";
+import { API } from "./rpc.js";
+import { Tower } from "./lib.js";
+import { app_ui } from "./app/ui.js";
+import { app_logic } from "./app/logic.js";
+import { change_password_logic, change_password_routes } from "./change_password/logic.js";
+import { desktop_logic } from "./desktop/logic.js";
+import { Router } from "./router.js";
+import { login_routes, login_logic } from "./login/logic.js";
+import { home_routes } from "./home/logic.js";
+import { environment_list_routes } from "./environment/list/logic.js";
+import { environment_form_routes } from "./environment/form/logic.js";
+import { environment_inventory_routes } from "./environment/inventory/logic.js";
+import { environment_deploy_routes } from "./environment/deploy/logic.js";
+import { datacenter_list_routes } from "./datacenter/list/logic.js";
+import { datacenter_form_routes } from "./datacenter/form/logic.js";
+import { pool_list_routes } from "./pool/list/logic.js";
+import { pool_form_routes } from "./pool/form/logic.js";
+import { node_list_routes } from "./node/list/logic.js";
+import { node_form_routes } from "./node/form/logic.js";
+import { role_list_routes } from "./role/list/logic.js";
+import { role_form_routes } from "./role/form/logic.js";
+import { service_routes } from "./service/logic.js";
+import { settings_routes } from "./settings/logic.js";
+
+const router = new Router([
+    ...home_routes,
+    ...login_routes,
+    ...change_password_routes,
+    ...environment_list_routes,
+    ...environment_form_routes,
+    ...environment_inventory_routes,
+    ...environment_deploy_routes,
+    ...datacenter_list_routes,
+    ...datacenter_form_routes,
+    ...pool_list_routes,
+    ...pool_form_routes,
+    ...node_list_routes,
+    ...node_form_routes,
+    ...service_routes,
+    ...role_list_routes,
+    ...role_form_routes,
+    ...settings_routes,
+]);
 
 function init() {
     webix.ui(app_ui);
 
+    router.init();
+    app_logic.init();
     login_logic.init();
     change_password_logic.init();
     desktop_logic.init();
+    // Check user is logged in
+    API.login.is_logged().then(
+        function (result) {
+            if (result) {
+                desktop_logic.show();
+                router.show(window.location.pathname);
+            } else {
+                navigation.navigate("/login");
+            }
+        }, function (err) {
+            Tower.msg.failed("Failed to connect to server");
+            navigation.navigate("/login");
+        }
+    );
 
-    app_logic.process_login();
 }
 webix.ready(init);

@@ -25,6 +25,8 @@ export default [
                 XMLHttpRequest: "readonly",
                 webix: "readonly",
                 "$$": "readonly",
+                navigation: "readonly",
+                URL: "readonly"
             },
         },
         rules: {

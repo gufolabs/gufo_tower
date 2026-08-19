@@ -11,6 +11,7 @@ export const SDL = {
     "datacenter": [
         "create_item",
         "delete_item",
+        "get_item",
         "get_items",
         "lookup_items",
         "update_item"
@@ -19,6 +20,7 @@ export const SDL = {
         "ansible_inventory",
         "create_item",
         "delete_item",
+        "get_item",
         "get_items",
         "lookup_items",
         "update_item"
@@ -35,6 +37,7 @@ export const SDL = {
     "node": [
         "create_item",
         "delete_item",
+        "get_item",
         "get_items",
         "lookup_items",
         "prepare_node",
@@ -43,6 +46,7 @@ export const SDL = {
     "nodetype": [
         "create_item",
         "delete_item",
+        "get_item",
         "get_items",
         "lookup_items",
         "update_item"
@@ -50,6 +54,7 @@ export const SDL = {
     "pool": [
         "create_item",
         "delete_item",
+        "get_item",
         "get_items",
         "lookup_items",
         "update_item"
@@ -62,6 +67,7 @@ export const SDL = {
     "role": [
         "create_item",
         "delete_item",
+        "get_item",
         "get_items",
         "lookup_items",
         "update_item"
