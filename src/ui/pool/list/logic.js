@@ -24,6 +24,6 @@ export class PoolListLogic {
 };
 
 export const pool_list_logic = new PoolListLogic();
-router.routes(
+router.push(
     new Route(/^\/environment\/(\d+)\/pool$/, pool_list_logic.on_route, "pool")
 );
