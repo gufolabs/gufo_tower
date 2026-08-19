@@ -13,19 +13,19 @@ export class EnvironmentInventoryLogic {
     init = () => {
     };
 
-    on_route = (e_id) => {
+    on_route = async (e_id) => {
         const env_id = parseInt(e_id, 10);
-        return app_logic.with_environment(env_id)
-            .then(() => API.environment.ansible_inventory(env_id))
-            .then((result) => {
-                $$("environment_inventory_text").setValues({
-                    text: result
-                });
-                $$("environment_inventory_panel").show();
-            })
-            .catch((err) => {
-                Tower.msg.failed("Cannot get inventory");
+
+        try {
+            await app_logic.with_environment(env_id);
+            const result = await API.environment.ansible_inventory(env_id);
+            $$("environment_inventory_text").setValues({
+                text: result
             });
+            $$("environment_inventory_panel").show();
+        } catch {
+            Tower.msg.failed("Cannot get inventory");
+        }
     };
 };
 

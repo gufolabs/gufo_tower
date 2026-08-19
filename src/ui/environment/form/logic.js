@@ -26,78 +26,76 @@ export class EnvironmentFormLogic {
         $$("pulled_label").setHTML("");
     };
 
-    on_route_item = (env_id) => {
-        return API.environment.get_item({ id: parseInt(env_id, 10) })
-            .then((data) => {
-                $$("environment_form").setValues(data);
-                $$("environment_form_panel").show();
-                return API.pull.is_pulled(data.id);
-            })
-            .then((result) => {
-                if (result) {
-                    $$("pulled_label").setHTML("...");
-                } else {
-                    $$("pulled_label").setHTML("");
-                }
-            })
-            .catch((err) => {
-                Tower.msg.failed("Failed to get data");
+    on_route_item = async (env_id) => {
+        try {
+            const data = await API.environment.get_item({
+                id: parseInt(env_id, 10)
             });
-    };
 
-    on_save = () => {
-        let data;
-        const form = $$("environment_form");
+            $$("environment_form").setValues(data);
+            $$("environment_form_panel").show();
 
-        if (form.validate()) {
-            data = form.getValues();
-            if (data.id === undefined) {
-                API.environment.create_item(data).then(
-                    function (result) {
-                        form.setValues(result);
-                        form.save();
-                        navigation.navigate("/environment")
-                        Tower.msg.complete("Created");
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to create " + err);
-                    }
-                );
+            const result = await API.pull.is_pulled(data.id);
+
+            if (result) {
+                $$("pulled_label").setHTML("...");
             } else {
-                API.environment.update_item(data).then(
-                    function (result) {
-                        form.setValues(result);
-                        form.save();
-                        navigation.navigate("/environment")
-                        Tower.msg.complete("Changed");
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to change" + err);
-                    }
-                );
+                $$("pulled_label").setHTML("");
             }
-        } else {
-            Tower.msg.failed("Error in data");
+        } catch {
+            Tower.msg.failed("Failed to get data");
         }
     };
 
-    on_delete = () => {
+    on_save = async () => {
+        const form = $$("environment_form");
+
+        if (!form.validate()) {
+            Tower.msg.failed("Error in data");
+            return;
+        }
+
+        const data = form.getValues();
+
+        try {
+            if (data.id === undefined) {
+                const result = await API.environment.create_item(data);
+                form.setValues(result);
+                form.save();
+                navigation.navigate("/environment");
+                Tower.msg.complete("Created");
+            } else {
+                const result = await API.environment.update_item(data);
+                form.setValues(result);
+                form.save();
+                navigation.navigate("/environment");
+                Tower.msg.complete("Changed");
+            }
+        } catch (err) {
+            if (data.id === undefined) {
+                Tower.msg.failed("Failed to create " + err);
+            } else {
+                Tower.msg.failed("Failed to change " + err);
+            }
+        }
+    };
+
+    on_delete = async () => {
         const data = $$("environment_form").getValues();
+
         if (data.id) {
-            API.environment.delete_item(data).then(
-                function () {
-                    Tower.msg.complete("Deleted");
-                    $$("environment_list").remove(data.id);
-                    // @todo: Unselect environment
-                    navigation.navigate("/environment")
-                },
-                function () {
-                    Tower.msg.failed("Failed to delete");
-                }
-            );
+            try {
+                await API.environment.delete_item(data);
+                Tower.msg.complete("Deleted");
+                $$("environment_list").remove(data.id);
+                // @todo: Unselect environment
+                navigation.navigate("/environment");
+            } catch {
+                Tower.msg.failed("Failed to delete");
+            }
         } else {
             Tower.msg.complete("Deleted");
-            navigation.navigate("/environment")
+            navigation.navigate("/environment");
         }
     };
 };

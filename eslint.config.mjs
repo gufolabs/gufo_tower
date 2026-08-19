@@ -26,7 +26,9 @@ export default [
                 webix: "readonly",
                 "$$": "readonly",
                 navigation: "readonly",
-                URL: "readonly"
+                URL: "readonly",
+                fetch: "readonly",
+                setTimeout: "readonly",
             },
         },
         rules: {

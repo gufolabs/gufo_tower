@@ -5,7 +5,6 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "../rpc.js";
-import { desktop_logic } from "../desktop/logic.js";
 import { Tower } from "../lib.js";
 import { Route } from "../route.js";
 
@@ -23,7 +22,7 @@ export class ChangePasswordLogic {
         $$("change_password_form").focus("old_password");
     };
 
-    on_change_password = () => {
+    on_change_password = async () => {
         if (!$$("change_password_form").validate()) {
             return;
         }
@@ -32,15 +31,13 @@ export class ChangePasswordLogic {
             Tower.msg.failed("Passwords mismatch");
             return;
         }
-        API.login.change_password(data.old_password, data.new_password).then(
-            function () {
-                Tower.msg.complete("Password changed");
-                desktop_logic.show();
-            },
-            function () {
-                Tower.msg.failed("Failed to change password");
-            }
-        );
+        try {
+            await API.login.change_password(data.old_password, data.new_password);
+            Tower.msg.complete("Password changed");
+            navigation.navigate("/");
+        } catch {
+            Tower.msg.failed("Failed to change password");
+        }
     };
 };
 

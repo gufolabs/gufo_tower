@@ -13,76 +13,71 @@ export class RoleFormLogic {
     init = () => {
     };
 
-    on_route_new = (env_id) => {
-        return app_logic.with_environment(parseInt(env_id, 10)).then(() => {
-            $$("role_form").clear();
+    on_route_new = async (env_id) => {
+        await app_logic.with_environment(parseInt(env_id, 10));
+        $$("role_form").clear();
+        $$("role_form_panel").show();
+    };
+
+    on_route_item = async (env_id, role_id) => {
+        try {
+            await app_logic.with_environment(parseInt(env_id, 10));
+            const data = await API.role.get_item({
+                id: parseInt(role_id, 10)
+            });
+            $$("role_form").setValues(data);
             $$("role_form_panel").show();
-        });
-    };
-
-    on_route_item = (env_id, role_id) => {
-        return app_logic.with_environment(parseInt(env_id, 10))
-            .then(() => API.role.get_item({ id: parseInt(role_id, 10) }))
-            .then((data) => {
-                $$("role_form").setValues(data);
-                $$("role_form_panel").show();
-            })
-            .catch((err) => {
-                Tower.msg.failed("Failed to get data");
-            }
-            );
-    };
-
-    on_save = () => {
-        let data;
-        const form = $$("role_form");
-
-        if (form.validate()) {
-            data = form.getValues();
-            data.environment = app_logic.current_env.id;
-            if (data.id === undefined) {
-                API.role.create_item(data).then(
-                    function (result) {
-                        form.setValues(result);
-                        form.save();
-                        navigation.navigate("..");
-                        Tower.msg.complete("Created");
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to create");
-                    }
-                );
-            } else {
-                API.role.update_item(data).then(
-                    function (result) {
-                        form.setValues(result);
-                        form.save();
-                        navigation.navigate("..");
-                        Tower.msg.complete("Changed");
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to change");
-                    }
-                );
-            }
-        } else {
-            Tower.msg.failed("Error in data");
+        } catch {
+            Tower.msg.failed("Failed to get data");
         }
     };
 
-    on_delete = () => {
+    on_save = async () => {
+        const form = $$("role_form");
+
+        if (!form.validate()) {
+            Tower.msg.failed("Error in data");
+            return;
+        }
+
+        const data = form.getValues();
+        data.environment = app_logic.current_env.id;
+
+        try {
+            if (data.id === undefined) {
+                const result = await API.role.create_item(data);
+                form.setValues(result);
+                form.save();
+                navigation.navigate("..");
+                Tower.msg.complete("Created");
+            } else {
+                const result = await API.role.update_item(data);
+                form.setValues(result);
+                form.save();
+                navigation.navigate("..");
+                Tower.msg.complete("Changed");
+            }
+        } catch {
+            if (data.id === undefined) {
+                Tower.msg.failed("Failed to create");
+            } else {
+                Tower.msg.failed("Failed to change");
+            }
+        }
+    };
+
+    on_delete = async () => {
         const data = $$("role_form").getValues();
+
         if (data.id) {
-            API.role.delete_item(data).then(
-                function () {
-                    Tower.msg.complete("Deleted");
-                    $$("role_list").remove(data.id);
-                    navigation.navigate("..");
-                },
-                function () {
-                    Tower.msg.failed("Failed to delete");
-                }
-            );
+            try {
+                await API.role.delete_item(data);
+                Tower.msg.complete("Deleted");
+                $$("role_list").remove(data.id);
+                navigation.navigate("..");
+            } catch {
+                Tower.msg.failed("Failed to delete");
+            }
         } else {
             Tower.msg.complete("Deleted");
             navigation.navigate("..");

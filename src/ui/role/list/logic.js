@@ -11,12 +11,11 @@ export class RoleListLogic {
     init = () => {
     };
 
-    on_route = (env_id) => {
-        return app_logic.with_environment(parseInt(env_id, 10)).then(() => {
-            $$("role_list_panel").show();
-            this.load();
-        });
-    }
+    on_route = async (env_id) => {
+        await app_logic.with_environment(parseInt(env_id, 10));
+        $$("role_list_panel").show();
+        this.load();
+    };
 
     // Load data info list
     load = () => {

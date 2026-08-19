@@ -54,7 +54,7 @@ const router = new Router([
     ...settings_routes,
 ]);
 
-function init() {
+async function init() {
     webix.ui(app_ui);
 
     router.init();
@@ -62,20 +62,18 @@ function init() {
     login_logic.init();
     change_password_logic.init();
     desktop_logic.init();
-    // Check user is logged in
-    API.login.is_logged().then(
-        function (result) {
-            if (result) {
-                desktop_logic.show();
-                router.show(window.location.pathname);
-            } else {
-                navigation.navigate("/login");
-            }
-        }, function (err) {
-            Tower.msg.failed("Failed to connect to server");
+    try {
+        const result = await API.login.is_logged();
+        if (result) {
+            desktop_logic.show();
+            await router.show(window.location.pathname);
+        } else {
             navigation.navigate("/login");
         }
-    );
-
+    } catch {
+        Tower.msg.failed("Failed to connect to server");
+        navigation.navigate("/login");
+    }
 }
+
 webix.ready(init);

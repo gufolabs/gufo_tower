@@ -11,23 +11,17 @@ export class HomeLogic {
     init = () => {
     };
 
-    on_route = () => {
-        this.show();
-    };
-
-    show = () => {
+    on_route = async () => {
         $$("home_panel").show();
-        this.load();
+        await this.load();
     };
 
-    load = () => {
-        API.home.get_data().then((data) => {
-            this.render(data);
-        });
+    load = async () => {
+        const data = await API.home.get_data();
+        this.render(data);
     };
 
     render = (data) => {
-        console.log(">>>", data);
         $$("home_panel").define("template", `
             <div class="home">
                 ${this.render_welcome(data)}

@@ -38,51 +38,52 @@ export class EnvironmentListLogic {
     on_search = (nv, ov) => {
     };
 
-    on_pull = () => {
+    on_pull = async () => {
         const env_id = app_logic.current_env.id;
-        const check_status = function (env, job_id) {
-            API.pull.get_job_status(env, job_id).then(
-                function (result) {
-                    if (result.complete) {
-                        // Pull done
-                        if (result.status) {
-                            Tower.msg.complete("Pull complete");
-                            Tower.notification("Pull complete");
-                        } else {
-                            Tower.msg.failed("Failed to pull");
-                            Tower.notification("Failed to pull");
-                        }
-                        $$("environment_list").hideProgress();
+
+        const check_status = async (env, job_id) => {
+            try {
+                const result = await API.pull.get_job_status(env, job_id);
+
+                if (result.complete) {
+                    if (result.status) {
+                        Tower.msg.complete("Pull complete");
+                        Tower.notification("Pull complete");
                     } else {
-                        // Run another check
-                        webix.delay(check_status, environment_list_logic,
-                            [env, job_id],
-                            environment_list_logic.PULL_CHECK_INTERVAL);
+                        Tower.msg.failed("Failed to pull");
+                        Tower.notification("Failed to pull");
                     }
-                },
-                function (err) {
-                    Tower.msg.failed("Failed to pull");
-                    Tower.notification("Failed to pull");
                     $$("environment_list").hideProgress();
+                    return;
                 }
-            );
+
+                setTimeout(
+                    () => check_status(env, job_id),
+                    environment_list_logic.PULL_CHECK_INTERVAL
+                );
+            } catch {
+                Tower.msg.failed("Failed to pull");
+                Tower.notification("Failed to pull");
+                $$("environment_list").hideProgress();
+            }
         };
 
         $$("environment_list").showProgress({
             type: "icon"
         });
         Tower.msg.started("Start pulling");
-        API.pull.start_job(env_id).then(
-            function (result) {
-                webix.delay(check_status, environment_list_logic,
-                    [env_id, result.job],
-                    environment_list_logic.PULL_CHECK_INTERVAL);
-            },
-            function (err) {
-                $$("environment_list").hideProgress();
-                Tower.msg.failed("Cannot pull repo");
-            }
-        );
+
+        try {
+            const result = await API.pull.start_job(env_id);
+
+            setTimeout(
+                () => check_status(env_id, result.job),
+                environment_list_logic.PULL_CHECK_INTERVAL
+            );
+        } catch {
+            $$("environment_list").hideProgress();
+            Tower.msg.failed("Cannot pull repo");
+        }
     };
 };
 

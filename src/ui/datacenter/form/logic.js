@@ -17,48 +17,48 @@ export class DatacenterFormLogic {
         $$("datacenter_form").setValues({});
     };
 
-    on_route_item = (dc_id) => {
-        return API.datacenter.get_item({ id: parseInt(dc_id, 10) }).then((data) => {
+    on_route_item = async (dc_id) => {
+        try {
+            const data = await API.datacenter.get_item({
+                id: parseInt(dc_id, 10)
+            });
             $$("datacenter_form").setValues(data);
             $$("datacenter_form_panel").show();
-        }, (err) => {
+        } catch {
             Tower.msg.failed("Failed to get data");
-        });
+        }
     };
 
-    on_save = () => {
-        let data;
+    on_save = async () => {
         const form = $$("datacenter_form");
 
-        if (form.validate()) {
-            data = form.getValues();
-            if (data.id === undefined) {
-                API.datacenter.create_item(data).then(
-                    function (result) {
-                        form.setValues(result);
-                        form.save();
-                        navigation.navigate("/datacenter");
-                        Tower.msg.complete("Created");
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to create " + err);
-                    }
-                );
-            } else {
-                API.datacenter.update_item(data).then(
-                    function (result) {
-                        form.setValues(result);
-                        form.save();
-                        navigation.navigate("/datacenter");
-                        Tower.msg.complete("Changed");
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to change " + err);
-                    }
-                );
-            }
-        } else {
+        if (!form.validate()) {
             Tower.msg.failed("Error in data");
+            return;
+        }
+
+        const data = form.getValues();
+
+        try {
+            if (data.id === undefined) {
+                const result = await API.datacenter.create_item(data);
+                form.setValues(result);
+                form.save();
+                navigation.navigate("/datacenter");
+                Tower.msg.complete("Created");
+            } else {
+                const result = await API.datacenter.update_item(data);
+                form.setValues(result);
+                form.save();
+                navigation.navigate("/datacenter");
+                Tower.msg.complete("Changed");
+            }
+        } catch (err) {
+            if (data.id === undefined) {
+                Tower.msg.failed("Failed to create " + err);
+            } else {
+                Tower.msg.failed("Failed to change " + err);
+            }
         }
     };
 
@@ -66,19 +66,18 @@ export class DatacenterFormLogic {
         console.log("Search", nv, ov);
     };
 
-    on_delete = () => {
+    on_delete = async () => {
         const data = $$("datacenter_form").getValues();
+
         if (data.id) {
-            API.datacenter.delete_item(data).then(
-                function () {
-                    Tower.msg.complete("Deleted");
-                    $$("datacenter_list").remove(data.id);
-                    navigation.navigate("/datacenter");
-                },
-                function () {
-                    Tower.msg.failed("Failed to delete");
-                }
-            );
+            try {
+                await API.datacenter.delete_item(data);
+                Tower.msg.complete("Deleted");
+                $$("datacenter_list").remove(data.id);
+                navigation.navigate("/datacenter");
+            } catch {
+                Tower.msg.failed("Failed to delete");
+            }
         } else {
             Tower.msg.complete("Deleted");
             navigation.navigate("/datacenter");

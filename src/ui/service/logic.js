@@ -14,45 +14,38 @@ export class ServiceLogic {
     init = () => {
     };
 
-    on_route = (env_id) => {
-        return app_logic.with_environment(parseInt(env_id, 10)).then(() => {
-            $$("service_panel").show();
-            service_logic.load();
-        });
+    on_route = async (env_id) => {
+        await app_logic.with_environment(parseInt(env_id, 10));
+        $$("service_panel").show();
+        await service_logic.load();
     };
 
-    load = () => {
+    load = async () => {
         settings_logic.init();
+
         const env_id = app_logic.current_env.id;
-        API.pull.is_pulled(env_id).then(
-            function (result) {
-                if (result) {
-                    $$("service_list").clearAll();
-                    API.service.get_service_list(env_id).then(
-                        function (res) {
-                            // Load service list
-                            $$("service_list").parse(res);
-                        },
-                        function (err) {
-                            Tower.msg.failed("Failed to get config");
-                        }
-                    );
-                    API.service.get_forms(env_id).then(
-                        function (res) {
-                            // Load forms list
-                            $$("service_form").parse(res);
-                        },
-                        function (err) {
-                            Tower.msg.failed("Failed to get forms.");
-                        }
-                    );
-                } else {
-                    Tower.msg.failed("Repo is not pulled. Press Pull button on Environments tab");
-                }
-            }, function (err) {
-                Tower.msg.failed("Cannot connect to server");
-            }
-        );
+        const result = await API.pull.is_pulled(env_id);
+
+        if (!result) {
+            Tower.msg.failed(
+                "Repo is not pulled. Press Pull button on Environments tab"
+            );
+            return;
+        }
+
+        $$("service_list").clearAll();
+
+        try {
+            const [services, forms] = await Promise.all([
+                API.service.get_service_list(env_id),
+                API.service.get_forms(env_id)
+            ]);
+
+            $$("service_list").parse(services);
+            $$("service_form").parse(forms);
+        } catch {
+            Tower.msg.failed("Failed to load service data");
+        }
     };
 
     set_enabled = (obj, common) => {
@@ -180,10 +173,11 @@ export class ServiceLogic {
         }
     };
 
-    on_save = () => {
+    on_save = async () => {
         const r = [];
         const env_id = app_logic.current_env.id;
-        $$("service_list").data.each(function (v) {
+
+        $$("service_list").data.each((v) => {
             if (!v.config) {
                 return;
             }
@@ -193,15 +187,15 @@ export class ServiceLogic {
                 id: v.id
             });
         });
-        API.service.save_config(env_id, r).then(
-            function (result) {
-                Tower.msg.complete("Config saved");
-            },
-            function (error) {
-                Tower.msg.failed("Failed to save");
-            }
-        );
+
+        try {
+            await API.service.save_config(env_id, r);
+            Tower.msg.complete("Config saved");
+        } catch {
+            Tower.msg.failed("Failed to save");
+        }
     };
+
     on_group_table = (mode) => {
         if (mode === "init") {
             mode = $$("settings_form").getValues()["group_by"]

@@ -12,31 +12,27 @@ export class SettingsLogic {
     init = () => {
     };
 
-    on_route = () => {
-        this.show();
-    };
-
-    show = () => {
+    on_route = async () => {
         $$("settings_form_panel").show();
-        API.settings.get_settings().then(function (result) {
+        try {
+            const result = await API.settings.get_settings();
             $$("settings_form").setValues(result);
-        }).fail(function (err) {
-            Tower.msg.failed("Failed to get settings")
-        });
+        } catch {
+            Tower.msg.failed("Failed to get settings");
+        }
     };
 
-    on_save = () => {
+    on_save = async () => {
         const form = $$("settings_form");
-        if (form.validate()) {
-            API.settings.save_settings(form.getValues()).then(
-                function () {
-                    Tower.msg.complete("Settings saved");
-                }, function () {
-                    Tower.msg.failed("Failed to save settings");
-                }
-            );
-        } else {
+        if (!form.validate()) {
             Tower.msg.failed("Error in settings");
+            return;
+        }
+        try {
+            await API.settings.save_settings(form.getValues());
+            Tower.msg.complete("Settings saved");
+        } catch {
+            Tower.msg.failed("Failed to save settings");
         }
     };
 };

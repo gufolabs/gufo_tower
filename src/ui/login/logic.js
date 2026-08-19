@@ -31,19 +31,20 @@ export class LoginLogic {
         login_logic.login(data.user, data.password);
     };
 
-    login = (user, password) => {
-        API.login.login({
-            user: user,
-            password: password
-        }).then(function (result) {
+    login = async (user, password) => {
+        try {
+            const result = await API.login.login({
+                user: user,
+                password: password
+            });
             if (result) {
                 desktop_logic.show();
             } else {
                 Tower.msg.failed("Login failed");
             }
-        }, function (err) {
+        } catch {
             Tower.msg.failed("Connection failed");
-        });
+        }
     };
 };
 export const login_logic = new LoginLogic();

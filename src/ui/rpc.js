@@ -19,29 +19,30 @@ export const API = (function () {
         for (const mi in SDL[api]) {
             const method = SDL[api][mi];
             r[api][method] = (function (rr, rpc_api, http_method) {
-                return function () {
-                    const defer = webix.promise.defer();
-                    webix.ajax().headers({
-                        "Content-Type": "text/json"
-                    }).post(
+                return async function () {
+                    const resp = await fetch(
                         rr._base_url + rpc_api + "/",
-                        JSON.stringify({
-                            id: rr.tid++,
-                            jsonrpc: "2.0",
-                            method: http_method,
-                            params: Array.prototype.slice.call(arguments)
-                        })
-                    ).then(function (resp) {
-                        const data = resp.json();
-                        if (!data.error) {
-                            defer.resolve(data.result);
-                        } else {
-                            defer.reject(data.error);
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "text/json"
+                            },
+                            body: JSON.stringify({
+                                id: rr.tid++,
+                                jsonrpc: "2.0",
+                                method: http_method,
+                                params: Array.prototype.slice.call(arguments)
+                            })
                         }
-                    }, function (err) {
-                        defer.reject(err);
-                    });
-                    return defer;
+                    );
+                    if (!resp.ok) {
+                        throw new Error(`HTTP ${resp.status}`);
+                    }
+                    const data = await resp.json();
+                    if (data.error) {
+                        throw data.error;
+                    }
+                    return data.result;
                 };
             })(r, api, method);
         }

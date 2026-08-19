@@ -18,33 +18,29 @@ export class AppLogic {
         desktop_logic.select_environment(env);
     };
 
-    with_environment = (env_id) => {
-        return API.environment.get_item({ id: env_id }).then(
-            (env) => {
-                this.select_environment(env);
-                return env;
-            },
-            (err) => {
-                Tower.msg.failed("Failed to get environment");
-                throw err;
-            }
-        );
+    with_environment = async (env_id) => {
+        try {
+            const env = await API.environment.get_item({ id: env_id });
+            this.select_environment(env);
+            return env;
+        } catch (err) {
+            Tower.msg.failed("Failed to get environment");
+            throw err;
+        }
     };
 
     is_environment_selected = () => {
         return app_logic.current_env !== null;
     };
 
-    logout = () => {
-        API.login.logout().then(
-            function () {
-                navigation.navigate("/login");
-                Tower.msg.complete("Logged out");
-            },
-            function () {
-                Tower.msg.failed("Failed to log out");
-            }
-        );
+    logout = async () => {
+        try {
+            await API.login.logout();
+            navigation.navigate("/login");
+            Tower.msg.complete("Logged out");
+        } catch {
+            Tower.msg.failed("Failed to log out");
+        }
     };
 };
 

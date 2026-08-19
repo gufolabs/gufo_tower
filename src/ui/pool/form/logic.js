@@ -13,75 +13,73 @@ export class PoolFormLogic {
     init = () => {
     };
 
-    on_route_new = (env_id) => {
-        return app_logic.with_environment(parseInt(env_id, 10)).then(() => {
-            $$("pool_form").clear();
-            $$("pool_form_panel").show();
-        });
-    }
+    on_route_new = async (env_id) => {
+        await app_logic.with_environment(parseInt(env_id, 10));
+        $$("pool_form").clear();
+        $$("pool_form_panel").show();
+    };
 
-    on_route_item = (env_id, pool_id) => {
-        return app_logic.with_environment(parseInt(env_id, 10))
-            .then(() => API.pool.get_item({ id: parseInt(pool_id, 10) }))
-            .then((data) => {
-                $$("pool_form").setValues(data);
-                $$("pool_form_panel").show();
-            })
-            .catch((err) => {
-                Tower.msg.failed("Failed to get data");
+    on_route_item = async (env_id, pool_id) => {
+        try {
+            await app_logic.with_environment(parseInt(env_id, 10));
+
+            const data = await API.pool.get_item({
+                id: parseInt(pool_id, 10)
             });
-    }
 
-    on_save = () => {
-        let data;
-        const form = $$("pool_form");
-
-        if (form.validate()) {
-            data = form.getValues();
-            data.environment = app_logic.current_env.id;
-            if (data.id === undefined) {
-                API.pool.create_item(data).then(
-                    function (result) {
-                        form.setValues(result);
-                        form.save();
-                        navigation.navigate("..");
-                        Tower.msg.complete("Created");
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to create");
-                    }
-                );
-            } else {
-                API.pool.update_item(data).then(
-                    function (result) {
-                        form.setValues(result);
-                        form.save();
-                        navigation.navigate("..");
-                        Tower.msg.complete("Changed");
-                    },
-                    function (err) {
-                        Tower.msg.failed("Failed to change");
-                    }
-                );
-            }
-        } else {
-            Tower.msg.failed("Error in data");
+            $$("pool_form").setValues(data);
+            $$("pool_form_panel").show();
+        } catch {
+            Tower.msg.failed("Failed to get data");
         }
     };
 
-    on_delete = () => {
+    on_save = async () => {
+        const form = $$("pool_form");
+
+        if (!form.validate()) {
+            Tower.msg.failed("Error in data");
+            return;
+        }
+
+        const data = form.getValues();
+        data.environment = app_logic.current_env.id;
+
+        try {
+            if (data.id === undefined) {
+                const result = await API.pool.create_item(data);
+                form.setValues(result);
+                form.save();
+                navigation.navigate("..");
+                Tower.msg.complete("Created");
+            } else {
+                const result = await API.pool.update_item(data);
+                form.setValues(result);
+                form.save();
+                navigation.navigate("..");
+                Tower.msg.complete("Changed");
+            }
+        } catch {
+            if (data.id === undefined) {
+                Tower.msg.failed("Failed to create");
+            } else {
+                Tower.msg.failed("Failed to change");
+            }
+        }
+    };
+
+    on_delete = async () => {
         const data = $$("pool_form").getValues();
+
         if (data.id) {
-            API.pool.delete_item(data).then(
-                function () {
-                    Tower.msg.complete("Deleted");
-                    $$("pool_list").remove(data.id);
-                    navigation.navigate("..");
-                },
-                function () {
-                    Tower.msg.failed("Failed to delete");
-                }
-            );
+            try {
+                await API.pool.delete_item(data);
+                Tower.msg.complete("Deleted");
+                $$("pool_list").remove(data.id);
+                navigation.navigate("..");
+            } catch {
+                Tower.msg.failed("Failed to delete");
+            }
         } else {
             Tower.msg.complete("Deleted");
             navigation.navigate("..");
