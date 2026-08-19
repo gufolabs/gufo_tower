@@ -19,7 +19,7 @@ import { app_logic } from "./app/logic.js";
 import { change_password_logic } from "./change_password/logic.js";
 import { desktop_logic } from "./desktop/logic.js";
 import { login_logic } from "./login/logic.js";
-// // Import application modules to register their routes.
+// Import application modules to register their routes.
 import "./home/logic.js";
 import "./environment/list/logic.js";
 import "./environment/form/logic.js";
