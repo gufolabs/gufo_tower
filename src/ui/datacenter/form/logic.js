@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------
 import { API } from "../../rpc.js";
 import { Tower } from "../../lib.js";
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
 
 export class DatacenterFormLogic {
     init = () => {
@@ -87,7 +87,7 @@ export class DatacenterFormLogic {
 
 export const datacenter_form_logic = new DatacenterFormLogic();
 
-export const datacenter_form_routes = [
+router.push(
     new Route(/^\/datacenter\/new$/, datacenter_form_logic.on_route_new, "datacenter"),
-    new Route(/^\/datacenter\/(\d+)$/, datacenter_form_logic.on_route_item, "datacenter"),
-];
+    new Route(/^\/datacenter\/(\d+)$/, datacenter_form_logic.on_route_item, "datacenter")
+);

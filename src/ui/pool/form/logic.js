@@ -7,12 +7,10 @@
 import { API } from "../../rpc.js";
 import { app_logic } from "../../app/logic.js";
 import { Tower } from "../../lib.js";
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
+import { state } from "../../state.js";
 
 export class PoolFormLogic {
-    init = () => {
-    };
-
     on_route_new = async (env_id) => {
         await app_logic.with_environment(parseInt(env_id, 10));
         $$("pool_form").clear();
@@ -43,7 +41,7 @@ export class PoolFormLogic {
         }
 
         const data = form.getValues();
-        data.environment = app_logic.current_env.id;
+        data.environment = state.get_environment().id;
 
         try {
             if (data.id === undefined) {
@@ -88,7 +86,7 @@ export class PoolFormLogic {
 };
 
 export const pool_form_logic = new PoolFormLogic();
-export const pool_form_routes = [
+router.push(
     new Route(/^\/environment\/(\d+)\/pool\/new$/, pool_form_logic.on_route_new, "pool"),
     new Route(/^\/environment\/(\d+)\/pool\/(\d+)$/, pool_form_logic.on_route_item, "pool"),
-]
+);

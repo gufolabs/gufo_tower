@@ -6,12 +6,9 @@
 // ----------------------------------------------------------------------
 import { API } from "../rpc.js";
 import { Tower } from "../lib.js";
-import { Route } from "../route.js";
+import { Route, router } from "../route.js";
 
 export class SettingsLogic {
-    init = () => {
-    };
-
     on_route = async () => {
         $$("settings_form_panel").show();
         try {
@@ -38,6 +35,6 @@ export class SettingsLogic {
 };
 export const settings_logic = new SettingsLogic();
 
-export const settings_routes = [
+router.push(
     new Route(/^\/settings$/, settings_logic.on_route, "settings")
-];
+);

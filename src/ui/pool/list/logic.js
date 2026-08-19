@@ -4,13 +4,10 @@
 // Copyright (C) 2015-2026 Gufo Labs
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
 import { app_logic } from "../../app/logic.js";
 
 export class PoolListLogic {
-    init = () => {
-    };
-
     on_route = async (env_id) => {
         await app_logic.with_environment(parseInt(env_id, 10));
         $$("pool_list_panel").show();
@@ -27,6 +24,6 @@ export class PoolListLogic {
 };
 
 export const pool_list_logic = new PoolListLogic();
-export const pool_list_routes = [
-    new Route(/^\/environment\/(\d+)\/pool$/, pool_list_logic.on_route, "pool"),
-];
+router.routes(
+    new Route(/^\/environment\/(\d+)\/pool$/, pool_list_logic.on_route, "pool")
+);

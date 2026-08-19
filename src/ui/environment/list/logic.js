@@ -7,7 +7,8 @@
 import { API } from "../../rpc.js";
 import { app_logic } from "../../app/logic.js";
 import { Tower } from "../../lib.js";
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
+import { state } from "../../state.js";
 
 export class EnvironmentListLogic {
     PULL_CHECK_INTERVAL = 1000;
@@ -39,7 +40,7 @@ export class EnvironmentListLogic {
     };
 
     on_pull = async () => {
-        const env_id = app_logic.current_env.id;
+        const env_id = state.get_environment().id;
 
         const check_status = async (env, job_id) => {
             try {
@@ -89,6 +90,6 @@ export class EnvironmentListLogic {
 
 export const environment_list_logic = new EnvironmentListLogic();
 
-export const environment_list_routes = [
-    new Route(/^\/environment$/, environment_list_logic.on_route, "environment"),
-];
+router.push(
+    new Route(/^\/environment$/, environment_list_logic.on_route, "environment")
+);

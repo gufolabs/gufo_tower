@@ -4,12 +4,9 @@
 // Copyright (C) 2015-2026 Gufo Labs
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
 
 export class DatacenterListLogic {
-    init = () => {
-    };
-
     on_route = () => {
         $$("datacenter_list_panel").show();
         datacenter_list_logic.load();
@@ -27,6 +24,6 @@ export class DatacenterListLogic {
 
 export const datacenter_list_logic = new DatacenterListLogic();
 
-export const datacenter_list_routes = [
+router.push(
     new Route(/^\/datacenter$/, datacenter_list_logic.on_route, "datacenter")
-];
+);

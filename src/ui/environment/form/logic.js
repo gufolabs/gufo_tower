@@ -6,12 +6,9 @@
 // ----------------------------------------------------------------------
 import { API } from "../../rpc.js";
 import { Tower } from "../../lib.js";
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
 
 export class EnvironmentFormLogic {
-    init = () => {
-    };
-
     on_route_new = () => {
         $$("environment_form_panel").show();
         $$("environment_form").clear();
@@ -102,7 +99,7 @@ export class EnvironmentFormLogic {
 
 export const environment_form_logic = new EnvironmentFormLogic();
 
-export const environment_form_routes = [
+router.push(
     new Route(/^\/environment\/new$/, environment_form_logic.on_route_new, "environment"),
-    new Route(/^\/environment\/(\d+)$/, environment_form_logic.on_route_item, "environment"),
-];
+    new Route(/^\/environment\/(\d+)$/, environment_form_logic.on_route_item, "environment")
+);

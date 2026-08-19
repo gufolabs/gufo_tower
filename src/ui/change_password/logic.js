@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------
 import { API } from "../rpc.js";
 import { Tower } from "../lib.js";
-import { Route } from "../route.js";
+import { Route, router } from "../route.js";
 
 export class ChangePasswordLogic {
     init = () => {
@@ -43,6 +43,6 @@ export class ChangePasswordLogic {
 
 export const change_password_logic = new ChangePasswordLogic();
 
-export const change_password_routes = [
+router.push(
     new Route(/^\/change-password$/, change_password_logic.on_route)
-];
+);

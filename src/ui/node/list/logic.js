@@ -5,12 +5,9 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { app_logic } from "../../app/logic.js";
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
 
 export class NodeListLogic {
-    init = () => {
-    };
-
     on_route = async (env_id) => {
         await app_logic.with_environment(parseInt(env_id, 10));
         $$("node_list_panel").show();
@@ -27,6 +24,6 @@ export class NodeListLogic {
     };
 };
 export const node_list_logic = new NodeListLogic();
-export const node_list_routes = [
+router.push(
     new Route(/^\/environment\/(\d+)\/node$/, node_list_logic.on_route, "node"),
-];
+);

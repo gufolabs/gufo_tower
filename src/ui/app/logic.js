@@ -7,14 +7,13 @@
 import { API } from "../rpc.js";
 import { desktop_logic } from "../desktop/logic.js";
 import { Tower } from "../lib.js";
+import { state } from "../state.js";
 
 export class AppLogic {
-    current_env = null;
-
     init = () => { };
 
     select_environment = (env) => {
-        app_logic.current_env = env;
+        state.set_environment(env);
         desktop_logic.select_environment(env);
     };
 
@@ -27,10 +26,6 @@ export class AppLogic {
             Tower.msg.failed("Failed to get environment");
             throw err;
         }
-    };
-
-    is_environment_selected = () => {
-        return app_logic.current_env !== null;
     };
 
     logout = async () => {

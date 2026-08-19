@@ -6,13 +6,10 @@
 // ----------------------------------------------------------------------
 import { API } from "../../rpc.js";
 import { Tower } from "../../lib.js";
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
 import { app_logic } from "../../app/logic.js";
 
 export class EnvironmentInventoryLogic {
-    init = () => {
-    };
-
     on_route = async (e_id) => {
         const env_id = parseInt(e_id, 10);
 
@@ -31,6 +28,6 @@ export class EnvironmentInventoryLogic {
 
 export const environment_inventory_logic = new EnvironmentInventoryLogic();
 
-export const environment_inventory_routes = [
-    new Route(/^\/environment\/(\d+)\/inventory$/, environment_inventory_logic.on_route, "environment"),
-];
+router.push(
+    new Route(/^\/environment\/(\d+)\/inventory$/, environment_inventory_logic.on_route, "environment")
+);

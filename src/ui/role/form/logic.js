@@ -7,12 +7,10 @@
 import { API } from "../../rpc.js";
 import { app_logic } from "../../app/logic.js";
 import { Tower } from "../../lib.js";
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
+import { state } from "../../state.js";
 
 export class RoleFormLogic {
-    init = () => {
-    };
-
     on_route_new = async (env_id) => {
         await app_logic.with_environment(parseInt(env_id, 10));
         $$("role_form").clear();
@@ -41,7 +39,7 @@ export class RoleFormLogic {
         }
 
         const data = form.getValues();
-        data.environment = app_logic.current_env.id;
+        data.environment = state.get_environment().id;
 
         try {
             if (data.id === undefined) {
@@ -86,7 +84,7 @@ export class RoleFormLogic {
 };
 
 export const role_form_logic = new RoleFormLogic();
-export const role_form_routes = [
+router.push(
     new Route(/^\/environment\/(\d+)\/role\/new$/, role_form_logic.on_route_new, "role"),
-    new Route(/^\/environment\/(\d+)\/role\/(\d+)$/, role_form_logic.on_route_item, "role"),
-]
+    new Route(/^\/environment\/(\d+)\/role\/(\d+)$/, role_form_logic.on_route_item, "role")
+);

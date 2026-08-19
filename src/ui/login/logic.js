@@ -7,7 +7,8 @@
 import { API } from "../rpc.js";
 import { desktop_logic } from "../desktop/logic.js";
 import { Tower } from "../lib.js";
-import { Route } from "../route.js";
+import { Route, router } from "../route.js";
+import { state } from "../state.js";
 
 export class LoginLogic {
     init = () => {
@@ -15,7 +16,7 @@ export class LoginLogic {
 
     on_route = () => {
         $$("login_panel").show();
-        login_logic.clear_form();
+        this.clear_form();
     };
 
     clear_form = () => {
@@ -28,7 +29,7 @@ export class LoginLogic {
             return;
         }
         const data = $$("login_form").getValues();
-        login_logic.login(data.user, data.password);
+        this.login(data.user, data.password);
     };
 
     login = async (user, password) => {
@@ -39,6 +40,7 @@ export class LoginLogic {
             });
             if (result) {
                 desktop_logic.show();
+                navigation.navigate(state.pop_return_path());
             } else {
                 Tower.msg.failed("Login failed");
             }
@@ -49,6 +51,6 @@ export class LoginLogic {
 };
 export const login_logic = new LoginLogic();
 
-export const login_routes = [
-    new Route(/^\/login$/, login_logic.on_route),
-];
+router.push(
+    new Route(/^\/login$/, login_logic.on_route)
+);

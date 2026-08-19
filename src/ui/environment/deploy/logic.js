@@ -7,16 +7,13 @@
 import { API } from "../../rpc.js";
 import { app_logic } from "../../app/logic.js";
 import { Tower } from "../../lib.js";
-import { Route } from "../../route.js";
+import { Route, router } from "../../route.js";
 
 export class EnvironmentDeployLogic {
-    init = () => {
-    };
-
     on_route = (e_id) => {
         const env_id = parseInt(e_id, 10);
-        return app_logic.with_environment(env_id).then(() => {
-            const env_name = app_logic.current_env.name;
+        return app_logic.with_environment(env_id).then((env) => {
+            const env_name = env.name;
             const rx_progress = /^(ok|changed|unreachable|failed|fatal): \[/mg;
             const rx_task = /^.+?\*{3}\s*$/mg;
             const rx_line = /^(ok|changed|unreachable|failed|fatal|skipping): \[.+?$/mg;
@@ -157,6 +154,6 @@ export class EnvironmentDeployLogic {
 
 export const environment_deploy_logic = new EnvironmentDeployLogic();
 
-export const environment_deploy_routes = [
-    new Route(/^\/environment\/(\d+)\/deploy$/, environment_deploy_logic.on_route, "environment"),
-];
+router.push(
+    new Route(/^\/environment\/(\d+)\/deploy$/, environment_deploy_logic.on_route, "environment")
+);

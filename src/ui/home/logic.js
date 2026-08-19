@@ -5,12 +5,9 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "../rpc.js";
-import { Route } from "../route.js";
+import { Route, router } from "../route.js";
 
 export class HomeLogic {
-    init = () => {
-    };
-
     on_route = async () => {
         $$("home_panel").show();
         await this.load();
@@ -96,6 +93,4 @@ export class HomeLogic {
 
 export const home_logic = new HomeLogic();
 
-export const home_routes = [
-    new Route(/^\/$/, home_logic.on_route, "home"),
-];
+router.push(new Route(/^\/$/, home_logic.on_route, "home"))
