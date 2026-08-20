@@ -15,7 +15,7 @@ export const environment_inventory = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: () => { navigation.navigate("../.."); },
+                    click: () => { navigation.navigate("/environment"); },
                     width: 32
                 },
                 {

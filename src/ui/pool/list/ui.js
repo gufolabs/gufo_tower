@@ -26,7 +26,7 @@ export const pool_list = {
                     icon: "plus",
                     autowidth: true,
                     label: "Create new...",
-                    click: () => { navigation.navigate("./new"); }
+                    click: () => { navigation.navigate(`${location.pathname}/new`); }
                 }
             ]
         },

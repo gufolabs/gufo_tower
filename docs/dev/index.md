@@ -10,4 +10,5 @@ including both individuals and companies, interested in contributing to the proj
 - [Code Base](codebase.md)
 - [Contributing Guide](CONTRIBUTING.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Application URL Structure](app-url-structure.md)
 - [Supported Standards](standards.md)

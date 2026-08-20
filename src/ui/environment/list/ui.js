@@ -38,7 +38,7 @@ export const environment_list = {
                     click: () => {
                         const id = $$("environment_list").getSelectedId();
                         const env = $$("environment_list").getItem(id);
-                        navigation.navigate(`./${env.id}/inventory`);
+                        navigation.navigate(`/environment/${env.id}/inventory`);
                     },
                     autowidth: true,
                     disabled: true
@@ -62,7 +62,7 @@ export const environment_list = {
                     click: () => {
                         const id = $$("environment_list").getSelectedId();
                         const env = $$("environment_list").getItem(id);
-                        navigation.navigate(`./${env.id}/deploy`);
+                        navigation.navigate(`/environment/${env.id}/deploy`);
                     },
                     autowidth: true,
                     disabled: true,

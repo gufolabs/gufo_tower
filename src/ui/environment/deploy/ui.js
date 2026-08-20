@@ -14,7 +14,7 @@ export const environment_deploy = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: () => { navigation.navigate("../.."); },
+                    click: () => { navigation.navigate("/environment"); },
                     width: 32
                 },
                 {
