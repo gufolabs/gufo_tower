@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------
 import { API } from "../rpc.js";
 import { Route, router } from "../route.js";
+import { installation_name } from "../state.js";
 
 export class HomeLogic {
     on_route = async () => {
@@ -45,7 +46,7 @@ export class HomeLogic {
         </p>`;
 
     render_environments = (environments) => `
-    <h2>Environments</h2>
+    <h2>Environments in ${installation_name.state}</h2>
 
     <table>
         <thead>
@@ -54,6 +55,7 @@ export class HomeLogic {
                 <th>URL</th>
                 <th>Type</th>
                 <th>Installation name</th>
+                <th>Tag</th>
                 <th>Pools</th>                
                 <th>DC</th>
                 <th>Nodes</th>
@@ -70,6 +72,7 @@ export class HomeLogic {
                     </td>
                     <td>${environment.env_type}</td>
                     <td>${environment.installation_name}</td>
+                    <td>${environment.tag}</td>
                     <td>${environment.pools || "-"}</td>
                     <td>${environment.datacenters || "-"}</td>
                     <td>${environment.nodes || "-"}</td>

@@ -5,15 +5,14 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "../rpc.js";
-import { app_logic } from "../app/logic.js";
 import { settings_logic } from "../settings/logic.js";
 import { Tower } from "../lib.js";
 import { Route, router } from "../route.js";
-import { state } from "../state.js";
+import { current_env } from "../state.js";
 
 export class ServiceLogic {
     on_route = async (env_id) => {
-        await app_logic.with_environment(parseInt(env_id, 10));
+        await current_env.with(parseInt(env_id, 10));
         $$("service_panel").show();
         await service_logic.load();
     };
@@ -21,7 +20,7 @@ export class ServiceLogic {
     load = async () => {
         settings_logic.init();
 
-        const env_id = state.get_environment().id;
+        const env_id = current_env.state.id;
         const result = await API.pull.is_pulled(env_id);
 
         if (!result) {
@@ -173,7 +172,7 @@ export class ServiceLogic {
 
     on_save = async () => {
         const r = [];
-        const env_id = state.get_environment().id;
+        const env_id = current_env.state.id;
 
         $$("service_list").data.each((v) => {
             if (!v.config) {

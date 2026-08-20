@@ -10,10 +10,11 @@ import "./skin.js";
 import "./login/ui.js";
 import "./change_password/ui.js";
 import "./desktop/ui.js";
+import { installation_name } from "./state.js";
 import { API } from "./rpc.js";
 import { Tower } from "./lib.js";
 import { app_ui } from "./app/ui.js";
-import { state } from "./state.js";
+import { return_path } from "./state.js";
 import { router } from "./route.js";
 import { app_logic } from "./app/logic.js";
 import { change_password_logic } from "./change_password/logic.js";
@@ -45,12 +46,18 @@ async function init() {
     change_password_logic.init();
     desktop_logic.init();
     try {
+        const cfg = await API.settings.app_config();
+        installation_name.setState(cfg.installation_name);
+    } catch {
+        Tower.msg.failed("Failed to get app config");
+    }
+    try {
         const result = await API.login.is_logged();
         if (result) {
             desktop_logic.show();
             await router.show();
         } else {
-            state.push_return_path();
+            return_path.push();
             navigation.navigate("/login");
         }
     } catch {

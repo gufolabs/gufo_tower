@@ -5,11 +5,11 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { Route, router } from "../../route.js";
-import { app_logic } from "../../app/logic.js";
+import { current_env } from "../../state.js";
 
 export class PoolListLogic {
     on_route = async (env_id) => {
-        await app_logic.with_environment(parseInt(env_id, 10));
+        await current_env.with(parseInt(env_id, 10));
         $$("pool_list_panel").show();
         this.load();
     };

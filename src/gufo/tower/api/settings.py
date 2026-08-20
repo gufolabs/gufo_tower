@@ -7,7 +7,7 @@
 
 # Gufo Tower modules
 from ..models.settings import Settings
-from .base import API, api
+from .base import API, api, open_api
 
 
 class SettingsAPI(API):
@@ -31,3 +31,8 @@ class SettingsAPI(API):
             if k not in current or current[k] != data[k]:
                 Settings.set_item(k, data[k])
         return True
+
+    @open_api
+    def app_config(self):
+        """Get application config."""
+        return {"installation_name": Settings.get_installation_name()}

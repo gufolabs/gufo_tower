@@ -7,6 +7,7 @@
 import { API } from "../../rpc.js";
 import { Tower } from "../../lib.js";
 import { Route, router } from "../../route.js";
+import { current_env } from "../../state.js";
 
 export class EnvironmentFormLogic {
     on_route_new = () => {
@@ -61,12 +62,14 @@ export class EnvironmentFormLogic {
                 form.save();
                 navigation.navigate("/environment");
                 Tower.msg.complete("Created");
+                current_env.setState(result);
             } else {
                 const result = await API.environment.update_item(data);
                 form.setValues(result);
                 form.save();
                 navigation.navigate("/environment");
                 Tower.msg.complete("Changed");
+                current_env.setState(result);
             }
         } catch (err) {
             if (data.id === undefined) {
@@ -92,6 +95,7 @@ export class EnvironmentFormLogic {
             }
         } else {
             Tower.msg.complete("Deleted");
+            current_env.setState(null);
             navigation.navigate("/environment");
         }
     };

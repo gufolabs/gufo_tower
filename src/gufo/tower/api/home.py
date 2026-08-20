@@ -49,7 +49,9 @@ class HomeAPI(API):
             .count()
         )
         nodes = Node.select().where(Node.environment == env).count()
+        _, _, tag = env.playbook_link.partition("@")
         return {
+            "id": env.id,
             "name": env.name,
             "web_host": env.web_host,
             "url": f"https://{env.web_host}/",
@@ -58,4 +60,5 @@ class HomeAPI(API):
             "pools": pools,
             "datacenters": datacenters,
             "nodes": nodes,
+            "tag": tag or "-",
         }

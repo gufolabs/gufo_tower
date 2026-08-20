@@ -5,10 +5,9 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "../../rpc.js";
-import { app_logic } from "../../app/logic.js";
 import { Tower } from "../../lib.js";
 import { Route, router } from "../../route.js";
-import { state } from "../../state.js";
+import { current_env } from "../../state.js";
 
 export class EnvironmentListLogic {
     PULL_CHECK_INTERVAL = 1000;
@@ -29,7 +28,7 @@ export class EnvironmentListLogic {
 
     on_select = () => {
         const data = $$("environment_list").getSelectedItem();
-        app_logic.select_environment(data);
+        current_env.setState(data);
         $$("environment_inventory_button").enable();
         $$("environment_pull_button").enable();
         $$("environment_deploy_button").enable();
@@ -40,7 +39,7 @@ export class EnvironmentListLogic {
     };
 
     on_pull = async () => {
-        const env_id = state.get_environment().id;
+        const env_id = current_env.state.id;
 
         const check_status = async (env, job_id) => {
             try {

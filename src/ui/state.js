@@ -5,36 +5,70 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 
-export class AppState {
-    current_env = null;
-    return_path = "/";
+import { API } from "./rpc";
+import { Tower } from "./lib";
 
-    set_environment = (env) => {
-        this.current_env = env;
+class Store {
+    #state;
+    #events = new EventTarget();
+
+    constructor(state) {
+        this.#state = state;
     }
 
-    clear_environment = () => {
-        this.current_env = null;
+    get state() {
+        return this.#state;
     }
 
-    get_environment = () => {
-        return this.current_env;
+    setState(updater) {
+        const state =
+            typeof updater === "function"
+                ? updater(this.#state)
+                : updater;
+        if (state === this.#state) {
+            return;
+        }
+        this.#state = state;
+        this.#events.dispatchEvent(new Event("change"));
     }
 
-    push_return_path = (path) => {
-        path = path ?? window.location.pathname;
+    subscribe(callback) {
+        this.#events.addEventListener("change", callback);
+        return () => {
+            this.#events.removeEventListener("change", callback);
+        };
+    }
+}
+
+class EnvStore extends Store {
+    async with(env_id) {
+        try {
+            const env = await API.environment.get_item({ id: env_id });
+            this.setState(env);
+            return env;
+        } catch (err) {
+            Tower.msg.failed("Failed to get environment");
+            throw err;
+        }
+    }
+}
+
+class PathStore extends Store {
+    push(path = window.location.pathname) {
         if (path === "/login") {
-            this.return_path = "/";
+            this.setState("/");
         } else {
-            this.return_path = path;
+            this.setState(path);
         }
     }
 
-    pop_return_path = () => {
-        const path = this.return_path;
-        this.return_path = "/";
+    pop() {
+        const path = this.state;
+        this.setState("/");
         return path;
     }
-};
+}
 
-export const state = new AppState();
+export const installation_name = new Store("Unconfigured installation");
+export const current_env = new EnvStore(null);
+export const return_path = new PathStore("/");
