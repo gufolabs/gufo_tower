@@ -85,6 +85,16 @@ class ModelAPI(API):
         return self.render_items(cfg, lambda x: x.list_item())
 
     @api
+    def get_item(self, cfg):
+        with db.atomic():
+            try:
+                record = self.model.get(self.model.id == int(cfg["id"]))
+            except peewee.DoesNotExist as e:
+                msg = "Does not exist"
+                raise APIError(msg) from e
+        return record.list_item()
+
+    @api
     def lookup_items(self, cfg):
         cfg = cfg or {}
         return self.render_items(cfg, lambda x: x.reference_item())

@@ -25,6 +25,11 @@ export default [
                 XMLHttpRequest: "readonly",
                 webix: "readonly",
                 "$$": "readonly",
+                navigation: "readonly",
+                URL: "readonly",
+                fetch: "readonly",
+                setTimeout: "readonly",
+                location: "readonly",
             },
         },
         rules: {

@@ -7,41 +7,56 @@
 
 import "./style.css";
 import "./skin.js";
-import "./rpc.js";
-import "./lib.js";
-import "./login_ui.js";
-import "./login_logic.js";
-import "./change_password_ui.js";
-import "./change_password_logic.js";
-import "./environment_ui.js";
-import "./environment_logic.js";
-import "./datacenter_ui.js";
-import "./datacenter_logic.js";
-import "./role_ui.js";
-import "./role_logic.js";
-import "./pool_ui.js";
-import "./pool_logic.js";
-import "./node_ui.js";
-import "./node_logic.js";
-import "./service_ui.js";
-import "./service_logic.js";
-import "./settings_ui.js";
-import "./settings_logic.js";
-import "./desktop_ui.js";
-import "./desktop_logic.js";
-import { app_ui } from "./app_ui.js";
-import { app_logic } from "./app_logic.js";
-import { login_logic } from "./login_logic.js";
-import { change_password_logic } from "./change_password_logic.js";
-import { desktop_logic } from "./desktop_logic.js";
+import "./login/ui.js";
+import "./change_password/ui.js";
+import "./desktop/ui.js";
+import { API } from "./rpc.js";
+import { Tower } from "./lib.js";
+import { app_ui } from "./app/ui.js";
+import { state } from "./state.js";
+import { router } from "./route.js";
+import { app_logic } from "./app/logic.js";
+import { change_password_logic } from "./change_password/logic.js";
+import { desktop_logic } from "./desktop/logic.js";
+import { login_logic } from "./login/logic.js";
+// Import application modules to register their routes.
+import "./home/logic.js";
+import "./environment/list/logic.js";
+import "./environment/form/logic.js";
+import "./environment/inventory/logic.js";
+import "./environment/deploy/logic.js";
+import "./datacenter/list/logic.js";
+import "./datacenter/form/logic.js";
+import "./pool/list/logic.js";
+import "./pool/form/logic.js";
+import "./node/list/logic.js";
+import "./node/form/logic.js";
+import "./role/list/logic.js";
+import "./role/form/logic.js";
+import "./service/logic.js";
+import "./settings/logic.js";
 
-function init() {
+async function init() {
     webix.ui(app_ui);
 
+    router.init();
+    app_logic.init();
     login_logic.init();
     change_password_logic.init();
     desktop_logic.init();
-
-    app_logic.process_login();
+    try {
+        const result = await API.login.is_logged();
+        if (result) {
+            desktop_logic.show();
+            await router.show();
+        } else {
+            state.push_return_path();
+            navigation.navigate("/login");
+        }
+    } catch {
+        Tower.msg.failed("Failed to connect to server");
+        navigation.navigate("/login");
+    }
 }
+
 webix.ready(init);

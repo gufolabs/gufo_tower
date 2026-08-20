@@ -1,0 +1,92 @@
+// ----------------------------------------------------------------------
+// Role Form UI
+// ----------------------------------------------------------------------
+// Copyright (C) 2015-2026 Gufo Labs
+// See LICENSE.md for details
+// ----------------------------------------------------------------------
+
+import { role_form_logic } from "./logic.js";
+
+export const role_form = {
+    id: "role_form_panel",
+    rows: [
+        {
+            view: "toolbar",
+            cols: [
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "arrow-left",
+                    click: () => { navigation.navigate(".."); },
+                    width: 32
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "save",
+                    label: "Save",
+                    autowidth: true,
+                    click: role_form_logic.on_save
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "trash-o",
+                    label: "Delete",
+                    autowidth: true,
+                    click: role_form_logic.on_delete
+                },
+                {}
+            ]
+        },
+        {
+            view: "form",
+            id: "role_form",
+            elementsConfig: {
+                labelWidth: 110
+            },
+            scroll: false,
+            elements: [
+                {
+                    view: "text",
+                    name: "name",
+                    label: "Name",
+                    required: true,
+                    placeholder: "Name",
+                    invalidMessage: "Cannot be empty"
+                },
+                {
+                    view: "text",
+                    name: "role_name",
+                    label: "Role name",
+                    required: true,
+                    placeholder: "Role name",
+                    invalidMessage: "Cannot be empty",
+                    bottomLabel: "Role name that will be known to Ansible"
+                },
+                {
+                    view: "checkbox",
+                    name: "is_enabled",
+                    label: "Enabled",
+                    value: true,
+                    required: true
+                },
+                {
+                    view: "textarea",
+                    name: "description",
+                    label: "Description",
+                    height: 150
+                },
+                {
+                    view: "text",
+                    name: "link",
+                    label: "Link",
+                    required: true,
+                    placeholder: "git+https://github.com/bla/blabla@master",
+                    bottomLabel: "Link repo format is <a href=https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support>written here</a>"
+                },
+                {}
+            ]
+        }
+    ]
+};
