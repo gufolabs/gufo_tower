@@ -52,7 +52,7 @@ export const datacenter_list = {
             on: {
                 onItemDblClick: (id) => {
                     const item = $$("datacenter_list").getItem(id.row);
-                    navigation.navigate(`./${item.id}`);
+                    navigation.navigate(`${location.pathname}/${item.id}`);
                 }
             },
             datafetch: Tower.config.datafetch,

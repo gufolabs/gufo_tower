@@ -126,7 +126,7 @@ export const environment_list = {
                 onSelectChange: environment_list_logic.on_select,
                 onItemDblClick: (id) => {
                     const item = $$("environment_list").getItem(id.row);
-                    navigation.navigate(`./${item.id}`);
+                    navigation.navigate(`${location.pathname}/${item.id}`);
                 }
             },
             datafetch: Tower.config.datafetch,

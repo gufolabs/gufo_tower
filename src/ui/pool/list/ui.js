@@ -49,7 +49,7 @@ export const pool_list = {
             on: {
                 onItemDblClick: (id) => {
                     const item = $$("pool_list").getItem(id.row);
-                    navigation.navigate(`./${item.id}`)
+                    navigation.navigate(`${location.pathname}/${item.id}`)
                 }
             },
             datafetch: Tower.config.datafetch,

@@ -29,6 +29,7 @@ export default [
                 URL: "readonly",
                 fetch: "readonly",
                 setTimeout: "readonly",
+                location: "readonly",
             },
         },
         rules: {

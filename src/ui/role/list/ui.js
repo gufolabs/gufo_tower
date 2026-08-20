@@ -66,7 +66,7 @@ export const role_list = {
             on: {
                 onItemDblClick: (id) => {
                     const item = $$("role_list").getItem(id.row);
-                    navigation.navigate(`./${item.id}`)
+                    navigation.navigate(`${location.pathname}/${item.id}`)
                 }
             },
             datafetch: Tower.config.datafetch,

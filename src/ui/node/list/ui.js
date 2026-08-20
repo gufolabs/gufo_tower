@@ -74,7 +74,7 @@ export const node_list = {
             on: {
                 onItemDblClick: (id) => {
                     const item = $$("node_list").getItem(id.row);
-                    navigation.navigate(`./${item.id}`);
+                    navigation.navigate(`${location.pathname}/${item.id}`);
                 }
             },
             datafetch: Tower.config.datafetch,
