@@ -78,6 +78,7 @@ export const SDL = {
         "save_config"
     ],
     "settings": [
+        "app_config",
         "get_settings",
         "save_settings"
     ]

@@ -8,7 +8,7 @@ import { API } from "../rpc.js";
 import { desktop_logic } from "../desktop/logic.js";
 import { Tower } from "../lib.js";
 import { Route, router } from "../route.js";
-import { state } from "../state.js";
+import { return_path } from "../state.js";
 
 export class LoginLogic {
     init = () => {
@@ -40,7 +40,7 @@ export class LoginLogic {
             });
             if (result) {
                 desktop_logic.show();
-                navigation.navigate(state.pop_return_path());
+                navigation.navigate(return_path.pop());
             } else {
                 Tower.msg.failed("Login failed");
             }

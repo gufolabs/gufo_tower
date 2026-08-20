@@ -4,12 +4,12 @@
 // Copyright (C) 2015-2026 Gufo Labs
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
-import { app_logic } from "../../app/logic.js";
 import { Route, router } from "../../route.js";
+import { current_env } from "../../state.js";
 
 export class RoleListLogic {
     on_route = async (env_id) => {
-        await app_logic.with_environment(parseInt(env_id, 10));
+        await current_env.with(parseInt(env_id, 10));
         $$("role_list_panel").show();
         this.load();
     };

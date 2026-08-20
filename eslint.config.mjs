@@ -30,6 +30,8 @@ export default [
                 fetch: "readonly",
                 setTimeout: "readonly",
                 location: "readonly",
+                EventTarget: "readonly",
+                Event: "readonly",
             },
         },
         rules: {

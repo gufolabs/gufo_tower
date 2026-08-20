@@ -5,21 +5,20 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "../../rpc.js";
-import { app_logic } from "../../app/logic.js";
 import { Tower } from "../../lib.js";
 import { Route, router } from "../../route.js";
-import { state } from "../../state.js";
+import { current_env } from "../../state.js";
 
 export class PoolFormLogic {
     on_route_new = async (env_id) => {
-        await app_logic.with_environment(parseInt(env_id, 10));
+        await current_env.with(parseInt(env_id, 10));
         $$("pool_form").clear();
         $$("pool_form_panel").show();
     };
 
     on_route_item = async (env_id, pool_id) => {
         try {
-            await app_logic.with_environment(parseInt(env_id, 10));
+            await current_env.with(parseInt(env_id, 10));
 
             const data = await API.pool.get_item({
                 id: parseInt(pool_id, 10)
@@ -41,7 +40,7 @@ export class PoolFormLogic {
         }
 
         const data = form.getValues();
-        data.environment = state.get_environment().id;
+        data.environment = current_env.state.id;
 
         try {
             if (data.id === undefined) {

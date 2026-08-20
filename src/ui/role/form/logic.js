@@ -5,21 +5,20 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "../../rpc.js";
-import { app_logic } from "../../app/logic.js";
 import { Tower } from "../../lib.js";
 import { Route, router } from "../../route.js";
-import { state } from "../../state.js";
+import { current_env } from "../../state.js";
 
 export class RoleFormLogic {
     on_route_new = async (env_id) => {
-        await app_logic.with_environment(parseInt(env_id, 10));
+        await current_env.with(parseInt(env_id, 10));
         $$("role_form").clear();
         $$("role_form_panel").show();
     };
 
     on_route_item = async (env_id, role_id) => {
         try {
-            await app_logic.with_environment(parseInt(env_id, 10));
+            await current_env.with(parseInt(env_id, 10));
             const data = await API.role.get_item({
                 id: parseInt(role_id, 10)
             });
@@ -39,7 +38,7 @@ export class RoleFormLogic {
         }
 
         const data = form.getValues();
-        data.environment = state.get_environment().id;
+        data.environment = current_env.state.id;
 
         try {
             if (data.id === undefined) {

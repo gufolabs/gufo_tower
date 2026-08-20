@@ -51,7 +51,7 @@ export const desktop = {
                         {
                             id: "environment_label",
                             view: "label",
-                            label: "Gufo Tower: Select environment"
+                            label: "Gufo Tower"
                         },
                         {
                             view: "menu",

@@ -7,6 +7,7 @@
 import { API } from "../rpc.js";
 import { Tower } from "../lib.js";
 import { Route, router } from "../route.js";
+import { installation_name } from "../state.js";
 
 export class SettingsLogic {
     on_route = async () => {
@@ -26,8 +27,10 @@ export class SettingsLogic {
             return;
         }
         try {
-            await API.settings.save_settings(form.getValues());
+            const values = form.getValues();
+            await API.settings.save_settings(values);
             Tower.msg.complete("Settings saved");
+            installation_name.setState(values.installation_name);
         } catch {
             Tower.msg.failed("Failed to save settings");
         }

@@ -5,14 +5,14 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "../../rpc.js";
-import { app_logic } from "../../app/logic.js";
 import { Tower } from "../../lib.js";
 import { Route, router } from "../../route.js";
+import { current_env } from "../../state.js";
 
 export class EnvironmentDeployLogic {
     on_route = (e_id) => {
         const env_id = parseInt(e_id, 10);
-        return app_logic.with_environment(env_id).then((env) => {
+        return current_env.with(env_id).then((env) => {
             const env_name = env.name;
             const rx_progress = /^(ok|changed|unreachable|failed|fatal): \[/mg;
             const rx_task = /^.+?\*{3}\s*$/mg;
