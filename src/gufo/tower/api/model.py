@@ -90,7 +90,7 @@ class ModelAPI(API):
             try:
                 record = self.model.get(self.model.id == int(cfg["id"]))
             except peewee.DoesNotExist as e:
-                msg = "Does not exists"
+                msg = "Does not exist"
                 raise APIError(msg) from e
         return record.list_item()
 
