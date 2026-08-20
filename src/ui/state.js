@@ -63,7 +63,7 @@ class PathStore extends Store {
     }
 
     pop() {
-        const path = this.return_path;
+        const path = this.state;
         this.setState("/");
         return path;
     }
