@@ -10,11 +10,13 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import shutil
 import subprocess
 import sys
+import tempfile
 from abc import ABC, abstractmethod
-from collections.abc import AsyncIterator, Iterable
-from contextlib import asynccontextmanager
+from collections.abc import AsyncIterator, Iterable, Iterator
+from contextlib import asynccontextmanager, contextmanager
 from hashlib import sha256
 from pathlib import Path
 from typing import ClassVar, NoReturn
@@ -32,7 +34,9 @@ from playwright.async_api import (
 from tornado.web import create_signed_value
 
 # Gufo Tower modules
+from gufo.tower.config import config
 from gufo.tower.daemons.web import WebServer
+from gufo.tower.models.db import RestorePolicy, db, snapshot_manager
 from gufo.tower.models.settings import Settings
 
 DOCS_ROOT = Path("docs")
@@ -153,6 +157,7 @@ class BaseShotter(ABC):
         require_authorized: Switch between authorized and non-authorized sessions.
         screenshots: Expected screenshots definition.
         capture_console: If set, print output of JS console.
+        fixture: Load sql fixture before making shots.
     """
 
     _playwright: ClassVar[Playwright | None] = None
@@ -161,10 +166,12 @@ class BaseShotter(ABC):
     _auth_context: ClassVar[BrowserContext | None] = None
     _web: ClassVar[WebServer | None] = None
     _web_task: ClassVar[asyncio.Task[None] | None] = None
+    _temp_dir: ClassVar[str | None] = None
     _device_scale_factor = 2
     require_authorized: bool
     screenshots: dict[str, Path]
     capture_console = False
+    fixture: str | None = None
 
     def __init__(self) -> None:
         self._host = "127.0.0.1"
@@ -192,6 +199,8 @@ class BaseShotter(ABC):
         """
         if BaseShotter._web is not None:
             return
+        BaseShotter._temp_dir = tempfile.mkdtemp(prefix="tower-shotter-")
+        config.home = Path(BaseShotter._temp_dir)
         BaseShotter._web = WebServer()
         BaseShotter._web_task = asyncio.create_task(
             BaseShotter._web.run_from_argv([])
@@ -219,6 +228,9 @@ class BaseShotter(ABC):
         if BaseShotter._web_task is not None:
             await BaseShotter._web_task
             BaseShotter._web_task = None
+        if BaseShotter._temp_dir is not None:
+            shutil.rmtree(BaseShotter._temp_dir)
+            BaseShotter._temp_dir = None
 
     async def get_playwright(self) -> Playwright:
         """Return the shared Playwright instance, starting it if necessary."""
@@ -309,6 +321,7 @@ class BaseShotter(ABC):
         shot = self._screenshots[name]
         self.logger.info("Shotting `%s`", shot.name)
         await shot.make(view)
+        self.logger.info("Done")
 
     @asynccontextmanager
     async def highlight(self, target: Locator) -> AsyncIterator[None]:
@@ -358,6 +371,63 @@ class BaseShotter(ABC):
             if not shot.is_made:
                 yield shot
 
+    @asynccontextmanager
+    async def with_page(self) -> AsyncIterator[Page]:
+        """Create a browser page and close it when the context exits.
+
+        The page is created in either the authorized or clear browser context,
+        depending on ``require_authorized``. If ``capture_console`` is enabled,
+        JavaScript console messages are printed while the page is active.
+
+        Yields:
+            Page: The newly created Playwright page.
+        """
+        if self.require_authorized:
+            ctx = await self.get_auth_context()
+        else:
+            ctx = await self.get_clear_context()
+        page = await ctx.new_page()
+        if self.capture_console:
+            page.on("console", lambda msg: print(f"JS: {msg.text}"))
+        try:
+            yield page
+        finally:
+            await page.close()
+
+    @contextmanager
+    def with_fixture(self) -> Iterator[None]:
+        """Apply the configured database fixture for the duration of the context.
+
+        When no fixture is configured, the context manager does nothing. Otherwise,
+        the current database state is snapshotted and protected, the fixture SQL
+        statements are applied, and the original state is restored when leaving
+        the context.
+
+        The database state is restored even if an exception is raised inside the
+        context.
+
+        Yields:
+            None: The fixture is active for the duration of the context.
+        """
+        # No fixture
+        if not self.fixture:
+            yield
+            return
+        # With fixture
+        snapshot = snapshot_manager.snapshot()
+        token = snapshot_manager.protect(snapshot)
+        try:
+            with db.atomic():
+                for sql in self._iter_sql():
+                    db.execute_sql(sql)
+            yield
+        finally:
+            snapshot_manager.unprotect(token)
+            snapshot_manager.restore(
+                snapshot,
+                policy=RestorePolicy.PRUNE,
+            )
+
     @classmethod
     async def run(cls) -> None:
         """Run all registered documentation screenshot generators.
@@ -371,17 +441,9 @@ class BaseShotter(ABC):
         try:
             for s_cls in loader:
                 shotter = loader[s_cls]()
-                if shotter.require_authorized:
-                    ctx = await shotter.get_auth_context()
-                else:
-                    ctx = await shotter.get_clear_context()
-                page = await ctx.new_page()
-                if shotter.capture_console:
-                    page.on("console", lambda msg: print(f"JS: {msg.text}"))
-                try:
-                    await shotter.make_shots(page)
-                finally:
-                    await page.close()
+                async with shotter.with_page() as page:
+                    with shotter.with_fixture():
+                        await shotter.make_shots(page)
                 missed = list(shotter.iter_missed_shots())
                 if missed:
                     msg = f"Missed screenshots: {','.join(shot.name for shot in missed)}"
@@ -389,6 +451,27 @@ class BaseShotter(ABC):
         finally:
             await cls.close()
             Screenshot.compress_all()
+
+    def _iter_sql(self) -> Iterator[str]:
+        """Iterate over SQL statements in the fixture dump.
+
+        Yields:
+            SQL INSERT statements from the fixture dump.
+        """
+        if self.fixture is None:
+            msg = "_iter_sql() without fixture"
+            raise RuntimeError(msg)
+        path = Path("tests", "fixtures", self.fixture, "data.sql")
+        if not path.exists():
+            msg = f"Fixture {self.fixture} does not exists"
+            raise RuntimeError(msg)
+        with open(path) as fp:
+            for line in fp:
+                statement = line.strip()
+                if statement.startswith("--"):
+                    continue
+                if statement.upper().startswith("INSERT INTO"):
+                    yield statement
 
 
 loader = Loader[type[BaseShotter]](
