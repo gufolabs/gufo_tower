@@ -463,7 +463,7 @@ class BaseShotter(ABC):
             raise RuntimeError(msg)
         path = Path("tests", "fixtures", self.fixture, "data.sql")
         if not path.exists():
-            msg = f"Fixture {self.fixture} does not exists"
+            msg = f"Fixture {self.fixture} does not exist"
             raise RuntimeError(msg)
         with open(path) as fp:
             for line in fp:
