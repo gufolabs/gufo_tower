@@ -12,6 +12,8 @@ To see unreleased changes, please see the [CHANGELOG on the master branch](https
 
 ## [Unreleased]
 
+The unreleased version is identified in code by a version number higher than any released version, with the -dev suffix. This changelog reflects the current state of the master branch.
+
 ### Fixed
 
 * Editing on double-click on grid line.
