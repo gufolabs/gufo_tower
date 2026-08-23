@@ -142,7 +142,7 @@ class PullAPI(API):
             # Pull
             if (path / ".git").is_dir():
                 repo = Repo(path)
-                porcelain.fetch(repo)
+                porcelain.fetch(repo, spec.url)
             else:
                 shutil.rmtree(path, ignore_errors=True)
                 porcelain.clone(
@@ -156,7 +156,7 @@ class PullAPI(API):
             raise RuntimeError(msg) from e
         if spec.revision is not None:
             try:
-                porcelain.checkout(repo, spec.revision)
+                porcelain.checkout(repo, spec.revision, force=True)
             except KeyError as e:
                 msg = f"Invalid tag: {spec.revision}"
                 raise RuntimeError(msg) from e
