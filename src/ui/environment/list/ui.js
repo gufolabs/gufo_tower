@@ -12,15 +12,16 @@ export const environment_list = {
     rows: [
         {
             view: "toolbar",
+            id: "environment_list_toolbar",
             elements: [
-                {
-                    view: "search",
-                    placeholder: "Search...",
-                    width: 150,
-                    on: {
-                        "onChange": environment_list_logic.on_search
-                    }
-                },
+                // {
+                //     view: "search",
+                //     placeholder: "Search...",
+                //     width: 150,
+                //     on: {
+                //         "onChange": environment_list_logic.on_search
+                //     }
+                // },
                 {
                     view: "button",
                     type: "icon",

@@ -12,3 +12,5 @@ Use the sections below to learn about the available operations and workflows.
 - [Login](login/index.md)
 - [Main Desktop](desktop/index.md)
 - [Change Password](change-password/index.md)
+- [Home Dashboard](home/index.md)
+- [Environments](environment/index.md)

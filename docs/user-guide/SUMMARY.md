@@ -3,3 +3,5 @@
 * [Login](login/index.md)
 * [Main Desktop](desktop/index.md)
 * [Changing Password](change-password/index.md)
+* [Home Dashboard](home/index.md)
+* [Environments](environment/)

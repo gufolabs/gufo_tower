@@ -12,6 +12,7 @@ export const environment_form = {
     rows: [
         {
             view: "toolbar",
+            id: "environment_form_toolbar",
             cols: [
                 {
                     view: "button",
@@ -36,7 +37,19 @@ export const environment_form = {
                     autowidth: true,
                     click: environment_form_logic.on_delete
                 },
-                {}
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/environment/form/", "_blank");
+                    }
+                }
             ]
         },
         {
@@ -105,9 +118,7 @@ export const environment_form = {
                                 placeholder: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
                                 view: "text",
                                 name: "config_order",
-                                bottomLabel: "Read about that field <a href='https://getnoc.com/config-reference/' target='_'> here</a>",
-                                label: "Config load preference",
-
+                                label: "Config Order",
                                 required: true
                             }
                         ]
@@ -144,8 +155,7 @@ export const environment_form = {
                                         view: "text",
                                         name: "playbook_link",
                                         label: "Playbook Repo URL",
-                                        required: true,
-                                        bottomLabel: "Playbook repo format is <a href=https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support>written here</a>"
+                                        required: true
                                     }
                                 ]
                             }
