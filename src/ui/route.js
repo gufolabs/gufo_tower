@@ -28,7 +28,10 @@ export class Route {
 
         await this.handler(...params);
         if (this.menu !== null) {
-            $$("sidebar").select(this.menu, false);
+            const sidebar = $$("sidebar");
+            sidebar.blockEvent();
+            sidebar.select(this.menu, false);
+            sidebar.unblockEvent();
         }
         return true;
     }
