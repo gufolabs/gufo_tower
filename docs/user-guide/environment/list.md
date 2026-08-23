@@ -17,6 +17,8 @@ Clicking an Environment row makes it the **active Environment** for the entire G
 
 To view and configure an Environment, double-click the corresponding row in the list to open the [Environment Form](form.md).
 
+## Toolbar
+
 A toolbar above the list provides actions for managing Environments.
 
 ![Environments Toolbar](environments-list-toolbar.png)

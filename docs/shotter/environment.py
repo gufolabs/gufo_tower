@@ -28,6 +28,10 @@ class EnvironmentShotter(BaseShotter):
         "environment-form": ENVIRONMENT / "environment-form.png",
         "environment-form-toolbar": ENVIRONMENT
         / "environment-form-toolbar.png",
+        "environment-list-toolbar-pull": ENVIRONMENT
+        / "environment-list-toolbar-pull.png",
+        "environment-list-toolbar-deploy": ENVIRONMENT
+        / "environment-list-toolbar-deploy.png",
     }
     fixture = "docs"
 
@@ -46,6 +50,22 @@ class EnvironmentShotter(BaseShotter):
             page.locator('[view_id="environment_list_toolbar"]'),
             "environments-list-toolbar",
         )
+        # Pull button
+        async with self.highlight(
+            page.locator('[view_id="environment_pull_button"]')
+        ):
+            await self.screenshot(
+                page.locator('[view_id="environment_list_toolbar"]'),
+                "environment-list-toolbar-pull",
+            )
+        # Pull deploy button
+        async with self.highlight(
+            page.locator('[view_id="environment_deploy_button"]')
+        ):
+            await self.screenshot(
+                page.locator('[view_id="environment_list_toolbar"]'),
+                "environment-list-toolbar-deploy",
+            )
         # Go to the form
         await self.open_page(page, "/environment/1")
         await self.screenshot(page, "environment-form")
