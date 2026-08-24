@@ -59,6 +59,7 @@ class JobLog(Model):
         Args:
             data: Log data to append.
         """
+        self.log_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.log_path, "a") as fp:
             fp.write(data.decode())
 
