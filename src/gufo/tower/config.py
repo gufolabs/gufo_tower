@@ -72,6 +72,10 @@ class Config:
         return self.home / "logs"
 
     @property
+    def jobs_log_dir(self) -> Path:
+        return self.log_dir / "jobs"
+
+    @property
     def deploy_keys_dir(self) -> Path:
         return self.home / "deploy_keys"
 
@@ -106,6 +110,7 @@ class Config:
         self._ensure_dir(self.home)
         self._ensure_dir(self.db_dir)
         self._ensure_dir(self.log_dir)
+        self._ensure_dir(self.jobs_log_dir)
         self._ensure_dir(self.deploy_keys_dir)
         self._move_old_database()
 

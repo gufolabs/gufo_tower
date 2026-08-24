@@ -51,7 +51,7 @@ class JobLog(Model):
         Returns:
             Path to the log file.
         """
-        return config.log_dir / "jobs" / f"{self.id}.log"
+        return config.jobs_log_dir / f"{self.id}.log"
 
     def append_log(self, data: bytes) -> None:
         """Append log data to the job log file.
