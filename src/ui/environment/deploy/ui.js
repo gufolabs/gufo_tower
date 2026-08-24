@@ -22,10 +22,10 @@ export const environment_deploy = {
                     id: "environment_deploy_badges",
                     type: "header",
                     borderless: true,
-                    template: "<span class='ansible-ok-tag' title='ok'>#ok#</span> " +
-                        "<span class='ansible-changed-tag' title='changed'>#changed#</span> " +
-                        "<span class='ansible-unreachable-tag' title='unreachable'>#unreach#</span> " +
-                        "<span class='ansible-failed-tag' title='failed'>#failed#</span> " +
+                    template: "<span class='ansible-tag ansible-ok-tag' title='ok'>#ok#</span> " +
+                        "<span class='ansible-tag ansible-changed-tag' title='changed'>#changed#</span> " +
+                        "<span class='ansible-tag ansible-unreachable-tag' title='unreachable'>#unreach#</span> " +
+                        "<span class='ansible-tag ansible-failed-tag' title='failed'>#failed#</span> " +
                         "Deploy: #status#",
                     data: {
                         ok: 0,
