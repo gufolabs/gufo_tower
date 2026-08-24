@@ -16,9 +16,9 @@ from dulwich.repo import Repo
 from gufo.err import err
 
 # Gufo Tower modules
-from ..core.repospec import RepoSpec
 from ..models.environment import Environment
 from ..models.role import Role
+from .repospec import RepoSpec
 
 logger = logging.getLogger(__name__)
 
