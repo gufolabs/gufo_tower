@@ -1,6 +1,13 @@
 /*
  * Tower CSS
  */
+:root {
+    --light-color: #ecf0f1;
+    --ansible-ok-color: #2ecc71;
+    --ansible-changed-color: #f1c40f;
+    --ansible-unreachable-color: #7f8c8d;
+    --ansible-failed-color: #c0392b;
+}
 
 /*
  * Desktop styling
@@ -27,12 +34,12 @@ div[view_id="desktop_menu"] .webix_list_item {
 }
 
 div[view_id="desktop_header"] .webix_view {
-    color: #ecf0f1 !important;
+    color: var(--light-color) !important;
 }
 
 div[view_id="sidebar"] .webix_selected {
     background-color: #3498db;
-    color: #ecf0f1;
+    color: var(--light-color);
 }
 
 .webix_layout_toolbar.webix_toolbar {
@@ -55,7 +62,7 @@ div[view_id="sidebar"] .webix_selected {
 
 .greenbutton button {
     background-color: green !important;
-    color: #ecf0f1 !important;
+    color: var(--light-color) !important;
 }
 
 .mywebix_badge {
@@ -80,12 +87,12 @@ div[view_id="sidebar"] .webix_selected {
 
 .webix_started div {
     background-color: #3498db;
-    color: #ecf0f1;
+    color: var(--light-color);
     border: none;
 }
 
 .webix_started div::before {
-    color: #ecf0f1;
+    color: var(--light-color);
     font-size: 13px;
     font-family: FontAwesome;
     content: "\f017";
@@ -94,11 +101,11 @@ div[view_id="sidebar"] .webix_selected {
 
 .webix_complete div {
     background-color: #2ecc71;
-    color: #ecf0f1;
+    color: var(--light-color);
 }
 
 .webix_complete div::before {
-    color: #ecf0f1;
+    color: var(--light-color);
     font-size: 13px;
     font-family: FontAwesome;
     content: "\f058";
@@ -107,11 +114,11 @@ div[view_id="sidebar"] .webix_selected {
 
 .webix_failed div {
     background-color: #c0392b;
-    color: #ecf0f1;
+    color: var(--light-color);
 }
 
 .webix_failed div::before {
-    color: #ecf0f1;
+    color: var(--light-color);
     font-size: 13px;
     font-family: FontAwesome;
     content: "\f0e7";
@@ -130,7 +137,7 @@ div[view_id="environment_deploy_output"]>DIV {
     word-wrap: break-word;
 }
 
-.ansible-status {
+.ansible-tag {
     padding: .2em .6em .3em;
     font-size: 75%;
     font-weight: bold;
@@ -139,59 +146,23 @@ div[view_id="environment_deploy_output"]>DIV {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 1em;
-    color: #ffffff;
 }
 
 .ansible-ok-tag {
-    padding: .2em .6em .3em;
-    font-size: 75%;
-    font-weight: bold;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 1em;
-    color: #ffffff;
-    background-color: #2ecc71;
+    background-color: var(--ansible-ok-color);
 }
 
 .ansible-changed-tag {
-    padding: .2em .6em .3em;
-    font-size: 75%;
-    font-weight: bold;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 1em;
-    color: #ffffff;
-    background-color: #f1c40f;
+    background-color: var(--ansible-changed-color);
 }
 
 .ansible-unreachable-tag {
-    padding: .2em .6em .3em;
-    font-size: 75%;
-    font-weight: bold;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 1em;
-    color: #ffffff;
-    background-color: #7f8c8d;
+    background-color: var(--ansible-unreachable-color);
+    border: 1px solid var(--light-color);
 }
 
 .ansible-failed-tag {
-    padding: .2em .6em .3em;
-    font-size: 75%;
-    font-weight: bold;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 1em;
-    color: #ffffff;
-    background-color: #c0392b;
+    background-color: var(--ansible-failed-color);
 }
 
 .ansible-task {
@@ -203,7 +174,7 @@ div[view_id="environment_deploy_output"]>DIV {
 }
 
 .ansible-ok {
-    color: #2ecc71;
+    color: var(--ansible-ok-color);
 }
 
 span.ansible-ok::before {
@@ -213,7 +184,7 @@ span.ansible-ok::before {
 }
 
 .ansible-changed {
-    color: #f1c40f;
+    color: var(--ansible-changed-color);
 }
 
 span.ansible-changed::before {
@@ -223,7 +194,7 @@ span.ansible-changed::before {
 }
 
 .ansible-unreachable {
-    color: #7f8c8d;
+    color: var(--ansible-unreachable-color);
 }
 
 span.ansible-unreachable::before {
@@ -233,7 +204,7 @@ span.ansible-unreachable::before {
 }
 
 .ansible-failed {
-    color: #c0392b;
+    color: var(--ansible-failed-color);
 }
 
 span.ansible-failed::before {
