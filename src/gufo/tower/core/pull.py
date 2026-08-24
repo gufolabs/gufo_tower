@@ -79,7 +79,7 @@ def prepare_env(env: Environment) -> None:
     # Clear old playbooks
     shutil.rmtree(env.playbook_path, ignore_errors=True)
     # Extract new from repo to playbooks
-    shutil.move(repo_playbooks_path, env.playbook_path)
+    shutil.copytree(repo_playbooks_path, env.playbook_path, dirs_exist_ok=True)
     # Pull all enabled roles
     for role in Role.select().where(
         Role.environment == env, Role.is_enabled == True
