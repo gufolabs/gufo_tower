@@ -14,3 +14,4 @@ Use the sections below to learn about the available operations and workflows.
 - [Change Password](change-password/index.md)
 - [Home Dashboard](home/index.md)
 - [Environments](environment/index.md)
+- [Datacenters](datacenter/index.md)

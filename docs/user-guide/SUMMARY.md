@@ -5,3 +5,4 @@
 * [Changing Password](change-password/index.md)
 * [Home Dashboard](home/index.md)
 * [Environments](environment/)
+* [Datacenters](datacenters/)

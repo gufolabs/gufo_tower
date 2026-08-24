@@ -12,6 +12,7 @@ export const datacenter_form = {
     rows: [
         {
             view: "toolbar",
+            id: "datacenter_form_toolbar",
             cols: [
                 {
                     view: "button",

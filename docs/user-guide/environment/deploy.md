@@ -22,6 +22,7 @@ The toolbar contains the following elements:
 | **Deploy Recap** | Displays a summary of deployment tasks by their result. |
 | **Deploy Status** | Displays the current deployment status. |
 | **Elapsed Time** | Displays the time elapsed since the deployment started. |
+| **Help** | Show this help page. |
 
 ## Deploy Recap
 

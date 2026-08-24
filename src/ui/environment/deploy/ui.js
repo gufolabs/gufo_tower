@@ -35,7 +35,9 @@ export const environment_deploy = {
                         status: "Waiting"
                     }
                 },
-                {},
+                {
+                    view: "spacer"
+                },
                 {
                     view: "template",
                     id: "environment_deploy_clock",
@@ -46,6 +48,16 @@ export const environment_deploy = {
                     template: "#time#",
                     data: {
                         time: "00:00"
+                    }
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/environment/deploy/", "_blank");
                     }
                 }
             ]
