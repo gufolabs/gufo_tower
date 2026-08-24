@@ -87,17 +87,17 @@ class Role(Model):
         shutil.rmtree(self.role_path, ignore_errors=True)
 
     def save(self, *args, **kwargs):
-        from gufo.tower.api.pull import PullAPI
+        from ..core.pull import pull
 
         for attr in self.dirty_fields:
             if attr.name == "link":
                 self.remove_role_dir()
                 if self.is_enabled:
-                    PullAPI.pull(self.link, self.role_path)
+                    pull(self.link, self.role_path)
             elif attr.name == "is_enabled" and not self.is_enabled:
                 self.remove_role_dir()
             elif attr.name == "is_enabled" and self.is_enabled:
-                PullAPI.pull(self.link, self.role_path)
+                pull(self.link, self.role_path)
         return super().save(*args, **kwargs)
 
     def delete_instance(self, *args, **kwargs):
