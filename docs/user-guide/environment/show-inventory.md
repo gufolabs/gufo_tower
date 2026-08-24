@@ -1,16 +1,26 @@
 # Show Inventory
 
-To display the Ansible inventory:
+The **Show Inventory** operation displays the Ansible inventory for the selected Environment.
 
-1. Select an Environment in the list.
-2. Click the **Inventory** button.
+The Inventory contains the data used to configure the Ansible deployment. It is useful for diagnostics and development, as it allows you to inspect the data used during deployment.
 
-![Show Inventory](show-inventory.png)
+The **Show Inventory** operation is performed for the currently selected Environment.
 
-A new window opens displaying the **Inventory**. The Inventory contains the data used to configure the Ansible deployment.
+To display the Ansible inventory, select the required Environment in the Environment List and click the **Inventory** button in the toolbar.
 
-The Inventory is useful for diagnostics and development, as it allows you to inspect the data used during deployment.
+![Inventory](environment-list-toolbar-inventory.png)
 
-To close the Inventory window, click the **Close** button.
+A new window opens displaying the **Inventory**.
 
-![Close Inventory](show-inventory-close.png)
+![Show Inventory](environment-inventory.png)
+
+
+## Inventory Toolbar
+
+The toolbar provides actions for managing the Inventory view.
+
+![Environment Form Toolbar](environment-inventory-toolbar.png)
+
+| Button | Description |
+| --- | --- |
+| **Back** | Return to the [Environment List](list.md). |

@@ -9,6 +9,7 @@ export const environment_deploy = {
     rows: [
         {
             view: "toolbar",
+            id: "environment_deploy_toolbar",
             cols: [
                 {
                     view: "button",

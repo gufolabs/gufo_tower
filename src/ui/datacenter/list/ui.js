@@ -30,6 +30,19 @@ export const datacenter_list = {
                     autowidth: true,
                     label: "Create new...",
                     click: () => navigation.navigate("/datacenter/new")
+                },
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/datacenter/list/", "_blank");
+                    }
                 }
             ]
         },

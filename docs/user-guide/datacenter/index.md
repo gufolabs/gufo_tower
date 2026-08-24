@@ -8,7 +8,7 @@ In addition to defining the grouping and locality of nodes, a Datacenter allows 
 
 To access Datacenters, select the **Datacenters** item in the sidebar.
 
-![Datacenters](datacenters-start.png)
+![Datacenters](datacenter-start.png)
 
 ## Contents
 

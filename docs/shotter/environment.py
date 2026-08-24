@@ -31,11 +31,17 @@ class EnvironmentShotter(BaseShotter):
         "environment-form": ENVIRONMENT / "environment-form.png",
         "environment-form-toolbar": ENVIRONMENT
         / "environment-form-toolbar.png",
+        "environment-list-toolbar-inventory": ENVIRONMENT
+        / "environment-list-toolbar-inventory.png",
         "environment-list-toolbar-pull": ENVIRONMENT
         / "environment-list-toolbar-pull.png",
         "environment-list-toolbar-deploy": ENVIRONMENT
         / "environment-list-toolbar-deploy.png",
-        # "environment-deploy": ENVIRONMENT / "environment-deploy.png",
+        "environment-deploy": ENVIRONMENT / "environment-deploy.png",
+        "deploy-toolbar": ENVIRONMENT / "deploy-toolbar.png",
+        "environment-inventory": ENVIRONMENT / "environment-inventory.png",
+        "environment-inventory-toolbar": ENVIRONMENT
+        / "environment-inventory-toolbar.png",
     }
     fixture = "docs"
 
@@ -58,6 +64,14 @@ class EnvironmentShotter(BaseShotter):
             page.locator('[view_id="environment_list_toolbar"]'),
             "environments-list-toolbar",
         )
+        # Inventory button
+        async with self.highlight(
+            page.locator('[view_id="environment_inventory_button"]')
+        ):
+            await self.screenshot(
+                page.locator('[view_id="environment_list_toolbar"]'),
+                "environment-list-toolbar-inventory",
+            )
         # Pull button
         async with self.highlight(
             page.locator('[view_id="environment_pull_button"]')
@@ -82,6 +96,14 @@ class EnvironmentShotter(BaseShotter):
             page.locator('[view_id="environment_form_toolbar"]'),
             "environment-form-toolbar",
         )
+        # Show inventory
+        await self.open_page(page, "/environment/1/inventory")
+        await page.get_by_text("vars: ").wait_for()
+        await self.screenshot(page, "environment-inventory")
+        await self.screenshot(
+            page.locator('[view_id="environment_inventory_toolbar"]'),
+            "environment-inventory-toolbar",
+        )
         # Pull
         env = Environment.get_by_id(1)
         prepare_env(env)
@@ -91,4 +113,8 @@ class EnvironmentShotter(BaseShotter):
         await self.screenshot(
             page,
             "environment-deploy",
+        )
+        await self.screenshot(
+            page.locator('[view_id="environment_deploy_toolbar"]'),
+            "deploy-toolbar",
         )

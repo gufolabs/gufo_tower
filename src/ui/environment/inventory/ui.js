@@ -10,6 +10,7 @@ export const environment_inventory = {
     rows: [
         {
             view: "toolbar",
+            id: "environment_inventory_toolbar",
             cols: [
                 {
                     view: "button",
