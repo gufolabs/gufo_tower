@@ -12,6 +12,9 @@ from pathlib import Path
 from playwright.async_api import Page
 
 # Gufo Tower modules
+from gufo.tower.core.pull import prepare_env
+from gufo.tower.models.environment import Environment
+
 from .base import BaseShotter
 
 USER_GUIDE = Path("user-guide")
@@ -79,12 +82,13 @@ class EnvironmentShotter(BaseShotter):
             page.locator('[view_id="environment_form_toolbar"]'),
             "environment-form-toolbar",
         )
-        # @todo: Run pull
+        # Pull
+        env = Environment.get_by_id(1)
+        prepare_env(env)
         # Run deploy
-        # await self.open_page(page, "/environment/1/deploy")
-        # @todo: fa-check-circle? or Complete
-        # await page.get_by_text("'Complete'").wait_for()
-        # await self.screenshot(
-        #     page,
-        #     "environment-deploy",
-        # )
+        await self.open_page(page, "/environment/1/deploy")
+        await page.locator("i.fa.fa-check-circle").wait_for()
+        await self.screenshot(
+            page,
+            "environment-deploy",
+        )
