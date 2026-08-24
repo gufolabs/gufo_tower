@@ -49,12 +49,11 @@ def pull(link: str, path: str | Path) -> None:
         # Pull
         if (path / ".git").is_dir():
             repo = Repo(path)
-            porcelain.fetch(repo, spec.url)
+            porcelain.fetch(repo, spec.url, depth=1)
         else:
             shutil.rmtree(path, ignore_errors=True)
             porcelain.clone(
-                source=spec.url,
-                target=path,
+                source=spec.url, target=path, depth=1, branch=spec.revision
             )
             repo = Repo(path)
     except BaseException as e:
