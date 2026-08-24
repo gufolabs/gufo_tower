@@ -27,9 +27,38 @@ The toolbar contains the following elements:
 
 **Deploy Recap** provides a summary of the deployment results. Each result is displayed as a number with a colored indicator.
 
+<style>
+.ansible-tag {
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 1em;
+}
+
+.ansible-ok-tag {
+    background-color: #2ecc71;
+}
+
+.ansible-changed-tag {
+    background-color: #f1c40f;
+}
+
+.ansible-unreachable-tag {
+    background-color: #7f8c8d;
+}
+
+.ansible-failed-tag {
+    background-color: #c0392b;
+}
+</style>
+
 | Result | Description |
 | --- | --- |
-| 🟢 **12** | Task completed successfully without changes. |
-| 🟡 **5** | Task completed successfully with changes. |
-| ⚪ **3** | Task was skipped. |
-| 🔴 **1** | Task failed. |
+| <div class="ansible-tag ansible-ok-tag">x</div> | Task completed successfully without changes. |
+| <div class="ansible-tag ansible-changed-tag">x</div> | Task completed successfully with changes. |
+| <div class="ansible-tag ansible-unreachable-tag">x</div>| Task was skipped. |
+| <div class="ansible-tag ansible-failed-tag">x</div> | Task failed. |

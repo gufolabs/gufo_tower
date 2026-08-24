@@ -32,6 +32,7 @@ class EnvironmentShotter(BaseShotter):
         / "environment-list-toolbar-pull.png",
         "environment-list-toolbar-deploy": ENVIRONMENT
         / "environment-list-toolbar-deploy.png",
+        # "environment-deploy": ENVIRONMENT / "environment-deploy.png",
     }
     fixture = "docs"
 
@@ -40,6 +41,10 @@ class EnvironmentShotter(BaseShotter):
         # Grab desktop
         async with self.highlight(page.locator('[webix_tm_id="environment"]')):
             await self.screenshot(page, "environments-start")
+        # Click on first environment
+        await page.locator(
+            '[view_id="environment_list"] .webix_cell'
+        ).first.click()
         # Environment list
         async with self.highlight(
             page.locator('[view_id="environment_list"]')
@@ -58,7 +63,7 @@ class EnvironmentShotter(BaseShotter):
                 page.locator('[view_id="environment_list_toolbar"]'),
                 "environment-list-toolbar-pull",
             )
-        # Pull deploy button
+        # Deploy button
         async with self.highlight(
             page.locator('[view_id="environment_deploy_button"]')
         ):
@@ -74,3 +79,12 @@ class EnvironmentShotter(BaseShotter):
             page.locator('[view_id="environment_form_toolbar"]'),
             "environment-form-toolbar",
         )
+        # @todo: Run pull
+        # Run deploy
+        # await self.open_page(page, "/environment/1/deploy")
+        # @todo: fa-check-circle? or Complete
+        # await page.get_by_text("'Complete'").wait_for()
+        # await self.screenshot(
+        #     page,
+        #     "environment-deploy",
+        # )
