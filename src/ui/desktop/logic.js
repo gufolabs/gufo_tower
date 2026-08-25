@@ -22,6 +22,7 @@ export class DesktopLogic {
 
     show = () => {
         $$("desktop").show();
+        this.update_title();
     };
 
     on_select_app = (selection) => {
