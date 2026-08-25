@@ -45,29 +45,26 @@ export class EnvironmentFormLogic {
         }
     };
 
+    to_list = () => {
+        navigation.navigate("/environment");
+    };
+
     on_save = async () => {
         const form = $$("environment_form");
-
         if (!form.validate()) {
             Tower.msg.failed("Error in data");
             return;
         }
-
         const data = form.getValues();
-
         try {
             if (data.id === undefined) {
                 const result = await API.environment.create_item(data);
-                form.setValues(result);
-                form.save();
-                navigation.navigate("/environment");
+                this.to_list();
                 Tower.msg.complete("Created");
                 current_env.setState(result);
             } else {
                 const result = await API.environment.update_item(data);
-                form.setValues(result);
-                form.save();
-                navigation.navigate("/environment");
+                this.to_list();
                 Tower.msg.complete("Changed");
                 current_env.setState(result);
             }
@@ -89,14 +86,14 @@ export class EnvironmentFormLogic {
                 Tower.msg.complete("Deleted");
                 $$("environment_list").remove(data.id);
                 // @todo: Unselect environment
-                navigation.navigate("/environment");
+                this.to_list();
             } catch {
                 Tower.msg.failed("Failed to delete");
             }
         } else {
             Tower.msg.complete("Deleted");
             current_env.setState(null);
-            navigation.navigate("/environment");
+            this.to_list();
         }
     };
 };

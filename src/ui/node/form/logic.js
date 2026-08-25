@@ -29,29 +29,25 @@ export class NodeFormLogic {
             Tower.msg.failed("Failed to get data");
         }
     };
+    to_list = () => {
+        navigation.navigate(`/environment/${current_env.state.id}/node`);
+    };
     on_save = async () => {
         const form = $$("node_form");
-
         if (!form.validate()) {
             Tower.msg.failed("Error in data");
             return;
         }
-
         const data = form.getValues();
         data.environment = current_env.state.id;
-
         try {
             if (data.id === undefined) {
-                const result = await API.node.create_item(data);
-                form.setValues(result);
-                form.save();
-                navigation.navigate("..");
+                await API.node.create_item(data);
+                this.to_list();
                 Tower.msg.complete("Created");
             } else {
-                const result = await API.node.update_item(data);
-                form.setValues(result);
-                form.save();
-                navigation.navigate("..");
+                await API.node.update_item(data);
+                this.to_list();
                 Tower.msg.complete("Changed");
             }
         } catch (err) {
@@ -65,19 +61,18 @@ export class NodeFormLogic {
 
     on_delete = async () => {
         const data = $$("node_form").getValues();
-
         if (data.id) {
             try {
                 await API.node.delete_item(data);
                 Tower.msg.complete("Deleted");
                 $$("node_list").remove(data.id);
-                navigation.navigate("..");
+                this.to_list();
             } catch {
                 Tower.msg.failed("Failed to delete");
             }
         } else {
             Tower.msg.complete("Deleted");
-            navigation.navigate("..");
+            this.to_list();
         }
     };
 };

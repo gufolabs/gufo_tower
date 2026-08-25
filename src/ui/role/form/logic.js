@@ -28,30 +28,26 @@ export class RoleFormLogic {
             Tower.msg.failed("Failed to get data");
         }
     };
+    to_list = () => {
+        navigation.navigate(`/environment/${current_env.state.id}/role`);
+    }
 
     on_save = async () => {
         const form = $$("role_form");
-
         if (!form.validate()) {
             Tower.msg.failed("Error in data");
             return;
         }
-
         const data = form.getValues();
         data.environment = current_env.state.id;
-
         try {
             if (data.id === undefined) {
-                const result = await API.role.create_item(data);
-                form.setValues(result);
-                form.save();
-                navigation.navigate("..");
+                await API.role.create_item(data);
+                this.to_list();
                 Tower.msg.complete("Created");
             } else {
-                const result = await API.role.update_item(data);
-                form.setValues(result);
-                form.save();
-                navigation.navigate("..");
+                await API.role.update_item(data);
+                this.to_list();
                 Tower.msg.complete("Changed");
             }
         } catch {
@@ -71,13 +67,13 @@ export class RoleFormLogic {
                 await API.role.delete_item(data);
                 Tower.msg.complete("Deleted");
                 $$("role_list").remove(data.id);
-                navigation.navigate("..");
+                this.to_list();
             } catch {
                 Tower.msg.failed("Failed to delete");
             }
         } else {
             Tower.msg.complete("Deleted");
-            navigation.navigate("..");
+            this.to_list();
         }
     };
 };
