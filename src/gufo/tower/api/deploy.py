@@ -109,8 +109,10 @@ class DeployHandler(BaseHandler):
         self.write(f"Starting job #{self.job_log.id}\n\n")
 
         # Generate ssh keys
-        for pool in Pool.select().where(Pool.environment == self):
-            build_ssh_keys(f"{pool.name}@noc", self.ssh_keys_path / pool.name)
+        for pool in Pool.select().where(Pool.environment == self.env):
+            build_ssh_keys(
+                f"{pool.name}@noc", self.env.ssh_keys_path / pool.name
+            )
 
         # Run playbook
         bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
