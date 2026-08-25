@@ -465,59 +465,6 @@ class Environment(Model):
                 }
         return r
 
-    def build_ssh_keys(self):
-        """Generate all necessary ssh keys."""
-        from .pool import Pool
-
-        key_types = [("rsa", 4096)]
-
-        if not self.ssh_keys_path.is_dir():
-            logging.info("Create directory %s", self.ssh_keys_path)
-            os.makedirs(self.ssh_keys_path)
-        for pool in Pool.select().where(Pool.environment == self):
-            prefix = self.ssh_keys_path / pool.name
-            if not prefix.is_dir():
-                logging.info("Create directory %s", prefix)
-                prefix.mkdir(mode=0o700)
-            for t, b in key_types:
-                fn = prefix / f"id_{t}"
-                if not fn.is_file():
-                    logging.info("Generating %s key for pool %s", t, pool.name)
-                    if os.getenv("OSTYPE") == "FreeBSD":
-                        subprocess.check_call(
-                            [
-                                "ssh-keygen",
-                                "-q",
-                                "-t",
-                                t,
-                                "-b",
-                                str(b),
-                                "-f",
-                                fn,
-                                "-N",
-                                '\\\\"\\\\"',
-                                "-C",
-                                f"{pool.name}@noc",
-                            ]
-                        )
-                    else:
-                        subprocess.check_call(
-                            [
-                                "ssh-keygen",
-                                "-q",
-                                "-t",
-                                t,
-                                "-b",
-                                str(b),
-                                "-f",
-                                fn,
-                                "-N",
-                                "",
-                                "-C",
-                                f"{pool.name}@noc",
-                            ]
-                        )
-
     def generate_certificate(self):
         """Generate self-signed certificate."""
         with (

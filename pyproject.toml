@@ -157,6 +157,7 @@ classifiers = [
 ]
 dependencies = [
   "bcrypt==5.0.0",
+  "cryptography >= 40.0.0",
   "peewee==4.3.0",
   "tornado==6.5.8",
   "ansible==2.9.26",
