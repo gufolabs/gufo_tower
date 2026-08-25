@@ -173,7 +173,6 @@ export class ServiceLogic {
     on_save = async () => {
         const r = [];
         const env_id = current_env.state.id;
-
         $$("service_list").data.each((v) => {
             if (!v.config) {
                 return;
@@ -184,7 +183,6 @@ export class ServiceLogic {
                 id: v.id
             });
         });
-
         try {
             await API.service.save_config(env_id, r);
             Tower.msg.complete("Config saved");

@@ -29,28 +29,25 @@ export class DatacenterFormLogic {
         }
     };
 
+    to_list = () => {
+        navigation.navigate("/datacenter");
+    };
+
     on_save = async () => {
         const form = $$("datacenter_form");
-
         if (!form.validate()) {
             Tower.msg.failed("Error in data");
             return;
         }
-
         const data = form.getValues();
-
         try {
             if (data.id === undefined) {
-                const result = await API.datacenter.create_item(data);
-                form.setValues(result);
-                form.save();
-                navigation.navigate("/datacenter");
+                await API.datacenter.create_item(data);
+                this.to_list();
                 Tower.msg.complete("Created");
             } else {
-                const result = await API.datacenter.update_item(data);
-                form.setValues(result);
-                form.save();
-                navigation.navigate("/datacenter");
+                await API.datacenter.update_item(data);
+                this.to_list();
                 Tower.msg.complete("Changed");
             }
         } catch (err) {
@@ -74,13 +71,13 @@ export class DatacenterFormLogic {
                 await API.datacenter.delete_item(data);
                 Tower.msg.complete("Deleted");
                 $$("datacenter_list").remove(data.id);
-                navigation.navigate("/datacenter");
+                this.to_list();
             } catch {
                 Tower.msg.failed("Failed to delete");
             }
         } else {
             Tower.msg.complete("Deleted");
-            navigation.navigate("/datacenter");
+            this.to_list();
         }
     };
 };
