@@ -15,3 +15,4 @@ Use the sections below to learn about the available operations and workflows.
 - [Home Dashboard](home/index.md)
 - [Environments](environment/index.md)
 - [Datacenters](datacenter/index.md)
+- [Settings](settings/index.md)

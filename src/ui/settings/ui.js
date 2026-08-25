@@ -10,6 +10,7 @@ export const settings_form = {
     rows: [
         {
             view: "toolbar",
+            id: "settings_toolbar",
             elements: [
                 {
                     view: "button",

@@ -18,7 +18,7 @@ export const datacenter_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: () => { navigation.navigate(".."); },
+                    click: () => { navigation.navigate("/datacenter"); },
                     width: 32
                 },
                 {

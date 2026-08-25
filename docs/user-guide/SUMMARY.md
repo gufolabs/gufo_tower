@@ -6,3 +6,4 @@
 * [Home Dashboard](home/index.md)
 * [Environments](environment/)
 * [Datacenters](datacenter/)
+* [Settings](settings/index.md)
