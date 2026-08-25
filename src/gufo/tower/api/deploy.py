@@ -20,9 +20,11 @@ import tornado.web
 
 # Gufo Tower modules
 from .. import __version__
+from ..core.ssh import build_ssh_keys
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.joblog import JobLog
+from ..models.pool import Pool
 from .base import BaseHandler
 
 logger = logging.getLogger(__name__)
@@ -107,7 +109,10 @@ class DeployHandler(BaseHandler):
         self.write(f"Starting job #{self.job_log.id}\n\n")
 
         # Generate ssh keys
-        self.env.build_ssh_keys()
+        for pool in Pool.select().where(Pool.environment == self.env):
+            build_ssh_keys(
+                f"{pool.name}@noc", self.env.ssh_keys_path / pool.name
+            )
 
         # Run playbook
         bin_path = os.path.abspath(os.path.join(os.getcwd(), "bin"))
