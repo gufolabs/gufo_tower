@@ -14,8 +14,6 @@ import json
 import logging
 import os
 import shutil
-import subprocess
-import tempfile
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -27,6 +25,7 @@ from playhouse.signals import Model
 
 # Tower modules
 from ..config import config
+from ..core.cert import generate_certificate
 from .db import db
 
 logging.getLogger(__name__)
@@ -299,9 +298,8 @@ class Environment(Model):
                         "cert": ln["cert"],
                     }
             if not has_cert and need_cert:
-                key, cert = self.generate_certificate()
+                key, cert = generate_certificate(self.web_host or "noc")
                 certificate[s] = {"key": key, "cert": cert}
-
             for n in need_cert:
                 conf = json.loads(n.config)
                 conf["cert"] = str(certificate[s]["cert"])
@@ -464,32 +462,6 @@ class Environment(Model):
                     "environment": descr["services"][srv],
                 }
         return r
-
-    def generate_certificate(self):
-        """Generate self-signed certificate."""
-        with (
-            tempfile.NamedTemporaryFile(delete=True) as kf,
-            tempfile.NamedTemporaryFile(delete=True) as cf,
-        ):
-            subprocess.check_call(
-                [
-                    "openssl",
-                    "req",
-                    "-x509",
-                    "-nodes",
-                    "-newkey",
-                    "rsa:4096",
-                    "-keyout",
-                    kf.name,
-                    "-out",
-                    cf.name,
-                    "-days",
-                    "3650",
-                    "-subj",
-                    "/CN=%s" % (self.web_host or "noc"),
-                ]
-            )
-            return kf.read().decode(), cf.read().decode()
 
     def delete_instance(self, *args, **kwargs):
         from .node import Node
