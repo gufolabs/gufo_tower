@@ -145,7 +145,9 @@ class Environment(Model):
                 "ansible_port": node.get_ssh_port(),
                 "ansible_user": node.login_as,
                 "ansible_python_interpreter": node.node_type.python_interpreter,
-                "ansible_ssh_private_key_file": self.deploy_keys,
+                "ansible_ssh_private_key_file": str(self.deploy_keys)
+                if self.deploy_keys
+                else None,
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name,
             }
