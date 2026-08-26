@@ -8,6 +8,21 @@
 import { API } from "./rpc";
 import { Tower } from "./lib";
 
+class EventTrigger {
+    #events = new EventTarget();
+
+    fire() {
+        this.#events.dispatchEvent(new Event("change"));
+    }
+
+    subscribe(callback) {
+        this.#events.addEventListener("change", callback);
+        return () => {
+            this.#events.removeEventListener("change", callback);
+        };
+    }
+}
+
 class Store {
     #state;
     #events = new EventTarget();
@@ -69,7 +84,33 @@ class PathStore extends Store {
     }
 }
 
+class SetStore extends Store {
+    add(x) {
+        this.setState((state) => {
+            if (state.has(x)) {
+                return state;
+            }
+            const next = new Set(state);
+            next.add(x);
+            return next;
+        });
+    }
+
+    delete(x) {
+        this.setState((state) => {
+            if (!state.has(x)) {
+                return state;
+            }
+            const next = new Set(state);
+            next.delete(x);
+            return next;
+        });
+    }
+}
+
 export const installation_name = new Store("Unconfigured installation");
 export const current_env = new EnvStore(null);
 export const return_path = new PathStore("/");
 export const service_group = new Store("node");
+export const deploy_options = new SetStore(new Set([1, 93, 94]));
+export const on_deploy = new EventTrigger();
