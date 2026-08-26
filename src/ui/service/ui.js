@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { threeStateCompare, Tower } from "../lib.js";
+import { service_group } from "../state.js";
 import { service_logic } from "./logic.js";
 
 export const service_panel = {
@@ -71,7 +72,7 @@ export const service_panel = {
                     on: {
                         "onSelectChange": service_logic.on_select_service,
                         "onAfterLoad": function () {
-                            service_logic.on_group_table("init")
+                            service_logic.on_group_table(service_group.state)
                         }
                     },
                     columns:

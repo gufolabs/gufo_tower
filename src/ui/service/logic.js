@@ -5,10 +5,9 @@
 // See LICENSE.md for details
 // ----------------------------------------------------------------------
 import { API } from "../rpc.js";
-import { settings_logic } from "../settings/logic.js";
 import { Tower } from "../lib.js";
 import { Route, router } from "../route.js";
-import { current_env } from "../state.js";
+import { current_env, service_group } from "../state.js";
 
 export class ServiceLogic {
     on_route = async (env_id) => {
@@ -18,11 +17,8 @@ export class ServiceLogic {
     };
 
     load = async () => {
-        settings_logic.init();
-
         const env_id = current_env.state.id;
         const result = await API.pull.is_pulled(env_id);
-
         if (!result) {
             Tower.msg.failed(
                 "Repo is not pulled. Press Pull button on Environments tab"
@@ -192,9 +188,6 @@ export class ServiceLogic {
     };
 
     on_group_table = (mode) => {
-        if (mode === "init") {
-            mode = $$("settings_form").getValues()["group_by"]
-        }
         const grid = $$("service_list");
         grid.filter("");
         grid.ungroup();
@@ -247,6 +240,7 @@ export class ServiceLogic {
             }
         });
         grid.filterByAll();
+        service_group.setState(mode);
     };
     on_expand_tree = (mode) => {
         if (mode) {
