@@ -68,11 +68,11 @@ div[view_id="sidebar"] .webix_selected {
 .mywebix_badge {
     background-color: #ffab24 !important;
     color: #fff;
-    border-radius: 50%;
+    border-radius: 8px;
     height: 29px;
     min-width: 29px;
     box-sizing: border-box;
-    padding: 0 12px;
+    padding: 4px 8px;
     text-align: center;
     line-height: 21px;
 }
