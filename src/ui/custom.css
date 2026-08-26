@@ -4,7 +4,7 @@
 :root {
     --light-color: #ecf0f1;
     --ansible-ok-color: #2ecc71;
-    --ansible-changed-color: #f1c40f;
+    --ansible-changed-color: #f39c12;
     --ansible-unreachable-color: #7f8c8d;
     --ansible-failed-color: #c0392b;
 }
@@ -138,6 +138,7 @@ div[view_id="environment_deploy_output"]>DIV {
 }
 
 .ansible-tag {
+    color: var(--light-color);
     padding: .2em .6em .3em;
     font-size: 75%;
     font-weight: bold;
