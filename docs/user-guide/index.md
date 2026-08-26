@@ -16,4 +16,5 @@ Use the sections below to learn about the available operations and workflows.
 - [Environments](environment/index.md)
 - [Datacenters](datacenter/index.md)
 - [Pools](pool/index.md)
+- [Nodes](node/index.md)
 - [Settings](settings/index.md)

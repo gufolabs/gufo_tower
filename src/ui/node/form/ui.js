@@ -14,6 +14,7 @@ export const node_form = {
     rows: [
         {
             view: "toolbar",
+            id: "node_form_toolbar",
             cols: [
                 {
                     view: "button",
@@ -40,7 +41,19 @@ export const node_form = {
                     autowidth: true,
                     click: node_form_logic.on_delete
                 },
-                {}
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/node/form/", "_blank");
+                    }
+                }
             ]
         },
         {

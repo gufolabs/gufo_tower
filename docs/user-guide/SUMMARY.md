@@ -7,4 +7,5 @@
 * [Environments](environment/)
 * [Datacenters](datacenter/)
 * [Pools](pool/)
+* [Nodes](node/)
 * [Settings](settings/index.md)
