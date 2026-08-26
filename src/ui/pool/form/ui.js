@@ -18,7 +18,9 @@ export const pool_form = {
                     type: "icon",
                     icon: "arrow-left",
                     width: 32,
-                    click: () => { navigation.navigate(".."); }
+                    click: () => {
+                        navigation.navigate(`/environment/${current_env.state.id}/pool`);
+                    },
                 },
                 {
                     view: "button",

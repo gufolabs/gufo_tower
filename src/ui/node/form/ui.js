@@ -7,6 +7,7 @@
 
 import { Tower } from "../../lib.js";
 import { node_form_logic } from "./logic.js";
+import { current_env } from "../../state.js";
 
 export const node_form = {
     id: "node_form_panel",
@@ -18,7 +19,9 @@ export const node_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: () => { navigation.navigate(".."); },
+                    click: () => {
+                        navigation.navigate(`/environment/${current_env.state.id}/node`);
+                    },
                     width: 32
                 },
                 {

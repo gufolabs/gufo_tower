@@ -17,7 +17,9 @@ export const role_form = {
                     view: "button",
                     type: "icon",
                     icon: "arrow-left",
-                    click: () => { navigation.navigate(".."); },
+                    click: () => {
+                        navigation.navigate(`/environment/${current_env.state.id}/role`);
+                    },
                     width: 32
                 },
                 {
