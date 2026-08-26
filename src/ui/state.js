@@ -72,3 +72,4 @@ class PathStore extends Store {
 export const installation_name = new Store("Unconfigured installation");
 export const current_env = new EnvStore(null);
 export const return_path = new PathStore("/");
+export const service_group = new Store("node");
