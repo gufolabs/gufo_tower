@@ -29,7 +29,6 @@ export class EnvironmentFormLogic {
             const data = await API.environment.get_item({
                 id: parseInt(env_id, 10)
             });
-
             $$("environment_form").setValues(data);
             $$("environment_form_panel").show();
 

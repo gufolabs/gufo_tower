@@ -11,15 +11,16 @@ export const pool_list = {
     rows: [
         {
             view: "toolbar",
+            id: "pool_list_toolbar",
             elements: [
-                {
-                    view: "search",
-                    placeholder: "Search...",
-                    width: 150,
-                    on: {
-                        "onChange": pool_list_logic.on_search
-                    }
-                },
+                // {
+                //     view: "search",
+                //     placeholder: "Search...",
+                //     width: 150,
+                //     on: {
+                //         "onChange": pool_list_logic.on_search
+                //     }
+                // },
                 {
                     view: "button",
                     type: "icon",
@@ -27,6 +28,19 @@ export const pool_list = {
                     autowidth: true,
                     label: "Create new...",
                     click: () => { navigation.navigate(`${location.pathname}/new`); }
+                },
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/pool/list/", "_blank");
+                    }
                 }
             ]
         },

@@ -13,15 +13,16 @@ export const node_list = {
     rows: [
         {
             view: "toolbar",
+            id: "node_list_toolbar",
             elements: [
-                {
-                    view: "search",
-                    placeholder: "Search...",
-                    width: 150,
-                    on: {
-                        "onChange": node_list_logic.on_search
-                    }
-                },
+                // {
+                //     view: "search",
+                //     placeholder: "Search...",
+                //     width: 150,
+                //     on: {
+                //         "onChange": node_list_logic.on_search
+                //     }
+                // },
                 {
                     view: "button",
                     type: "icon",
@@ -29,6 +30,19 @@ export const node_list = {
                     autowidth: true,
                     label: "Create new...",
                     click: () => { navigation.navigate(`${location.pathname}/new`); }
+                },
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/node/list/", "_blank");
+                    }
                 }
             ]
         },

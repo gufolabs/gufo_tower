@@ -13,6 +13,7 @@ export const pool_form = {
     rows: [
         {
             view: "toolbar",
+            id: "pool_form_toolbar",
             cols: [
                 {
                     view: "button",
@@ -39,7 +40,20 @@ export const pool_form = {
                     autowidth: true,
                     click: pool_form_logic.on_delete
                 },
-                {}
+                {},
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/pool/form/", "_blank");
+                    }
+                }
             ]
         },
         {

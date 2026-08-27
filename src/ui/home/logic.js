@@ -48,14 +48,14 @@ export class HomeLogic {
     render_environments = (environments) => `
     <h2>Environments in ${installation_name.state}</h2>
 
-    <table>
+    <table id="env-summary">
         <thead>
             <tr>
                 <th>Env. Name</th>
                 <th>URL</th>
                 <th>Type</th>
                 <th>Installation name</th>
-                <th>Tag</th>
+                <th>Version</th>
                 <th>Pools</th>                
                 <th>DC</th>
                 <th>Nodes</th>
@@ -82,9 +82,9 @@ export class HomeLogic {
     </table>`;
 
     render_summary = (data) => `
-    <h2>Summary</h2>
+    <h2>Gufo Tower Summary</h2>
     
-    <div class="summary">
+    <div id="tower-summary" class="summary">
     <div>Version:</div>
     <div>${data.version}</div>
     <div>DB Size:</div>

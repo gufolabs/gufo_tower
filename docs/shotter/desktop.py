@@ -29,6 +29,7 @@ class DesktopShotter(BaseShotter):
         "desktop-working-area": DESKTOP / "desktop-working-area.png",
         "desktop-menu": DESKTOP / "desktop-menu.png",
     }
+    fixture = "docs"
 
     async def make_shots(self, page: Page) -> None:
         await self.open_page(page)

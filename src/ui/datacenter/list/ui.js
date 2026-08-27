@@ -12,16 +12,17 @@ export const datacenter_list = {
     rows: [
         {
             view: "toolbar",
+            id: "datacenter_list_toolbar",
             elements: [
-                {
-                    view: "search",
-                    id: "datacenter_search",
-                    placeholder: "Search...",
-                    width: 150,
-                    on: {
-                        "onChange": datacenter_list_logic.on_search
-                    }
-                },
+                // {
+                //     view: "search",
+                //     id: "datacenter_search",
+                //     placeholder: "Search...",
+                //     width: 150,
+                //     on: {
+                //         "onChange": datacenter_list_logic.on_search
+                //     }
+                // },
                 {
                     view: "button",
                     type: "icon",
@@ -29,6 +30,19 @@ export const datacenter_list = {
                     autowidth: true,
                     label: "Create new...",
                     click: () => navigation.navigate("/datacenter/new")
+                },
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/datacenter/list/", "_blank");
+                    }
                 }
             ]
         },
