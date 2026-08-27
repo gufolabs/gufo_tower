@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -20,7 +21,7 @@ NODE = USER_GUIDE / "node"
 
 class NodeShotter(BaseShotter):
     require_authorized = True
-    screenshots = {
+    screenshots: ClassVar[dict[str, Path]] = {
         "node-start": NODE / "node-start.png",
         "node-list": NODE / "node-list.png",
         "node-list-toolbar": NODE / "node-list-toolbar.png",

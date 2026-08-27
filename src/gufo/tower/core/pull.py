@@ -80,7 +80,5 @@ def prepare_env(env: Environment) -> None:
     # Extract new from repo to playbooks
     shutil.copytree(repo_playbooks_path, env.playbook_path, dirs_exist_ok=True)
     # Pull all enabled roles
-    for role in Role.select().where(
-        Role.environment == env, Role.is_enabled == True
-    ):
+    for role in Role.select().where(Role.environment == env, Role.is_enabled):
         pull(role.link, role.role_path)

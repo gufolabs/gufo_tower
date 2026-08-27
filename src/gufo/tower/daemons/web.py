@@ -64,7 +64,7 @@ class WebServer:
         )
         parser.add_argument(
             "--children",
-            default=int(os.environ.get("TOWER_CHILDREN", 1)),
+            default=int(os.environ.get("TOWER_CHILDREN", "1")),
             type=int,
             help="Run several processes",
         )

@@ -5,6 +5,10 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
+# Python modules
+from collections.abc import Callable
+from typing import Any, Literal, TypedDict
+
 # Third-party modules
 import peewee
 
@@ -13,23 +17,79 @@ from ..models.db import db
 from .base import API, APIError, api
 
 
+class RenderSort(TypedDict):
+    """Sort descriptor for rendered model items.
+
+    Attributes:
+        id: Model field name to sort by.
+        dir: Sort direction, either ``"asc"`` or ``"desc"``.
+    """
+
+    id: str
+    dir: Literal["asc", "desc"]
+
+
+class RenderFilter(TypedDict):
+    """Filter descriptor for rendered model items.
+
+    Attributes:
+        property: Model field name to filter by.
+        value: Value to compare the field against.
+    """
+
+    property: str
+    value: Any
+
+
+class RenderConfig(TypedDict, total=False):
+    """Configuration for rendering model items.
+
+    Attributes:
+        start: Number of items to skip.
+        count: Maximum number of items to return.
+        dynamic: Enable dynamic loading and return ``total_count``
+            for the first batch.
+        filter: List of filter descriptors.
+        sort: A sort descriptor or a list of sort descriptors.
+    """
+
+    start: int | str
+    count: int | str
+    dynamic: bool
+    filter: list[RenderFilter]
+    sort: RenderSort | list[RenderSort]
+
+
 class ModelAPI(API):
     model = None  # ORM Model
 
     DYNAMIC_FIRST_BATCH_SIZE = 30
 
-    def render_items(self, cfg, format):
-        """Render items.
+    def render_items(
+        self, cfg: RenderConfig, format: Callable[[Any], Any]
+    ) -> dict[str, Any]:
+        """Render a paginated and optionally filtered model query.
 
-        Returns list of items
-        cfg may contain:
-            start
-            count
-            filter
-            sort - list of {name: ..., dir: <asc|desc>}
+        The configuration supports pagination, filtering, sorting and
+        dynamic loading.
 
         Args:
-            cfg
+        cfg: Query configuration containing:
+            start: Number of items to skip.
+            count: Maximum number of items to return.
+            dynamic: Enable dynamic loading and return ``total_count``
+                for the first batch.
+            filter: List of filters with ``property`` and ``value``.
+            sort: A sort descriptor or a list of descriptors. Each
+                descriptor contains ``id`` and optional ``dir``
+                (``"asc"`` or ``"desc"``).
+        format: Callable used to convert each model instance into the
+            returned representation.
+
+        Returns:
+            A dictionary containing ``pos`` and ``data``. When dynamic
+            loading is enabled for the first batch, it also contains
+            ``total_count``.
         """
         dynamic = "dynamic" in cfg
         start = int(cfg.get("start", 0))

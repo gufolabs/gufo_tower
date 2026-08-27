@@ -38,7 +38,7 @@ class JSONRPCHandler(BaseHandler):
         except ValueError as e:
             raise HTTPError(400, f"Bad request: {e}") from e
         # Parse request
-        id = req.get("id", None)
+        req_id = req.get("id", None)
         params = req.get("params", [])
         method = req.get("method")
         # Get handler
@@ -53,8 +53,8 @@ class JSONRPCHandler(BaseHandler):
             raise HTTPError(403, "Permission denied")
         # Prepare response
         response = {"error": None, "result": None}
-        if id is not None:
-            response["id"] = id
+        if req_id is not None:
+            response["id"] = req_id
         # Call handler
         logger.info("CALL %s.%s", api_name, method)
         try:

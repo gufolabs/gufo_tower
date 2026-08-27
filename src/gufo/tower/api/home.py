@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-from typing import Any
+from typing import Any, ClassVar
 
 # Gufo Tower modules
 from .. import __version__
@@ -21,7 +21,7 @@ from .base import API, api
 
 class HomeAPI(API):
     name = "home"
-    ENV_TYPES: dict[str, str] = dict(Environment.env_type.choices)
+    ENV_TYPES: ClassVar[dict[str, str]] = dict(Environment.env_type.choices)
 
     @api
     def get_data(self) -> dict[str, Any]:
