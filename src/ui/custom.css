@@ -7,6 +7,7 @@
     --ansible-changed-color: #f39c12;
     --ansible-unreachable-color: #7f8c8d;
     --ansible-failed-color: #c0392b;
+    --toolbar-color: #7f8c8d;
 }
 
 /*
@@ -43,7 +44,11 @@ div[view_id="sidebar"] .webix_selected {
 }
 
 .webix_layout_toolbar.webix_toolbar {
-    background: #7f8c8d;
+    background-color: var(--toolbar-color);
+}
+
+.webix_header>div {
+    background-color: var(--toolbar-color) !important;
 }
 
 .webix_hcell {
