@@ -38,6 +38,7 @@ class EnvironmentShotter(BaseShotter):
         "environment-list-toolbar-deploy": ENVIRONMENT
         / "environment-list-toolbar-deploy.png",
         "environment-deploy": ENVIRONMENT / "environment-deploy.png",
+        "environment-deploy-form": ENVIRONMENT / "environment-deploy-form.png",
         "deploy-toolbar": ENVIRONMENT / "deploy-toolbar.png",
         "environment-inventory": ENVIRONMENT / "environment-inventory.png",
         "environment-inventory-toolbar": ENVIRONMENT
@@ -107,8 +108,17 @@ class EnvironmentShotter(BaseShotter):
         # Pull
         env = Environment.get_by_id(1)
         prepare_env(env)
-        # Run deploy
+        # Show deploy form
         await self.open_page(page, "/environment/1/deploy")
+        await self.screenshot(
+            page.locator('[view_id="environment_deploy_form"]'),
+            "environment-deploy-form",
+        )
+        # Press "Deploy to show deploy form"
+        await page.locator(
+            '[view_id="environment_deploy_submit"] button'
+        ).click()
+        # Wait for deploy form
         await page.locator("i.fa.fa-check-circle").wait_for()
         await self.screenshot(
             page,

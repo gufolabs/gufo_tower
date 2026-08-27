@@ -6,7 +6,67 @@ To start a deployment, select the required Environment and click the **Deploy** 
 
 ![Deploy](environment-list-toolbar-deploy.png)
 
-The Deploy panel opens and displays the deployment progress and results.
+Clicking **Deploy** opens the [Deploy Configuration Form](#deploy-configuration-form), where the deployment parameters can be configured.
+
+## Deploy Configuration Form
+
+The **Deploy Configuration Form** is displayed when a deployment is started.
+
+![Deploy Configuration Form](environment-deploy-form.png)
+
+The form contains the following options:
+
+### Install Everything
+
+Install all NOC components.
+
+### Run Pre-Deploy Checks
+
+Run additional checks before starting the deployment.
+
+### Run Post-Deploy Tests
+
+Run tests after the deployment is completed.
+
+### Service Restart
+
+Defines how NOC services are restarted during deployment.
+
+| Option | Description |
+| --- | --- |
+| **No Restart** | Do not restart services. |
+| **Quick** | Restart all services simultaneously. |
+| **Gentle** | Restart services one at a time. |
+
+### Build Set Output
+
+Defines the level of output generated during the deployment.
+
+| Option | Description |
+| --- | --- |
+| **Normal** | Normal output. |
+| **Verbose** | Increased logging level. |
+| **Extremely Verbose** | Debug information. |
+
+### Show Secret in Deploy Log
+
+Show keys and passwords in the deployment log.
+
+> **Warning:** Enabling this option may expose sensitive information in the deployment log.
+
+### Cancel
+
+Cancel the deployment and return to the Environment List.
+
+### Deploy
+
+Start the deployment with the selected configuration.
+
+## Deploy Log
+
+After the deployment configuration is submitted, the Deploy panel displays the deployment progress and results.
+
+![Deploy Log](environment-deploy.png)
 
 ## Deploy Toolbar
 
@@ -45,7 +105,7 @@ The toolbar contains the following elements:
 }
 
 .ansible-changed-tag {
-    background-color: #f1c40f;
+    background-color: #f39c12;
 }
 
 .ansible-unreachable-tag {
