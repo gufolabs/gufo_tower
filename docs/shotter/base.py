@@ -169,7 +169,7 @@ class BaseShotter(ABC):
     _temp_dir: ClassVar[str | None] = None
     _device_scale_factor = 2
     require_authorized: bool
-    screenshots: dict[str, Path]
+    screenshots: ClassVar[dict[str, Path]]
     capture_console = False
     fixture: str | None = None
 

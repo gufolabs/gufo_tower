@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------
-# DesktopShotter class
+# HomeShotter class
 # ----------------------------------------------------------------------
 # Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -20,7 +21,7 @@ HOME = USER_GUIDE / "home"
 
 class HomeShotter(BaseShotter):
     require_authorized = True
-    screenshots = {
+    screenshots: ClassVar[dict[str, Path]] = {
         "home": HOME / "home.png",
         "env-summary": HOME / "env-summary.png",
         "tower-summary": HOME / "tower-summary.png",

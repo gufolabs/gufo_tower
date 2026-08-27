@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -20,7 +21,7 @@ CHANGE_PASS = USER_GUIDE / "change-password"
 
 class ChangePasswordShotter(BaseShotter):
     require_authorized = True
-    screenshots = {
+    screenshots: ClassVar[dict[str, Path]] = {
         "change-password-menu": CHANGE_PASS / "change-password-menu.png",
         "change-password-form": CHANGE_PASS / "change-password-form.png",
     }

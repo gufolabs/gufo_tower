@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -20,7 +21,7 @@ SETTINGS = USER_GUIDE / "settings"
 
 class SettingsShotter(BaseShotter):
     require_authorized = True
-    screenshots = {
+    screenshots: ClassVar[dict[str, Path]] = {
         "settings-start": SETTINGS / "settings-start.png",
         "settings": SETTINGS / "settings.png",
         "settings-toolbar": SETTINGS / "settings-toolbar.png",

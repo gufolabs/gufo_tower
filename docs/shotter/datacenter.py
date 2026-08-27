@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -20,7 +21,7 @@ DATACENTER = USER_GUIDE / "datacenter"
 
 class DatacenterShotter(BaseShotter):
     require_authorized = True
-    screenshots = {
+    screenshots: ClassVar[dict[str, Path]] = {
         "datacenter-start": DATACENTER / "datacenter-start.png",
         "datacenter-list": DATACENTER / "datacenter-list.png",
         "datacenter-list-toolbar": DATACENTER / "datacenter-list-toolbar.png",
@@ -37,7 +38,7 @@ class DatacenterShotter(BaseShotter):
         # Datacenter list
         async with self.highlight(page.locator('[view_id="datacenter_list"]')):
             await self.screenshot(page, "datacenter-list")
-        # Environments toolbar
+        # Datacenter list toolbar
         await self.screenshot(
             page.locator('[view_id="datacenter_list_toolbar"]'),
             "datacenter-list-toolbar",

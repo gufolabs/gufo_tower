@@ -6,10 +6,10 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-# Third-party modules
 import contextlib
 import json
 from itertools import product
+from typing import Any
 
 # Gufo Tower modules
 from ..contrib.yaml_ordered_dict import ordered_load
@@ -68,7 +68,7 @@ class ServiceAPI(API):
                 "borderless": False,
             }
         ]
-        help = {
+        svc_help = {
             "id": "help",
             "label": "Service info",
             "view": "template",
@@ -118,7 +118,7 @@ class ServiceAPI(API):
                 c["bottomLabel"] = description
                 c["bottomPadding"] = 35
             r += [c]
-        r += [help]
+        r += [svc_help]
         return r
 
     @api
@@ -178,7 +178,7 @@ class ServiceAPI(API):
         nodes = [
             n.id
             for n in Node.select().where(
-                Node.environment == env, Node.is_enabled == True
+                Node.environment == env, Node.is_enabled
             )
         ]
         pools = [
@@ -233,7 +233,7 @@ class ServiceAPI(API):
         nodes = {}
         for n in (
             Node.select()
-            .where(Node.environment == env, Node.is_enabled == True)
+            .where(Node.environment == env, Node.is_enabled)
             .execute()
         ):
             nodes[n.id] = n.name
@@ -270,15 +270,21 @@ class ServiceAPI(API):
         return r
 
     @api
-    def save_config(self, env_id, config):
+    def save_config(self, env_id: int, config: dict[str, Any]) -> bool:
         """Save config.
 
         Config is a list of dicts with keys
         service, pool, nodes, config
 
         Args:
-            env_id
-            config
+            env_id: Environment id
+            config: Config to save.
+
+        Returns:
+            True: if config have been saved successfully.
+
+        Raises:
+            APIError: in case of error.
         """
         # Find environment
         try:

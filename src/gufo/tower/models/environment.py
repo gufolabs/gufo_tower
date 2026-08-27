@@ -129,7 +129,7 @@ class Environment(Model):
             for s in (
                 Service.select()
                 .join(Node)
-                .where(Service.environment == self, Node.is_enabled == True)
+                .where(Service.environment == self, Node.is_enabled)
             ):
                 if s.service in active_services and s.present:
                     service_data[s.service] += [s]
@@ -323,7 +323,7 @@ class Environment(Model):
         nodes = {}
         for n in (
             Node.select()
-            .where(Node.environment == self, Node.is_enabled == True)
+            .where(Node.environment == self, Node.is_enabled)
             .execute()
         ):
             nodes[n.id] = n.name
@@ -389,8 +389,7 @@ class Environment(Model):
             )
 
         for role in Role.select().where(
-            Role.environment == self,
-            Role.is_enabled == True,
+            Role.environment == self, Role.is_enabled
         ):
             paths.append(
                 self.roles_dir / role.role_name / "meta" / "tower.yml"

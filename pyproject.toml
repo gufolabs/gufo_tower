@@ -46,22 +46,16 @@ ignore = [
   "D100", # 77 - Missing docstring in public module
   "D101", # 43 - Missing docstring in public class
   "D103", # 63 - Missing docstring in public function
-  "D417", # 9 - Missing argument descriptions in the docstring for `authenticate`: `password`, `user`
-  "RUF012", # 1 - Mutable default value for class attribute
   "PLC0415", # 20 - `import` should be at the top-level of a file
   "C901", # 6 - C901 `get_execution_order` is too complex (22 > 10)
   "E501", # 5 - Line too long (91 > 79)
   "S324", # 1 - Probable use of insecure hash functions in `hashlib`: `sha1`
   "S603", # 5 - `subprocess` call: check for execution of untrusted input
   "S607", # 3 - Starting a process with a partial executable path
-  "E712", # Peewee feature. 6 - Avoid equality comparisons to `True`; use `Role.is_enabled:` for truth checks
   "PLR0915", #3 -  Too many statements (68 > 50)
   "PLR0912", # 5 - Too many branches (26 > 12)
   "PLR2004", # 13 - Magic value used in comparison, consider replacing `2` with a constant variable
-  "PIE794", # 1 - Class field `config` is defined multiple times  
   "S506", # 1 - Probable use of unsafe loader `OrderedLoader` with `yaml.load`. Allows instantiation of arbitrary objects. Consider `yaml.safe_load`.
-  "PLW1508", # 1 - Invalid type for environment variable default; expected `str` or `None`
-  "A001", # 3 - Variable `hash` is shadowing a Python builtin
   "BLE001", # 1 - Do not catch blind exception: `Exception`
   "A002", # Function argument `format` is shadowing a Python builtin
   "S108", # 2 - Probable insecure usage of temporary file or directory: "/tmp/${USER}/ansible"

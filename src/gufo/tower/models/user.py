@@ -6,6 +6,8 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
+from __future__ import annotations
+
 import bcrypt
 from peewee import BooleanField, CharField, DoesNotExist, Model
 
@@ -24,48 +26,62 @@ class User(Model):
     password = CharField(default="NOLOGIN")
 
     @classmethod
-    def hash_password(cls, password):
+    def hash_password(cls, password: str | bytes) -> bytes:
         """Return hashed password data.
 
         Args:
-            password
+            password: Plain-text password.
+
+        Returns:
+            Hashed password.
         """
         if isinstance(password, str):
             password = password.encode("utf-8")
         return bcrypt.hashpw(password, bcrypt.gensalt(10))
 
     @classmethod
-    def check_password(cls, password, hashed):
+    def check_password(
+        cls, password: str | bytes, hashed: str | bytes
+    ) -> bool:
         """Check plain-text password matched hashed implementation.
 
         Args:
-            password
-            hashed
+            password: Plain-text password.
+            hashed: Hashed password.
+
+        Returns:
+            True: if password is correct.
+            False: otherwise.
         """
         if isinstance(password, str):
-            password = password.encode("utf-8")
+            password = password.encode()
         if isinstance(hashed, str):
-            hashed = hashed.encode("utf-8")
+            hashed = hashed.encode()
         return bcrypt.hashpw(password, hashed) == hashed
 
-    def set_password(self, password):
+    def set_password(self, password: str | bytes) -> None:
+        """Change user password.
+
+        Args:
+            password: Plain-text password.
+        """
         self.password = self.hash_password(password)
         self.save()
 
     @classmethod
-    def get_user(cls, name):
+    def get_user(cls, name: str) -> User | None:
         try:
             return User.get(User.name == name)
         except DoesNotExist:
             return None
 
     @classmethod
-    def authenticate(cls, user, password):
+    def authenticate(cls, user: str, password: str) -> User | None:
         """Perform user authentication.
 
         Args:
-            user
-            password
+            user: User name.
+            password: Password.
 
         Returns:
             User or None

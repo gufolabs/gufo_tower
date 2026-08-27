@@ -9,6 +9,7 @@
 import base64
 import json
 import os
+from typing import ClassVar
 
 # Third-party modules
 from peewee import CharField, DoesNotExist, Model, TextField
@@ -25,7 +26,7 @@ class Settings(Model):
     key = CharField(primary_key=True)
     value = TextField()
 
-    DEFAULTS = {
+    DEFAULTS: ClassVar[dict[str, str]] = {
         "url": "http://example.com/",
         "installation_name": "Unconfigured installation",
         "group_by": "node",

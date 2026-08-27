@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -17,7 +18,9 @@ from .base import BaseShotter
 
 class LoginShotter(BaseShotter):
     require_authorized = False
-    screenshots = {"login": Path("user-guide", "login", "login.png")}
+    screenshots: ClassVar[dict[str, Path]] = {
+        "login": Path("user-guide", "login", "login.png")
+    }
 
     async def make_shots(self, page: Page) -> None:
         await self.open_page(page)

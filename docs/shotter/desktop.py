@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -20,7 +21,7 @@ DESKTOP = USER_GUIDE / "desktop"
 
 class DesktopShotter(BaseShotter):
     require_authorized = True
-    screenshots = {
+    screenshots: ClassVar[dict[str, Path]] = {
         "desktop": DESKTOP / "desktop.png",
         "desktop-header": DESKTOP / "desktop-header.png",
         "desktop-sidebar": DESKTOP / "desktop-sidebar.png",

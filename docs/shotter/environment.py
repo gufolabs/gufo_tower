@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -23,7 +24,7 @@ ENVIRONMENT = USER_GUIDE / "environment"
 
 class EnvironmentShotter(BaseShotter):
     require_authorized = True
-    screenshots = {
+    screenshots: ClassVar[dict[str, Path]] = {
         "environments-start": ENVIRONMENT / "environments-start.png",
         "environments-list": ENVIRONMENT / "environments-list.png",
         "environments-list-toolbar": ENVIRONMENT

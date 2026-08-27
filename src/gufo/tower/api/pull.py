@@ -29,11 +29,15 @@ class PullAPI(API):
     executor = ThreadPoolExecutor(2)
 
     @api
-    def is_pulled(self, env_id):
+    def is_pulled(self, env_id: int) -> bool:
         """Check repo is pulled and ready to deploy.
 
         Args:
-            env_id
+            env_id: Environment id
+
+        Returns:
+            True: if repo have been pulled.
+            False: otherwise.
         """
         try:
             env = Environment.get(Environment.id == int(env_id))

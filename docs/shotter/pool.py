@@ -7,6 +7,7 @@
 
 # Python modules
 from pathlib import Path
+from typing import ClassVar
 
 # Third-party modules
 from playwright.async_api import Page
@@ -20,7 +21,7 @@ POOL = USER_GUIDE / "pool"
 
 class PoolShotter(BaseShotter):
     require_authorized = True
-    screenshots = {
+    screenshots: ClassVar[dict[str, Path]] = {
         "pool-start": POOL / "pool-start.png",
         "pool-list": POOL / "pool-list.png",
         "pool-list-toolbar": POOL / "pool-list-toolbar.png",
