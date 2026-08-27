@@ -1,3 +1,2 @@
-@import "./pkg/webix/webix.css";
-@import "./pkg/webix/sidebar.css";
+@import "webix/webix.css";
 @import "./custom.css";
