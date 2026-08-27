@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------
 
 import { role_form_logic } from "./logic.js";
+import { current_env } from "../../state.js";
 
 export const role_form = {
     id: "role_form_panel",

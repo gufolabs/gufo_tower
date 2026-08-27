@@ -6,6 +6,7 @@
 // ----------------------------------------------------------------------
 
 import { pool_form_logic } from "./logic.js";
+import { current_env } from "../../state.js";
 
 export const pool_form = {
     id: "pool_form_panel",

@@ -65,31 +65,8 @@ export const environment_list = {
                         navigation.navigate(`/environment/${env.id}/deploy`);
                     },
                     autowidth: true,
-                    disabled: true,
-                    tooltip: "Stop all daemons, update everything, restart everything"
-                },
-                {
-                    view: "multiselect",
-                    label: "Deploy options",
-                    id: "deployment_options",
-                    labelWidth: 100,
-                    options: [
-                        {
-                            id: 1,
-                            value: "Install Everything",
-                            tooltip: "Ignore other options except verbose. Normal install"
-                        },
-                        { id: 93, value: "Run pre deploy checks" },
-                        { id: 94, value: "Run post deploy tests" },
-                        { id: 50, value: "Restart quick", tooltip: "Stop all, start all" },
-                        { id: 51, value: "Restart gentle", tooltip: "Restart one by one" },
-                        { id: 90, value: "Be verbose", tooltip: "Debug output -v" },
-                        { id: 91, value: "Be extremely verbose", tooltip: "Debug output -vvvv" },
-                        { id: 92, value: "Show secrets in deploy log", tooltip: "Disable no_log" }
-                    ],
-                    value: "1,93,94"
+                    disabled: true
                 }
-
             ]
         },
         {
