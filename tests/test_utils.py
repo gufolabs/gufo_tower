@@ -104,9 +104,6 @@ def test_get_size_directory_ignores_symlink(tmp_path: Path):
     assert get_size(path) == expected
 
 
-import pytest
-
-
 @pytest.mark.parametrize(
     ("duration", "expected"),
     [
