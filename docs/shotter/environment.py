@@ -39,7 +39,8 @@ class EnvironmentShotter(BaseShotter):
         / "environment-list-toolbar-deploy.png",
         "environment-deploy": ENVIRONMENT / "environment-deploy.png",
         "environment-deploy-form": ENVIRONMENT / "environment-deploy-form.png",
-        "deploy-toolbar": ENVIRONMENT / "deploy-toolbar.png",
+        "environment-deploy-toolbar": ENVIRONMENT
+        / "environment-deploy-toolbar.png",
         "environment-inventory": ENVIRONMENT / "environment-inventory.png",
         "environment-inventory-toolbar": ENVIRONMENT
         / "environment-inventory-toolbar.png",
@@ -126,5 +127,5 @@ class EnvironmentShotter(BaseShotter):
         )
         await self.screenshot(
             page.locator('[view_id="environment_deploy_toolbar"]'),
-            "deploy-toolbar",
+            "environment-deploy-toolbar",
         )

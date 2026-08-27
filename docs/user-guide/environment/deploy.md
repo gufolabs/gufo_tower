@@ -72,7 +72,7 @@ After the deployment configuration is submitted, the Deploy panel displays the d
 
 The toolbar provides controls for managing and monitoring the deployment.
 
-![Deploy Toolbar](deploy-toolbar.png)
+![Deploy Toolbar](environment-deploy-toolbar.png)
 
 The toolbar contains the following elements:
 
