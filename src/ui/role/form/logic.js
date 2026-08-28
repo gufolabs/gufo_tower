@@ -61,8 +61,16 @@ export class RoleFormLogic {
 
     on_delete = async () => {
         const data = $$("role_form").getValues();
-
         if (data.id) {
+            const confirmed = await webix.confirm({
+                title: "Delete role?",
+                text: "Are you sure you want to delete this role?<br><br>" +
+                    "This operation cannot be undone.",
+                type: "confirm-error",
+            });
+            if (!confirmed) {
+                return;
+            }
             try {
                 await API.role.delete_item(data);
                 Tower.msg.complete("Deleted");
