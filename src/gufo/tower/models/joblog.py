@@ -16,7 +16,6 @@ from peewee import (
     ForeignKeyField,
     IntegerField,
     Model,
-    TextField,
 )
 
 # Tower modules
