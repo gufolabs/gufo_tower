@@ -9,8 +9,7 @@
 import shutil
 from pathlib import Path
 
-from peewee import BooleanField, CharField, ForeignKeyField, TextField
-from playhouse.signals import Model, post_save
+from peewee import BooleanField, CharField, ForeignKeyField, Model, TextField
 
 # Tower modules
 from .db import db
@@ -116,16 +115,18 @@ class Role(Model):
     def role_path(self) -> Path:
         return self.environment.roles_dir / self.role_name
 
+    @classmethod
+    def create_default_roles(cls, env: Environment) -> None:
+        """Create the default roles for the given environment.
 
-@post_save(sender=Environment)
-def on_save_environment_new(sender, instance, created):
-    if created:
-        # Create default roles
+        Args:
+            env: Environment to create the default roles for.
+        """
         for role in DEFAULT_ROLES:
-            Role(
+            cls(
                 name=role["name"],
                 description=role["description"],
                 link=role["link"],
-                environment=instance,
+                environment=env,
                 role_name=role.get("role_name", role["name"].lower()),
             ).save()

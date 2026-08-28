@@ -7,8 +7,7 @@
 
 # Third-party modules
 import yaml
-from peewee import BooleanField, CharField, ForeignKeyField, TextField
-from playhouse.signals import Model
+from peewee import BooleanField, CharField, ForeignKeyField, Model, TextField
 
 # Tower modules
 from .db import db
