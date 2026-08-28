@@ -53,15 +53,6 @@ class JobLog(Model):
             config.jobs_log_dir / str(self.environment_id) / f"{self.id}.log"
         )
 
-    def append_log(self, data: bytes) -> None:
-        """Append log data to the job log file.
-
-        Args:
-            data: Log data to append.
-        """
-        with open(self.log_path, "a") as fp:
-            fp.write(data.decode())
-
     def get_log(self) -> str:
         """Return the job log contents.
 
