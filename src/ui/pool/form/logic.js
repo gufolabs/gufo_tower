@@ -62,8 +62,16 @@ export class PoolFormLogic {
 
     on_delete = async () => {
         const data = $$("pool_form").getValues();
-
         if (data.id) {
+            const confirmed = await webix.confirm({
+                title: "Delete pool?",
+                text: "Are you sure you want to delete this pool?<br><br>" +
+                    "This operation cannot be undone.",
+                type: "confirm-error",
+            });
+            if (!confirmed) {
+                return;
+            }
             try {
                 await API.pool.delete_item(data);
                 Tower.msg.complete("Deleted");

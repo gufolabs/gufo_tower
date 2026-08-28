@@ -78,8 +78,16 @@ export class EnvironmentFormLogic {
 
     on_delete = async () => {
         const data = $$("environment_form").getValues();
-
         if (data.id) {
+            const confirmed = await webix.confirm({
+                title: "Delete environment?",
+                text: "Are you sure you want to delete this environment?<br><br>" +
+                    "This operation cannot be undone.",
+                type: "confirm-error",
+            });
+            if (!confirmed) {
+                return;
+            }
             try {
                 await API.environment.delete_item(data);
                 Tower.msg.complete("Deleted");

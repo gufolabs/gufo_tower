@@ -62,6 +62,15 @@ export class NodeFormLogic {
     on_delete = async () => {
         const data = $$("node_form").getValues();
         if (data.id) {
+            const confirmed = await webix.confirm({
+                title: "Delete node?",
+                text: "Are you sure you want to delete this node?<br><br>" +
+                    "This operation cannot be undone.",
+                type: "confirm-error",
+            });
+            if (!confirmed) {
+                return;
+            }
             try {
                 await API.node.delete_item(data);
                 Tower.msg.complete("Deleted");

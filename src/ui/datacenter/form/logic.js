@@ -67,6 +67,16 @@ export class DatacenterFormLogic {
         const data = $$("datacenter_form").getValues();
 
         if (data.id) {
+            const confirmed = await webix.confirm({
+                title: "Delete datacenter?",
+                text: "Are you sure you want to delete this datacenter?<br><br>" +
+                    "This operation cannot be undone.",
+                type: "confirm-error",
+            });
+
+            if (!confirmed) {
+                return;
+            }
             try {
                 await API.datacenter.delete_item(data);
                 Tower.msg.complete("Deleted");
