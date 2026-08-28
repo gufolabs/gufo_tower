@@ -121,5 +121,5 @@ The toolbar contains the following elements:
 | --- | --- |
 | <div class="ansible-tag ansible-ok-tag">x</div> | Task completed successfully without changes. |
 | <div class="ansible-tag ansible-changed-tag">x</div> | Task completed successfully with changes. |
-| <div class="ansible-tag ansible-unreachable-tag">x</div>| Task was skipped. |
+| <div class="ansible-tag ansible-unreachable-tag">x</div>| Tower could not connect to the host. |
 | <div class="ansible-tag ansible-failed-tag">x</div> | Task failed. |
