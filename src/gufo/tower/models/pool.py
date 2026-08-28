@@ -43,5 +43,5 @@ class Pool(Model):
         cls(
             environment=env,
             name=DEFAULT_POOL,
-            description=f"Default pool for {instance.name}",
+            description=f"Default pool for {env.name}",
         ).save()
