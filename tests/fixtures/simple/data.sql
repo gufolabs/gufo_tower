@@ -10,9 +10,10 @@ BEGIN TRANSACTION;
 --    "is_default" INTEGER NOT NULL,
 --    "config_order" VARCHAR(255) NOT NULL,
 --    "install_method" VARCHAR(255) NOT NULL,
---    "playbook_link" VARCHAR(255) NOT NULL
+--    "playbook_link" VARCHAR(255) NOT NULL,
+--    "deploy_key_type" VARCHAR(255) NOT NULL
 -- );
-INSERT INTO environment VALUES(1,'simple','Simple one-node install','test','Simple','simple.test.example.com',0,'yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC','git','git+https://github.com/gufolabs/noc@stable');
+INSERT INTO environment VALUES(1,'simple','Simple one-node install','test','Simple','simple.test.example.com',0,'yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC','git','git+https://github.com/gufolabs/noc@stable','ed25519');
 -- settings
 -- CREATE TABLE IF NOT EXISTS "settings" (
 --     "key" VARCHAR(255) NOT NULL PRIMARY KEY,
