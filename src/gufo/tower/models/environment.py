@@ -361,7 +361,7 @@ class Environment(Model):
     @property
     def cache_path(self) -> Path:
         """Environment's cache directory path."""
-        return config.cache_dir / self.name
+        return config.cache_dir / str(self.id)
 
     @property
     def playbook_path(self) -> Path:

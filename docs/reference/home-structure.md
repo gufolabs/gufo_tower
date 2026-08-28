@@ -19,7 +19,7 @@ db/
     config.db
     config.XXXXXX.db.xz
 cache/
-    <environment>/
+    <environment id>/
         playbooks/
         additional_roles/
         data/
@@ -41,7 +41,7 @@ Where:
 
 * `cache/` — stores cached data.
 
-  * `<environment>/` — cache specific to an environment.
+  * `<environment id>/` — cache specific to the environment identified by its ID.
 
     * `playbooks/` — cached playbooks.
     * `additional_roles/` — cached Ansible roles installed as additional roles.
