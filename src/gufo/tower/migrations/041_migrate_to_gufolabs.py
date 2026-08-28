@@ -1,3 +1,10 @@
+# ----------------------------------------------------------------------
+# 041_migrate_to_gufolabs
+# ----------------------------------------------------------------------
+# Copyright (C) 2015-2026 Gufo Labs
+# See LICENSE for details
+# ----------------------------------------------------------------------
+
 # Gufo Tower modules
 from gufo.tower.models.migration import Migrator
 
