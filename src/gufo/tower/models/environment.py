@@ -26,6 +26,7 @@ from playhouse.signals import Model, post_save
 # Tower modules
 from ..config import config
 from ..core.cert import generate_certificate
+from ..core.ssh.base import BaseKey
 from .db import db
 
 logging.getLogger(__name__)
@@ -62,6 +63,9 @@ class Environment(Model):
         default="yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC"
     )
     install_method = CharField(default="git")
+    deploy_key_type = CharField(
+        default="ed25519", choices=[("ed25515", "ed25519"), ("rsa", "rsa")]
+    )
 
     def list_item(self):
         return {
@@ -74,6 +78,7 @@ class Environment(Model):
             "playbook_link": self.playbook_link,
             "install_method": self.install_method,
             "web_host": self.web_host,
+            "deploy_key_type": self.deploy_key_type,
         }
 
     def reference_item(self):
@@ -144,7 +149,7 @@ class Environment(Model):
                 "ansible_port": node.get_ssh_port(),
                 "ansible_user": node.login_as,
                 "ansible_python_interpreter": node.node_type.python_interpreter,
-                "ansible_ssh_private_key_file": str(self.deploy_keys)
+                "ansible_ssh_private_key_file": str(self.ssh_priv_key_path)
                 if self.deploy_keys
                 else None,
                 "node_id": node.id,
@@ -477,6 +482,31 @@ class Environment(Model):
             shutil.rmtree(self.cache_path)
         super().delete_instance(*args, **kwargs)
 
+    @property
+    def ssh_priv_key_path(self) -> Path:
+        """Return the path to the environment's SSH private key.
+
+        The private key filename is derived from the configured deployment key
+        type.
+
+        Returns:
+            Path to the SSH private key file.
+        """
+        ssh_key = BaseKey.get(self.deploy_key_type)
+        return self.ssh_keys_path / ssh_key.filename
+
+    @property
+    def ssh_public_key_path(self) -> Path:
+        """Return the path to the environment's SSH public key.
+
+        The public key is stored alongside the private key with the ``.pub``
+        suffix.
+
+        Returns:
+            Path to the SSH public key file.
+        """
+        return self.ssh_priv_key_path.with_suffix(".pub")
+
 
 # NOTE: With lazy loading, signal handlers must be defined in the same
 # module as their sender to ensure they are registered when the model loads.
@@ -484,9 +514,13 @@ class Environment(Model):
 def on_save_environment(
     sender: type[Environment], instance: Environment, created: bool
 ) -> None:
+    # Ensure cache directory
+    instance.cache_path.mkdir(parents=True, exist_ok=True)
+    # Ensure SSH keys
+    ssh_key = BaseKey.get(instance.deploy_key_type)
+    ssh_key.ensure(instance.ssh_keys_path, f"gufo-tower@{instance.name}")
+    # Create default records when necessary
     if created:
-        instance.cache_path.mkdir(parents=True, exist_ok=True)
-
         from .pool import Pool
         from .role import Role
 

@@ -14,19 +14,19 @@ import pytest
 from cryptography.hazmat.primitives import serialization
 
 # Gufo Tower modules
-from gufo.tower.core.ssh import BaseKey, ED25519Key, RSAKey, build_ssh_keys
+from gufo.tower.core.ssh.base import BaseKey
 
 
 @pytest.mark.parametrize(
     "key_class",
     [
-        RSAKey,
-        ED25519Key,
+        "rsa",
+        "ed25519",
     ],
 )
 def test_ssh_key(tmp_path: Path, key_class: BaseKey) -> None:
     name = "test@noc"
-    key = key_class()
+    key = BaseKey.get(key_class)
 
     key.ensure(tmp_path, name)
 
@@ -66,15 +66,3 @@ def test_ssh_key(tmp_path: Path, key_class: BaseKey) -> None:
         path.name: hashlib.sha256(path.read_bytes()).digest()
         for path in tmp_path.iterdir()
     } == hashes
-
-
-def test_build_ssh_keys(tmp_path: Path) -> None:
-    out = tmp_path / "keys" / "pool"
-
-    build_ssh_keys("test@noc", out)
-
-    assert out.is_dir()
-    assert (out / "id_rsa").is_file()
-    assert (out / "id_rsa.pub").is_file()
-    assert (out / "id_ed25519").is_file()
-    assert (out / "id_ed25519.pub").is_file()

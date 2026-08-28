@@ -38,6 +38,14 @@ export const environment_form = {
                     click: environment_form_logic.on_delete
                 },
                 {
+                    view: "button",
+                    type: "icon",
+                    icon: "copy",
+                    label: "Copy SSH key",
+                    autowidth: true,
+                    click: () => { environment_form_logic.on_copy_key(); }
+                },
+                {
                     view: "spacer"
                 },
                 {
@@ -101,18 +109,24 @@ export const environment_form = {
                                 ]
                             },
                             {
-                                view: "combo",
-                                name: "env_type",
-                                label: "Type",
-                                required: true,
-                                options: [
-                                    { id: "prod", value: "Productive" },
-                                    { id: "test", value: "Test" },
-                                    { id: "dev", value: "Develop" },
-                                    { id: "eval", value: "Evaluation" },
-                                    { id: "other", value: "Other" }
-                                ],
-                                value: "eval"
+                                cols: [
+                                    {
+                                        view: "combo",
+                                        name: "env_type",
+                                        label: "Type",
+                                        width: 300,
+                                        required: true,
+                                        options: [
+                                            { id: "prod", value: "Productive" },
+                                            { id: "test", value: "Test" },
+                                            { id: "dev", value: "Develop" },
+                                            { id: "eval", value: "Evaluation" },
+                                            { id: "other", value: "Other" }
+                                        ],
+                                        value: "eval"
+                                    },
+                                    {}
+                                ]
                             },
                             {
                                 placeholder: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
@@ -126,18 +140,9 @@ export const environment_form = {
                 },
                 {
                     view: "fieldset",
-                    label: "Repo",
+                    label: "Deploy",
                     body: {
                         rows: [
-                            {
-                                cols: [
-                                    {
-                                        view: "label",
-                                        label: "",
-                                        id: "pulled_label",
-                                    }
-                                ]
-                            },
                             {
                                 cols: [
                                     {
@@ -157,6 +162,22 @@ export const environment_form = {
                                         label: "Playbook Repo URL",
                                         required: true
                                     }
+                                ]
+                            },
+                            {
+                                cols: [
+                                    {
+                                        view: "combo",
+                                        name: "deploy_key_type",
+                                        label: "SSH Key Type",
+                                        width: 250,
+                                        options: [
+                                            { id: "ed25519", value: "ed25519" },
+                                            { id: "rsa", value: "rsa" },
+                                        ],
+                                        required: true
+                                    },
+                                    {}
                                 ]
                             }
                         ]
