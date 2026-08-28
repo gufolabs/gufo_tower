@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from typing import BinaryIO
 
 # Third-party modules
 import tornado.iostream
@@ -46,9 +47,9 @@ class DeployHandler(BaseHandler):
         self.recap: dict[
             str, tuple[int, int, int, int]
         ] = {}  # node -> (ok, changed, unreachable, failed)
-        self.play_log: list[bytes] = []
-        self.env: Environment | None = None
-        self.job_log: JobLog | None = None
+        self._env: Environment | None = None
+        self._job_log: JobLog | None = None
+        self._log_file: BinaryIO | None = None
         self.tags = ""
         self.ansible_verbose = ""
         self.connection_closed = False
@@ -56,23 +57,33 @@ class DeployHandler(BaseHandler):
     @property
     def environment(self) -> Environment:
         """Return current environment."""
-        if self.env is None:
+        if self._env is None:
             msg = "Environment is not set"
             raise RuntimeError(msg)
-        return self.env
+        return self._env
 
     @property
-    def joblog(self) -> JobLog:
+    def job_log(self) -> JobLog:
         """Return current job log."""
-        if self.job_log is None:
+        if self._job_log is None:
             msg = "JobLog is not set"
             raise RuntimeError(msg)
-        return self.job_log
+        return self._job_log
+
+    @property
+    def log_file(self) -> BinaryIO:
+        """Return the open job log file."""
+        if self._log_file is None:
+            path = self.job_log.log_path
+            path.parent.mkdir(parents=True, exist_ok=True)
+            self._log_file = path.open("wb")
+        return self._log_file
 
     @tornado.web.authenticated
     async def get(self, env_id: int, *args, **kwargs):
+        """Run deploy."""
         try:
-            self.env = Environment.get(Environment.id == env_id)
+            self._env = Environment.get(Environment.id == env_id)
         except Environment.DoesNotExist as e:
             raise tornado.web.HTTPError(404) from e
         try:
@@ -106,24 +117,24 @@ class DeployHandler(BaseHandler):
             if tags:
                 self.tags = "--tags=" + ",".join(tags)
         logger.info(
-            "Running deploy on %s %s", self.env.name, self.deploy_options
+            "Running deploy on %s %s", self._env.name, self.deploy_options
         )
         with db.atomic():
-            self.job_log = JobLog(
-                environment=self.env,
+            self._job_log = JobLog(
+                environment=self._env,
                 start_ts=datetime.datetime.now(),
                 user=self.current_user.name,
                 playbook="site.yml",
             )
-            self.job_log.save()
+            self._job_log.save()
         # Disable nginx proxy buffering
         self.set_header("X-Accel-Buffering", "no")
         # Stream output
-        self.write(f"Starting job #{self.job_log.id}\n\n")
+        self.write(f"Starting job #{self._job_log.id}\n\n")
         # Generate ssh keys
-        for pool in Pool.select().where(Pool.environment == self.env):
+        for pool in Pool.select().where(Pool.environment == self._env):
             build_ssh_keys(
-                f"{pool.name}@noc", self.env.ssh_keys_path / pool.name
+                f"{pool.name}@noc", self._env.ssh_keys_path / pool.name
             )
         # Run playbook
         bin_path = Path(sys.argv[0]).resolve().parent
@@ -135,7 +146,7 @@ class DeployHandler(BaseHandler):
             ansible_ssh_cp = os.path.join("/tmp/tower-%%r-%%h-%%r")
         env.update(
             {
-                "NOC_ENV": str(self.env.name),
+                "NOC_ENV": str(self._env.name),
                 "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
                 "ANSIBLE_SSH_PIPELINING": "1",
                 "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
@@ -143,9 +154,9 @@ class DeployHandler(BaseHandler):
                 "ANSIBLE_STDOUT_CALLBACK": "debug",
                 "ANSIBLE_ROLES_PATH": ":".join(
                     [
-                        str(self.env.roles_dir),
-                        str(self.env.playbook_path / "system_roles"),
-                        str(self.env.playbook_path / "noc_roles"),
+                        str(self._env.roles_dir),
+                        str(self._env.playbook_path / "system_roles"),
+                        str(self._env.playbook_path / "noc_roles"),
                     ]
                 ),
                 "PYTHONUNBUFFERED": "1",
@@ -170,7 +181,7 @@ class DeployHandler(BaseHandler):
             env=env,
             stdout=tornado.process.Subprocess.STREAM,
             stderr=subprocess.STDOUT,
-            cwd=str(self.env.playbook_path),
+            cwd=str(self._env.playbook_path),
             close_fds=True,
         )
         self.write_pb()
@@ -187,6 +198,7 @@ class DeployHandler(BaseHandler):
             self.on_stream_close()
 
     def write_pb(self) -> None:
+        """Generate the Ansible playbook from the service execution order."""
         from gufo.tower.models.service import Service
 
         order = Service.get_execution_order(self.environment)
@@ -202,6 +214,7 @@ class DeployHandler(BaseHandler):
         )
 
     def resolv_pb(self, service: str) -> Path | None:
+        """Resolve the playbook path for a service."""
         path = self.environment.roles_dir / service / "service.yml"
         if path.exists():
             return path
@@ -224,45 +237,47 @@ class DeployHandler(BaseHandler):
         return None
 
     def on_connection_close(self, *args, **kwargs):
+        """Handle client disconnection and terminate the running job."""
         logger.info("Connection terminated")
         self.connection_closed = True
         self.sp.stdout.close()
         super().on_connection_close(*args, **kwargs)
-        self.play_log.append(b"\nConnection terminated\n")
+        self.log_file.write(b"\nConnection terminated\n")
         with db.atomic():
-            self.joblog.complete_ts = datetime.datetime.now()
-            self.joblog.log = (b"".join(self.play_log)).decode()
-            self.joblog.save()
+            self.job_log.complete_ts = datetime.datetime.now()
+            self.job_log.save()
 
     def on_data(self, data: bytes) -> None:
-        def qlog(x):
-            if x.endswith(b"\n"):
-                return x[:-1]
-            return x
-
-        logger.debug("PROGRESS: %s", qlog(data))
+        """Process and stream a chunk of Ansible output."""
+        logger.debug("PROGRESS: %s", data.removesuffix(b"\n"))
         self.write(data)
         self.flush()
-        self.joblog.append_log(data)
+        self.log_file.write(data)
         for match in self.rx_recap.finditer(data.decode()):
             g = match.groups()
             self.recap[g[0]] = tuple(int(x) for x in g[1:])
-        self.play_log.append(data)
 
     def on_stream_close(self):
+        """Finalize the deployment job and close the response."""
         logger.info("Deploy complete")
+        self.close_log()
         self.finish()
         recap = (0, 0, 0, 0)
         for v in list(self.recap.values()):
             recap = tuple((x + y) for x, y in zip(recap, v, strict=True))
         with db.atomic():
-            self.joblog.complete_ts = datetime.datetime.now()
-            self.joblog.is_complete = True
-            self.joblog.log = "".join(str(self.play_log))
+            self.job_log.complete_ts = datetime.datetime.now()
+            self.job_log.is_complete = True
             (
-                self.joblog.n_ok,
-                self.joblog.n_changed,
-                self.joblog.n_unreachable,
-                self.joblog.n_failed,
+                self.job_log.n_ok,
+                self.job_log.n_changed,
+                self.job_log.n_unreachable,
+                self.job_log.n_failed,
             ) = recap
-            self.joblog.save()
+            self.job_log.save()
+
+    def close_log(self) -> None:
+        """Close the job log file."""
+        if self._log_file:
+            self._log_file.close()
+            self._log_file = None

@@ -16,7 +16,6 @@ from peewee import (
     ForeignKeyField,
     IntegerField,
     Model,
-    TextField,
 )
 
 # Tower modules
@@ -37,7 +36,6 @@ class JobLog(Model):
     environment = ForeignKeyField(Environment)
     user = CharField()
     playbook = CharField()
-    log = TextField(default="")
     is_complete = BooleanField(default=False)
     n_ok = IntegerField(default=0)
     n_changed = IntegerField(default=0)
@@ -51,16 +49,9 @@ class JobLog(Model):
         Returns:
             Path to the log file.
         """
-        return config.jobs_log_dir / f"{self.id}.log"
-
-    def append_log(self, data: bytes) -> None:
-        """Append log data to the job log file.
-
-        Args:
-            data: Log data to append.
-        """
-        with open(self.log_path, "a") as fp:
-            fp.write(data.decode())
+        return (
+            config.jobs_log_dir / str(self.environment_id) / f"{self.id}.log"
+        )
 
     def get_log(self) -> str:
         """Return the job log contents.
