@@ -6,8 +6,7 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
-from peewee import CharField, ForeignKeyField, TextField
-from playhouse.signals import Model, post_save
+from peewee import CharField, ForeignKeyField, Model, TextField
 
 # Tower modules
 from .db import db
@@ -34,13 +33,15 @@ class Pool(Model):
             "description": self.description,
         }
 
+    @classmethod
+    def create_default_pool(cls, env: Environment) -> None:
+        """Create the default pool for the given environment.
 
-@post_save(sender=Environment)
-def on_save_environment(sender, instance, created):
-    if created:
-        # Create default pool
-        Pool(
-            environment=instance,
+        Args:
+            env: Environment to create the default pool for.
+        """
+        cls(
+            environment=env,
             name=DEFAULT_POOL,
             description=f"Default pool for {instance.name}",
         ).save()

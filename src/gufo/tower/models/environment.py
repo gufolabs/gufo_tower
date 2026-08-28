@@ -21,7 +21,7 @@ from urllib.parse import urlparse
 
 # Third-party modules
 from peewee import BooleanField, CharField, TextField
-from playhouse.signals import Model
+from playhouse.signals import Model, post_save
 
 # Tower modules
 from ..config import config
@@ -477,6 +477,18 @@ class Environment(Model):
             shutil.rmtree(self.cache_path)
         super().delete_instance(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
-        self.cache_path.mkdir(parents=True, exist_ok=True)
-        super().save(*args, **kwargs)
+
+# NOTE: With lazy loading, signal handlers must be defined in the same
+# module as their sender to ensure they are registered when the model loads.
+@post_save(sender=Environment)
+def on_save_environment(
+    sender: type[Environment], instance: Environment, created: bool
+) -> None:
+    if created:
+        instance.cache_path.mkdir(parents=True, exist_ok=True)
+
+        from .pool import Pool
+        from .role import Role
+
+        Pool.create_default_pool(instance)
+        Role.create_default_roles(instance)
