@@ -59,6 +59,7 @@ export class HomeLogic {
                 <th>Pools</th>                
                 <th>DC</th>
                 <th>Nodes</th>
+                <th>Last Deploy</th>
             </tr>
         </thead>
         <tbody>
@@ -76,6 +77,13 @@ export class HomeLogic {
                     <td>${environment.pools || "-"}</td>
                     <td>${environment.datacenters || "-"}</td>
                     <td>${environment.nodes || "-"}</td>
+                    <td>
+                        ${environment.deploy_status ?
+            `<i class="fa fa-${environment.deploy_status.status ? "check" : "times"}"></i>
+                            ${environment.deploy_status.ts} (${environment.deploy_status.duration})`
+            : "-"
+        }
+</td>
                 </tr>
             `).join("")}
         </tbody>

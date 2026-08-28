@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 # Gufo Tower modules
-from gufo.tower.utils import get_size, humanize_size
+from gufo.tower.utils import get_size, humanize_duration, humanize_size
 
 
 @pytest.mark.parametrize(
@@ -102,3 +102,25 @@ def test_get_size_directory_ignores_symlink(tmp_path: Path):
     expected = sum(p.stat().st_blocks * 512 for p in (path, file))
 
     assert get_size(path) == expected
+
+
+@pytest.mark.parametrize(
+    ("duration", "expected"),
+    [
+        (0, "0s"),
+        (1, "1s"),
+        (59, "59s"),
+        (60, "1m 0s"),
+        (61, "1m 1s"),
+        (3599, "59m 59s"),
+        (3600, "1h 0m"),
+        (3601, "1h 0m"),
+        (3661, "1h 1m"),
+        (86399, "23h 59m"),
+        (86400, "1d 0h"),
+        (90061, "1d 1h"),
+    ],
+)
+def test_humanize_duration(duration: int, expected: str) -> None:
+    """Test humanize_duration."""
+    assert humanize_duration(duration) == expected

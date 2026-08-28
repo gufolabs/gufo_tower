@@ -47,3 +47,30 @@ def get_size(path: Path) -> int:
         for p in (path, *path.rglob("*"))
         if not p.is_symlink()
     )
+
+
+def humanize_duration(duration: float) -> str:
+    """Convert a duration in seconds to a human-readable string.
+
+    Durations shorter than one minute are represented in seconds.
+    Durations shorter than one hour are represented in minutes and seconds.
+    Durations shorter than one day are represented in hours and minutes.
+    Longer durations are represented in days and hours.
+
+    Args:
+        duration: Duration in seconds.
+
+    Returns:
+        A human-readable duration string.
+    """
+    seconds = int(duration)
+    if seconds < 60:
+        return f"{seconds}s"
+    minutes, seconds = divmod(seconds, 60)
+    if minutes < 60:
+        return f"{minutes}m {seconds}s"
+    hours, minutes = divmod(minutes, 60)
+    if hours < 24:
+        return f"{hours}h {minutes}m"
+    days, hours = divmod(hours, 24)
+    return f"{days}d {hours}h"
