@@ -27,6 +27,7 @@ cache/
 deploy_keys/
 logs/
     jobs/
+        <environment id>
 repo/
     <hash>/
 ```
@@ -52,6 +53,8 @@ Where:
 * `logs/` — log files.
 
   * `jobs/` — deployment job logs.
+  
+    * `<environment id>` - environment id.
 
 * `repo/` — stores local Git repository clones.
 

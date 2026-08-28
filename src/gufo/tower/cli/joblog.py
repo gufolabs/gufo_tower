@@ -11,6 +11,7 @@ import os
 import sys
 import time
 from argparse import ArgumentParser
+from typing import NoReturn
 
 # Tower modules
 from ..config import config
@@ -74,7 +75,7 @@ def get_default_env():
     return env
 
 
-def die(msg):
+def die(msg) -> NoReturn:
     print(msg + "\n")
     sys.exit(1)
 
@@ -104,10 +105,11 @@ def joblog_list(args):
 def joblog_view(args):
     try:
         joblog = JobLog.get(start_ts=args.start)
-        print(joblog.log)
-        print_stat(joblog)
     except JobLog.DoesNotExist:
         die(f"Invalid Joblog Start Ts: '{args.env}'")
+    log = joblog.get_log()
+    print(log if log else "No data")
+    print_stat(joblog)
 
 
 def joblog_clean(args):
