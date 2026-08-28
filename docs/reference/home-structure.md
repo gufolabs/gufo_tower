@@ -19,7 +19,7 @@ db/
     config.db
     config.XXXXXX.db.xz
 cache/
-    <environment>/
+    <environment id>/
         playbooks/
         additional_roles/
         data/
