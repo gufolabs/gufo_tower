@@ -231,7 +231,7 @@ class DeployHandler(BaseHandler):
         self.play_log.append(b"\nConnection terminated\n")
         with db.atomic():
             self.joblog.complete_ts = datetime.datetime.now()
-            self.joblog.log = "".join(self.play_log)
+            self.joblog.log = (b"".join(self.play_log)).decode()
             self.joblog.save()
 
     def on_data(self, data: bytes) -> None:
