@@ -52,6 +52,15 @@ The URL may use the following schemes:
 | `git+https://` | Git repository accessed over HTTPS using Git/Pip-style URL syntax. |
 | `git+ssh://` | Git repository accessed using SSH using Git/Pip-style URL syntax. |
 
+## SSH Key Type
+
+Defines the type of SSH key generated for the Environment and used for deployment.
+
+The following key types are supported:
+
+- **ED25519**
+- **RSA**
+
 ## Environment Form Toolbar
 
 The toolbar provides actions for managing the current Environment.
@@ -63,3 +72,4 @@ The toolbar provides actions for managing the current Environment.
 | **Back** | Return to the [Environment List](list.md). |
 | **Save** | Save changes to the current Environment. |
 | **Delete** | Delete the current Environment. |
+| **Copy SSH Key** | Copies the public SSH key for the Environment to the clipboard. The copied public key can be added to the `~/.ssh/authorized_keys` file on NOC nodes to allow Gufo Tower to access the nodes during deployment. |

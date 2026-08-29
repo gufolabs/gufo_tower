@@ -130,7 +130,7 @@ class DeployHandler(BaseHandler):
         # Stream output
         self.write(f"Starting job #{self._job_log.id}\n\n")
         # Run playbook
-        bin_path = Path(sys.argv[0]).resolve().parent
+        bin_path = Path(sys.exec_prefix) / "bin"
         if os.path.exists("/.dockerenv"):
             ansible_ssh_cp = os.path.join(
                 "/root/.ansible/cp/ansible-ssh-%%r-%%h-%%r"
