@@ -8,6 +8,7 @@ import { API } from "../../rpc.js";
 import { Tower } from "../../lib.js";
 import { Route, router } from "../../route.js";
 import { current_env } from "../../state.js";
+import { copyToClipboard } from "../../clipboard.js";
 
 export class EnvironmentFormLogic {
     on_route_new = () => {
@@ -21,7 +22,6 @@ export class EnvironmentFormLogic {
             config_order: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
             name: "NOC"
         });
-        $$("pulled_label").setHTML("");
     };
 
     on_route_item = async (env_id) => {
@@ -29,16 +29,9 @@ export class EnvironmentFormLogic {
             const data = await API.environment.get_item({
                 id: parseInt(env_id, 10)
             });
+            current_env.setState(data);
             $$("environment_form").setValues(data);
             $$("environment_form_panel").show();
-
-            const result = await API.pull.is_pulled(data.id);
-
-            if (result) {
-                $$("pulled_label").setHTML("...");
-            } else {
-                $$("pulled_label").setHTML("");
-            }
         } catch {
             Tower.msg.failed("Failed to get data");
         }
@@ -103,6 +96,21 @@ export class EnvironmentFormLogic {
             this.to_list();
         }
     };
+
+    on_copy_key = async () => {
+        let key;
+        try {
+            key = await API.environment.get_ssh_public_key(current_env.state.id);
+        } catch {
+            Tower.msg.failed("Failed to get key");
+            return;
+        }
+        if (key === "") {
+            Tower.msg.failed("No key configured");
+            return;
+        }
+        await copyToClipboard(key);
+    }
 };
 
 export const environment_form_logic = new EnvironmentFormLogic();

@@ -76,10 +76,6 @@ class Config:
         return self.log_dir / "jobs"
 
     @property
-    def deploy_keys_dir(self) -> Path:
-        return self.home / "deploy_keys"
-
-    @property
     def in_docker(self) -> bool:
         return Path("/.dockerenv").exists()
 
@@ -111,7 +107,6 @@ class Config:
         self._ensure_dir(self.db_dir)
         self._ensure_dir(self.log_dir)
         self._ensure_dir(self.jobs_log_dir)
-        self._ensure_dir(self.deploy_keys_dir)
         self._move_old_database()
 
     def _move_old_database(self) -> None:

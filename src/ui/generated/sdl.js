@@ -22,6 +22,7 @@ export const SDL = {
         "delete_item",
         "get_item",
         "get_items",
+        "get_ssh_public_key",
         "lookup_items",
         "update_item"
     ],

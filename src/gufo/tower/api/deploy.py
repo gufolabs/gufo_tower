@@ -22,11 +22,9 @@ import tornado.web
 
 # Gufo Tower modules
 from .. import __version__
-from ..core.ssh import build_ssh_keys
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.joblog import JobLog
-from ..models.pool import Pool
 from .base import BaseHandler
 
 logger = logging.getLogger(__name__)
@@ -131,13 +129,8 @@ class DeployHandler(BaseHandler):
         self.set_header("X-Accel-Buffering", "no")
         # Stream output
         self.write(f"Starting job #{self._job_log.id}\n\n")
-        # Generate ssh keys
-        for pool in Pool.select().where(Pool.environment == self._env):
-            build_ssh_keys(
-                f"{pool.name}@noc", self._env.ssh_keys_path / pool.name
-            )
         # Run playbook
-        bin_path = Path(sys.argv[0]).resolve().parent
+        bin_path = Path(sys.exec_prefix) / "bin"
         if os.path.exists("/.dockerenv"):
             ansible_ssh_cp = os.path.join(
                 "/root/.ansible/cp/ansible-ssh-%%r-%%h-%%r"

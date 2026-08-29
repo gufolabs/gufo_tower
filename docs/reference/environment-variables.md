@@ -11,4 +11,3 @@ Tower can be configured using the following environment variables.
 | `TOWER_SERIAL_RESTART_NOC` | `False` | Restart NOC after installation using `./noc ctl serialrestart all`.                                                                                              |
 | `TOWER_VERSION`            | —       | Internal variable used to verify that Tower generates the inventory correctly.                                                                                   |
 | `TOWER_DB_PATH`            | —       | Internal variable specifying the path to the Tower `config.db` file.                                                                                             |
-| `TOWER_SSH_KEY_PATH`       | —       | Internal variable specifying the path and filename of the SSH key. Normally does not need to be changed.                                                         |

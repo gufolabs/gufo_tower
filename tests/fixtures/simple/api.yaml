@@ -14,6 +14,7 @@ steps:
           playbook_link: git+https://github.com/gufolabs/noc@stable
           install_method: git
           web_host: simple.test.example.com
+          deploy_key_type: ed25519
   - name: environment - lookup items
     method: environment.lookup_items
     params:
