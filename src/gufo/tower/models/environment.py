@@ -12,7 +12,6 @@ import copy
 import hashlib
 import json
 import logging
-import os
 import shutil
 from collections import defaultdict
 from pathlib import Path
@@ -420,17 +419,6 @@ class Environment(Model):
         return self.data_path / "src_dist"
 
     @property
-    def deploy_keys(self) -> Path | None:
-        if path := os.getenv("TOWER_SSH_KEY_PATH"):
-            return Path(path)
-        if config.in_docker:
-            return config.deploy_keys_dir / "id_rsa"
-        path = Path.home() / ".ssh" / "id_rsa"
-        if path.exists():
-            return path
-        return None
-
-    @property
     def ssh_keys_path(self) -> Path:
         return self.cache_path / "ssh"
 
@@ -493,7 +481,7 @@ class Environment(Model):
             Path to the SSH private key file.
         """
         ssh_key = BaseKey.get(self.deploy_key_type)
-        return self.ssh_keys_path / ssh_key.filename
+        return self.ssh_keys_path / "deploy" / ssh_key.filename
 
     @property
     def ssh_public_key_path(self) -> Path:

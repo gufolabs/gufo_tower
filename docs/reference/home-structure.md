@@ -24,7 +24,7 @@ cache/
         additional_roles/
         data/
         ssh/
-deploy_keys/
+            deploy/
 logs/
     jobs/
         <environment id>
@@ -48,7 +48,7 @@ Where:
     * `data/` — cached runtime data.
     * `ssh/` — cached SSH-related data.
 
-* `deploy_keys/` — optional SSH keys used for deployment.
+      * `deploy/` - SSH keys used for deployment.
 
 * `logs/` — log files.
 
