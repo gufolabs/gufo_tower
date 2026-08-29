@@ -24,7 +24,7 @@ class LoginShotter(BaseShotter):
 
     async def make_shots(self, page: Page) -> None:
         await self.open_page(page)
-        await page.locator("#user").fill("admin")
-        await page.locator("#password").fill("admin")
+        await page.locator('[view_id="user"] input').fill("admin")
+        await page.locator('[view_id="password"] input').fill("admin")
         view = page.locator('[view_id="login"]')
         await self.screenshot(view, "login")

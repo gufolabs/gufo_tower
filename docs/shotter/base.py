@@ -441,6 +441,7 @@ class BaseShotter(ABC):
         try:
             for s_cls in loader:
                 shotter = loader[s_cls]()
+                shotter.logger.info("Running %s", s_cls)
                 async with shotter.with_page() as page:
                     with shotter.with_fixture():
                         await shotter.make_shots(page)

@@ -42,6 +42,7 @@ export const login_form = {
                                     view: "text",
                                     type: "password",
                                     name: "password",
+                                    id: "password",
                                     label: "Password",
                                     placeholder: "Password",
                                     required: true,
