@@ -64,7 +64,7 @@ class Environment(Model):
     )
     install_method = CharField(default="git")
     deploy_key_type = CharField(
-        default="ed25519", choices=[("ed25515", "ed25519"), ("rsa", "rsa")]
+        default="ed25519", choices=[("ed25519", "ed25519"), ("rsa", "rsa")]
     )
 
     def list_item(self):
