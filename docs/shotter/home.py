@@ -30,6 +30,7 @@ class HomeShotter(BaseShotter):
 
     async def make_shots(self, page: Page) -> None:
         await self.open_page(page)
+        await page.locator("#tower-summary").wait_for()
         # Grab desktop
         await self.screenshot(page, "home")
         # Env summary
