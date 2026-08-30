@@ -8,6 +8,7 @@ import { API } from "../../rpc.js";
 import { Tower } from "../../lib.js";
 import { Route, router } from "../../route.js";
 import { current_env } from "../../state.js";
+import { copyToClipboard } from "../../clipboard.js";
 
 export class EnvironmentListLogic {
     PULL_CHECK_INTERVAL = 1000;
@@ -29,6 +30,7 @@ export class EnvironmentListLogic {
     on_select = () => {
         const data = $$("environment_list").getSelectedItem();
         current_env.setState(data);
+        $$("environment_copy_ssh_button").enable();
         $$("environment_inventory_button").enable();
         $$("environment_pull_button").enable();
         $$("environment_deploy_button").enable();
@@ -84,6 +86,21 @@ export class EnvironmentListLogic {
             $$("environment_list").hideProgress();
             Tower.msg.failed("Cannot pull repo");
         }
+    };
+
+    on_copy_key = async () => {
+        let key;
+        try {
+            key = await API.environment.get_ssh_public_key(current_env.state.id);
+        } catch {
+            Tower.msg.failed("Failed to get key");
+            return;
+        }
+        if (key === "") {
+            Tower.msg.failed("No key configured");
+            return;
+        }
+        await copyToClipboard(key);
     };
 };
 

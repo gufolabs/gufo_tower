@@ -72,4 +72,3 @@ The toolbar provides actions for managing the current Environment.
 | **Back** | Return to the [Environment List](list.md). |
 | **Save** | Save changes to the current Environment. |
 | **Delete** | Delete the current Environment. |
-| **Copy SSH Key** | Copies the public SSH key for the Environment to the clipboard. The copied public key can be added to the `~/.ssh/authorized_keys` file on NOC nodes to allow Gufo Tower to access the nodes during deployment. |

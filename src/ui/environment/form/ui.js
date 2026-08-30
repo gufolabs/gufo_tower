@@ -38,14 +38,6 @@ export const environment_form = {
                     click: environment_form_logic.on_delete
                 },
                 {
-                    view: "button",
-                    type: "icon",
-                    icon: "copy",
-                    label: "Copy SSH key",
-                    autowidth: true,
-                    click: () => { environment_form_logic.on_copy_key(); }
-                },
-                {
                     view: "spacer"
                 },
                 {
