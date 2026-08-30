@@ -32,6 +32,16 @@ export const environment_list = {
                 },
                 {
                     view: "button",
+                    id: "environment_copy_ssh_button",
+                    type: "icon",
+                    icon: "copy",
+                    label: "Copy SSH key",
+                    autowidth: true,
+                    disabled: true,
+                    click: () => { environment_list_logic.on_copy_key(); }
+                },
+                {
+                    view: "button",
                     id: "environment_inventory_button",
                     type: "icon",
                     icon: "search",

@@ -8,7 +8,6 @@ import { API } from "../../rpc.js";
 import { Tower } from "../../lib.js";
 import { Route, router } from "../../route.js";
 import { current_env } from "../../state.js";
-import { copyToClipboard } from "../../clipboard.js";
 
 export class EnvironmentFormLogic {
     on_route_new = () => {
@@ -96,21 +95,6 @@ export class EnvironmentFormLogic {
             this.to_list();
         }
     };
-
-    on_copy_key = async () => {
-        let key;
-        try {
-            key = await API.environment.get_ssh_public_key(current_env.state.id);
-        } catch {
-            Tower.msg.failed("Failed to get key");
-            return;
-        }
-        if (key === "") {
-            Tower.msg.failed("No key configured");
-            return;
-        }
-        await copyToClipboard(key);
-    }
 };
 
 export const environment_form_logic = new EnvironmentFormLogic();

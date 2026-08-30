@@ -28,6 +28,7 @@ The toolbar contains the following buttons:
 | Button | Description |
 | --- | --- |
 | **Create New** | Creates a new Environment. |
+| **Copy SSH Key** | Copies the public SSH key for the Environment to the clipboard. The copied public key can be added to the `~/.ssh/authorized_keys` file on NOC nodes to allow Gufo Tower to access the nodes during deployment. |
 | **Inventory** | Displays the Ansible inventory file for the selected Environment. Available only when an Environment is selected. See [Show Inventory](show-inventory.md) for details. |
 | **Pull** | Pulls the playbooks for the selected Environment. Available only when an Environment is selected. See [Pull](pull.md) for details. |
 | **Deploy** | Runs the deployment for the selected Environment. Available only when an Environment is selected. See [Deploy](deploy.md) for details. |
