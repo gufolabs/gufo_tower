@@ -84,7 +84,6 @@ export const node_form = {
                     view: "select",
                     name: "datacenter",
                     label: "Datacenter",
-                    options: "rpc->datacenter:lookup",
                     required: true
                 },
                 {
@@ -102,7 +101,6 @@ export const node_form = {
                                 view: "select",
                                 name: "node_type",
                                 label: "Node Type",
-                                options: "rpc->nodetype:lookup",
                                 required: true
                             },
                             {
