@@ -11,7 +11,6 @@ import logging
 import os
 import re
 import subprocess
-import sys
 from pathlib import Path
 from typing import BinaryIO
 
@@ -21,7 +20,7 @@ import tornado.process
 import tornado.web
 
 # Gufo Tower modules
-from .. import __version__
+from ..core.ansible import get_bin_path, to_ansible_environment
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.joblog import JobLog
@@ -130,32 +129,8 @@ class DeployHandler(BaseHandler):
         # Stream output
         self.write(f"Starting job #{self._job_log.id}\n\n")
         # Run playbook
-        bin_path = Path(sys.exec_prefix) / "bin"
-        if os.path.exists("/.dockerenv"):
-            ansible_ssh_cp = os.path.join(
-                "/root/.ansible/cp/ansible-ssh-%%r-%%h-%%r"
-            )
-        else:
-            ansible_ssh_cp = os.path.join("/tmp/tower-%%r-%%h-%%r")
-        env.update(
-            {
-                "NOC_ENV": str(self._env.name),
-                "ANSIBLE_SSH_CONTROL_PATH": ansible_ssh_cp,
-                "ANSIBLE_SSH_PIPELINING": "1",
-                "ANSIBLE_REMOTE_TEMP": "/tmp/${USER}/ansible",
-                "ANSIBLE_HOST_KEY_CHECKING": "False",
-                "ANSIBLE_STDOUT_CALLBACK": "debug",
-                "ANSIBLE_ROLES_PATH": ":".join(
-                    [
-                        str(self._env.roles_dir),
-                        str(self._env.playbook_path / "system_roles"),
-                        str(self._env.playbook_path / "noc_roles"),
-                    ]
-                ),
-                "PYTHONUNBUFFERED": "1",
-                "TOWER_VERSION": __version__,
-            }
-        )
+        bin_path = get_bin_path()
+        env.update(to_ansible_environment(self._env))
         command = [
             str(bin_path / "ansible-playbook"),
             "-i",

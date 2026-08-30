@@ -59,6 +59,8 @@ export class HomeLogic {
                 <th>Pools</th>                
                 <th>DC</th>
                 <th>Nodes</th>
+                <th>vCPU</th>
+                <th>RAM(MB)</th>
                 <th>Last Deploy</th>
             </tr>
         </thead>
@@ -77,6 +79,8 @@ export class HomeLogic {
                     <td>${environment.pools || "-"}</td>
                     <td>${environment.datacenters || "-"}</td>
                     <td>${environment.nodes || "-"}</td>
+                    <td>${environment.total_vcpu || "-"}</td>
+                    <td>${environment.total_memory_mb || "-"}</td>
                     <td>
                         ${environment.deploy_status ?
             `<i class="fa fa-${environment.deploy_status.status ? "check" : "times"}"></i>

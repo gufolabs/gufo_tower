@@ -6,7 +6,14 @@
 # ----------------------------------------------------------------------
 
 # Third-party modules
-from peewee import BooleanField, CharField, ForeignKeyField, Model, TextField
+from peewee import (
+    BooleanField,
+    CharField,
+    ForeignKeyField,
+    IntegerField,
+    Model,
+    TextField,
+)
 
 from .datacenter import Datacenter
 
@@ -32,8 +39,22 @@ class Node(Model):
     address = CharField()
     login_as = CharField()
     is_enabled = BooleanField(default=True)
+    # Inventory information
+    arch = CharField(null=True)
+    cpu = CharField(null=True)
+    vcpu = IntegerField(null=True)
+    memory_mb = IntegerField(null=True)
+    os_brand = CharField(null=True)
+    os_version = CharField(null=True)
+    virt = CharField(null=True)
 
     def list_item(self):
+        if self.os_brand and self.os_version:
+            os_name = f"{self.os_brand} {self.os_version}"
+        elif self.os_brand:
+            os_name = self.os_brand
+        else:
+            os_name = None
         return {
             "id": str(self.id),
             "environment": self.environment.reference_item(),
@@ -44,6 +65,15 @@ class Node(Model):
             "description": self.description,
             "address": self.address,
             "login_as": self.login_as,
+            # Inventory info
+            "arch": self.arch,
+            "cpu": self.cpu,
+            "vcpu": self.vcpu,
+            "memory_mb": self.memory_mb,
+            "os_brand": self.os_brand,
+            "os_version": self.os_version,
+            "os": os_name,
+            "virt": self.virt,
         }
 
     def get_vars(self):

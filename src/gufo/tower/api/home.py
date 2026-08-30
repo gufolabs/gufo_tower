@@ -69,6 +69,8 @@ class EnvironmentData(TypedDict):
     datacenters: int
     nodes: int
     tag: str
+    total_vcpu: int | None
+    total_memory_mb: int | None
     deploy_status: DeployData | None
 
 
@@ -118,6 +120,16 @@ class HomeAPI(API):
             .count()
         )
         nodes = Node.select().where(Node.environment == env).count()
+        total_vcpu = (
+            Node.select(peewee.fn.COALESCE(peewee.fn.SUM(Node.vcpu), 0))
+            .where(Node.environment == env)
+            .scalar()
+        )
+        total_memory_mb = (
+            Node.select(peewee.fn.COALESCE(peewee.fn.SUM(Node.memory_mb), 0))
+            .where(Node.environment == env)
+            .scalar()
+        )
         _, _, tag = env.playbook_link.partition("@")
         return {
             "id": env.id,
@@ -130,6 +142,8 @@ class HomeAPI(API):
             "datacenters": datacenters,
             "nodes": nodes,
             "tag": tag or "-",
+            "total_vcpu": total_vcpu,
+            "total_memory_mb": total_memory_mb,
             "deploy_status": deploy_status.to_data()
             if deploy_status
             else None,
