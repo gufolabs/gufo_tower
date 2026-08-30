@@ -24,6 +24,9 @@ The table contains the following columns:
 | **Pools** | Total number of pools in the environment. Refer to the [Pool](../pool/index.md) section for details. |
 | **DC** | Total number of datacenters occupied by the environment. Refer to the [Datacenter](../datacenter/index.md) section for details. |
 | **Nodes** | Total number of nodes running the environment. Refer to the [Node](../node/index.md) section for details. |
+| **vCPU** | Total number of virtual CPUs allocated to the Environment. |
+| **RAM (MB)** | Total amount of RAM, in megabytes, allocated to the Environment. |
+| **Last Deploy** | Time and status of the most recent deployment of the Environment. |
 
 ## Gufo Tower Summary
 

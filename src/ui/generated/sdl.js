@@ -41,7 +41,7 @@ export const SDL = {
         "get_item",
         "get_items",
         "lookup_items",
-        "prepare_node",
+        "update_facts",
         "update_item"
     ],
     "nodetype": [

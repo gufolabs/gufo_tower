@@ -32,6 +32,14 @@ export const node_list = {
                     click: () => { navigation.navigate(`${location.pathname}/new`); }
                 },
                 {
+                    view: "button",
+                    type: "icon",
+                    icon: "database",
+                    autowidth: true,
+                    label: "Get inventory",
+                    click: () => { node_list_logic.on_inventory(); }
+                },
+                {
                     view: "spacer"
                 },
                 {
@@ -65,7 +73,7 @@ export const node_list = {
                 {
                     id: "node_type",
                     header: "Type",
-                    width: 100,
+                    width: 70,
                     format: Tower.format.lookup
                 },
                 {
@@ -78,6 +86,33 @@ export const node_list = {
                     id: "address",
                     header: "Address",
                     width: 100
+                },
+                {
+                    id: "os",
+                    header: "OS",
+                    width: 150
+                },
+                {
+                    id: "arch",
+                    header: "Arch",
+                    width: 70
+                },
+                {
+                    id: "cpu",
+                    header: "CPU",
+                    width: 120
+                },
+                {
+                    id: "vcpu",
+                    header: "vCPU",
+                    width: 50,
+                    css: { "text-align": "right" }
+                },
+                {
+                    id: "memory_mb",
+                    header: "RAM(MB)",
+                    width: 70,
+                    css: { "text-align": "right" }
                 },
                 {
                     id: "description",
