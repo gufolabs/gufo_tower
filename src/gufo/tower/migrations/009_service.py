@@ -41,12 +41,12 @@ def migrate(migrator: Migrator) -> None:
         loglevel = CharField(
             default="info",
             choices=[
-                "notset",
-                "debug",
-                "info",
-                "warning",
-                "error",
-                "critical",
+                ("notset", "notset"),
+                ("debug", "debug"),
+                ("info", "info"),
+                ("warning", "warning"),
+                ("error", "error"),
+                ("critical", "critical"),
             ],
         )
 
