@@ -399,22 +399,16 @@ class Environment(Model):
         return paths
 
     @property
-    def repo_hash(self):
-        return base64.b32encode(
-            hashlib.sha1(self.playbook_link.encode("utf-8")).digest()
-        ).decode("utf-8")[:6]
-
-    @property
     def repo_path(self) -> Path:
-        return config.home / "repo" / self.repo_hash
+        return self.cache_path / "repo"
 
     @property
     def data_path(self) -> Path:
         return self.cache_path / "data"
 
     @property
-    def src_path(self) -> Path:
-        return self.data_path / "src_dist"
+    def src_dist_path(self) -> Path:
+        return self.cache_path / "src_dist"
 
     @property
     def ssh_keys_path(self) -> Path:
@@ -502,6 +496,7 @@ def on_save_environment(
 ) -> None:
     # Ensure cache directory
     instance.cache_path.mkdir(parents=True, exist_ok=True)
+    instance.src_dist_path.mkdir(parents=True, exist_ok=True)
     # Ensure SSH keys
     ssh_key = BaseKey.get(instance.deploy_key_type)
     ssh_key.ensure(instance.ssh_keys_path, f"gufo-tower@{instance.name}")

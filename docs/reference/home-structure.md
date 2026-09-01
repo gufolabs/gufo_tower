@@ -46,6 +46,8 @@ Where:
     * `playbooks/` — cached playbooks.
     * `additional_roles/` — cached Ansible roles installed as additional roles.
     * `data/` — cached runtime data.
+    * `repo/` - local Git repository clone.
+    * `src_dist/` - cached distribution files downloaded during deployment.
     * `ssh/` — cached SSH-related data.
 
       * `deploy/` - SSH keys used for deployment.
@@ -56,6 +58,3 @@ Where:
   
     * `<environment id>` - environment id.
 
-* `repo/` — stores local Git repository clones.
-
-  * `<hash>/` — a repository clone, where `<hash>` is calculated from the repository URL.
