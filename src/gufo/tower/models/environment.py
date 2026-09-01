@@ -6,10 +6,8 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-import base64
 import contextlib
 import copy
-import hashlib
 import json
 import logging
 import shutil
