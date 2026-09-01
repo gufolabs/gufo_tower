@@ -7,7 +7,6 @@
 
 # Python modules
 import logging
-import re
 import shutil
 from pathlib import Path
 
@@ -23,15 +22,13 @@ from .repospec import RepoSpec
 
 logger = logging.getLogger(__name__)
 
-SHA_RE = re.compile(r"^[0-9a-fA-F]{7,64}$")
-
 
 def resolve_refspecs(url: str, revision: str | None) -> str | None:
     """Resolve a revision to remote Git refspecs.
 
     Args:
         url: Repository URL.
-        revision: Branch, tag, or commit to fetch.
+        revision: Branch or tag to fetch.
 
     Returns:
         List of Git refspecs, or None if no revision is specified.
@@ -48,8 +45,6 @@ def resolve_refspecs(url: str, revision: str | None) -> str | None:
     tag = f"refs/tags/{revision}".encode()
     if tag in refs:
         return f"{tag.decode()}:{tag.decode()}"
-    if SHA_RE.fullmatch(revision):
-        return revision
     raise KeyError(revision)
 
 
