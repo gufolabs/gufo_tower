@@ -23,6 +23,31 @@ from .repospec import RepoSpec
 logger = logging.getLogger(__name__)
 
 
+def resolve_refspecs(url: str, revision: str | None) -> str | None:
+    """Resolve a revision to remote Git refspecs.
+
+    Args:
+        url: Repository URL.
+        revision: Branch or tag to fetch.
+
+    Returns:
+        List of Git refspecs, or None if no revision is specified.
+
+    Raises:
+        KeyError: if revision is invalid or not found.
+    """
+    if revision is None:
+        return None
+    refs = porcelain.ls_remote(url).refs
+    branch = f"refs/heads/{revision}".encode()
+    if branch in refs:
+        return f"{branch.decode()}:{branch.decode()}"
+    tag = f"refs/tags/{revision}".encode()
+    if tag in refs:
+        return f"{tag.decode()}:{tag.decode()}"
+    raise KeyError(revision)
+
+
 def pull(link: str, path: str | Path) -> None:
     """Clone or update a git repository.
 
@@ -35,37 +60,50 @@ def pull(link: str, path: str | Path) -> None:
     """
     spec = RepoSpec.from_url(link)
     path = Path(path)
-
     logger.debug(
         "Pull repo: %s, revision: %s, path: %s",
         spec.url,
         spec.revision,
         path,
     )
-
     try:
         # Ensure repo is exists
         path.mkdir(parents=True, exist_ok=True)
-        # Pull
-        if (path / ".git").is_dir():
-            repo = Repo(path)
-            porcelain.fetch(repo, spec.url, depth=1)
-        else:
+        # Check repo
+        repo = Repo(path) if (path / ".git").is_dir() else None
+        if (
+            repo is None
+            or repo.get_config().get(("remote", "origin"), "url")
+            != spec.url.encode()
+        ):
             shutil.rmtree(path, ignore_errors=True)
             porcelain.clone(
-                source=spec.url, target=path, depth=1, branch=spec.revision
+                source=spec.url,
+                target=path,
+                depth=1,
+                branch=spec.revision,
             )
-            repo = Repo(path)
+            return
+        result = porcelain.fetch(
+            repo,
+            spec.url,
+            depth=1,
+            force=True,
+        )
+        if spec.revision is not None:
+            refspec = resolve_refspecs(spec.url, spec.revision)
+            if refspec is None:
+                raise KeyError(spec.revision)
+            source, _ = refspec.split(":", 1)
+            revision = result.refs[source.encode()]
+            porcelain.checkout(repo, revision, force=True)
+    except KeyError as e:
+        msg = f"Invalid revision: {spec.revision}"
+        raise RuntimeError(msg) from e
     except BaseException as e:
         err.process()
         msg = f"failed to fetch repo: {e}"
         raise RuntimeError(msg) from e
-    if spec.revision is not None:
-        try:
-            porcelain.checkout(repo, spec.revision, force=True)
-        except KeyError as e:
-            msg = f"Invalid tag: {spec.revision}"
-            raise RuntimeError(msg) from e
 
 
 def prepare_env(env: Environment) -> None:
