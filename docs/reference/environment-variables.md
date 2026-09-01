@@ -10,4 +10,5 @@ Tower can be configured using the following environment variables.
 | `TOWER_STOP_NOC`           | `True`  | Stop NOC during deployment. Disabling this may reduce downtime on heavily loaded installations where deployment time is critical.                                |
 | `TOWER_SERIAL_RESTART_NOC` | `False` | Restart NOC after installation using `./noc ctl serialrestart all`.                                                                                              |
 | `TOWER_VERSION`            | —       | Internal variable used to verify that Tower generates the inventory correctly.                                                                                   |
-| `TOWER_DB_PATH`            | —       | Internal variable specifying the path to the Tower `config.db` file.                                                                                             |
+| `TOWER_HOME` | - | Path to the Tower home directory. See [Home Directory Structure](home-structure.md) for details. |
+| `TOWER_CACHE` | - | Path to the cache directory for the current environment. See [Home Directory Structure](home-structure.md) for details.|

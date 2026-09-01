@@ -20,6 +20,7 @@ from typing import Any
 
 # Gufo Tower modules
 from .. import __version__
+from ..config import config
 from ..models.environment import Environment
 from ..models.node import Node
 
@@ -151,6 +152,8 @@ def to_ansible_environment(env: Environment) -> dict[str, Any]:
         ),
         "PYTHONUNBUFFERED": "1",
         "TOWER_VERSION": __version__,
+        "TOWER_HOME": str(config.home),
+        "TOWER_CACHE": str(env.cache_path),
     }
 
 
