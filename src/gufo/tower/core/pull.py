@@ -72,6 +72,9 @@ def pull(link: str, path: str | Path) -> None:
         path,
     )
     try:
+        # Ensure repo is exists
+        path.mkdir(parents=True, exist_ok=True)
+        # Check repo
         repo = Repo(path) if (path / ".git").is_dir() else None
         if (
             repo is None
