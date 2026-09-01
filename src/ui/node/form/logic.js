@@ -24,20 +24,25 @@ export class NodeFormLogic {
                 id: parseInt(node_id, 10)
             });
             await this.load_lookups();
-
-            $$("node_form").setValues(data);
+            const form = $$("node_form");
+            // Filter only form fields
+            const values = { id: data.id };
+            for (const name of Object.keys(form.elements)) {
+                if (name in data) {
+                    values[name] = data[name];
+                }
+            }
+            form.setValues(values);
             $$("node_form_panel").show();
         } catch {
             Tower.msg.failed("Failed to get data");
         }
     };
     load_lookups = async () => {
-        console.log("load lookups");
         const [datacenters, node_types] = await Promise.all([
             API.datacenter.lookup_items({}),
             API.nodetype.lookup_items({}),
         ]);
-        console.log(datacenters, node_types);
         $$("node_form").elements.datacenter.define("options", datacenters.data);
         $$("node_form").elements.node_type.define("options", node_types.data);
     };
