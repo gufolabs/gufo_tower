@@ -15,9 +15,5 @@ include/
 lib/
 share/
 var/
-.gitlab-ci.yml
-.bumpversion.cfg
-.flake8
-venv*/
 .mypy_cache/
 node_modules/
