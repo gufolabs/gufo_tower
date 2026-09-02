@@ -34,6 +34,7 @@ export const node_list = {
                 {
                     view: "button",
                     type: "icon",
+                    id: "nodes_get_inventory_button",
                     icon: "database",
                     autowidth: true,
                     label: "Get inventory",
