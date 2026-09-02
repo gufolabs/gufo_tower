@@ -142,8 +142,8 @@ class Environment(Model):
         for node in nodes:
             r["nodes"]["hosts"] += [node.name]
             hostvars = {
-                "ansible_host": node.get_address(),
-                "ansible_port": node.get_ssh_port(),
+                "ansible_host": node.address,
+                "ansible_port": node.port,
                 "ansible_user": node.login_as,
                 "ansible_python_interpreter": node.node_type.python_interpreter,
                 "ansible_ssh_private_key_file": str(self.ssh_priv_key_path),

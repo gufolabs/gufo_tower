@@ -22,12 +22,17 @@ from .db import db
 from .environment import Environment
 from .nodetype import NodeType
 
+DEFAULT_PORT = 22
+
 
 class Node(Model):
     class Meta:
         database = db
         table_name = "node"
-        indexes = ((("environment", "datacenter", "name"), True),)
+        indexes = (
+            (("environment", "datacenter", "name"), True),
+            (("address", "port"), True),
+        )
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     datacenter = ForeignKeyField(Datacenter, on_delete="RESTRICT")
@@ -37,6 +42,7 @@ class Node(Model):
     # Ansible settings
     # Node address or address:port
     address = CharField()
+    port = IntegerField(default=DEFAULT_PORT)
     login_as = CharField()
     is_enabled = BooleanField(default=True)
     # Inventory information
@@ -64,6 +70,7 @@ class Node(Model):
             "name": self.name,
             "description": self.description,
             "address": self.address,
+            "port": self.port or DEFAULT_PORT,
             "login_as": self.login_as,
             # Inventory info
             "arch": self.arch,
@@ -78,16 +85,6 @@ class Node(Model):
 
     def get_vars(self):
         return self.node_type.get_vars()
-
-    def get_address(self):
-        """Returns node addess."""
-        return str(self.address.split(":")[0])
-
-    def get_ssh_port(self):
-        """Returns node ssh port."""
-        if ":" in self.address:
-            return int(self.address.split(":")[1])
-        return 22
 
     def delete_instance(self, *args, **kwargs):
         from .service import Service
