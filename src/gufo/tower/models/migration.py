@@ -9,7 +9,7 @@
 import datetime
 import importlib
 import logging
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from pkgutil import iter_modules
 
 # Third-party modules
@@ -187,7 +187,7 @@ class Migrator:
         operation.run()
 
     def add_index(
-        self, table: str, columns: list[str], unique: bool = False
+        self, table: str, columns: Sequence[str], unique: bool = False
     ) -> None:
         """Create a database index.
 

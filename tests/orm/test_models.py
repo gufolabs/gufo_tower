@@ -10,7 +10,7 @@ from dataclasses import dataclass
 
 # Third-party modules
 import pytest
-from peewee import ForeignKeyField
+from peewee import ForeignKeyField, Model
 
 # Gufo Tower modules
 from gufo.tower.models.datacenter import Datacenter
@@ -23,7 +23,7 @@ from gufo.tower.models.service import Service
 from gufo.tower.models.settings import Settings
 from gufo.tower.models.user import User
 
-MODELS = [
+MODELS: list[type[Model]] = [
     Datacenter,
     Environment,
     Node,
@@ -51,7 +51,7 @@ class Index:
     @classmethod
     def from_model(
         cls,
-        model,
+        model: type[Model],
         fields: tuple[str, ...],
         unique: bool,
     ) -> "Index":
@@ -66,7 +66,7 @@ class Index:
     @classmethod
     def from_database(
         cls,
-        model,
+        model: type[Model],
         name: str,
         unique: bool,
     ) -> "Index":
@@ -80,7 +80,7 @@ class Index:
         )
 
     @staticmethod
-    def _field_to_column(model, field: str) -> str:
+    def _field_to_column(model: type[Model], field: str) -> str:
         """Convert a model field name to a database column name."""
         if field not in model._meta.fields:
             # Already a database column name.
@@ -89,12 +89,12 @@ class Index:
 
 
 @pytest.fixture(params=MODELS, ids=lambda m: m.__name__)
-def model(request):
+def model(request) -> Model:
     """Return a model class under test."""
     return request.param
 
 
-def get_database_indexes(model) -> set[Index]:
+def get_database_indexes(model: type[Model]) -> set[Index]:
     """Return indexes defined in the database."""
     cursor = model._meta.database.execute_sql(
         f'PRAGMA index_list("{model._meta.table_name}")'
@@ -112,7 +112,7 @@ def get_database_indexes(model) -> set[Index]:
     return indexes
 
 
-def get_model_indexes(model) -> set[Index]:
+def get_model_indexes(model: type[Model]) -> set[Index]:
     """Return indexes declared by the model."""
 
     def to_column(field) -> str:
@@ -156,7 +156,7 @@ def get_model_indexes(model) -> set[Index]:
     return indexes
 
 
-def test_indexes(model) -> None:
+def test_indexes(model: type[Model]) -> None:
     """Check database indexes match model definition."""
     model_indexes = get_model_indexes(model)
     db_indexes = get_database_indexes(model)
