@@ -18,3 +18,4 @@ Use the sections below to learn about the available operations and workflows.
 - [Pools](pool/index.md)
 - [Nodes](node/index.md)
 - [Settings](settings/index.md)
+- [Preparing Nodes](preparing-nodes/index.md)

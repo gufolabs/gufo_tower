@@ -110,6 +110,10 @@ Yes. Tower can be used both to install and to upgrade NOC installations while pr
 
 Yes. Each Tower environment represents a separate NOC installation and can have its own configuration.
 
+### Can Tower configure virtual machines automatically?
+
+Yes. Tower can provide node-specific configuration through cloud-init. A virtual machine can retrieve its configuration from Tower during the first boot and configure itself automatically.
+
 ## Support and License
 
 ### What is the license of Tower?

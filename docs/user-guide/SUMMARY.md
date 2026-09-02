@@ -9,3 +9,4 @@
 * [Pools](pool/)
 * [Nodes](node/)
 * [Settings](settings/index.md)
+* [Preparing Nodes](preparing-nodes/index.md)
