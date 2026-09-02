@@ -203,11 +203,13 @@ def test_same_service_different_node(isolated_fixture) -> None:
         environment=environment,
         datacenter=datacenter,
         name="node1",
+        address="192.168.2.1",
     )
     node2 = create_node(
         environment=environment,
         datacenter=datacenter,
         name="node2",
+        address="192.168.2.2",
     )
 
     service1 = create_service(
@@ -266,12 +268,10 @@ def test_same_service_different_environment(isolated_fixture) -> None:
     datacenter2 = create_datacenter(name="orm-service-datacenter-2")
 
     node1 = create_node(
-        environment=environment1,
-        datacenter=datacenter1,
+        environment=environment1, datacenter=datacenter1, address="192.168.2.1"
     )
     node2 = create_node(
-        environment=environment2,
-        datacenter=datacenter2,
+        environment=environment2, datacenter=datacenter2, address="192.168.3.1"
     )
 
     service1 = create_service(
