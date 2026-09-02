@@ -7,9 +7,10 @@
 
 # Python modules
 import asyncio
+import sys
 
 # Gufo Tower modules
 from .base import BaseShotter
 
 if __name__ == "__main__":
-    asyncio.run(BaseShotter.run())
+    asyncio.run(BaseShotter.run(sys.argv[1:]))
