@@ -429,7 +429,7 @@ class BaseShotter(ABC):
             )
 
     @classmethod
-    async def run(cls) -> None:
+    async def run(cls, shotters: list[str] | None = None) -> None:
         """Run all registered documentation screenshot generators.
 
         Each shotter receives an isolated page and the browser context
@@ -437,9 +437,12 @@ class BaseShotter(ABC):
         cause the run to fail. Generated screenshots are compressed and
         summarized after all shotters complete.
         """
+        shotters = set(shotters or [])
         await cls.start()
         try:
             for s_cls in loader:
+                if shotters and s_cls not in shotters:
+                    continue
                 shotter = loader[s_cls]()
                 shotter.logger.info("Running %s", s_cls)
                 async with shotter.with_page() as page:
