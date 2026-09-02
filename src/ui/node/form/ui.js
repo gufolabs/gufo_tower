@@ -101,7 +101,8 @@ export const node_form = {
                                 view: "select",
                                 name: "node_type",
                                 label: "Node Type",
-                                required: true
+                                required: true,
+                                width: 250
                             },
                             {
                                 view: "text",
@@ -111,7 +112,17 @@ export const node_form = {
                                 bottomLabel: "Will be placed to /etc/hosts",
                                 required: true,
                                 invalidMessage: "Node address have to be valid address.",
-                                validate: Tower.rules.regex(/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/)
+                                validate: Tower.rules.regex(/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/),
+                                width: 270
+                            },
+                            {
+                                view: "text",
+                                name: "port",
+                                label: "Port",
+                                value: 22,
+                                width: 180,
+                                inputmode: "numeric",
+                                validate: Tower.rules.regex(/^\d{1,5}$/)
                             },
                             {
                                 view: "text",

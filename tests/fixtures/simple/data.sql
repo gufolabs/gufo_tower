@@ -57,10 +57,11 @@ INSERT INTO pool VALUES(1,1,'default','Default pool for simple');
 --     "os_brand" VARCHAR(255),
 --     "os_version" VARCHAR(255),
 --     "virt" VARCHAR(255)
+--     "port" INTEGER NOT NULL
 --     FOREIGN KEY ("environment_id") REFERENCES "environment" ("id") ON DELETE RESTRICT,
 --     FOREIGN KEY ("datacenter_id") REFERENCES "datacenter" ("id") ON DELETE RESTRICT
 -- );
-INSERT INTO node VALUES(1,1,1,'n01','testing node','10.0.0.1','ansible',1,1,'x86_64','QEMU Virtual CPU version 2.5+',4,11960,'Debian','12.14','kvm');
+INSERT INTO node VALUES(1,1,1,'n01','testing node','10.0.0.1','ansible',1,1,'x86_64','QEMU Virtual CPU version 2.5+',4,11960,'Debian','12.14','kvm',22);
 -- role
 -- CREATE TABLE IF NOT EXISTS "role" (
 --     "id" INTEGER NOT NULL PRIMARY KEY,

@@ -10,7 +10,6 @@ The list contains the following columns:
 | --- | --- |
 | **Node** | Node name. The name must be unique within the Datacenter. |
 | **Enabled** | Indicates whether the Node is enabled. Deployment is not performed on disabled Nodes. |
-| **Type** | Node type. See [Node Types](node-types.md) for details. |
 | **Datacenter** | Datacenter where the Node is located. See [Datacenters](../datacenter/index.md) for details. |
 | **Address** | Management address of the Node. This address is used by Gufo Tower to access the Node for deployment and for communication between Nodes. |
 | **OS** | Installed operating system. |

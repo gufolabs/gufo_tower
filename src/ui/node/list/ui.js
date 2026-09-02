@@ -71,12 +71,6 @@ export const node_list = {
                     format: Tower.format.check
                 },
                 {
-                    id: "node_type",
-                    header: "Type",
-                    width: 70,
-                    format: Tower.format.lookup
-                },
-                {
                     id: "datacenter",
                     header: "Datacenter",
                     width: 150,

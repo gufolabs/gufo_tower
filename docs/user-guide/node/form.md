@@ -28,11 +28,17 @@ A detailed, human-readable description of the Node.
 
 The type of the Node. See [Node Types](node-types.md) for details.
 
-## API Address
+## Address
 
 The IP address used to access the Node.
 
 This address is written to the `hosts` file and is used by Gufo Tower to access the Node for deployment and for communication between Nodes.
+
+## Port
+
+The SSH port used by Gufo Tower to access the Node for provisioning.
+
+The default port is 22.
 
 ## Login User
 

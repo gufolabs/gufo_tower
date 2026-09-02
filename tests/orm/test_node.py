@@ -174,12 +174,14 @@ def test_same_name_different_datacenter(isolated_fixture) -> None:
         datacenter=datacenter1,
         node_type=node_type,
         name="same",
+        address="192.168.2.1",
     )
     node2 = create_node(
         environment=environment,
         datacenter=datacenter2,
         node_type=node_type,
         name="same",
+        address="192.168.3.1",
     )
 
     assert node1.id != node2.id
@@ -197,12 +199,14 @@ def test_same_name_different_environment(isolated_fixture) -> None:
         datacenter=datacenter,
         node_type=node_type,
         name="same",
+        address="192.168.2.1",
     )
     node2 = create_node(
         environment=environment2,
         datacenter=datacenter,
         node_type=node_type,
         name="same",
+        address="192.168.3.1",
     )
 
     assert node1.id != node2.id
