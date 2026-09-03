@@ -24,6 +24,7 @@ from gufo.err import err
 from tornado.web import StaticFileHandler
 
 # Tower modules
+from gufo.tower.api.cloudinit import CloudInitHandler
 from gufo.tower.api.deploy import DeployHandler
 from gufo.tower.api.jsonrpc import JSONRPCHandler
 from gufo.tower.config import config
@@ -107,6 +108,7 @@ class WebServer:
                     {"path": docs_root, "default_filename": "index.html"},
                 ),
                 (r"^/deploy/([a-zA-Z0-9]+)/$", DeployHandler),
+                (r"^/cloud-init/([a-zA-Z0-9\-]+)$", CloudInitHandler),
                 (
                     r"^/assets/(.*)$",
                     StaticFileHandler,
