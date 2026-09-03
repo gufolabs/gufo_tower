@@ -34,7 +34,6 @@ export class EnvironmentListLogic {
         $$("environment_inventory_button").enable();
         $$("environment_pull_button").enable();
         $$("environment_deploy_button").enable();
-        $$("deployment_options").enable();
     };
 
     on_search = (nv, ov) => {
