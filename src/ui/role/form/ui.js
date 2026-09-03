@@ -99,7 +99,6 @@ export const role_form = {
                     label: "Link",
                     required: true,
                     placeholder: "git+https://github.com/bla/blabla@master",
-                    bottomLabel: "Link repo format is <a href=https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support>written here</a>"
                 },
                 {}
             ]

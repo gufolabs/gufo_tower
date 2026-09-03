@@ -24,7 +24,7 @@ A detailed, human-readable description of the role.
 
 ## Link
 
-The URL of the Git repository from which the role can be downloaded.
+The URL of the Git repository from which the role can be downloaded. See [Git Repository URL Format](../../reference/git-repository-url-format.md) for details.
 
 ## Extra Role Form Toolbar
 
