@@ -19,7 +19,8 @@ export class EnvironmentFormLogic {
             playbook_link: "git+https://github.com/gufolabs/noc@stable",
             installation_name: "Unconfigured installation",
             config_order: "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
-            name: "NOC"
+            name: "NOC",
+            deploy_key_type: "ed25519"
         });
     };
 
