@@ -24,6 +24,7 @@ from gufo.err import err
 from tornado.web import StaticFileHandler
 
 # Tower modules
+from gufo.tower import __version__
 from gufo.tower.api.cloudinit import CloudInitHandler
 from gufo.tower.api.deploy import DeployHandler
 from gufo.tower.api.jsonrpc import JSONRPCHandler
@@ -144,6 +145,7 @@ class WebServer:
         )
         self._parse_args(argv)
         config.setup()
+        self.logger.info("Running Gufo Tower %s", __version__)
         self._migrate()
         self._server = self._get_server()
         self._server.start(self._children)
