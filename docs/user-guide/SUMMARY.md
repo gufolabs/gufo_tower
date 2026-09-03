@@ -8,5 +8,6 @@
 * [Datacenters](datacenter/)
 * [Pools](pool/)
 * [Nodes](node/)
+* [Extra Roles](role/)
 * [Settings](settings/index.md)
 * [Preparing Nodes](preparing-nodes/index.md)

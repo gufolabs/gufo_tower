@@ -38,19 +38,7 @@ Defines the method used to install NOC.
 
 ## Playbook Repo URL
 
-The URL of the Git repository from which the Ansible playbooks will be obtained.
-
-The URL may use the following schemes:
-
-| Scheme | Description |
-| --- | --- |
-| `http://` | Git repository accessed over HTTP. |
-| `https://` | Git repository accessed over HTTPS. |
-| `git://` | Git repository accessed using the Git protocol. |
-| `ssh://` | Git repository accessed using SSH. |
-| `git+http://` | Git repository accessed over HTTP using Git/Pip-style URL syntax. |
-| `git+https://` | Git repository accessed over HTTPS using Git/Pip-style URL syntax. |
-| `git+ssh://` | Git repository accessed using SSH using Git/Pip-style URL syntax. |
+The URL of the Git repository from which the Ansible playbooks will be obtained. See [Git Repository URL Format](../../reference/git-repository-url-format.md) for details.
 
 ## SSH Key Type
 

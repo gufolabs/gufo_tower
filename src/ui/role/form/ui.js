@@ -13,6 +13,7 @@ export const role_form = {
     rows: [
         {
             view: "toolbar",
+            id: "role_form_toolbar",
             cols: [
                 {
                     view: "button",
@@ -39,7 +40,19 @@ export const role_form = {
                     autowidth: true,
                     click: role_form_logic.on_delete
                 },
-                {}
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/role/form/", "_blank");
+                    }
+                }
             ]
         },
         {
@@ -86,7 +99,6 @@ export const role_form = {
                     label: "Link",
                     required: true,
                     placeholder: "git+https://github.com/bla/blabla@master",
-                    bottomLabel: "Link repo format is <a href=https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support>written here</a>"
                 },
                 {}
             ]

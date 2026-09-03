@@ -71,7 +71,7 @@ export const full_navigation = [
     },
     {
         id: "role",
-        value: "Additional services",
+        value: "Extra Roles",
         icon: "archive",
         path: "/environment/:id/role"
     },

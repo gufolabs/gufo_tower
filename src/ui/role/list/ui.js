@@ -12,16 +12,17 @@ export const role_list = {
     rows: [
         {
             view: "toolbar",
+            id: "role_list_toolbar",
             elements: [
-                {
-                    view: "search",
-                    id: "role_search",
-                    placeholder: "Search...",
-                    width: 150,
-                    on: {
-                        "onChange": role_list_logic.on_search
-                    }
-                },
+                // {
+                //     view: "search",
+                //     id: "role_search",
+                //     placeholder: "Search...",
+                //     width: 150,
+                //     on: {
+                //         "onChange": role_list_logic.on_search
+                //     }
+                // },
                 {
                     view: "button",
                     type: "icon",
@@ -29,6 +30,19 @@ export const role_list = {
                     autowidth: true,
                     label: "Create new...",
                     click: () => { navigation.navigate(`${location.pathname}/new`); }
+                },
+                {
+                    view: "spacer"
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/role/list/", "_blank");
+                    }
                 }
             ]
         },
