@@ -17,5 +17,6 @@ Use the sections below to learn about the available operations and workflows.
 - [Datacenters](datacenter/index.md)
 - [Pools](pool/index.md)
 - [Nodes](node/index.md)
+- [Extra Roles](role/index.md)
 - [Settings](settings/index.md)
 - [Preparing Nodes](preparing-nodes/index.md)

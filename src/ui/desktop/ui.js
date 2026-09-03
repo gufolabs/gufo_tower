@@ -105,7 +105,7 @@ export const desktop = {
                 {
                     view: "sidebar",
                     id: "sidebar",
-                    width: 200,
+                    width: 150,
                     select: true,
                     data: short_navigation,
                     on: {
