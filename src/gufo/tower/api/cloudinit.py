@@ -21,6 +21,9 @@ from .base import BaseHandler
 
 logger = logging.getLogger(__name__)
 
+CT_YAML = "text/yaml"
+CT_CLOUD_CONFIG = "text/cloud-config"
+
 
 class CloudInitHandler(BaseHandler):
     """Serve cloud-init configuration for nodes."""
@@ -46,37 +49,50 @@ class CloudInitHandler(BaseHandler):
             return self.serve_meta_data(node)
         if resource == "user-data":
             return self.serve_user_data(node)
+        if resource == "vendor-data":
+            return self.serve_vendor_data(node)
         raise HTTPError(404, "Resource not found")
 
-    def serve_yaml(self, data: dict[str, Any]) -> None:
-        """Serialize data as YAML and send it as the HTTP response."""
-        self.set_header("Content-Type", "text/yaml")
-        self.write(
-            yaml.safe_dump(
+    def _encode_yaml(self, data: dict[str, Any]) -> str:
+        """Serialize a mapping to YAML or return an empty string."""
+        if data:
+            return yaml.safe_dump(
                 data, sort_keys=False, default_flow_style=False, width=4096
             )
-        )
+        return ""
 
     def serve_meta_data(self, node: Node) -> None:
         """Serve cloud-init instance metadata for the node."""
-        return self.serve_yaml(
-            {"instance-id": node.name, "local-hostname": node.name}
+        self.set_header("Content-Type", CT_YAML)
+        self.write(
+            self._encode_yaml(
+                {"instance-id": node.name, "local-hostname": node.name}
+            )
         )
 
     def serve_user_data(self, node: Node) -> None:
         """Serve cloud-init user-data for the node."""
-        return self.serve_yaml(
-            {
-                "users": [
-                    {
-                        "name": node.login_as,
-                        "sudo": "ALL=(ALL) NOPASSWD:ALL",
-                        "groups": "sudo",
-                        "shell": "/bin/bash",
-                        "ssh_authorized_keys": [
-                            node.environment.ssh_public_key_path.read_text().strip()
-                        ],
-                    }
-                ]
-            }
+        self.set_header("Content-Type", CT_CLOUD_CONFIG)
+        self.write(
+            "#cloud-config\n"
+            + self._encode_yaml(
+                {
+                    "users": [
+                        {
+                            "name": node.login_as,
+                            "sudo": "ALL=(ALL) NOPASSWD:ALL",
+                            "groups": "sudo",
+                            "shell": "/bin/bash",
+                            "ssh_authorized_keys": [
+                                node.environment.ssh_deploy_public_key_path.read_text().strip()
+                            ],
+                        }
+                    ]
+                }
+            )
         )
+
+    def serve_vendor_data(self, node: Node) -> None:
+        """Serve cloud-init vendor-data for the node."""
+        self.set_header("Content-Type", CT_YAML)
+        self.write("")
