@@ -33,7 +33,7 @@ class EnvironmentAPI(ModelAPI):
         except Environment.DoesNotExist as e:
             msg = f"Environment not found: {env_id}"
             raise APIError(msg) from e
-        path = e.ssh_public_key_path
+        path = e.ssh_deploy_public_key_path
         if path.exists():
             return path.read_text()
         return ""
