@@ -152,12 +152,13 @@ classifiers = [
 dependencies = [
   "bcrypt==5.0.0",
   "cryptography >= 40.0.0",
+  "jmespath==1.1.0",
   "peewee==4.4.0",
   "tornado==6.5.8",
   "ansible==2.9.26",
   "dulwich==1.2.14",
   "gufo-err==0.6.0",
-  "gufo-loader==2.0.1"
+  "gufo-loader==2.0.1",
 ]
 description = "A web-based control plane for managing NOC cluster topology, node assignments, and service configuration."
 dynamic = ["version"]
@@ -188,14 +189,14 @@ lint = [
   "types-PyYAML==6.0.12.3",
   "types-peewee==4.3.0.20260807",
 ]
+playwright = [
+  "playwright==1.62.0",
+]
 test = [
   "PyYAML>=6.0",
   "pytest-benchmark==5.1.0",
   "pytest-cov==7.0.0",
   "pytest==8.4.2",
-]
-playwright=[
-  "playwright==1.62.0",
 ]
 
 [project.readme]
