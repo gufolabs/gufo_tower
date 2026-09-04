@@ -12,9 +12,12 @@ import os
 import sys
 from argparse import ArgumentParser
 
+# Third-party modules
+from gufo.err import err
+
 # Tower modules
-from ..api.pull import PullAPI
 from ..config import config
+from ..core.pull import prepare_env
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.pulllog import PullLog
@@ -44,8 +47,19 @@ def main():
             repo=env.playbook_link,
         )
         job.save()
-    api = PullAPI(None)
-    api.pull_job(job)
+    status = True
+    log = "success"
+    try:
+        prepare_env(env)
+    except BaseException as e:
+        err.process()
+        status = False
+        log = f"Failed: {e}"
+    with db.atomic():
+        job.complete_ts = datetime.datetime.now()
+        job.status = status
+        job.log = log
+        job.save()
 
 
 def die(msg):
