@@ -146,7 +146,9 @@ class Environment(Model):
                 "ansible_port": node.port,
                 "ansible_user": node.login_as,
                 "ansible_python_interpreter": node.node_type.python_interpreter,
-                "ansible_ssh_private_key_file": str(self.ssh_priv_key_path),
+                "ansible_ssh_private_key_file": str(
+                    self.ssh_deploy_priv_key_path
+                ),
                 "node_id": node.id,
                 "noc_dc": node.datacenter.name,
             }
@@ -412,6 +414,10 @@ class Environment(Model):
     def ssh_keys_path(self) -> Path:
         return self.cache_path / "ssh"
 
+    @property
+    def ssh_deploy_keys_path(self) -> Path:
+        return self.ssh_keys_path / "deploy"
+
     def get_services_description(self) -> dict[str, Any]:
         import yaml
 
@@ -461,7 +467,7 @@ class Environment(Model):
         super().delete_instance(*args, **kwargs)
 
     @property
-    def ssh_priv_key_path(self) -> Path:
+    def ssh_deploy_priv_key_path(self) -> Path:
         """Return the path to the environment's SSH private key.
 
         The private key filename is derived from the configured deployment key
@@ -471,10 +477,10 @@ class Environment(Model):
             Path to the SSH private key file.
         """
         ssh_key = BaseKey.get(self.deploy_key_type)
-        return self.ssh_keys_path / "deploy" / ssh_key.filename
+        return self.ssh_deploy_keys_path / ssh_key.filename
 
     @property
-    def ssh_public_key_path(self) -> Path:
+    def ssh_deploy_public_key_path(self) -> Path:
         """Return the path to the environment's SSH public key.
 
         The public key is stored alongside the private key with the ``.pub``
@@ -483,7 +489,7 @@ class Environment(Model):
         Returns:
             Path to the SSH public key file.
         """
-        return self.ssh_priv_key_path.with_suffix(".pub")
+        return self.ssh_deploy_priv_key_path.with_suffix(".pub")
 
 
 # NOTE: With lazy loading, signal handlers must be defined in the same
@@ -495,9 +501,11 @@ def on_save_environment(
     # Ensure cache directory
     instance.cache_path.mkdir(parents=True, exist_ok=True)
     instance.src_dist_path.mkdir(parents=True, exist_ok=True)
-    # Ensure SSH keys
+    # Ensure SSH deploy keys
     ssh_key = BaseKey.get(instance.deploy_key_type)
-    ssh_key.ensure(instance.ssh_keys_path, f"gufo-tower@{instance.name}")
+    ssh_key.ensure(
+        instance.ssh_deploy_keys_path, f"gufo-tower@{instance.name}"
+    )
     # Create default records when necessary
     if created:
         from .pool import Pool
