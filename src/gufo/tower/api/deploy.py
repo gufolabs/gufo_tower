@@ -217,7 +217,9 @@ class DeployHandler(BaseHandler):
 
     def on_data(self, data: bytes) -> None:
         """Process and stream a chunk of Ansible output."""
-        logger.debug("PROGRESS: %s", data.removesuffix(b"\n"))
+        logger.debug(
+            "PROGRESS: %s", data.removesuffix(b"\n").decode(errors="ignore")
+        )
         self.write(data)
         self.flush()
         self.log_file.write(data)
