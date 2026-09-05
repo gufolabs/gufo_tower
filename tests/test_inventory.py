@@ -49,7 +49,7 @@ def _replace_pem(value: str) -> str:
 
 
 def test_ansible_inventory(isolated_fixture: Fixture) -> None:
-    def replace_vars(data: Any) -> Any:
+    def replace_vars(data: Any) -> Any:  # noqa: ANN401
         if isinstance(data, str):
             # Strip /tmp/...
             if data.startswith(home):
