@@ -44,6 +44,6 @@ def test_generate_certificate() -> None:
         serialization.PublicFormat.SubjectPublicKeyInfo,
     )
     assert (
-        certificate.not_valid_after - certificate.not_valid_before
+        certificate.not_valid_after_utc - certificate.not_valid_before_utc
         == timedelta(days=3650)
     )
