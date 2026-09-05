@@ -57,25 +57,28 @@ def data_fixture(request: pytest.FixtureRequest) -> Iterator[Fixture]:
     snapshot = snapshot_manager.snapshot()
     token = snapshot_manager.protect(snapshot)
     cache_target: Path | None = None
+    to_unlink: list[Path] = []
     try:
         fixture: Fixture = request.param
-        # This time assume environment id is always 1
-        if fixture.cache_path.exists():
-            cache_target = Path(config.cache_dir, "1")
         # Apply data
         with mdb.atomic():
             for sql in fixture.iter_sql():
                 mdb.execute_sql(sql)
         # Attach cache snapshot
-        if cache_target:
-            cache_target.parent.mkdir(parents=True, exist_ok=True)
-            cache_target.symlink_to(fixture.cache_path, True)
+        if fixture.cache_path.exists():
+            # This time assume environment id is always 1
+            cache_target = Path(config.cache_dir, "1")
+            cache_target.mkdir(parents=True, exist_ok=True)
+            for path in fixture.cache_path.iterdir():
+                target = cache_target / path.name
+                target.symlink_to(path)
+                to_unlink.append(target)
         # Pass control
         yield fixture
     finally:
         # Detach cache
-        if cache_target:
-            cache_target.unlink()
+        for path in to_unlink:
+            path.unlink()
         # Revert to snapshot
         snapshot_manager.unprotect(token)
         snapshot_manager.restore(
