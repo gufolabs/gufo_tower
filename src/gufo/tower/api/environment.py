@@ -9,6 +9,7 @@
 import yaml
 
 # Gufo Tower models
+from ..core.inventory import ansible_inventory
 from ..models.environment import Environment
 from .model import APIError, ModelAPI, api
 
@@ -24,7 +25,7 @@ class EnvironmentAPI(ModelAPI):
         except Environment.DoesNotExist as e:
             msg = f"Environment not found: {env_id}"
             raise APIError(msg) from e
-        return yaml.safe_dump(e.ansible_inventory, default_flow_style=False)
+        return yaml.safe_dump(ansible_inventory(e), default_flow_style=False)
 
     @api
     def get_ssh_public_key(self, env_id: int) -> str:

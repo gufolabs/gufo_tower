@@ -95,7 +95,7 @@ class Fixture:
     """Test fixture definition."""
 
     name: str
-    db_dump_path: Path
+    path: Path
     api_steps: list[APIStep]
 
     @classmethod
@@ -122,9 +122,19 @@ class Fixture:
         """
         return Fixture(
             name=path.name,
-            db_dump_path=path / "data.sql",
+            path=path,
             api_steps=APIStep.from_yaml(path / "api.yaml"),
         )
+
+    @property
+    def db_dump_path(self) -> Path:
+        """Path to the database dump."""
+        return self.path / "data.sql"
+
+    @property
+    def cache_path(self) -> Path:
+        """Path to the cache snapshot."""
+        return self.path / "cache"
 
     @classmethod
     def iter_fixtures(cls) -> Iterator[Fixture]:
