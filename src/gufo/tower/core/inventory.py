@@ -90,7 +90,6 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
         "_meta": {"hostvars": {}},
         "nodes": {"vars": {}, "hosts": []},
     }
-    service_data: defaultdict[str, list[Service]] = defaultdict(list)
     node_services: defaultdict[str, list[Service]] = defaultdict(list)
     with db.atomic():
         nodes = list(
@@ -102,7 +101,6 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
             .where(Service.environment == env, Node.is_enabled)
         ):
             if s.service in srv_descr and s.present:
-                service_data[s.service].append(s)
                 node_services[s.node.name].append(s)
     # Hosts variables
     for node in nodes:

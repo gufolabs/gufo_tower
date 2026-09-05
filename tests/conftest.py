@@ -56,7 +56,6 @@ def data_fixture(request: pytest.FixtureRequest) -> Iterator[Fixture]:
     # Create and protect snapshot
     snapshot = snapshot_manager.snapshot()
     token = snapshot_manager.protect(snapshot)
-    cache_target: Path | None = None
     to_unlink: list[Path] = []
     try:
         fixture: Fixture = request.param
