@@ -13,9 +13,6 @@ from typing import ClassVar
 from playwright.async_api import Page
 
 # Gufo Tower modules
-from gufo.tower.core.pull import prepare_env
-from gufo.tower.models.environment import Environment
-
 from .base import BaseShotter
 
 USER_GUIDE = Path("user-guide")

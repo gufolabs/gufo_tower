@@ -13,6 +13,7 @@ from argparse import ArgumentParser
 
 # Gufo Tower modules
 from ..config import config
+from ..core.inventory import ansible_inventory
 from ..models.environment import Environment
 
 
@@ -56,6 +57,6 @@ def ansible_list(args):
     """Ansible dynamic inventory."""
     try:
         env = Environment.get(Environment.name == args.env)
-        print(json.dumps(env.ansible_inventory, sort_keys=True, indent=2))
+        print(json.dumps(ansible_inventory(env), sort_keys=True, indent=2))
     except Environment.DoesNotExist:
         die(f"Invalid environment: '{args.env}'")

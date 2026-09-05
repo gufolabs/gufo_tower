@@ -43,7 +43,7 @@ def db(home) -> SqliteDatabase:
 @pytest.fixture(
     scope="module", params=list(Fixture.iter_fixtures()), ids=lambda x: x.name
 )
-def data_fixture(request) -> Iterator[Fixture]:
+def data_fixture(request: pytest.FixtureRequest) -> Iterator[Fixture]:
     """Load a test fixture into the database.
 
     Creates a protected snapshot of the current database state,
@@ -56,15 +56,28 @@ def data_fixture(request) -> Iterator[Fixture]:
     # Create and protect snapshot
     snapshot = snapshot_manager.snapshot()
     token = snapshot_manager.protect(snapshot)
+    to_unlink: list[Path] = []
     try:
         fixture: Fixture = request.param
         # Apply data
         with mdb.atomic():
             for sql in fixture.iter_sql():
                 mdb.execute_sql(sql)
+        # Attach cache snapshot
+        if fixture.cache_path.exists():
+            # This time assume environment id is always 1
+            cache_target = Path(config.cache_dir, "1")
+            cache_target.mkdir(parents=True, exist_ok=True)
+            for path in fixture.cache_path.iterdir():
+                target = cache_target / path.name
+                target.symlink_to(path)
+                to_unlink.append(target)
         # Pass control
         yield fixture
     finally:
+        # Detach cache
+        for path in to_unlink:
+            path.unlink()
         # Revert to snapshot
         snapshot_manager.unprotect(token)
         snapshot_manager.restore(

@@ -93,7 +93,6 @@ def joblog_list(args):
     """Ansible dynamic inventory."""
     try:
         env = Environment.get(Environment.name == args.env)
-        # print(json.dumps(env.ansible_inventory, sort_keys=True, indent=2))
     except Environment.DoesNotExist:
         die(f"Invalid environment: '{args.env}'")
     print("=" * 20, env.name, "=" * 20)
