@@ -139,12 +139,9 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
         r["_meta"]["hostvars"][node.name]["required_assets"] = sorted(
             set(required_assets)
         )
-    need_cert = []
-    has_cert = False
-    certificate = {}
     for s in srv_descr:
         if srv_descr[s].require_cert:
-            update_certs(env, certificate, has_cert, need_cert, s)
+            update_certs(env, s)
     for srv in iter_service_config(env):
         service = srv["service"]
         service_group = f"svc-{service}"
@@ -296,41 +293,48 @@ def iter_service_config(env: Environment) -> Iterator[ServiceConfig]:
 
 def update_certs(
     env: Environment,
-    certificate: dict[str, dict[str, str]],
-    has_cert: bool,
-    need_cert: list[Service],
     service: str,
 ) -> None:
     """Update certificates for a service.
 
+    An existing certificate is reused when available.
+    Otherwise, a new self-signed certificate is generated and assigned
+    to all present service instances that do not have a certificate.
+
     Args:
         env: Environment used to generate a certificate when necessary.
-        certificate: Mapping of service names to their certificates.
-        has_cert: Whether a certificate has already been found for the service.
-        need_cert: Services requiring a certificate.
         service: Service name to update.
     """
-    srs = Service.select().where(Service.service == service)
-    for line in srs:
-        ln = json.loads(line.config)
-        if not ln["cert"]:
-            if line.present:
-                need_cert.append(line)
-        else:
-            has_cert = True
-            certificate[service] = {
-                "key": ln["cert_key"],
-                "cert": ln["cert"],
-            }
-    if not has_cert and need_cert:
+    # Existing certificate and key
+    key: str | None = None
+    cert: str | None = None
+    # Check for all instances, get existing certificate
+    need_cert: list[
+        Service
+    ] = []  # All service instances which require certificates
+    with db.atomic():
+        for svc in Service.select().where(
+            Service.environment == env, Service.service == service
+        ):
+            cfg = json.loads(svc.config)
+            if not cfg["cert"]:
+                if svc.present:
+                    need_cert.append(svc)
+            elif not key:
+                key = cfg["cert_key"]
+                cert = cfg["cert"]
+    if not need_cert:
+        return
+    # Generate certificate if not exists
+    if not cert:
         key, cert = generate_certificate(env.web_host or "noc")
-        certificate[service] = {"key": key, "cert": cert}
-    for n in need_cert:
-        conf = json.loads(n.config)
-        conf["cert"] = str(certificate[service]["cert"])
-        conf["cert_key"] = str(certificate[service]["key"])
-        n.config = json.dumps(conf, sort_keys=True)
-        n.save()
+    with db.atomic():
+        for svc in need_cert:
+            conf = json.loads(svc.config)
+            conf["cert"] = cert
+            conf["cert_key"] = key
+            svc.config = json.dumps(conf, sort_keys=True)
+            svc.save()
 
 
 def apply_tower_inventory(
