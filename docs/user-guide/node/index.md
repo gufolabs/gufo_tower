@@ -14,4 +14,3 @@ To access Nodes, first select the required Environment and then select the **Nod
 
 - [Node List](list.md)
 - [Node Form](form.md)
-- [Node Types](node-types.md)

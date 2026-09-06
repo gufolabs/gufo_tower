@@ -13,7 +13,6 @@ from peewee import IntegrityError
 from gufo.tower.models.datacenter import Datacenter
 from gufo.tower.models.environment import Environment
 from gufo.tower.models.node import Node
-from gufo.tower.models.nodetype import NodeType
 from gufo.tower.models.pool import Pool
 from gufo.tower.models.service import Service
 
@@ -48,11 +47,6 @@ def create_datacenter(**kwargs) -> Datacenter:
     return Datacenter.create(**data)
 
 
-def get_node_type() -> NodeType:
-    """Return the predefined Linux node type."""
-    return NodeType.get(NodeType.name == "Linux")
-
-
 def create_node(**kwargs) -> Node:
     """Create a test node."""
     environment = kwargs.pop("environment", None)
@@ -63,14 +57,9 @@ def create_node(**kwargs) -> Node:
     if datacenter is None:
         datacenter = create_datacenter()
 
-    node_type = kwargs.pop("node_type", None)
-    if node_type is None:
-        node_type = get_node_type()
-
     data = {
         "environment": environment,
         "datacenter": datacenter,
-        "node_type": node_type,
         "name": "orm-service-node",
         "description": "Service test node",
         "address": "192.0.2.1",

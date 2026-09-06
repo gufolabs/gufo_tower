@@ -44,14 +44,6 @@ export const SDL = {
         "update_facts",
         "update_item"
     ],
-    "nodetype": [
-        "create_item",
-        "delete_item",
-        "get_item",
-        "get_items",
-        "lookup_items",
-        "update_item"
-    ],
     "pool": [
         "create_item",
         "delete_item",

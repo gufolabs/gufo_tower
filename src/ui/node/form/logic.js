@@ -39,12 +39,8 @@ export class NodeFormLogic {
         }
     };
     load_lookups = async () => {
-        const [datacenters, node_types] = await Promise.all([
-            API.datacenter.lookup_items({}),
-            API.nodetype.lookup_items({}),
-        ]);
+        const datacenters = await API.datacenter.lookup_items({});
         $$("node_form").elements.datacenter.define("options", datacenters.data);
-        $$("node_form").elements.node_type.define("options", node_types.data);
     };
     to_list = () => {
         navigation.navigate(`/environment/${current_env.state.id}/node`);

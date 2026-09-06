@@ -1,4 +1,3 @@
 - [Overview](index.md)
 - [Node List](list.md)
 - [Node Form](form.md)
-- [Node Types](node-types.md)

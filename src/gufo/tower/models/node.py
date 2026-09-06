@@ -20,7 +20,6 @@ from .datacenter import Datacenter
 # Tower modules
 from .db import db
 from .environment import Environment
-from .nodetype import NodeType
 
 DEFAULT_PORT = 22
 
@@ -36,7 +35,6 @@ class Node(Model):
 
     environment = ForeignKeyField(Environment, on_delete="RESTRICT")
     datacenter = ForeignKeyField(Datacenter, on_delete="RESTRICT")
-    node_type = ForeignKeyField(NodeType, on_delete="RESTRICT")
     name = CharField()
     description = TextField()
     # Ansible settings
@@ -66,7 +64,6 @@ class Node(Model):
             "environment": self.environment.reference_item(),
             "is_enabled": self.is_enabled,
             "datacenter": self.datacenter.reference_item(),
-            "node_type": self.node_type.reference_item(),
             "name": self.name,
             "description": self.description,
             "address": self.address,
@@ -82,9 +79,6 @@ class Node(Model):
             "os": os_name,
             "virt": self.virt,
         }
-
-    def get_vars(self):
-        return self.node_type.get_vars()
 
     def delete_instance(self, *args, **kwargs):
         from .service import Service

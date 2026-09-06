@@ -98,13 +98,6 @@ export const node_form = {
                     body: {
                         cols: [
                             {
-                                view: "select",
-                                name: "node_type",
-                                label: "Node Type",
-                                required: true,
-                                width: 250
-                            },
-                            {
                                 view: "text",
                                 name: "address",
                                 label: "IP Address",
