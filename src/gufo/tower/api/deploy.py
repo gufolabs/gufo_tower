@@ -136,7 +136,8 @@ class DeployHandler(BaseHandler):
             "-i",
             str(bin_path / "tower-inv"),
             "site.yml",
-            "-f 50",
+            "-f",
+            "50",
             "--diff",
         ]
         if self.ansible_verbose:
