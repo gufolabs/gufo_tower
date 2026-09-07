@@ -16,7 +16,6 @@ from peewee import ForeignKeyField, Model
 from gufo.tower.models.datacenter import Datacenter
 from gufo.tower.models.environment import Environment
 from gufo.tower.models.node import Node
-from gufo.tower.models.nodetype import NodeType
 from gufo.tower.models.pool import Pool
 from gufo.tower.models.role import Role
 from gufo.tower.models.service import Service
@@ -27,7 +26,6 @@ MODELS: list[type[Model]] = [
     Datacenter,
     Environment,
     Node,
-    NodeType,
     Pool,
     Role,
     Service,

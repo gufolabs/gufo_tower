@@ -14,7 +14,6 @@ from peewee import IntegrityError
 from gufo.tower.models.datacenter import Datacenter
 from gufo.tower.models.environment import Environment
 from gufo.tower.models.node import Node
-from gufo.tower.models.nodetype import NodeType
 
 
 def create_environment(**kwargs) -> Environment:
@@ -47,11 +46,6 @@ def create_datacenter(**kwargs) -> Datacenter:
     return Datacenter.create(**data)
 
 
-def get_node_type() -> NodeType:
-    """Return the predefined Linux node type."""
-    return NodeType.get(NodeType.name == "Linux")
-
-
 def create_node(**kwargs) -> Node:
     """Create a test node."""
     environment = kwargs.pop("environment", None)
@@ -62,14 +56,9 @@ def create_node(**kwargs) -> Node:
     if datacenter is None:
         datacenter = create_datacenter()
 
-    node_type = kwargs.pop("node_type", None)
-    if node_type is None:
-        node_type = get_node_type()
-
     data = {
         "environment": environment,
         "datacenter": datacenter,
-        "node_type": node_type,
         "name": "orm-node",
         "description": "Test node",
         "address": "192.0.2.1",
@@ -86,7 +75,6 @@ def test_create(isolated_fixture) -> None:
     assert node.id is not None
     assert node.environment.name == "orm-node-environment"
     assert node.datacenter.name == "orm-node-datacenter"
-    assert node.node_type.name == "Linux"
     assert node.name == "orm-node"
     assert node.description == "Test node"
     assert node.address == "192.0.2.1"
@@ -103,7 +91,6 @@ def test_get(isolated_fixture) -> None:
     assert loaded.id == node.id
     assert loaded.environment.id == node.environment.id
     assert loaded.datacenter.id == node.datacenter.id
-    assert loaded.node_type.id == node.node_type.id
     assert loaded.name == node.name
     assert loaded.description == node.description
     assert loaded.address == node.address
@@ -144,12 +131,10 @@ def test_unique_name(isolated_fixture) -> None:
     """Check unique node name per environment and datacenter."""
     environment = create_environment(name="orm-node-unique-env")
     datacenter = create_datacenter(name="orm-node-unique-dc")
-    node_type = get_node_type()
 
     create_node(
         environment=environment,
         datacenter=datacenter,
-        node_type=node_type,
         name="same",
     )
 
@@ -157,7 +142,6 @@ def test_unique_name(isolated_fixture) -> None:
         create_node(
             environment=environment,
             datacenter=datacenter,
-            node_type=node_type,
             name="same",
         )
 
@@ -167,19 +151,16 @@ def test_same_name_different_datacenter(isolated_fixture) -> None:
     environment = create_environment(name="orm-node-dc-env")
     datacenter1 = create_datacenter(name="orm-node-dc-1")
     datacenter2 = create_datacenter(name="orm-node-dc-2")
-    node_type = get_node_type()
 
     node1 = create_node(
         environment=environment,
         datacenter=datacenter1,
-        node_type=node_type,
         name="same",
         address="192.168.2.1",
     )
     node2 = create_node(
         environment=environment,
         datacenter=datacenter2,
-        node_type=node_type,
         name="same",
         address="192.168.3.1",
     )
@@ -192,19 +173,16 @@ def test_same_name_different_environment(isolated_fixture) -> None:
     environment1 = create_environment(name="orm-node-env-1")
     environment2 = create_environment(name="orm-node-env-2")
     datacenter = create_datacenter(name="orm-node-env-dc")
-    node_type = get_node_type()
 
     node1 = create_node(
         environment=environment1,
         datacenter=datacenter,
-        node_type=node_type,
         name="same",
         address="192.168.2.1",
     )
     node2 = create_node(
         environment=environment2,
         datacenter=datacenter,
-        node_type=node_type,
         name="same",
         address="192.168.3.1",
     )

@@ -24,10 +24,6 @@ The Datacenter where the Node is located. See [Datacenters](../datacenter/index.
 
 A detailed, human-readable description of the Node.
 
-## Node Type
-
-The type of the Node. See [Node Types](node-types.md) for details.
-
 ## Address
 
 The IP address used to access the Node.

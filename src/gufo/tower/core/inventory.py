@@ -109,13 +109,10 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
             "ansible_host": node.address,
             "ansible_port": node.port,
             "ansible_user": node.login_as,
-            "ansible_python_interpreter": node.node_type.python_interpreter,
             "ansible_ssh_private_key_file": str(env.ssh_deploy_priv_key_path),
             "node_id": node.id,
             "noc_dc": node.datacenter.name,
         }
-        # Update with node settings
-        hostvars.update(node.get_vars())
         # Set up has_svc_XXXX variables
         hostvars.update(
             dict.fromkeys(
