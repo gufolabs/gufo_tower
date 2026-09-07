@@ -18,6 +18,6 @@ def migrate(migrator: Migrator) -> None:
             database = migrator.db
             table_name = "node_type"
 
-    migrator.drop_index("node_type", "node_node_type_id")
+    migrator.drop_index("node", "node_node_type_id")
     migrator.drop_column("node", "node_type_id")
     migrator.drop_table(NodeType)
