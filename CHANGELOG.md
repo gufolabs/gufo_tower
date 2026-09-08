@@ -47,7 +47,7 @@ The unreleased version is identified in code by a version number higher than any
 * bcrypt 5.0.0
 * Gufo Err 0.6.0
 * Gufo Loader 2.0.1
-* Peewee 3.19.0
+* Peewee 4.5.1
 * Tornado 6.5.8
 
 ## 1.1.1 (2023-04-11)
