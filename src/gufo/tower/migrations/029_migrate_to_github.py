@@ -107,5 +107,5 @@ def migrate(migrator: Migrator) -> None:
     migrator.rename_column("environment", "branch", "version")
 
     migrator.rename_column("environment", "custom_branch", "custom_version")
-    (migrator.drop_column("environment", "custom_changeset"),)
+    migrator.drop_column("environment", "custom_changeset")
     migrator.drop_column("environment", "changeset")
