@@ -8,7 +8,7 @@
 # Python modules
 import codecs
 from collections.abc import Callable
-from typing import TypeVar
+from typing import Any, TypeVar
 
 # Third-party modules
 import tornado.web
