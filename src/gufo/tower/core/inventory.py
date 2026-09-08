@@ -27,6 +27,7 @@ from ..models.node import Node
 from ..models.pool import Pool
 from ..models.role import Role
 from ..models.service import Service
+from .caps import TowerCaps
 from .cert import generate_certificate
 
 
@@ -66,6 +67,10 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
             "vars": {
                 "noc_env": env.name,
                 "noc_installation_name": env.installation_name,
+                "caps": [
+                    TowerCaps.ANSIBLE_L1.value,
+                    TowerCaps.INVENTORY_V1.value,
+                ],
                 "config_order": env.config_order,
                 "installation_type": env.env_type,
                 "install_method": env.install_method,

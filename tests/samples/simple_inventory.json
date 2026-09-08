@@ -3,6 +3,10 @@
     "vars": {
       "noc_env": "simple",
       "noc_installation_name": "Simple",
+      "caps": [
+        "ansible_l1",
+        "inventory_v1"
+      ],
       "config_order": "yaml:///opt/noc/etc/tower.yml,yaml:///opt/noc/etc/settings.yml,env:///NOC",
       "installation_type": "test",
       "install_method": "git",
