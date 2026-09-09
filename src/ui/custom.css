@@ -74,18 +74,6 @@ div[view_id="sidebar"] .webix_selected {
     color: var(--light-color) !important;
 }
 
-.mywebix_badge {
-    background-color: #ffab24 !important;
-    color: #fff;
-    border-radius: 8px;
-    height: 29px;
-    min-width: 29px;
-    box-sizing: border-box;
-    padding: 4px 8px;
-    text-align: center;
-    line-height: 21px;
-}
-
 .webix_message_area {
     position: fixed;
     left: 50%;
