@@ -7,6 +7,8 @@
 
 # Python modules
 import codecs
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 # Third-party modules
 import tornado.web
@@ -36,14 +38,17 @@ class BaseHandler(tornado.web.RequestHandler):
         return None
 
 
-def api(method):
+T = TypeVar("T", bound=Callable[..., Any])
+
+
+def api(method: T) -> T:
     """Authenticated API method decorator."""
     method.api = True
     method.open_api = False
     return method
 
 
-def open_api(method):
+def open_api(method: T) -> T:
     """Open API method decorator."""
     method.api = True
     method.open_api = True
