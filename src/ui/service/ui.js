@@ -13,6 +13,7 @@ export const service_panel = {
     rows: [
         {
             view: "toolbar",
+            id: "service_toolbar",
             elements: [
                 {
                     view: "button",
@@ -41,19 +42,18 @@ export const service_panel = {
                 },
                 {},
                 {
-                    view: "button",
-                    autowidth: true,
-                    value: "Group by Node",
+                    view: "segmented",
+                    id: "service_group",
+                    label: "Group by:",
+                    value: service_group.state,
+                    width: 220,
+                    labelWidth: 75,
+                    options: [
+                        { id: "node", value: "Node" },
+                        { id: "service", value: "Service" }
+                    ],
                     click: function () {
-                        service_logic.on_group_table("node")
-                    }
-                },
-                {
-                    view: "button",
-                    autowidth: true,
-                    value: "Group by Service",
-                    click: function () {
-                        service_logic.on_group_table("service")
+                        service_logic.on_group_table(this.getValue())
                     }
                 }
             ]

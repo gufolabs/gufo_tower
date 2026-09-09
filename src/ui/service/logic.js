@@ -42,26 +42,21 @@ export class ServiceLogic {
     };
 
     set_enabled = (obj, common) => {
-        if (Object.hasOwn(obj, 'config') && Object.hasOwn(obj['config'], 'backup_power')) {
-            return common.treecheckbox(obj, common) +
-                common.space(obj, common) +
-                '<span class="mywebix_badge">' +
-                obj.config.power +
-                "</span>" +
-                '<span class="mywebix_badge" style="background-color: green !important;">' +
-                obj.config.backup_power +
-                "</span>"
+        const checkbox = common.treecheckbox(obj, common);
+        const config = obj.config;
+        if (!config || !Object.hasOwn(config, "power")) {
+            return checkbox;
         }
-        else if (Object.hasOwn(obj, 'config') && Object.hasOwn(obj['config'], 'power')) {
-            return common.treecheckbox(obj, common) +
-                common.space(obj, common) +
-                '<span class="mywebix_badge">' +
-                obj.config.power +
-                "</span>"
+        const space = common.space(obj, common);
+        if (Object.hasOwn(config, "backup_power")) {
+            return checkbox + space +
+                '<span class="service_power_backup">' +
+                `<span>${config.power}</span>` +
+                `<span>${config.backup_power}</span>` +
+                "</span>";
         }
-        else {
-            return common.treecheckbox(obj, common)
-        }
+        return checkbox + space +
+            `<span class="service_power">${config.power}</span>`;
     };
 
     on_column_group = (obj, common, name) => {

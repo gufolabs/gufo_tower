@@ -8,6 +8,10 @@
     --ansible-unreachable-color: #7f8c8d;
     --ansible-failed-color: #c0392b;
     --toolbar-color: #7f8c8d;
+    --service-power-background: #16a085;
+    --service-power-color: #fff;
+    --service-backup-power-background: #7f8c8d;
+    --service-backup-power-color: #fff;
 }
 
 /*
@@ -68,18 +72,6 @@ div[view_id="sidebar"] .webix_selected {
 .greenbutton button {
     background-color: green !important;
     color: var(--light-color) !important;
-}
-
-.mywebix_badge {
-    background-color: #ffab24 !important;
-    color: #fff;
-    border-radius: 8px;
-    height: 29px;
-    min-width: 29px;
-    box-sizing: border-box;
-    padding: 4px 8px;
-    text-align: center;
-    line-height: 21px;
 }
 
 .webix_message_area {
@@ -268,4 +260,41 @@ span.ansible-skipping::before {
 .home a:hover,
 .webix_cell a:hover {
     border-bottom-style: solid;
+}
+
+.service_power {
+    display: inline-block;
+    background-color: var(--service-power-background);
+    color: var(--service-power-color);
+    border-radius: 8px;
+    height: 29px;
+    min-width: 29px;
+    box-sizing: border-box;
+    padding: 4px 8px;
+    text-align: center;
+    line-height: 21px;
+}
+
+.service_power_backup {
+    display: inline-flex;
+    height: 29px;
+    min-width: 29px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    line-height: 21px;
+}
+
+.service_power_backup>span {
+    padding: 4px 8px;
+    background-color: var(--service-power-background);
+    color: var(--service-power-color);
+}
+
+.service_power_backup>span+span {
+    background-color: var(--service-backup-power-background);
+    color: var(--service-backup-power-color);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
 }
