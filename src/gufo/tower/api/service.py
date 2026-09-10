@@ -8,11 +8,14 @@
 # Python modules
 import contextlib
 import json
+from collections.abc import Iterable
 from itertools import product
+from pathlib import Path
 from typing import Any
 
+import yaml
+
 # Gufo Tower modules
-from ..contrib.yaml_ordered_dict import ordered_load
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.node import Node
@@ -24,38 +27,41 @@ from .base import API, APIError, api
 class ServiceAPI(API):
     name = "service"
 
-    def get_available_services(self, env):
+    def get_available_services(self, env: Environment):
         svc = {}
         for path in env.services_path:
-            if not path.exists():
-                continue
-            with open(path) as f:
-                descr = ordered_load(f)
-                if not descr:
-                    continue
-                if "services" not in descr or not descr["services"]:
-                    continue
-                if "forms" not in descr or not descr["forms"]:
-                    continue
-                for srv in sorted(descr["services"]):
-                    svc[srv] = {
-                        "name": srv,
-                        "form": descr["forms"].get(srv, []),
-                        "meta": descr["services"].get(srv, []),
-                        "config": self.get_service_config(descr, srv),
-                    }
+            for d in self.iter_service_descr(path):
+                svc[d["name"]] = d
         return svc
+
+    def iter_service_descr(self, path: Path) -> Iterable[dict[str, Any]]:
+        if not path.exists():
+            return
+        with open(path) as f:
+            descr = yaml.safe_load(f)
+        if not descr:
+            return
+        if "services" not in descr or not descr["services"]:
+            return
+        if "forms" not in descr or not descr["forms"]:
+            return
+        for srv in sorted(descr["services"]):
+            yield {
+                "name": srv,
+                "form": descr["forms"].get(srv, []),
+                "meta": descr["services"].get(srv, []),
+                "config": self.get_service_config(descr, srv),
+            }
 
     def get_service_config(self, cfg, service):
         r = {}
         if "forms" not in cfg or not cfg["forms"]:
             return r
         sc = cfg["forms"][service]
-        for k, v in list(sc.items()):
+        for k, v in sc.items():
             if "description" in k:
                 continue
             r[k] = v.get("default", None)
-
         return r
 
     def get_service_form(self, descr, srv):
@@ -123,17 +129,18 @@ class ServiceAPI(API):
 
     @api
     def get_forms(self, env):
-        r = {}
         # Find environment
         try:
             env = Environment.get(Environment.id == env)
         except Environment.DoesNotExist as e:
             msg = "Environment does not exist"
             raise APIError(msg) from e
+
         srvs = self.get_available_services(env)
-        for srv in srvs:
-            r[srv] = self.get_service_form(srvs[srv]["form"], srv)
-        return r
+        return {
+            srv: self.get_service_form(descr["form"], srv)
+            for srv, descr in srvs.items()
+        }
 
     def migrate_settings(self, env):
         env_id = env.id
