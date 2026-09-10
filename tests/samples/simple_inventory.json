@@ -3,6 +3,7 @@
     "vars": {
       "noc_env": "simple",
       "noc_installation_name": "Simple",
+      "noc_licence_level": "ce",
       "caps": [
         "ansible_l1",
         "inventory_v1"

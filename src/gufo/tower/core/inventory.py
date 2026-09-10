@@ -29,6 +29,7 @@ from ..models.role import Role
 from ..models.service import Service
 from .caps import TowerCaps
 from .cert import generate_certificate
+from .level import LicenceLevel
 
 
 class ServiceConfig(TypedDict):
@@ -67,6 +68,7 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
             "vars": {
                 "noc_env": env.name,
                 "noc_installation_name": env.installation_name,
+                "noc_licence_level": LicenceLevel.CE.value,
                 "caps": [
                     TowerCaps.ANSIBLE_L1.value,
                     TowerCaps.INVENTORY_V1.value,
