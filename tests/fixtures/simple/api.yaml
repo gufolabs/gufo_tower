@@ -15,6 +15,7 @@ steps:
           install_method: git
           web_host: simple.test.example.com
           deploy_key_type: ed25519
+          deploy_tag: stable
   - name: environment - lookup items
     method: environment.lookup_items
     params:

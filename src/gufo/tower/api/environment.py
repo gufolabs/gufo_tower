@@ -5,7 +5,9 @@
 # See LICENSE for details
 # ----------------------------------------------------------------------
 
-# Third-party models
+# Python models
+from typing import ClassVar
+
 import yaml
 
 # Gufo Tower models
@@ -17,6 +19,7 @@ from .model import APIError, ModelAPI, api
 class EnvironmentAPI(ModelAPI):
     name = "environment"
     model = Environment
+    ignored_fields: ClassVar[set[str] | None] = {"deploy_tag"}
 
     @api
     def ansible_inventory(self, env_id: int):
