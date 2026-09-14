@@ -7,7 +7,7 @@
 
 # Python modules
 from collections.abc import Callable
-from typing import Any, Literal, TypedDict
+from typing import Any, ClassVar, Literal, TypedDict
 
 # Third-party modules
 import peewee
@@ -61,9 +61,10 @@ class RenderConfig(TypedDict, total=False):
 
 
 class ModelAPI(API):
-    model = None  # ORM Model
+    model: ClassVar[type[peewee.Model]]
 
     DYNAMIC_FIRST_BATCH_SIZE = 30
+    ignored_fields: ClassVar[set[str] | None] = None
 
     def render_items(
         self, cfg: RenderConfig, format: Callable[[Any], Any]
@@ -139,6 +140,22 @@ class ModelAPI(API):
             r["total_count"] = total_count
         return r
 
+    def clean(self, cfg: dict[str, Any]) -> dict[str, Any]:
+        """Remove ignored fields from the configuration.
+
+        Args:
+            cfg: Configuration dictionary to clean.
+
+        Returns:
+            A configuration dictionary without fields listed in
+            ``ignored_fields``. Returns the original dictionary if no fields
+            are ignored.
+        """
+        to_ignore = {"id"}
+        if self.ignored_fields:
+            to_ignore |= self.ignored_fields
+        return {k: v for k, v in cfg.items() if k not in to_ignore}
+
     @api
     def get_items(self, cfg=None):
         cfg = cfg or {}
@@ -161,9 +178,7 @@ class ModelAPI(API):
 
     @api
     def create_item(self, cfg):
-        if "id" in cfg:
-            del cfg["id"]
-        record = self.model(**cfg)
+        record = self.model(**self.clean(cfg))
         with db.atomic():
             record.save()
         return record.list_item()
@@ -176,11 +191,11 @@ class ModelAPI(API):
             except peewee.DoesNotExist as e:
                 msg = "Does not exists"
                 raise APIError(msg) from e
-            for f in cfg:
-                if f in ("id", "environment"):
-                    continue
-                if getattr(record, f) != cfg[f]:
-                    setattr(record, f, cfg[f])
+            for k, v in self.clean(cfg).items():
+                if k == "environment":
+                    continue  # Cannot change environment
+                if getattr(record, k) != v:
+                    setattr(record, k, v)
             record.save()
         return record.list_item()
 

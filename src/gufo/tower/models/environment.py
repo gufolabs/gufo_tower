@@ -70,10 +70,23 @@ class Environment(Model):
             "install_method": self.install_method,
             "web_host": self.web_host,
             "deploy_key_type": self.deploy_key_type,
+            "deploy_tag": self.deploy_tag,
         }
 
     def reference_item(self):
         return {"id": str(self.id), "value": self.name}
+
+    @property
+    def deploy_tag(self) -> str | None:
+        """Return the deployment tag from the playbook link.
+
+        Returns:
+            The deployment tag specified after the last ``@`` in the
+            playbook link, or ``None`` if no tag is specified.
+        """
+        if "@" in self.playbook_link:
+            return self.playbook_link.rsplit("@", 1)[1]
+        return None
 
     @property
     def cache_path(self) -> Path:

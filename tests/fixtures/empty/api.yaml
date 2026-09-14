@@ -16,6 +16,7 @@ steps:
         install_method: git
         web_host: empty.test.example.com
         deploy_key_type: ed25519
+        deploy_tag: master
     expected:
       id: "1"
       name: empty
@@ -27,6 +28,7 @@ steps:
       install_method: git
       web_host: empty.test.example.com
       deploy_key_type: ed25519
+      deploy_tag: master
   - name: Check environment
     method: environment.get_items
     expected:
@@ -42,3 +44,4 @@ steps:
           install_method: git
           web_host: empty.test.example.com
           deploy_key_type: ed25519
+          deploy_tag: master

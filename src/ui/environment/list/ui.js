@@ -105,6 +105,11 @@ export const environment_list = {
                     }
                 },
                 {
+                    id: "deploy_tag",
+                    header: "Deploy Tag",
+                    width: 150
+                },
+                {
                     id: "description",
                     header: "Description",
                     fillspace: true

@@ -11,6 +11,7 @@ The list contains the following columns:
 | **Environment** | Environment name. |
 | **Type** | Environment type. See [Environment Types](environment-types.md) for details. |
 | **URL** | Starting page of the NOC web application. Clicking the URL opens the corresponding NOC installation. |
+| **Deploy Tag** | Deployment tag used to identify the version of the NOC installation. |
 | **Description** | Text description of the environment. |
 
 Clicking an Environment row makes it the **active Environment** for the entire Gufo Tower application.
