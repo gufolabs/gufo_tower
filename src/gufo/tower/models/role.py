@@ -32,11 +32,6 @@ DEFAULT_ROLES = [
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-pgbouncer.git",
     },
     {
-        "name": "Memcached",
-        "description": "Caching level. Helps to handle lots of devices. From 20k devices.",
-        "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-memcached.git",
-    },
-    {
         "name": "Alerta notifications",
         "description": "Notifies about deploy to deploy system",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-alerta-notifications.git",
@@ -46,11 +41,6 @@ DEFAULT_ROLES = [
         "name": "Telegraf",
         "description": "Helps to monitor node's health",
         "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-telegraf.git",
-    },
-    {
-        "name": "Nsqadmin",
-        "description": "Web interface for NSQd",
-        "link": "git+https://code.getnoc.com/ansible-roles/ansible-role-nsqadmin.git",
     },
 ]
 
