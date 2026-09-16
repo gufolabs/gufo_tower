@@ -9,8 +9,8 @@
 from enum import Enum
 
 
-class LicenceLevel(Enum):
-    """NOC licence level.
+class LicenseLevel(Enum):
+    """NOC license level.
 
     Attributes:
         CE: Community edition.
