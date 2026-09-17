@@ -6,6 +6,7 @@ Manpages for the `gufo-tower` command-line interface.
 
 | Command                            | Description              |
 | ---------------------------------- | ------------------------ |
+| [`gufo-tower backup`](backup.md) | Create a backup. |
 | [`gufo-tower inventory`](inventory.md) | Show Ansible inventory. |
 | [`gufo-tower job log`](job-log.md) | Manage Gufo Tower job logs. |
 | [`gufo-tower pull`](pull.md) | Pull repository. |

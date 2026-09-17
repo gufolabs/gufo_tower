@@ -1,40 +1,61 @@
 # -----------------------------------------------------------------------
-# Dump/Restore
+# Backup
 # -----------------------------------------------------------------------
 # Copyright (C) 2015-2026 Gufo Labs
 # See LICENSE for details
 # -----------------------------------------------------------------------
 
 # Python modules
-import argparse
-import shutil
-import subprocess
+import sqlite3
+import tarfile
+import tempfile
+from pathlib import Path
 
-# Gufo Tower modules
+# Third-party modules
+import click
+
+# Tower modules
 from ..config import config
+from ..models.db import db
+from .base import Context, entrypoint, pass_context
 
 
-def sqlite_path():
-    return "sqlite3"
+@entrypoint
+@click.command("backup", short_help="Create a backup.")
+@click.option(
+    "--out",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=Path("gufo-tower-backup.tgz"),
+    show_default=True,
+    help="Path to the backup archive.",
+)
+@pass_context
+def backup(ctx: Context, out: Path) -> None:
+    """Create a compressed backup archive.
 
+    Args:
+        ctx: CLI execution context.
+        out: Path to the output ``tar.gz`` archive.
 
-def dump():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--output", default="/dev/stdout", help="Output path")
-    args = parser.parse_args()
+    Returns:
+        None.
+    """
     config.setup()
-    with open(args.output, "w") as f:
-        subprocess.check_call(
-            [sqlite_path(), str(config.db_path), ".dump"], stdout=f
-        )
-
-
-def restore():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input", nargs=1, help="Input file path")
-    args = parser.parse_args()
-    config.setup()
-    if config.db_path.exists():
-        shutil.move(str(config.db_path), str(config.db_path) + ".bak")
-    with open(args.input[0]) as fp:
-        subprocess.check_call([sqlite_path(), str(config.db_path)], stdin=fp)
+    with (
+        tempfile.TemporaryDirectory() as tmp,
+        tarfile.open(out, "w:gz") as tar,
+    ):
+        db_path = Path(tmp) / "config.db"
+        with sqlite3.connect(db_path) as backup_db:
+            db.connection().backup(backup_db)
+        tar.add(db_path, arcname="db/config.db")
+        if not config.cache_dir.is_dir():
+            return
+        for environment_path in config.cache_dir.iterdir():
+            if not environment_path.is_dir():
+                continue
+            for name in ("ssh", "data"):
+                path = environment_path / name
+                if path.exists():
+                    tar.add(path, arcname=str(path.relative_to(config.home)))
+    ctx.print(f"Written: {out}")
