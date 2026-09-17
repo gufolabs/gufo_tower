@@ -375,6 +375,22 @@ def update_certs(
             svc.save()
 
 
+def get_inventory_yaml(env: Environment) -> str:
+    """Generate Ansible inventory as YAML.
+
+    Args:
+        env: Environment for which to generate the inventory.
+
+    Returns:
+        Generated Ansible inventory in YAML format.
+    """
+    return yaml.safe_dump(
+        ansible_inventory(env),
+        sort_keys=False,
+        allow_unicode=True,
+    )
+
+
 def write_inventory(env: Environment) -> Path:
     """Write Ansible inventory to the environment inventory file.
 
@@ -386,11 +402,5 @@ def write_inventory(env: Environment) -> Path:
     """
     path = env.ansible_inventory_path
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as fp:
-        yaml.safe_dump(
-            ansible_inventory(env),
-            fp,
-            sort_keys=False,
-            allow_unicode=True,
-        )
+    path.write_text(get_inventory_yaml(env), encoding="utf-8")
     return path
