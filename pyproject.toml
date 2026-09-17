@@ -206,7 +206,6 @@ file = "README.md"
 [project.scripts]
 tower-deploy = "gufo.tower.cli.deploy:main"
 tower-dump = "gufo.tower.cli.backup:dump"
-tower-inv = "gufo.tower.cli.inv:main"
 tower-joblog = "gufo.tower.cli.joblog:main"
 tower-pull = "gufo.tower.cli.pull:main"
 tower-restore = "gufo.tower.cli.backup:restore"

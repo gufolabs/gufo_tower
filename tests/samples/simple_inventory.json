@@ -22,10 +22,30 @@
           "description": "Default pool for simple"
         }
       ]
+    },
+    "hosts": {},
+    "children": {
+      "dc-dc1": {},
+      "svc-chwriter": {},
+      "svc-clickhouse": {},
+      "svc-datastream": {},
+      "svc-discovery": {},
+      "svc-kafka": {},
+      "svc-login": {},
+      "svc-metrics": {},
+      "svc-mib": {},
+      "svc-mongod": {},
+      "svc-nginx": {},
+      "svc-postgres": {},
+      "svc-sae": {},
+      "svc-scheduler": {},
+      "svc-web": {},
+      "noc-config-n01": {}
     }
   },
-  "_meta": {
-    "hostvars": {
+  "nodes": {
+    "vars": {},
+    "hosts": {
       "n01": {
         "ansible_host": "10.0.0.1",
         "ansible_port": 22,
@@ -56,16 +76,10 @@
       }
     }
   },
-  "nodes": {
-    "vars": {},
-    "hosts": [
-      "n01"
-    ]
-  },
   "dc-dc1": {
-    "hosts": [
-      "n01"
-    ],
+    "hosts": {
+      "n01": {}
+    },
     "vars": {}
   },
   "svc-chwriter": {
@@ -77,10 +91,9 @@
       "chwriter_power": 1,
       "chwriter_records_buffer": 1000000
     },
-    "children": [
-      "cfg-chwriter-n01",
-      "svc-chwriter-read"
-    ]
+    "children": {
+      "svc-chwriter-read": {}
+    }
   },
   "cfg-chwriter-n01": {
     "vars": {
@@ -91,32 +104,506 @@
       "chwriter_power": 1,
       "chwriter_records_buffer": 1000000
     },
-    "hosts": [
-      "n01"
-    ]
+    "hosts": {
+      "n01": {}
+    }
   },
   "svc-chwriter-read": {
-    "hosts": []
+    "hosts": {}
   },
   "svc-chwriter-exec": {
-    "hosts": [
-      "n01"
-    ]
+    "hosts": {
+      "n01": {}
+    }
   },
   "svc-noc-read": {
-    "hosts": [
-      "n01"
-    ]
+    "hosts": {
+      "n01": {}
+    }
   },
   "svc-clickhouse-read": {
-    "hosts": [
-      "n01"
-    ]
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-clickhouse": {
+    "vars": {
+      "clickhouse_db": "noc",
+      "clickhouse_expose_metrics": true,
+      "clickhouse_max_ast_elements": 10000,
+      "clickhouse_password": "noc",
+      "clickhouse_query_size": 262144,
+      "clickhouse_ro_grafana_password": "noc",
+      "clickhouse_ro_password": "noc",
+      "clickhouse_timezone": "Europe/Moscow",
+      "clickhouse_user": "noc"
+    },
+    "children": {}
+  },
+  "cfg-clickhouse-n01": {
+    "vars": {
+      "clickhouse_db": "noc",
+      "clickhouse_expose_metrics": true,
+      "clickhouse_max_ast_elements": 10000,
+      "clickhouse_password": "noc",
+      "clickhouse_query_size": 262144,
+      "clickhouse_ro_grafana_password": "noc",
+      "clickhouse_ro_password": "noc",
+      "clickhouse_timezone": "Europe/Moscow",
+      "clickhouse_user": "noc"
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-clickhouse-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-consul-read": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-consul-template-read": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-grafana-read": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-datastream": {
+    "vars": {
+      "datastream_enable_address": false,
+      "datastream_enable_address_wait": false,
+      "datastream_enable_administrativedomain": false,
+      "datastream_enable_administrativedomain_wait": false,
+      "datastream_enable_alarm": false,
+      "datastream_enable_alarm_wait": false,
+      "datastream_enable_cfgping": true,
+      "datastream_enable_cfgping_wait": true,
+      "datastream_enable_cfgsyslog": true,
+      "datastream_enable_cfgsyslog_wait": true,
+      "datastream_enable_cfgtrap": true,
+      "datastream_enable_cfgtrap_wait": true,
+      "datastream_enable_dnszone": false,
+      "datastream_enable_dnszone_wait": false,
+      "datastream_enable_managedobject": false,
+      "datastream_enable_managedobject_wait": false,
+      "datastream_enable_prefix": false,
+      "datastream_enable_prefix_wait": false,
+      "datastream_enable_resourcegroup": false,
+      "datastream_enable_resourcegroup_wait": false,
+      "datastream_enable_vrf": false,
+      "datastream_enable_vrf_wait": false,
+      "datastream_loglevel": "info",
+      "datastream_mode": "wait",
+      "datastream_power": 1,
+      "datastream_whitelist_access": ""
+    },
+    "children": {
+      "svc-datastream-read": {}
+    }
+  },
+  "cfg-datastream-n01": {
+    "vars": {
+      "datastream_enable_address": false,
+      "datastream_enable_address_wait": false,
+      "datastream_enable_administrativedomain": false,
+      "datastream_enable_administrativedomain_wait": false,
+      "datastream_enable_alarm": false,
+      "datastream_enable_alarm_wait": false,
+      "datastream_enable_cfgping": true,
+      "datastream_enable_cfgping_wait": true,
+      "datastream_enable_cfgsyslog": true,
+      "datastream_enable_cfgsyslog_wait": true,
+      "datastream_enable_cfgtrap": true,
+      "datastream_enable_cfgtrap_wait": true,
+      "datastream_enable_dnszone": false,
+      "datastream_enable_dnszone_wait": false,
+      "datastream_enable_managedobject": false,
+      "datastream_enable_managedobject_wait": false,
+      "datastream_enable_prefix": false,
+      "datastream_enable_prefix_wait": false,
+      "datastream_enable_resourcegroup": false,
+      "datastream_enable_resourcegroup_wait": false,
+      "datastream_enable_vrf": false,
+      "datastream_enable_vrf_wait": false,
+      "datastream_loglevel": "info",
+      "datastream_mode": "wait",
+      "datastream_power": 1,
+      "datastream_whitelist_access": ""
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-datastream-read": {
+    "hosts": {}
+  },
+  "svc-datastream-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-mongod-read": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-discovery": {
+    "vars": {
+      "discovery_backup_power": 1,
+      "discovery_loglevel": "info",
+      "discovery_max_threads": 20,
+      "discovery_power": 2
+    },
+    "children": {
+      "svc-discovery-read": {}
+    }
+  },
+  "cfg-discovery-default-n01": {
+    "vars": {
+      "discovery_backup_power": 1,
+      "discovery_loglevel": "info",
+      "discovery_max_threads": 20,
+      "discovery_power": 2
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-discovery-read": {
+    "hosts": {}
+  },
+  "svc-discovery-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-kafka": {
+    "vars": {
+      "kafka_cluster_id": "",
+      "kafka_insecure_certs": false,
+      "kafka_memory_limit": 1
+    },
+    "children": {
+      "svc-kafka-read": {}
+    }
+  },
+  "cfg-kafka-n01": {
+    "vars": {
+      "kafka_cluster_id": "",
+      "kafka_insecure_certs": false,
+      "kafka_memory_limit": 1
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-kafka-read": {
+    "hosts": {}
+  },
+  "svc-kafka-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-login": {
+    "vars": {
+      "login_language": "en",
+      "login_loglevel": "info",
+      "login_methods": "local",
+      "login_pam_service": "noc",
+      "login_power": 2,
+      "login_radius_secret": null,
+      "login_radius_server": null,
+      "login_session_ttl": "7d"
+    },
+    "children": {
+      "svc-login-read": {}
+    }
+  },
+  "cfg-login-n01": {
+    "vars": {
+      "login_language": "en",
+      "login_loglevel": "info",
+      "login_methods": "local",
+      "login_pam_service": "noc",
+      "login_power": 2,
+      "login_radius_secret": null,
+      "login_radius_server": null,
+      "login_session_ttl": "7d"
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-login-read": {
+    "hosts": {}
+  },
+  "svc-login-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-metrics": {
+    "vars": {
+      "metrics_backup_power": 1,
+      "metrics_loglevel": "info",
+      "metrics_power": 2
+    },
+    "children": {
+      "svc-metrics-read": {}
+    }
+  },
+  "cfg-metrics-n01": {
+    "vars": {
+      "metrics_backup_power": 1,
+      "metrics_loglevel": "info",
+      "metrics_power": 2
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-metrics-read": {
+    "hosts": {}
+  },
+  "svc-metrics-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-mib": {
+    "vars": {
+      "mib_loglevel": "info",
+      "mib_power": 1
+    },
+    "children": {
+      "svc-mib-read": {}
+    }
+  },
+  "cfg-mib-n01": {
+    "vars": {
+      "mib_loglevel": "info",
+      "mib_power": 1
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-mib-read": {
+    "hosts": {}
+  },
+  "svc-mib-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-mongod": {
+    "vars": {
+      "mongod_db": "noc",
+      "mongod_logging_destination": "syslog",
+      "mongod_password": "noc",
+      "mongod_power": "server",
+      "mongod_rs": "noc",
+      "mongod_user": "noc",
+      "mongod_version": "4.4"
+    },
+    "children": {}
+  },
+  "cfg-mongod-n01": {
+    "vars": {
+      "mongod_db": "noc",
+      "mongod_logging_destination": "syslog",
+      "mongod_password": "noc",
+      "mongod_power": "server",
+      "mongod_rs": "noc",
+      "mongod_user": "noc",
+      "mongod_version": "4.4"
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-mongod-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-nginx": {
+    "vars": {
+      "nginx_cert": "-----BEGIN CERTIFICATE-----\n${CERTIFICATE}\n-----END CERTIFICATE-----\n",
+      "nginx_cert_key": "-----BEGIN RSA PRIVATE KEY-----\n${RSA_PRIVATE_KEY}\n-----END RSA PRIVATE KEY-----\n",
+      "nginx_external_cert_management": "False",
+      "nginx_http_redirect": "True",
+      "nginx_json_logging": "False",
+      "nginx_permit_firewall": true,
+      "nginx_self_signed_cerificate": "True"
+    },
+    "children": {
+      "svc-nginx-read": {}
+    }
+  },
+  "cfg-nginx-n01": {
+    "vars": {
+      "nginx_cert": "-----BEGIN CERTIFICATE-----\n${CERTIFICATE}\n-----END CERTIFICATE-----\n",
+      "nginx_cert_key": "-----BEGIN RSA PRIVATE KEY-----\n${RSA_PRIVATE_KEY}\n-----END RSA PRIVATE KEY-----\n",
+      "nginx_external_cert_management": "False",
+      "nginx_http_redirect": "True",
+      "nginx_json_logging": "False",
+      "nginx_permit_firewall": true,
+      "nginx_self_signed_cerificate": "True"
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-nginx-read": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-nginx-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-postgres": {
+    "vars": {
+      "postgres_max_clients": 300,
+      "postgres_noc_db": "noc",
+      "postgres_noc_password": "noc",
+      "postgres_noc_user": "noc",
+      "postgres_power": "master",
+      "postgres_replicator_password": "noc",
+      "postgres_superuser_password": "noc",
+      "postgres_version": "14"
+    },
+    "children": {
+      "svc-postgres-read": {}
+    }
+  },
+  "cfg-postgres-n01": {
+    "vars": {
+      "postgres_max_clients": 300,
+      "postgres_noc_db": "noc",
+      "postgres_noc_password": "noc",
+      "postgres_noc_user": "noc",
+      "postgres_power": "master",
+      "postgres_replicator_password": "noc",
+      "postgres_superuser_password": "noc",
+      "postgres_version": "14"
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-postgres-read": {
+    "hosts": {}
+  },
+  "svc-postgres-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-sae": {
+    "vars": {
+      "sae_db_threads": 4,
+      "sae_loglevel": "info",
+      "sae_power": 2
+    },
+    "children": {
+      "svc-sae-read": {}
+    }
+  },
+  "cfg-sae-n01": {
+    "vars": {
+      "sae_db_threads": 4,
+      "sae_loglevel": "info",
+      "sae_power": 2
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-sae-read": {
+    "hosts": {}
+  },
+  "svc-sae-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-scheduler": {
+    "vars": {
+      "scheduler_loglevel": "info",
+      "scheduler_max_threads": 10,
+      "scheduler_power": 1
+    },
+    "children": {
+      "svc-scheduler-read": {}
+    }
+  },
+  "cfg-scheduler-n01": {
+    "vars": {
+      "scheduler_loglevel": "info",
+      "scheduler_max_threads": 10,
+      "scheduler_power": 1
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-scheduler-read": {
+    "hosts": {}
+  },
+  "svc-scheduler-exec": {
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-web": {
+    "vars": {
+      "web_language": "en",
+      "web_loglevel": "info",
+      "web_max_threads": 10,
+      "web_power": 2,
+      "web_theme": "gray"
+    },
+    "children": {
+      "svc-web-read": {}
+    }
+  },
+  "cfg-web-n01": {
+    "vars": {
+      "web_language": "en",
+      "web_loglevel": "info",
+      "web_max_threads": 10,
+      "web_power": 2,
+      "web_theme": "gray"
+    },
+    "hosts": {
+      "n01": {}
+    }
+  },
+  "svc-web-read": {
+    "hosts": {}
+  },
+  "svc-web-exec": {
+    "hosts": {
+      "n01": {}
+    }
   },
   "noc-config-n01": {
-    "hosts": [
-      "n01"
-    ],
+    "hosts": {
+      "n01": {}
+    },
     "vars": {
       "noc_services": [
         {
@@ -129,7 +616,7 @@
             "power": 1,
             "records_buffer": 1000000
           },
-          "pool": null,
+          "pool": "global",
           "environment": {
             "level": "global",
             "category": "internal",
@@ -180,7 +667,7 @@
             "power": 1,
             "whitelist_access": ""
           },
-          "pool": null,
+          "pool": "global",
           "environment": {
             "level": "global",
             "category": "internal",
@@ -241,7 +728,7 @@
             "radius_server": null,
             "session_ttl": "7d"
           },
-          "pool": null,
+          "pool": "global",
           "environment": {
             "level": "global",
             "category": "internal",
@@ -268,7 +755,7 @@
             "loglevel": "info",
             "power": 2
           },
-          "pool": null,
+          "pool": "global",
           "environment": {
             "level": "global",
             "category": "internal",
@@ -294,7 +781,7 @@
             "loglevel": "info",
             "power": 1
           },
-          "pool": null,
+          "pool": "global",
           "environment": {
             "level": "global",
             "category": "internal",
@@ -321,7 +808,7 @@
             "loglevel": "info",
             "power": 2
           },
-          "pool": null,
+          "pool": "global",
           "environment": {
             "level": "global",
             "category": "internal",
@@ -348,7 +835,7 @@
             "max_threads": 10,
             "power": 1
           },
-          "pool": null,
+          "pool": "global",
           "environment": {
             "level": "global",
             "category": "internal",
@@ -377,7 +864,7 @@
             "power": 2,
             "theme": "gray"
           },
-          "pool": null,
+          "pool": "global",
           "environment": {
             "level": "global",
             "category": "internal",
@@ -404,496 +891,5 @@
         }
       ]
     }
-  },
-  "svc-clickhouse": {
-    "vars": {
-      "clickhouse_db": "noc",
-      "clickhouse_expose_metrics": true,
-      "clickhouse_max_ast_elements": 10000,
-      "clickhouse_password": "noc",
-      "clickhouse_query_size": 262144,
-      "clickhouse_ro_grafana_password": "noc",
-      "clickhouse_ro_password": "noc",
-      "clickhouse_timezone": "Europe/Moscow",
-      "clickhouse_user": "noc"
-    },
-    "children": [
-      "cfg-clickhouse-n01",
-      "svc-clickhouse-read"
-    ]
-  },
-  "cfg-clickhouse-n01": {
-    "vars": {
-      "clickhouse_db": "noc",
-      "clickhouse_expose_metrics": true,
-      "clickhouse_max_ast_elements": 10000,
-      "clickhouse_password": "noc",
-      "clickhouse_query_size": 262144,
-      "clickhouse_ro_grafana_password": "noc",
-      "clickhouse_ro_password": "noc",
-      "clickhouse_timezone": "Europe/Moscow",
-      "clickhouse_user": "noc"
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-clickhouse-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-consul-read": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-consul-template-read": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-grafana-read": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-datastream": {
-    "vars": {
-      "datastream_enable_address": false,
-      "datastream_enable_address_wait": false,
-      "datastream_enable_administrativedomain": false,
-      "datastream_enable_administrativedomain_wait": false,
-      "datastream_enable_alarm": false,
-      "datastream_enable_alarm_wait": false,
-      "datastream_enable_cfgping": true,
-      "datastream_enable_cfgping_wait": true,
-      "datastream_enable_cfgsyslog": true,
-      "datastream_enable_cfgsyslog_wait": true,
-      "datastream_enable_cfgtrap": true,
-      "datastream_enable_cfgtrap_wait": true,
-      "datastream_enable_dnszone": false,
-      "datastream_enable_dnszone_wait": false,
-      "datastream_enable_managedobject": false,
-      "datastream_enable_managedobject_wait": false,
-      "datastream_enable_prefix": false,
-      "datastream_enable_prefix_wait": false,
-      "datastream_enable_resourcegroup": false,
-      "datastream_enable_resourcegroup_wait": false,
-      "datastream_enable_vrf": false,
-      "datastream_enable_vrf_wait": false,
-      "datastream_loglevel": "info",
-      "datastream_mode": "wait",
-      "datastream_power": 1,
-      "datastream_whitelist_access": ""
-    },
-    "children": [
-      "cfg-datastream-n01",
-      "svc-datastream-read"
-    ]
-  },
-  "cfg-datastream-n01": {
-    "vars": {
-      "datastream_enable_address": false,
-      "datastream_enable_address_wait": false,
-      "datastream_enable_administrativedomain": false,
-      "datastream_enable_administrativedomain_wait": false,
-      "datastream_enable_alarm": false,
-      "datastream_enable_alarm_wait": false,
-      "datastream_enable_cfgping": true,
-      "datastream_enable_cfgping_wait": true,
-      "datastream_enable_cfgsyslog": true,
-      "datastream_enable_cfgsyslog_wait": true,
-      "datastream_enable_cfgtrap": true,
-      "datastream_enable_cfgtrap_wait": true,
-      "datastream_enable_dnszone": false,
-      "datastream_enable_dnszone_wait": false,
-      "datastream_enable_managedobject": false,
-      "datastream_enable_managedobject_wait": false,
-      "datastream_enable_prefix": false,
-      "datastream_enable_prefix_wait": false,
-      "datastream_enable_resourcegroup": false,
-      "datastream_enable_resourcegroup_wait": false,
-      "datastream_enable_vrf": false,
-      "datastream_enable_vrf_wait": false,
-      "datastream_loglevel": "info",
-      "datastream_mode": "wait",
-      "datastream_power": 1,
-      "datastream_whitelist_access": ""
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-datastream-read": {
-    "hosts": []
-  },
-  "svc-datastream-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-mongod-read": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-discovery": {
-    "vars": {
-      "discovery_backup_power": 1,
-      "discovery_loglevel": "info",
-      "discovery_max_threads": 20,
-      "discovery_power": 2
-    },
-    "children": [
-      "cfg-discovery-default-n01",
-      "svc-discovery-read"
-    ]
-  },
-  "cfg-discovery-default-n01": {
-    "vars": {
-      "discovery_backup_power": 1,
-      "discovery_loglevel": "info",
-      "discovery_max_threads": 20,
-      "discovery_power": 2
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-discovery-read": {
-    "hosts": []
-  },
-  "svc-discovery-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-kafka": {
-    "vars": {
-      "kafka_cluster_id": "",
-      "kafka_insecure_certs": false,
-      "kafka_memory_limit": 1
-    },
-    "children": [
-      "cfg-kafka-n01",
-      "svc-kafka-read"
-    ]
-  },
-  "cfg-kafka-n01": {
-    "vars": {
-      "kafka_cluster_id": "",
-      "kafka_insecure_certs": false,
-      "kafka_memory_limit": 1
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-kafka-read": {
-    "hosts": []
-  },
-  "svc-kafka-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-login": {
-    "vars": {
-      "login_language": "en",
-      "login_loglevel": "info",
-      "login_methods": "local",
-      "login_pam_service": "noc",
-      "login_power": 2,
-      "login_radius_secret": null,
-      "login_radius_server": null,
-      "login_session_ttl": "7d"
-    },
-    "children": [
-      "cfg-login-n01",
-      "svc-login-read"
-    ]
-  },
-  "cfg-login-n01": {
-    "vars": {
-      "login_language": "en",
-      "login_loglevel": "info",
-      "login_methods": "local",
-      "login_pam_service": "noc",
-      "login_power": 2,
-      "login_radius_secret": null,
-      "login_radius_server": null,
-      "login_session_ttl": "7d"
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-login-read": {
-    "hosts": []
-  },
-  "svc-login-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-metrics": {
-    "vars": {
-      "metrics_backup_power": 1,
-      "metrics_loglevel": "info",
-      "metrics_power": 2
-    },
-    "children": [
-      "cfg-metrics-n01",
-      "svc-metrics-read"
-    ]
-  },
-  "cfg-metrics-n01": {
-    "vars": {
-      "metrics_backup_power": 1,
-      "metrics_loglevel": "info",
-      "metrics_power": 2
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-metrics-read": {
-    "hosts": []
-  },
-  "svc-metrics-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-mib": {
-    "vars": {
-      "mib_loglevel": "info",
-      "mib_power": 1
-    },
-    "children": [
-      "cfg-mib-n01",
-      "svc-mib-read"
-    ]
-  },
-  "cfg-mib-n01": {
-    "vars": {
-      "mib_loglevel": "info",
-      "mib_power": 1
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-mib-read": {
-    "hosts": []
-  },
-  "svc-mib-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-mongod": {
-    "vars": {
-      "mongod_db": "noc",
-      "mongod_logging_destination": "syslog",
-      "mongod_password": "noc",
-      "mongod_power": "server",
-      "mongod_rs": "noc",
-      "mongod_user": "noc",
-      "mongod_version": "4.4"
-    },
-    "children": [
-      "cfg-mongod-n01",
-      "svc-mongod-read"
-    ]
-  },
-  "cfg-mongod-n01": {
-    "vars": {
-      "mongod_db": "noc",
-      "mongod_logging_destination": "syslog",
-      "mongod_password": "noc",
-      "mongod_power": "server",
-      "mongod_rs": "noc",
-      "mongod_user": "noc",
-      "mongod_version": "4.4"
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-mongod-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-nginx": {
-    "vars": {
-      "nginx_cert": "-----BEGIN CERTIFICATE-----\n${CERTIFICATE}\n-----END CERTIFICATE-----\n",
-      "nginx_cert_key": "-----BEGIN RSA PRIVATE KEY-----\n${RSA_PRIVATE_KEY}\n-----END RSA PRIVATE KEY-----\n",
-      "nginx_external_cert_management": "False",
-      "nginx_http_redirect": "True",
-      "nginx_json_logging": "False",
-      "nginx_permit_firewall": true,
-      "nginx_self_signed_cerificate": "True"
-    },
-    "children": [
-      "cfg-nginx-n01",
-      "svc-nginx-read"
-    ]
-  },
-  "cfg-nginx-n01": {
-    "vars": {
-      "nginx_cert": "-----BEGIN CERTIFICATE-----\n${CERTIFICATE}\n-----END CERTIFICATE-----\n",
-      "nginx_cert_key": "-----BEGIN RSA PRIVATE KEY-----\n${RSA_PRIVATE_KEY}\n-----END RSA PRIVATE KEY-----\n",
-      "nginx_external_cert_management": "False",
-      "nginx_http_redirect": "True",
-      "nginx_json_logging": "False",
-      "nginx_permit_firewall": true,
-      "nginx_self_signed_cerificate": "True"
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-nginx-read": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-nginx-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-postgres": {
-    "vars": {
-      "postgres_max_clients": 300,
-      "postgres_noc_db": "noc",
-      "postgres_noc_password": "noc",
-      "postgres_noc_user": "noc",
-      "postgres_power": "master",
-      "postgres_replicator_password": "noc",
-      "postgres_superuser_password": "noc",
-      "postgres_version": "14"
-    },
-    "children": [
-      "cfg-postgres-n01",
-      "svc-postgres-read"
-    ]
-  },
-  "cfg-postgres-n01": {
-    "vars": {
-      "postgres_max_clients": 300,
-      "postgres_noc_db": "noc",
-      "postgres_noc_password": "noc",
-      "postgres_noc_user": "noc",
-      "postgres_power": "master",
-      "postgres_replicator_password": "noc",
-      "postgres_superuser_password": "noc",
-      "postgres_version": "14"
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-postgres-read": {
-    "hosts": []
-  },
-  "svc-postgres-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-sae": {
-    "vars": {
-      "sae_db_threads": 4,
-      "sae_loglevel": "info",
-      "sae_power": 2
-    },
-    "children": [
-      "cfg-sae-n01",
-      "svc-sae-read"
-    ]
-  },
-  "cfg-sae-n01": {
-    "vars": {
-      "sae_db_threads": 4,
-      "sae_loglevel": "info",
-      "sae_power": 2
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-sae-read": {
-    "hosts": []
-  },
-  "svc-sae-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-scheduler": {
-    "vars": {
-      "scheduler_loglevel": "info",
-      "scheduler_max_threads": 10,
-      "scheduler_power": 1
-    },
-    "children": [
-      "cfg-scheduler-n01",
-      "svc-scheduler-read"
-    ]
-  },
-  "cfg-scheduler-n01": {
-    "vars": {
-      "scheduler_loglevel": "info",
-      "scheduler_max_threads": 10,
-      "scheduler_power": 1
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-scheduler-read": {
-    "hosts": []
-  },
-  "svc-scheduler-exec": {
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-web": {
-    "vars": {
-      "web_language": "en",
-      "web_loglevel": "info",
-      "web_max_threads": 10,
-      "web_power": 2,
-      "web_theme": "gray"
-    },
-    "children": [
-      "cfg-web-n01",
-      "svc-web-read"
-    ]
-  },
-  "cfg-web-n01": {
-    "vars": {
-      "web_language": "en",
-      "web_loglevel": "info",
-      "web_max_threads": 10,
-      "web_power": 2,
-      "web_theme": "gray"
-    },
-    "hosts": [
-      "n01"
-    ]
-  },
-  "svc-web-read": {
-    "hosts": []
-  },
-  "svc-web-exec": {
-    "hosts": [
-      "n01"
-    ]
   }
 }

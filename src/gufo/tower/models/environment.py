@@ -94,6 +94,11 @@ class Environment(Model):
         return config.cache_dir / str(self.id)
 
     @property
+    def ansible_inventory_path(self) -> Path:
+        """Path to environment's ansible directory."""
+        return self.cache_path / "inv" / "inventory.yml"
+
+    @property
     def playbook_path(self) -> Path:
         return self.cache_path / "playbooks"
 
