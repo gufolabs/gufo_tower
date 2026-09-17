@@ -8,8 +8,6 @@
 # Python models
 from typing import ClassVar
 
-import yaml
-
 # Gufo Tower models
 from ..core.inventory import write_inventory
 from ..models.environment import Environment
