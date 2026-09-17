@@ -54,13 +54,13 @@ class ServiceDescription:
 
 
 def ansible_inventory(env: Environment) -> dict[str, Any]:
-    """Generate Ansible-compatible dynamic inventory.
+    """Generate Ansible static inventory.
 
     Args:
         env: Environment to generate the inventory for.
 
     Returns:
-        Ansible-compatible dynamic inventory.
+        Ansible-compatible static inventory.
     """
     srv_descr = get_services_description(env)
     r: dict[str, Any] = {
@@ -80,7 +80,7 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
                 "noc_env_type": env.env_type,
                 # Repo settings
                 "playbook_link": env.playbook_link,
-                # Web settions
+                # Web settings
                 "noc_web_host": env.web_host,
                 # Tower local settings
                 "tower_data": str(env.data_path),
@@ -92,10 +92,11 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
                     .where(Pool.environment == env)
                     .order_by(Pool.name)
                 ],
-            }
+            },
+            "hosts": {},
+            "children": {},
         },
-        "_meta": {"hostvars": {}},
-        "nodes": {"vars": {}, "hosts": []},
+        "nodes": {"vars": {}, "hosts": {}},
     }
     node_services: defaultdict[str, list[Service]] = defaultdict(list)
     with db.atomic():
@@ -111,7 +112,6 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
                 node_services[s.node.name].append(s)
     # Hosts variables
     for node in nodes:
-        r["nodes"]["hosts"].append(node.name)
         hostvars = {
             "ansible_host": node.address,
             "ansible_port": node.port,
@@ -130,19 +130,18 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
                 True,
             )
         )
-        r["_meta"]["hostvars"][node.name] = hostvars
-        dcn = f"dc-{node.datacenter.name}"
-        if dcn not in r:
-            r[dcn] = {"hosts": [], "vars": {}}
-            if node.datacenter.proxy:
-                r[dcn]["vars"]["http_proxy"] = node.datacenter.proxy
-        r[dcn]["hosts"].append(node.name)
         required_assets = []
         for s in node_services[node.name]:
             required_assets += srv_descr[s.service].required_assets
-        r["_meta"]["hostvars"][node.name]["required_assets"] = sorted(
-            set(required_assets)
-        )
+        hostvars["required_assets"] = sorted(set(required_assets))
+        r["nodes"]["hosts"][node.name] = hostvars
+        dcn = f"dc-{node.datacenter.name}"
+        if dcn not in r:
+            r[dcn] = {"hosts": {}, "vars": {}}
+            r["all"]["children"][dcn] = {}
+            if node.datacenter.proxy:
+                r[dcn]["vars"]["http_proxy"] = node.datacenter.proxy
+        r[dcn]["hosts"][node.name] = {}
     for s in srv_descr:
         if srv_descr[s].require_cert:
             update_certs(env, s)
@@ -161,43 +160,78 @@ def ansible_inventory(env: Environment) -> dict[str, Any]:
                     )
                 except AttributeError:
                     continue
-                pool_name = srv["pool"]
             case "global":
                 srv_name = "-".join(["cfg", service, srv["node"]])
-                pool_name = None
             case _:
                 srv_name = "-".join(["cfg", service, srv["node"]])
-                pool_name = "global"
         if service_group not in r:
             r[service_group] = {
                 "vars": name_config(srv["config"], service),
-                "children": [srv_name, f"{service_group}-read"],
+                "children": {},
             }
+            r["all"]["children"][service_group] = {}
         else:
-            r[service_group]["children"].append(srv_name)
+            r[service_group]["children"][srv_name] = {}
         # make service group
         if srv_name not in r:
             r[srv_name] = {
                 "vars": name_config(srv["config"], service),
-                "hosts": [srv["node"]],
+                "hosts": {srv["node"]: {}},
             }
             if f"{service_group}-read" not in r:
-                r[f"{service_group}-read"] = {"hosts": []}
-        # make execution group
-        if f"{service_group}-exec" not in r:
-            r[f"{service_group}-exec"] = {"hosts": [srv["node"]]}
+                r[f"{service_group}-read"] = {"hosts": {}}
+                r[service_group]["children"][f"{service_group}-read"] = {}
         else:
-            r[f"{service_group}-exec"]["hosts"].append(srv["node"])
+            r[srv_name]["hosts"][srv["node"]] = {}
+        # make execution group
+        exec_group = f"{service_group}-exec"
+        if exec_group not in r:
+            r[exec_group] = {"hosts": {srv["node"]: {}}}
+        else:
+            r[exec_group]["hosts"][srv["node"]] = {}
         # resolve depends
         if srv_descr[service].depends:
             for dep in srv_descr[service].depends:
-                if f"svc-{dep}-read" not in r:
-                    r[f"svc-{dep}-read"] = {"hosts": [srv["node"]]}
-                elif srv["node"] not in r[f"svc-{dep}-read"]["hosts"]:
-                    r[f"svc-{dep}-read"]["hosts"].append(srv["node"])
-
-        # Generate tower.yml
-        apply_tower_inventory(env, pool_name, r, srv, srv_descr)
+                dep_group = f"svc-{dep}-read"
+                if dep_group not in r:
+                    r[dep_group] = {"hosts": {srv["node"]: {}}}
+                else:
+                    r[dep_group]["hosts"][srv["node"]] = {}
+    # Tower service configuration is stored directly in inventory vars.
+    for srv in iter_service_config(env):
+        service = srv["service"]
+        if service not in srv_descr:
+            continue
+        if srv_descr[service].category != "internal":
+            continue
+        node_noc_config = f"noc-config-{srv['node']}"
+        if node_noc_config not in r:
+            r[node_noc_config] = {
+                "hosts": {srv["node"]: {}},
+                "vars": {"noc_services": []},
+            }
+            r["all"]["children"][node_noc_config] = {}
+        line = {
+            "name": service,
+            "config": srv["config"],
+            "pool": srv["pool"],
+            "environment": srv_descr[service].environment.copy(),
+        }
+        if srv_descr[service].level == "pool":
+            order = env.config_order.split(",")
+            for conf in order:
+                if "yaml://" in conf:
+                    yaml_path = (
+                        Path(urlparse(conf).path).parent
+                        / f"pool-{srv['pool']}.yml"
+                    )
+                    order.insert(-1, f"yaml://{yaml_path}")
+                    break
+            line["config_order"] = ",".join(order)
+        else:
+            line["config_order"] = env.config_order
+        line["environment"].pop("description", None)
+        r[node_noc_config]["vars"]["noc_services"].append(line)
     return r
 
 
@@ -407,3 +441,24 @@ def apply_tower_inventory_internal(
     if "description" in line["environment"]:
         del line["environment"]["description"]
     r[node_noc_config]["vars"]["noc_services"].append(line)
+
+
+def write_inventory(env: Environment) -> Path:
+    """Write Ansible inventory to the environment inventory file.
+
+    Args:
+        env: Environment for which to generate the inventory.
+
+    Returns:
+        Path to the generated Ansible inventory file.
+    """
+    path = env.ansible_inventory_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as fp:
+        yaml.safe_dump(
+            ansible_inventory(env),
+            fp,
+            sort_keys=False,
+            allow_unicode=True,
+        )
+    return path

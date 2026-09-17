@@ -46,6 +46,7 @@ Where:
     * `playbooks/` — cached playbooks.
     * `additional_roles/` — cached Ansible roles installed as additional roles.
     * `data/` — cached runtime data.
+    * `inv/inventory.json` - Ansible inventory file.
     * `repo/` - local Git repository clone.
     * `src_dist/` - cached distribution files downloaded during deployment.
     * `ssh/` — cached SSH-related data.

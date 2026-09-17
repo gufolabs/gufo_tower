@@ -21,6 +21,7 @@ import tornado.web
 
 # Gufo Tower modules
 from ..core.ansible import get_bin_path, to_ansible_environment
+from ..core.inventory import write_inventory
 from ..models.db import db
 from ..models.environment import Environment
 from ..models.joblog import JobLog
@@ -134,7 +135,7 @@ class DeployHandler(BaseHandler):
         command = [
             str(bin_path / "ansible-playbook"),
             "-i",
-            str(bin_path / "tower-inv"),
+            str(write_inventory(self._env)),
             "site.yml",
             "-f",
             "50",
