@@ -6,12 +6,9 @@
 # ----------------------------------------------------------------------
 
 # Python modules
-import argparse
 import asyncio
 import hashlib
 import logging
-import os
-from collections.abc import Iterable
 from email.utils import formatdate
 from http import HTTPStatus
 from importlib.resources import files
@@ -20,7 +17,6 @@ from pathlib import Path
 # Third-party modules
 import tornado.httpserver
 import tornado.web
-from gufo.err import err
 from tornado.web import StaticFileHandler
 
 # Tower modules
@@ -41,44 +37,19 @@ class WebServer:
     lifecycle.
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        addr: str | None = None,
+        port: int = 8888,
+        children: int = 1,
+    ) -> None:
         self.logger = logging.getLogger("web")
         self._ready_event = asyncio.Event()
         self._shutdown_event = asyncio.Event()
-        self._children = 1
-        self._addr: str | None = None
-        self._port = 8888
+        self._children = children
+        self._addr = addr
+        self._port = port
         self._server: tornado.httpserver.HTTPServer | None = None
-
-    def _parse_args(self, argv: Iterable[str]) -> None:
-        """Parse command-line arguments and configure the listening endpoint.
-
-        The listening address and port are taken from ``--listen`` or,
-        when the option is omitted, from the ``TOWER_LISTEN`` environment
-        variable. The number of worker processes is configured by
-        ``--children`` or ``TOWER_CHILDREN``.
-        """
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-            "--listen",
-            default=os.environ.get("TOWER_LISTEN", "0.0.0.0:8888"),
-            help="Listen on specified address",
-        )
-        parser.add_argument(
-            "--children",
-            default=int(os.environ.get("TOWER_CHILDREN", "1")),
-            type=int,
-            help="Run several processes",
-        )
-        ns = parser.parse_args(argv)
-        self._children = ns.children
-        if ":" in ns.listen:
-            parts = ns.listen.rsplit(":", 1)
-            self._addr = parts[0]
-            self._port = int(parts[1])
-        else:
-            self._addr = None
-            self._port = int(ns.listen)
 
     def _migrate(self) -> None:
         """Apply all pending database migrations."""
@@ -131,19 +102,8 @@ class WebServer:
         server.bind(self._port, address=self._addr)
         return server
 
-    async def run_from_argv(self, argv: Iterable[str]) -> None:
-        """Initialize and run the web server.
-
-        The method parses command-line arguments, initializes the
-        configuration, applies database migrations, starts the configured
-        number of worker processes, and waits until `shutdown` is
-        called.
-        """
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format="%(asctime)s [%(name)s] %(message)s",
-        )
-        self._parse_args(argv)
+    async def run(self) -> None:
+        """Initialize and run the web server."""
         config.setup()
         self.logger.info("Running Gufo Tower %s", __version__)
         self._migrate()
@@ -189,16 +149,3 @@ class UIHandler(tornado.web.RequestHandler):
             self.set_status(HTTPStatus.NOT_MODIFIED)
             return
         self.write(self.content)
-
-
-def run() -> None:
-    """Run the Tower web server using command-line arguments."""
-    import sys
-
-    server = WebServer()
-    asyncio.run(server.run_from_argv(sys.argv[1:]))
-
-
-if __name__ == "__main__":
-    err.setup(catch_all=True, format="extend")
-    run()

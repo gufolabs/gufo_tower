@@ -151,6 +151,7 @@ classifiers = [
 ]
 dependencies = [
   "bcrypt==5.0.0",
+  "click==8.4.2",
   "cryptography >= 44.0.0",
   "jmespath==1.1.0",
   "peewee==4.5.1",
@@ -204,12 +205,7 @@ content-type = "text/markdown"
 file = "README.md"
 
 [project.scripts]
-tower-deploy = "gufo.tower.cli.deploy:main"
-tower-dump = "gufo.tower.cli.backup:dump"
-tower-joblog = "gufo.tower.cli.joblog:main"
-tower-pull = "gufo.tower.cli.pull:main"
-tower-restore = "gufo.tower.cli.backup:restore"
-tower-web = "gufo.tower.daemons.web:run"
+gufo-tower = "gufo.tower.cli.base:main"
 
 [project.urls]
 "Bug Tracker" = "https://github.com/gufolabs/gufo_tower/issues"

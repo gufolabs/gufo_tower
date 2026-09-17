@@ -11,6 +11,7 @@ nav:
   - Installation: installation.md
   - User Guide: user-guide/
   - Reference: reference/
+  - Man: man/
   - Developers' Guide: dev/
   - FAQ: faq.md
   - Changelog: CHANGELOG.md
