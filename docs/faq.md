@@ -169,28 +169,26 @@ This issue only applies to **amd64** systems. If the Node is a virtual machine, 
 
 Yes. After the initial configuration, deployments can be performed directly from the command line instead of using the web interface.
 
-Tower uses Ansible playbooks for deployments, so you can run the same playbooks manually and use Ansible options such as tags to perform specific operations.
+Use the `gufo-tower deploy` command to run deployments from the command line.
+It prepares the static inventory and Ansible environment before starting the
+playbook, and supports Ansible forks and tags.
 
 For example, you can run the complete deployment:
 
 ```shell
-cd <tower data>/cache/<environment id>/playbooks
-
-export ANSIBLE_SSH_PIPELINING=1 ANSIBLE_HOST_KEY_CHECKING=1 PYTHONUNBUFFERED=1 NOC_ENV=<environment name>
-
-ansible-playbook -i /opt/tower/bin/tower-inv site.yml -f 50
+gufo-tower deploy
 ```
 
 You can also run specific operations using tags. For example, to update NOC sources:
 
 ```shell
-ansible-playbook -i /opt/tower/bin/tower-inv site.yml -f 6 --tags get_source
+gufo-tower deploy -f 6 --tags get_source
 ```
 
 Or to update the configuration and perform a gentle restart:
 
 ```shell
-ansible-playbook -i /opt/tower/bin/tower-inv site.yml -f 6 --tags config,sort_restart
+gufo-tower deploy -f 6 --tags config,sort_restart
 ```
 
 This provides direct access to the underlying Ansible deployment system and can be useful for automation, troubleshooting, or performing specific deployment operations.

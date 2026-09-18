@@ -157,6 +157,49 @@ def to_ansible_environment(env: Environment) -> dict[str, Any]:
     }
 
 
+def resolve_service_playbook(env: Environment, service: str) -> Path | None:
+    """Resolve the playbook path for a service.
+
+    Args:
+        env: Environment containing the service.
+        service: Service name.
+
+    Returns:
+        Path to the service playbook, or ``None`` if it does not exist.
+    """
+    for path in (
+        env.roles_dir / service / "service.yml",
+        env.playbook_path / "system_roles" / service / "service.yml",
+        env.playbook_path / "noc_roles" / service / "service.yml",
+    ):
+        if path.exists():
+            return path
+    return None
+
+
+def write_tower_playbook(env: Environment) -> Path:
+    """Generate the deployment playbook from the service execution order.
+
+    Args:
+        env: Environment for which to generate the playbook.
+
+    Returns:
+        Path to the generated ``tower.yml`` playbook.
+    """
+    from ..models.service import Service
+
+    playbooks = [
+        playbook
+        for service in Service.get_execution_order(env)
+        if (playbook := resolve_service_playbook(env, service))
+    ]
+    path = env.playbook_path / "tower.yml"
+    path.write_text(
+        "".join(f"- import_playbook: {playbook}\n" for playbook in playbooks)
+    )
+    return path
+
+
 rx_inv_line = re.compile(
     r"^(?P<node>\S+) \| (?P<status>SUCCESS|FAILED!) => (?P<data>.*?)$"
 )
