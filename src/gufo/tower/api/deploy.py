@@ -11,7 +11,6 @@ import logging
 import os
 import re
 import subprocess
-from pathlib import Path
 from typing import BinaryIO
 
 # Third-party modules
@@ -20,7 +19,11 @@ import tornado.process
 import tornado.web
 
 # Gufo Tower modules
-from ..core.ansible import get_bin_path, to_ansible_environment
+from ..core.ansible import (
+    get_bin_path,
+    to_ansible_environment,
+    write_tower_playbook,
+)
 from ..core.inventory import write_inventory
 from ..models.db import db
 from ..models.environment import Environment
@@ -154,7 +157,7 @@ class DeployHandler(BaseHandler):
             cwd=str(self._env.playbook_path),
             close_fds=True,
         )
-        self.write_pb()
+        write_tower_playbook(self.environment)
         while True:
             try:
                 data = await self.sp.stdout.read_bytes(
@@ -166,45 +169,6 @@ class DeployHandler(BaseHandler):
             self.on_data(data)
         if not self.connection_closed:
             self.on_stream_close()
-
-    def write_pb(self) -> None:
-        """Generate the Ansible playbook from the service execution order."""
-        from gufo.tower.models.service import Service
-
-        order = Service.get_execution_order(self.environment)
-        pb_order: list[Path] = []
-        for service in order:
-            pb = self.resolv_pb(service)
-            if not pb:
-                continue
-            pb_order.append(pb)
-        tower_autogen = self.environment.playbook_path / "tower.yml"
-        tower_autogen.write_text(
-            "".join(f"- import_playbook: {line}\n" for line in pb_order)
-        )
-
-    def resolv_pb(self, service: str) -> Path | None:
-        """Resolve the playbook path for a service."""
-        path = self.environment.roles_dir / service / "service.yml"
-        if path.exists():
-            return path
-        path = (
-            self.environment.playbook_path
-            / "system_roles"
-            / service
-            / "service.yml"
-        )
-        if path.exists():
-            return path
-        path = (
-            self.environment.playbook_path
-            / "noc_roles"
-            / service
-            / "service.yml"
-        )
-        if path.exists():
-            return path
-        return None
 
     def on_connection_close(self, *args, **kwargs):
         """Handle client disconnection and terminate the running job."""

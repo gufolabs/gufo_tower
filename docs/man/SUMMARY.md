@@ -1,5 +1,6 @@
 * [Overview](index.md)
 * [gufo-tower backup](backup.md)
+* [gufo-tower deploy](deploy.md)
 * [gufo-tower inventory](inventory.md)
 * [gufo-tower job log](job-log.md)
 * [gufo-tower pull](pull.md)
