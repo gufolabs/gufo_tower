@@ -202,9 +202,7 @@ class BaseShotter(ABC):
         BaseShotter._temp_dir = tempfile.mkdtemp(prefix="tower-shotter-")
         config.home = Path(BaseShotter._temp_dir)
         BaseShotter._web = WebServer()
-        BaseShotter._web_task = asyncio.create_task(
-            BaseShotter._web.run_from_argv([])
-        )
+        BaseShotter._web_task = asyncio.create_task(BaseShotter._web.run())
         await BaseShotter._web.wait_for_ready()
 
     @classmethod

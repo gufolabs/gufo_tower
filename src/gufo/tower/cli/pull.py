@@ -7,61 +7,52 @@
 
 # Python modules
 import datetime
-import logging
-import os
-import sys
-from argparse import ArgumentParser
 
 # Third-party modules
+import click
 from gufo.err import err
 
 # Tower modules
 from ..config import config
 from ..core.pull import prepare_env
 from ..models.db import db
-from ..models.environment import Environment
 from ..models.pulllog import PullLog
+from .base import Context, entrypoint, pass_context
 
 
-def main():
-    logging.basicConfig(level=logging.DEBUG)
-    parser = ArgumentParser()
-    parser.add_argument(
-        "--env",
-        action="store",
-        dest="env",
-        help="Use environment [%default]",
-        default=os.environ.get("NOC_ENV", "test"),
-    )
-    args = parser.parse_args()
+@entrypoint
+@click.command("pull", short_help="Pull repository")
+@click.option(
+    "--env",
+    envvar="NOC_ENV",
+    help="Use environment.",
+)
+@pass_context
+def pull(ctx: Context, env: str | None) -> None:
+    """Pull repository for the specified environment."""
     config.setup()
-    try:
-        env = Environment.get(Environment.name == args.env)
-    except Environment.DoesNotExist:
-        die(f"Invalid environment: '{args.env}'")
+    environment = ctx.get_environment(env)
+
     with db.atomic():
         job = PullLog(
             start_ts=datetime.datetime.now(),
-            environment=env,
+            environment=environment,
             user="cli",
-            repo=env.playbook_link,
+            repo=environment.playbook_link,
         )
         job.save()
+
     status = True
     log = "success"
     try:
-        prepare_env(env)
+        prepare_env(environment)
     except BaseException as e:
         err.process()
         status = False
         log = f"Failed: {e}"
+
     with db.atomic():
         job.complete_ts = datetime.datetime.now()
         job.status = status
         job.log = log
         job.save()
-
-
-def die(msg):
-    print(msg + "\n")
-    sys.exit(1)
