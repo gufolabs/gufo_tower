@@ -136,6 +136,16 @@ A managed Node must:
 
 Yes. Tower can provide node-specific configuration through cloud-init. A virtual machine can retrieve its configuration from Tower during the first boot and configure itself automatically.
 
+### How can I check the SSH connection to a node?
+
+Use `gufo-tower ssh` command:
+
+```shell
+gufo-tower ssh <node>
+```
+
+where `<node>` can be either the node name configured in Tower or the node's IP address.
+
 ### What Do the Deployment Options Mean?
 
 Deployment options let you control what Tower does during a deployment and how much diagnostic information it produces. In most cases, the default options are sufficient; the additional options are useful for troubleshooting, maintenance, or more controlled deployments.
