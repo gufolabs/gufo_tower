@@ -193,6 +193,30 @@ gufo-tower deploy -f 6 --tags config,sort_restart
 
 This provides direct access to the underlying Ansible deployment system and can be useful for automation, troubleshooting, or performing specific deployment operations.
 
+### Can I view deployment logs from the command line?
+
+Yes. Use the `gufo-tower job log` commands to view deployment logs.
+
+To list recent deployments:
+
+```shell
+gufo-tower job log list
+```
+
+To show the log of the most recent deployment:
+
+```shell
+gufo-tower job log show
+```
+
+To show the log of a specific deployment, specify its job ID:
+
+```shell
+gufo-tower job log show <job_id>
+```
+
+The job ID is shown in the first column of the `job log list` output.
+
 ## Support and License
 
 ### What is the license of Tower?
