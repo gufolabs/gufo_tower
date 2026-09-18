@@ -208,6 +208,7 @@ gufo-tower = "gufo.tower.cli.base:main"
 [project.urls]
 "Bug Tracker" = "https://github.com/gufolabs/gufo_tower/issues"
 Changelog = "https://github.com/gufolabs/gufo_tower/blob/master/CHANGELOG.md"
+Discord = "https://discord.gg/CdZhMrWkV"
 Documentation = "https://docs.gufolabs.com/gufo_tower/"
 Homepage = "https://github.com/gufolabs/gufo_tower/"
 "Source Code" = "https://github.com/gufolabs/gufo_tower/"
