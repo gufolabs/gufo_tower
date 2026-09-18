@@ -10,6 +10,7 @@ Manpages for the `gufo-tower` command-line interface.
 | [`gufo-tower deploy`](deploy.md) | Deploy an environment. |
 | [`gufo-tower inventory`](inventory.md) | Show Ansible inventory. |
 | [`gufo-tower job log`](job-log.md) | Manage Gufo Tower job logs. |
+| [`gufo-tower migrate`](migrate.md) | Apply database migrations. |
 | [`gufo-tower pull`](pull.md) | Pull repository. |
 | [`gufo-tower restore`](restore.md) | Restore a backup. |
 | [`gufo-tower ssh`](ssh.md) | Connect to a node over SSH. |
