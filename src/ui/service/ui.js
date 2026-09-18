@@ -55,6 +55,16 @@ export const service_panel = {
                     click: function () {
                         service_logic.on_group_table(this.getValue())
                     }
+                },
+                {
+                    view: "button",
+                    type: "icon",
+                    icon: "question-circle",
+                    label: "Help",
+                    autowidth: true,
+                    click: () => {
+                        window.open("/docs/user-guide/service/", "_blank");
+                    }
                 }
             ]
         },
