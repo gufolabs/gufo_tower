@@ -3,6 +3,7 @@
 * [gufo-tower deploy](deploy.md)
 * [gufo-tower inventory](inventory.md)
 * [gufo-tower job log](job-log.md)
+* [gufo-tower migrate](migrate.md)
 * [gufo-tower pull](pull.md)
 * [gufo-tower restore](restore.md)
 * [gufo-tower ssh](ssh.md)
