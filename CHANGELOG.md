@@ -10,45 +10,96 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the master branch](https://github.com/gufolabs/gufo_tower/blob/master/CHANGELOG.md) guide.
 
-## [Unreleased]
+## 2.0.0 (2026-09-23)
 
 The unreleased version is identified in code by a version number higher than any released version, with the -dev suffix. This changelog reflects the current state of the master branch.
 
-### Fixed
+### Breaking changes
 
-* Editing on double-click on grid line.
+* Python 3.10+ is now required (`py310` project target).
+* Source tree reorganized:
+
+  * Python code moved to `src/gufo/tower`.
+  * UI moved to `src/ui`.
+  * The production UI is built into the Python package under `build/ui/`.
+
+* `TOWER_DB_PATH` has been removed. Configuration is now driven by `TOWER_HOME` and `TOWER_CACHE`. The default home directory is `~/.tower` (previously `/var/tower` or `/opt/tower`).
+* The legacy CLI scripts (`tower-pull`, `tower-inv`, `tower-backup`, `tower-restore`, `tower-joblog`) have been replaced by the unified `gufo-tower` CLI with the following subcommands:
+  `backup`, `deploy`, `inventory`, `job log`, `migrate`, `pull`, `restore`, `ssh`, `version`, `web`.
+* `NodeType` has been removed completely from both the model and UI. Node type is no longer a concept in Tower.
+* The default playbook repository is now `https://github.com/gufolabs/noc` (`gufolabs/noc`).
 
 ### Added
 
-* Build python package
-* Documentation
-* Devcontainer
-* GitHub CI Workflows
-* UI building and bundling
-* Migration of playbook urls from `nocproject/noc` to `gufolabs/noc`
+* **UI rewritten on WebIX 5.4.0**, with a new look and Navigation API.
+* **Home dashboard** showing the Tower version, the last deployment status of an environment, and pools summary.
+* **Deploy configuration dialog** with options for forks, tags, checks, secrets, stopping NOC, and serial restart.
+* **Configurable SSH key type** for environment deployments. New environments use an `ed25519` key by default.
+* **Cloud-init support** for automatic node preparation and bootstrapping.
+* **SSH command** (`gufo-tower ssh`) for connecting to deployment nodes.
+* **Node inventory** displayed in the node list.
+* **Deploy tag** displayed in the environment list.
+* **Installation name** displayed in the desktop title on startup.
+* **Copy SSH key** action moved to the environment list toolbar.
+* **Confirmation before deletion** of resources.
+* **Deployment log** displayed in the FAQ / deployment view.
+* **Tower Capabilities** mechanism: the playbook can discover supported Tower features through `all.vars.caps` (`ansible_l1`, `inventory_v1`).
+* **Static Ansible inventory** generated in the environment cache.
+* **`gufo-tower migrate`** command for applying pending database migrations.
+* **Documentation**, including the User Guide, reference documentation for environment variables, home directory structure and Git repository URL format, FAQ, and a documentation screenshotter.
+* Pull operations use **shallow clones** of the playbook repository.
+* SSH keys and certificates are generated in-process, removing the runtime dependency on `ssh-keygen` and `openssl`.
+* Documented environment variables:
+  `TOWER_HOME`, `TOWER_CACHE`, `TOWER_RUN_CHECKS`, `TOWER_SHOW_SECRETS`, `TOWER_RUN_TESTS`, `TOWER_STOP_NOC`, `TOWER_SERIAL_RESTART_NOC`.
 
 ### Changed
 
-* `TOWER_DB_PATH` replaced with `TOWER_HOME`, defaults changed from
-  `/var/tower` to `~/.tower`
-* Updated license
-* Source codes moved from `tower` to `src/gufo/tower`
-* All code formatted with `ruff format`
-* Dependencies moved from `requirements.txt` to `pyproject.toml`
-* `Readme.md` renamed to `README.md`
-* Default playbook repo url now points to `https://github.com/gufolabs/noc`
+* **CLI redesigned under `gufo-tower`**. Commands are Click-based and automatically map command options to `TOWER_*` environment variables.
+* **Data layout reorganized**. Each environment now has its own cache under `cache/<env-id>/...`, with the playbook repository stored in the environment cache. See the home directory structure reference.
+* **Install Method** is now a combobox.
+* **Node address** is split into separate `address` and `port` fields.
+* **Deployment recap** parsing and visibility improved in the UI.
+* **Pull no longer uses the API**. The playbook is copied to the cache instead of being moved.
+* The `deploy` command replaces the legacy `-f 50` option with separate `--forks` and `--tags` options.
+* **License files renamed** from `LICENSE` / `LICENSE.ru` to `LICENSE.md`.
+* The web service reports the **Gufo Tower version** on startup and displays it on the home dashboard.
+
+### Fixed
+
+* `noc_licence_level` has been corrected to `noc_license_level` in the inventory.
+* Form saving, form back navigation, and click processing in the **Change Password** form.
+* **Double-click editing** in grid rows.
+* Services loading.
+* Missing database indexes.
+* Deploy recap parsing.
+* Inventory serialization.
+* Settings menu selection.
+* Foreign keys are now enabled on database connection.
+* Environment ID is now used in the cache path.
+* Legacy database locations (`/var/tower` and `/opt/tower`) are migrated to the new `TOWER_HOME` on first run.
 
 ### Removed
 
-* `VERSION` file, moved to `src/gufo/tower/__init__.py`
+* **`NodeType`** model and UI.
+* `JobLog.log` field, replaced by `logfile`.
+* Obsolete Docker files and GitLab CI settings.
+* `six` dependency.
+* Deprecated `memcached` and `nsqadmin` roles.
+* Obsolete `deployment_options` activation in the inventory list.
 
 ### Dependencies
 
-* bcrypt 5.0.0
-* Gufo Err 0.6.0
-* Gufo Loader 2.0.1
-* Peewee 4.5.1
 * Tornado 6.5.8
+* Peewee 4.5.1
+* WebIX 5.4.0
+* cryptography >=44.0.0
+* bcrypt 5.0.0
+* dulwich 1.2.15
+* click 8.4.2
+* gufo-err 0.6.0
+* gufo-loader 2.0.1
+* jmespath 1.1.0
+* ansible 2.9.26 (pinned)
 
 ## 1.1.1 (2023-04-11)
 * Fix settings save 2

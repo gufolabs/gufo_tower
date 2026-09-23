@@ -9,4 +9,4 @@ Attributes:
     __version__: Gufo Tower version
 """
 
-__version__: str = "2.0.0-dev"
+__version__: str = "2.0.0"
