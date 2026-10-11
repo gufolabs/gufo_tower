@@ -22,7 +22,7 @@ Install Tower using:
 curl https://sh.gufolabs.com/tower | sh -s -- venv
 ```
 
-Complete setup instructions are available in the [Installation Guide](installation/index.md.md).
+Complete setup instructions are available in the [Installation Guide](installation/index.md).
 
 ### How to upgrade Tower?
 
