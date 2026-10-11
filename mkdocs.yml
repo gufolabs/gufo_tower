@@ -8,7 +8,7 @@ repo_url: https://github.com/gufolabs/gufo_tower/
 repo_name: gufolabs/gufo_tower
 nav:
   - Home: index.md
-  - Installation: installation.md
+  - Installation: installation/
   - User Guide: user-guide/
   - Reference: reference/
   - Man: man/

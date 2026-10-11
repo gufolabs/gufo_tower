@@ -1,11 +1,14 @@
 [Unit]
-Description=NOC supervisor service
+Description=Gufo Tower web service
 After=network.target
 
 [Service]
 WorkingDirectory=/opt/tower
 User=tower
+Environment=TOWER_HOME=/var/lib/tower
+# Keep loopback binding when Nginx proxies requests; remove --listen for direct access.
 ExecStart=/opt/tower/bin/gufo-tower web --listen=127.0.0.1:8888
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target

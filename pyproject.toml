@@ -172,7 +172,7 @@ keywords = [
 ]
 license = {file = "LICENSE.md"}
 name = "gufo_tower"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.11"
 
 [project.optional-dependencies]
 docs = [

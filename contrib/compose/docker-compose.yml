@@ -1,0 +1,8 @@
+services:
+  tower:
+    image: ghcr.io/gufolabs/gufo-tower:master
+    restart: always
+    ports:
+      - "8888:8888"
+    volumes:
+      - "/var/tower:/data"
