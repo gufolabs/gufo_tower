@@ -25,7 +25,7 @@ To install Tower, run the installation script:
 curl https://sh.gufolabs.com/tower | sh -s -- venv
 ```
 
-The script creates a Python virtual environment and installs Tower into it. See the [Installation Guide](installation.md) for other installation methods and detailed instructions.
+The script creates a Python virtual environment and installs Tower into it. See the [Installation Guide](installation/) for other installation methods and detailed instructions.
 
 ## Usage
 
@@ -50,4 +50,3 @@ The stack extracts key technologies proven in NOC and develops them as independe
 NOC uses the resulting components as external dependencies, while other network management products can benefit from them as well.
 
 Gufo Tower complements this ecosystem by providing a simple and reliable way to deploy and manage NOC as a native application.
-

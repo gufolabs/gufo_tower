@@ -10,9 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the master branch](https://github.com/gufolabs/gufo_tower/blob/master/CHANGELOG.md) guide.
 
-## 2.0.0 (2026-09-23)
+## [Unreleased]
 
-The unreleased version is identified in code by a version number higher than any released version, with the -dev suffix. This changelog reflects the current state of the master branch.
+### Added
+
+* Installation guide: docker compose and nginx setup.
+* Docker image build.
+
+## 2.0.0 (2026-09-23)
 
 ### Breaking changes
 
