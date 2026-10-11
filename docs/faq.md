@@ -22,11 +22,11 @@ Install Tower using:
 curl https://sh.gufolabs.com/tower | sh -s -- venv
 ```
 
-Complete setup instructions are available in the [Installation Guide](installation.md).
+Complete setup instructions are available in the [Installation Guide](installation/index.md.md).
 
 ### How to upgrade Tower?
 
-Tower can be upgraded using the standard Python package management tools. See the [Installation Guide](installation.md) for details.
+Tower can be upgraded using the standard Python package management tools. See the [Installation Guide](installation/index.md) for details.
 
 ### How quickly can I deploy NOC with Tower?
 
