@@ -11,7 +11,7 @@ permissions:
   packages: write
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: "gufo-tower"
+  IMAGE_NAME: "gufolabs/gufo-tower"
 jobs:
   build:
     runs-on: ubuntu-latest
